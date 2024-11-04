@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Proyecto_IS.Infraestructure</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FastEndpoints" Version="5.30.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Proyecto-IS.Common.Interfaces\Proyecto-IS.Common.Interfaces.csproj" />
+    <ProjectReference Include="..\Proyecto-IS.Domain.DataAccess\Proyecto-IS.Domain.DataAccess.csproj" />
+    <ProjectReference Include="..\Proyecto-IS.Domain\Proyecto-IS.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
