@@ -1,0 +1,6 @@
+@ElectroManage.WebAPI_HostAddress = http://localhost:5173
+
+GET {{ElectroManage.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

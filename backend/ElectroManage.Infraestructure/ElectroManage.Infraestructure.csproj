@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>ElectroManage.Infraestructure</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FastEndpoints" Version="5.30.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ElectroManage.Common.Interfaces\ElectroManage.Common.Interfaces.csproj" />
+    <ProjectReference Include="..\ElectroManage.Domain.DataAccess\ElectroManage.Domain.DataAccess.csproj" />
+    <ProjectReference Include="..\ElectroManage.Domain\ElectroManage.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
