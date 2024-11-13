@@ -5,7 +5,17 @@
   "projects": {
     "frontend": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "standalone": false
+        },
+        "@schematics/angular:directive": {
+          "standalone": false
+        },
+        "@schematics/angular:pipe": {
+          "standalone": false
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -27,8 +37,8 @@
               }
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.css",
               "node_modules/ngx-toastr/toastr.css",
+              "node_modules/bootstrap/dist/css/bootstrap.css",
               "@angular/material/prebuilt-themes/azure-blue.css",
               "src/styles.css"
             ],
