@@ -2,18 +2,6 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.11.
 
-## Prerequisites
-
-- Node.js (version 14.x or higher)
-- npm (version 6.x or higher)
-- Angular CLI (version 18.x)
-- Modern web browser (Chrome, Firefox, Safari, or Edge)
-
-## Installation
-
-- run `cd frontend` to navigate to the project directory
-- run `npm install` to install the dependencies
-
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
