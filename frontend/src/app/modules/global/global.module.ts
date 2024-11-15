@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IndexComponent } from './components/index/index.component';
 import { MenuComponent } from './components/menu/menu.component';
+import { RouterModule } from '@angular/router';
 
 //add the route of each module you need yo import here down.
 
@@ -12,6 +13,7 @@ import { MenuComponent } from './components/menu/menu.component';
   ],
   imports: [
     CommonModule,
+    RouterModule
 
     //add all modules you need here down. Remember to add them to export array too.
   ],

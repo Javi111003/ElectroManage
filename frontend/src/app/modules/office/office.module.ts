@@ -14,4 +14,4 @@ import { GlobalModule } from '../global/global.module';
     GlobalModule
   ]
 })
-export class OficinaModule { }
+export class OfficeModule { }
