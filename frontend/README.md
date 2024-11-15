@@ -2,6 +2,30 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.11.
 
+## Prerequisites
+
+Before you begin, ensure you have met the following requirements:
+
+- **Node.js**: You need to have Node.js installed. You can download it from [nodejs.org](https://nodejs.org/).
+- **Angular CLI**: Install Angular CLI globally using npm:
+  ```bash
+  npm install -g @angular/cli
+  ```
+
+## Installation
+
+To set up the frontend project, follow these steps:
+
+1. **Go to frontend folder**:
+   ```bash
+   cd frontend
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
