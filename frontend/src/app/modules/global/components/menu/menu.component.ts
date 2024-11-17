@@ -6,5 +6,8 @@ import { Component } from '@angular/core';
   styleUrl: './menu.component.css'
 })
 export class MenuComponent {
-
+  isSidebarActive = false;
+  toggleSidebar() {
+    this.isSidebarActive = !this.isSidebarActive;
+  }
 }
