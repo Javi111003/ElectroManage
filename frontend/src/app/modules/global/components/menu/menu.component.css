@@ -1,234 +1,189 @@
+/* Layout for the main container using CSS Grid */
 .grid-container {
-    display: grid;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    grid-template-areas:
-      "header header"
-      "sidebar main"
-      "footer footer";
-    grid-template-columns: 300px 1fr; /* Sidebar y contenido principal */
-    grid-template-rows: auto 1fr auto; /* Header (auto), Main (expandible), Footer (auto) */
-    height: 100vh; /* Ocupar toda la ventana */
-    overflow: hidden; /* Evitar scroll global */
-  }
-  
+  display: grid; /* Enables CSS Grid layout */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; /* Font stack for wide compatibility */
+  grid-template-areas:
+      "header header" /* Header spans two columns */
+      "sidebar main" /* Sidebar and main content on the same row */
+      "footer footer"; /* Footer spans two columns */
+ grid-template-columns:auto 1fr; /* Sidebar adjusts size, main takes remaining space */
+  grid-template-rows: auto 1fr auto; /* Header and footer adjust based on content, main fills available space */
+  height: 100vh; /* Full viewport height */
+  overflow: hidden; /* Prevents global scrolling */
+}
+/* Header styles */
 .header {
-  grid-area: header;
-  background-color: #045881;
-  padding: 3px;
-  color: white;
-  height: 40px;
-  display: flex;
-  align-items: center;
+  grid-area: header; /* Assigns this section to the header grid area */
+  background-color: #045881; /* Sets a blue background color */
+  color: white; /* Sets the text color to white */
+  height: 40px; /* Fixed height for the header */
+  padding: 3px; /* Small padding inside the header */
+  display: flex; /* Flexbox layout for alignment */
+  align-items: center; /* Vertically centers items */
+  justify-content: space-between; /* Space between header items */
 }
 .header img {
-  height: 35px;
-  margin-right: 10px;
+  height: 35px; /* Larger image size */
+  margin-left: 10px;
 }
 .header p {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   margin: 0;
+  margin-left: 6px;
   flex-grow: 1;
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: left; 
 }
 .header mat-icon {
-  width: 30px; /* Tamaño del área activa */
-  height: 30px;
-  display: flex;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%; /* Hace el área activa circular */
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  width: 30px; /* Sets icon width */
+  height: 30px; /* Sets icon height */
+  display: flex; /* Centers icon content */
+  align-items: center; /* Vertically centers content */
+  justify-content: center; /* Horizontally centers content */
+  cursor: pointer; /* Changes cursor to pointer */
+  border-radius: 50%; /* Makes the icon area circular */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Adds smooth hover effects */
 }
-.header mat-icon:hover{
-  background-color: rgba(56, 55, 55, 0.404); /* Fondo semitransparente */
-  transform: scale(1.05); /* Ligero aumento para resaltar */
+.header mat-icon:hover {
+  background-color: rgba(56, 55, 55, 0.404); /* Adds a semi-transparent background on hover */
+  transform: scale(1.05); /* Slightly enlarges the icon on hover */
 }
+/* Sidebar styles */
 .sidebar {
-  grid-area: sidebar;
-  position: fixed;
-  top: 40px;
-  left: 0;
-  height: calc(100vh - 100px);
-  width: 250px;
-  background-color: #f5f5f5;
-  border-right: 1px solid #ddd;
-  padding: 1rem;
-  overflow-y: auto;
-  transition: transform 0.3s ease-in-out;
-  transform: translateX(-100%);
-  z-index: 1000;
+  grid-area: sidebar; /* Assigns this section to the sidebar grid area */
+  position: relative; /* Fixes the sidebar position */
+  top: 40px; /* Starts right below the header */
+  left: 0; /* Aligns the sidebar to the left edge */
+  min-width: 240px; /* Minimum width */
+  max-width: 400px; /* Maximum width */
+  width: 100%;
+  height: calc(100vh - 100px); /* Sidebar height minus header and footer */
+  background-color: #ffffff; /* Light gray background color */
+  border-right: 2.3px solid #cacbcc; /* Subtle border */
+  padding: 1rem; /* Internal spacing for sidebar content */
+  overflow-y: auto; /* Enables vertical scrolling */
+  transform: translateX(-100%); /* Hides sidebar by default (off-screen) */
+  transition: transform 0.3s ease-in-out; /* Smooth sidebar slide effect */
+  z-index: 1000; /* Ensures sidebar appears above other elements */
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1); /* Shadow for floating effect */
+  border-radius: 0 3px 3px 0; /* Rounded corners on the right */
+  resize: horizontal;
 }
 .sidebar.active {
-  transform: translateX(0);
+  transform: translateX(0); /* Makes sidebar visible */
 }
 .sidebar .logo {
-  font-size: 1.5em;
-  margin-bottom: 20px;
-}
-.sidebar .nav a:hover {
-  color: #ddd;
-}
-/* Mostrar la barra lateral en dispositivos de escritorio */
-@media (min-width: 768px) {
-  .sidebar {
-    position: sticky;
-    transform: translateX(0);
-  }
-  
-  .grid-container {
-    grid-template-columns: 250px 1fr;
-  }
-}
-/* Botón de menú para móviles */
-.menu-btn {
-  /* position: fixed;
-  left: 10px;
-  top: 10px; */
-  display: flex; /* Asegura que el contenido se centre */
-  align-items: center; /* Centrado vertical */
-  justify-content: center; /* Centrado horizontal */
-  font-size: 1.5em; /* Tamaño del ícono */
-  cursor: pointer;
-  color: white;
-  width: 40px; /* Ajusta el ancho al ícono */
-  height: 40px; /* Ajusta el alto al ícono */
-  padding: 0; /* Sin relleno extra */
-  margin: 0; /* Sin márgenes extra */
-  background: none; /* Sin fondo para evitar efectos visuales no deseados */
-  border: none; /* Sin borde predeterminado */
-}
-@media (min-width: 768px) {
-  .menu-btn {
-   display: none;
-  }
-}
-.main-content {
-    grid-area: main;
-    padding: 1rem;
-    overflow-y: auto; /* Habilitar scroll interno */
-  }
-  .footer {
-    grid-area: footer;
-    background-color: #045881;
-    height: 60px;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-.header {
-  display:flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.nav-links a {
-  color: white;
-  text-decoration: none;
-  margin-left: 1rem;
+  font-size: 1.5em; /* Enlarges the logo text */
+  margin-bottom: 20px; /* Adds spacing below the logo */
 }
 .sidebar-content ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  list-style: none; /* Removes default bullet points */
+  padding: 0; /* Removes padding */
+  margin: 0; /* Removes margin */
 }
 .sidebar-content li {
-  margin-bottom: 1rem;
+  margin-bottom: 1rem; /* Adds spacing between list items */
 }
-.sidebar-content a {
-  text-decoration: none;
-  color: #333;
+.sidebar-content li > a,
+.sidebar-content li > .dropdown-label {
+  display: flex; /* Flexbox for alignment */
+  align-items: center; /* Centers items vertically */
+  padding: 8px; /* Adds padding for clickable area */
+  gap: 12px; /* Space between text and icon */
+  width: 100%; /* Makes the clickable area full-width */
+  cursor: pointer; /* Changes cursor to pointer */
+  color: #333; /* Sets dark gray text color */
+  text-decoration: none; /* Removes underlines */
+  transition: background-color 0.3s; /* Smooth hover effect */
 }
-.sidebar ul li a {
-  display: inline-flex; /* Asegura que el ícono y el texto estén alineados en línea */
-  align-items: center; /* Centra verticalmente */
-  gap: 0px; /* Elimina el espaciado entre ícono y texto */
-}
-.sidebar ul li a mat-icon {
-  font-size: 20px; /* Ajusta el tamaño del ícono */
-}
-.sidebar ul li a span {
-  margin-left: 0px; /* Asegura que no haya margen entre el texto y el ícono */
-}
-
-/* Ajustes para móviles */
-@media (max-width: 767px) {
-    .header {
-      justify-content: flex-start; /* Todo alineado a la izquierda */
-      gap: 0; /* Sin separación adicional */
-    }
-  
-    /* Botón de menú, logo y texto juntos */
-    .menu-btn,
-    .header img,
-    .header p {
-      order: 1; /* Todos juntos al inicio */
-    }
-  
-    .header mat-icon {
-      order: 2; /* Ícono del usuario al final */
-      margin-left: auto; /* Alinearlo a la derecha */
-    }
-  
-    .header img {
-      margin-right: auto; /* Separación mínima del botón */
-    }
-  
-    .header p {
-      margin-right:auto ; /* Separación mínima del logo */
-      font-size: 0.9em; /* Ajustar tamaño del texto en móvil */
-    }
-}
-
-/* Estilos para todos los elementos del menú (tanto dropdowns como enlaces simples) */
-.sidebar-content li a,
-.dropdown-label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px;
-    cursor: pointer;
-    color: #333;
-    text-decoration: none;
-    transition: background-color 0.3s;
-}
-
-/* Efecto hover unificado para todos los elementos */
 .sidebar-content li a:hover,
 .dropdown-label:hover {
-    background-color: #e0e0e0;
+  background-color: #045781ad; /* Light blue background on hover */
 }
-
-/* Resto de los estilos para los dropdowns */
-.dropdown-toggle {
-    display: none;
+.sidebar ul li a mat-icon {
+  width: 24px; /* Icon width */
+  height: 24px; /* Icon height */
+  display: flex; /* Centers icon content */
+  align-items: center; /* Vertically centers content */
+  justify-content: center; /* Horizontally centers content */
+  margin: 0; /* Removes default margin */
 }
-
-.arrow {
-    transition: transform 0.3s;
+/* Dropdown styles */
+.dropdown-label {
+  justify-content: flex-start; /* Aligns items to the start */
 }
-
+.dropdown-label .arrow {
+  margin-left: 180px; /* Pushes the arrow to the right */
+  transition: transform 0.3s; /* Smooth arrow rotation on toggle */
+  position: absolute;
+}
 .dropdown-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-    padding-left: 20px;
+  max-height: 0; /* Initially hidden */
+  overflow: hidden; /* Prevents visible overflow */
+  transition: max-height 0.3s ease-in-out; /* Smooth dropdown opening */
+  font-size: 0.9em; /* Smaller text size for dropdown items */
+  padding: 6px 0; /* Adjusts spacing inside dropdown */
 }
-
-.dropdown-toggle:checked ~ .dropdown-content {
-    max-height: 500px;
-}
-
-.dropdown-toggle:checked ~ .dropdown-label .arrow {
-    transform: rotate(180deg);
-}
-
-/* Estilos para los enlaces dentro del dropdown */
 .dropdown-content a {
-    color: #666;
-    padding: 8px;
+  margin-left: 35px; /* Indents dropdown items for hierarchy */
 }
-
-.dropdown-content a:hover {
-    color: #045881;
-    background-color: #e0e0e0;
+.dropdown-toggle {
+  display: none; /* Hides the input toggle used for dropdown logic */
+}
+.dropdown-toggle:checked ~ .dropdown-content {
+  max-height: 500px; /* Reveals dropdown items */
+}
+.dropdown-toggle:checked ~ .dropdown-label .arrow {
+  transform: rotate(180deg); /* Rotates arrow to indicate expanded state */
+}
+/* Main content styles */
+.main-content {
+  grid-area: main; /* Assigns this section to the main grid area */
+  padding: 1rem; /* Adds padding inside main content */
+  overflow-y: auto; /* Enables vertical scrolling */
+  transition: margin-left 0.3s ease; /* Smooth transition for size adjustment */
+}
+/* Footer styles */
+.footer {
+  grid-area: footer; /* Assigns this section to the footer grid area */
+  background-color: #045881; /* Blue background color */
+  color: white; /* White text color */
+  height: 60px; /* Fixed footer height */
+  display: flex; /* Flexbox for alignment */
+  justify-content: center; /* Centers content horizontally */
+  align-items: center; /* Centers content vertically */
+}
+/* Responsive styles for smaller screens */
+@media (max-width: 767px) {
+  .menu-btn {
+    display: flex; /* Displays menu button on small screens */
+    align-items: center; /* Centers button content vertically */
+    justify-content: center; /* Centers button content horizontally */
+    width: 40px; /* Sets button width */
+    height: 40px; /* Sets button height */
+    font-size: 1.5em; /* Increases icon size */
+    cursor: pointer; /* Changes cursor to pointer */
+    color: white; /* Sets icon color to white */
+    background: none; /* Removes background styling */
+    border: none; /* Removes border */
+  }
+  .sidebar {
+    transform: translateX(-100%); /* Hides sidebar by default */
+  }
+  .sidebar.active {
+    transform: translateX(0); /* Displays sidebar when active */
+  }
+}
+/* Responsive styles for larger screens */
+@media (min-width: 768px) {
+  .sidebar {
+    position: sticky; /* Keeps sidebar in view while scrolling */
+    transform: translateX(0); /* Sidebar always visible */
+  }
+  .grid-container {
+    grid-template-columns: 250px 1fr; /* Adjusts grid for larger screens */
+  }
+  .menu-btn {
+    display: none; /* Hides menu button on larger screens */
+  }
 }
