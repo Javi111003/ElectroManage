@@ -12,10 +12,44 @@
   <aside class="sidebar" [class.active]="isSidebarActive">
     <div class="sidebar-content">
       <ul>
-        <li><a href="#dashboard">Dashboard</a></li>
-        <li><a href="#perfil">Perfil</a></li>
-        <li><a href="#configuracion">Configuración</a></li>
-        <li><a href="#ayuda">Ayuda</a></li>
+        <li>
+          <a href="#inicio">
+            <mat-icon>home</mat-icon>Inicio
+          </a>
+        </li>
+        <!-- Menú Centro de Trabajo -->
+        <li class="dropdown">
+          <input type="checkbox" id="centro-trabajo" class="dropdown-toggle">
+          <label for="centro-trabajo" class="dropdown-label">
+            <mat-icon>business</mat-icon> Centro de Trabajo
+            <span class="arrow">▼</span>
+          </label>
+          <ul class="dropdown-content">
+            <li><a href="#empleados"><mat-icon>people</mat-icon>Empleados</a></li>
+            <li><a href="#horarios"><mat-icon>schedule</mat-icon> Horarios</a></li>
+            <li><a href="#tareas"><mat-icon>task</mat-icon> Tareas</a></li>
+          </ul>
+        </li>
+        
+        <!-- Menú Oficina -->
+        <li class="dropdown">
+          <input type="checkbox" id="oficina" class="dropdown-toggle">
+          <label for="oficina" class="dropdown-label">
+            <mat-icon>inventory</mat-icon> Oficina
+            <span class="arrow">▼</span>
+          </label>
+          <ul class="dropdown-content">
+            <li><a href="#documentos"><mat-icon>description</mat-icon> Documentos</a></li>
+            <li><a href="#reportes"><mat-icon>bar_chart</mat-icon> Reportes</a></li>
+            <li><a href="#facturas"><mat-icon>receipt</mat-icon> Facturas</a></li>
+          </ul>
+        </li>
+        
+        <li>
+          <a href="sobreNosotros">
+            <mat-icon>info</mat-icon> Sobre Nosotros
+          </a>
+        </li>
       </ul>
     </div>
   </aside>
