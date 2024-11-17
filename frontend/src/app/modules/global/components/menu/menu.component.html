@@ -1,42 +1,41 @@
+<html>
 <div class="grid-container">
-    <!-- Header -->
-    <header class="header">
-        <nav class="navbar">
-            <div class="logo">
-                <img src="./logo.jpg"class="logo-img">
-            </div>
-            <div class="nav-links">
-                <a href="#inicio">Inicio</a>
-                <a href="#servicios">Servicios</a>
-                <a href="#contacto">Contacto</a>
-            </div>
-        </nav>
-    </header>
+  <!-- Header -->
+  <header class="header">
+      <div class="menu-btn" (click)="toggleSidebar()">☰</div>
+      <img src="logo.png">
+      <p>Electro Manage</p>
+      <mat-icon>person</mat-icon>
+  </header>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-content">
-            <ul>
-                <li><a href="#dashboard">Dashboard</a></li>
-                <li><a href="#perfil">Perfil</a></li>
-                <li><a href="#configuracion">Configuración</a></li>
-                <li><a href="#ayuda">Ayuda</a></li>
-            </ul>
-        </div>
-    </aside>
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.active]="isSidebarActive">
+    <div class="sidebar-content">
+      <ul>
+        <li><a href="#dashboard">Dashboard</a></li>
+        <li><a href="#perfil">Perfil</a></li>
+        <li><a href="#configuracion">Configuración</a></li>
+        <li><a href="#ayuda">Ayuda</a></li>
+      </ul>
+    </div>
+  </aside>
 
-    <!-- Contenido Principal -->
-    <main class="main-content">
-        <div class="content">
-            <!-- Aquí va el contenido principal -->
-        </div>
-    </main>
+  <!-- Contenido Principal -->
+  <main class="main-content">
+    <div class="content">
+      <video controls>
+        <source src="logo.mp4" type="video/mp4">
+      </video>
+      <p>Inserta el texto aqui</p>
+    </div>
+  </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <p>&copy; 2024 Tu Empresa. Todos los derechos reservados.</p>
-        </div>
-    </footer>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; 2024 Tu Empresa. Todos los derechos reservados.</p>
+    </div>
+  </footer>
 </div>
 <router-outlet></router-outlet>
+</html>
