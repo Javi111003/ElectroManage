@@ -1,72 +1,65 @@
-
+<!-- Main container layout using Grid -->
 <div class="grid-container">
-  <!-- Header -->
+  <!-- Header Section -->
   <header class="header">
-      <div class="menu-btn" (click)="toggleSidebar()">☰</div>
-      <img src="logo.png">
-      <p>Electro Manage</p>
-      <mat-icon>person</mat-icon>
+    <div class="menu-btn" (click)="toggleSidebar()">☰</div> <!-- Mobile menu button (toggles sidebar visibility) -->
+    <img src="logo.png" alt="Company Logo"> <!-- Company logo -->
+    <p>Electro Manage</p> <!-- Application title -->
+    <mat-icon>person</mat-icon> <!-- User profile icon -->
   </header>
-
-  <!-- Sidebar -->
+  <!-- Sidebar Section -->
   <aside class="sidebar" [class.active]="isSidebarActive">
     <div class="sidebar-content">
       <ul>
-        <li>
+        <li> <!-- Sidebar item: Home -->
           <a href="#inicio">
             <mat-icon>home</mat-icon>Inicio
           </a>
         </li>
-        <!-- Menú Centro de Trabajo -->
-        <li class="dropdown">
-          <input type="checkbox" id="centro-trabajo" class="dropdown-toggle">
-          <label for="centro-trabajo" class="dropdown-label">
+        <li class="dropdown"> <!-- Dropdown menu: Work Center -->
+          <input type="checkbox" id="centro-trabajo" class="dropdown-toggle"> <!-- Toggle for dropdown visibility -->
+          <label for="centro-trabajo" class="dropdown-label"> <!-- Dropdown label with icon and arrow -->
             <mat-icon>business</mat-icon> Centro de Trabajo
             <span class="arrow">▼</span>
           </label>
-          <ul class="dropdown-content">
-            <li><a href="#empleados"><mat-icon>people</mat-icon>Empleados</a></li>
-            <li><a href="#horarios"><mat-icon>schedule</mat-icon> Horarios</a></li>
-            <li><a href="#tareas"><mat-icon>task</mat-icon> Tareas</a></li>
+          <ul class="dropdown-content"> <!-- Dropdown content -->
+            <li><a href="#empleados"><mat-icon>people</mat-icon>Empleados</a></li> <!-- Dropdown item: Employees -->
+            <li><a href="#horarios"><mat-icon>schedule</mat-icon>Horarios</a></li> <!-- Dropdown item: Schedules -->
+            <li><a href="#tareas"><mat-icon>task</mat-icon>Tareas</a></li> <!-- Dropdown item: Tasks -->
           </ul>
         </li>
-        
-        <!-- Menú Oficina -->
-        <li class="dropdown">
-          <input type="checkbox" id="oficina" class="dropdown-toggle">
-          <label for="oficina" class="dropdown-label">
+        <li class="dropdown"> <!-- Dropdown menu: Office -->
+          <input type="checkbox" id="oficina" class="dropdown-toggle"> <!-- Toggle for dropdown visibility -->
+          <label for="oficina" class="dropdown-label"> <!-- Dropdown label with icon and arrow -->
             <mat-icon>inventory</mat-icon> Oficina
             <span class="arrow">▼</span>
           </label>
-          <ul class="dropdown-content">
-            <li><a href="#documentos"><mat-icon>description</mat-icon> Documentos</a></li>
-            <li><a href="#reportes"><mat-icon>bar_chart</mat-icon> Reportes</a></li>
-            <li><a href="#facturas"><mat-icon>receipt</mat-icon> Facturas</a></li>
+          <ul class="dropdown-content"> <!-- Dropdown content -->
+            <li><a href="#documentos"><mat-icon>description</mat-icon>Documentos</a></li> <!-- Dropdown item: Documents -->
+            <li><a href="#reportes"><mat-icon>bar_chart</mat-icon>Reportes</a></li> <!-- Dropdown item: Reports -->
+            <li><a href="#facturas"><mat-icon>receipt</mat-icon>Facturas</a></li> <!-- Dropdown item: Invoices -->
           </ul>
         </li>
-        
-        <li>
+        <li> <!-- Sidebar item: About Us -->
           <a href="sobreNosotros">
-            <mat-icon>info</mat-icon> Sobre Nosotros
+            <mat-icon>info</mat-icon>Sobre Nosotros
           </a>
         </li>
       </ul>
     </div>
   </aside>
-
-  <!-- Contenido Principal -->
+  <!-- Main Content Section -->
   <main class="main-content">
     <div class="content">
-      <p>Inserta el texto aqui</p>
+      <router-outlet></router-outlet> <!-- Placeholder for dynamic routing -->
     </div>
   </main>
-
-  <!-- Footer -->
+  <!-- Footer Section -->
   <footer class="footer">
     <div class="footer-content">
-      <p>&copy; 2024 Tu Empresa. Todos los derechos reservados.</p>
+      <p>&copy; 2024 Tu Empresa. Todos los derechos reservados.</p> <!-- Footer text -->
     </div>
   </footer>
 </div>
-<router-outlet></router-outlet>
+
 
