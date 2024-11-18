@@ -1,12 +1,12 @@
 /* Layout for the main container using CSS Grid */
 .grid-container {
   display: grid; /* Enables CSS Grid layout */
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; /* Font stack for wide compatibility */
+  font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /* Font stack for wide compatibility */
   grid-template-areas:
-      "header header" /* Header spans two columns */
-      "sidebar main" /* Sidebar and main content on the same row */
-      "footer footer"; /* Footer spans two columns */
- grid-template-columns:auto 1fr; /* Sidebar adjusts size, main takes remaining space */
+    "header header" /* Header spans two columns */
+    "sidebar main" /* Sidebar and main content on the same row */
+    "footer footer"; /* Footer spans two columns */
+  grid-template-columns:auto 1fr; /* Sidebar adjusts size, main takes remaining space */
   grid-template-rows: auto 1fr auto; /* Header and footer adjust based on content, main fills available space */
   height: 100vh; /* Full viewport height */
   overflow: hidden; /* Prevents global scrolling */
@@ -29,10 +29,11 @@
 .header p {
   margin: 0;
   margin-left: 6px;
+  font-family:'AmaticSC';
   flex-grow: 1;
   font-size: 1.5em;
   font-weight: bold;
-  text-align: left; 
+  text-align: left;
 }
 .header mat-icon {
   width: 30px; /* Sets icon width */
@@ -52,7 +53,7 @@
 .sidebar {
   grid-area: sidebar; /* Assigns this section to the sidebar grid area */
   position: relative; /* Fixes the sidebar position */
-  top: 40px; /* Starts right below the header */
+  top: 0; /* Starts right below the header */
   left: 0; /* Aligns the sidebar to the left edge */
   min-width: 240px; /* Minimum width */
   max-width: 400px; /* Maximum width */
@@ -97,9 +98,6 @@
   transition: background-color 0.3s; /* Smooth hover effect */
 }
 .sidebar-content li a:hover,
-.dropdown-label:hover {
-  background-color: #045781ad; /* Light blue background on hover */
-}
 .sidebar ul li a mat-icon {
   width: 24px; /* Icon width */
   height: 24px; /* Icon height */
@@ -109,13 +107,25 @@
   margin: 0; /* Removes default margin */
 }
 /* Dropdown styles */
-.dropdown-label {
-  justify-content: flex-start; /* Aligns items to the start */
+.sidebar ul {
+  width: 100%;
 }
-.dropdown-label .arrow {
-  margin-left: 180px; /* Pushes the arrow to the right */
-  transition: transform 0.3s; /* Smooth arrow rotation on toggle */
-  position: absolute;
+.dropdown-label {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px;
+}
+.dropdown-label:hover {
+  color: white;
+  border-radius: 5px;
+  background-color: #045781ad; /* Light blue background on hover */
+}
+.dropdown-label:hover a {
+  color: white;
+}
+.dropdown-label label {
+  padding-left: 5px;
 }
 .dropdown-content {
   max-height: 0; /* Initially hidden */
@@ -134,7 +144,7 @@
   max-height: 500px; /* Reveals dropdown items */
 }
 .dropdown-toggle:checked ~ .dropdown-label .arrow {
-  transform: rotate(180deg); /* Rotates arrow to indicate expanded state */
+  transform: rotate(-90deg); /* Rotates arrow to indicate expanded state */
 }
 /* Main content styles */
 .main-content {
@@ -186,4 +196,61 @@
   .menu-btn {
     display: none; /* Hides menu button on larger screens */
   }
+}
+@font-face {
+  font-family: 'Gruppo';
+  src: url('../../../../../../public/fonts/Gruppo-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'AmaticSC';
+  src: url('../../../../../../public/fonts/AmaticSC-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+/* src/styles.css */
+.sidebar {
+    width: 250px;
+    background-color: white;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+}
+.nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+.nav a {
+    padding-left: 5px;
+    color: black;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s;
+}
+.submenu {
+    padding-left: 20px !important;
+}
+.nav li .submenu.hidden {
+    display: none;
+}
+.nav li .submenu li:hover {
+  border-radius: 5px;
+  background-color: #045781ad; /* Light blue background on hover */
+}
+.nav li .submenu li:hover a {
+  color: white;
+}
+.nav li .submenu li.active {
+  border-radius: 5px;
+  background-color: #045781ad; /* Light blue background on hover */
+}
+.nav li .submenu li.active a {
+  color: white;
+}
+.nav li .dropdown-label.active {
+  border-radius: 5px;
+  background-color: #045781ad; /* Light blue background on hover */
+}
+.nav li .dropdown-label.active a {
+  color: white;
 }
