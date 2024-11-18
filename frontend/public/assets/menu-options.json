@@ -16,19 +16,19 @@
           "id": "total-consumption",
           "label": "Consumo total",
           "icon": "people",
-          "link": "workCenter/total-consumption/form"
+          "link": "workCenter/total-consumption"
         },
         {
           "id": "avg-consumption",
           "label": "Consumo promedio",
           "icon": "schedule",
-          "link": "workCenter/avg-consumption/form"
+          "link": "workCenter/avg-consumption"
         },
         {
           "id": "policy",
           "label": "Políticas de eficiencia energética",
           "icon": "task",
-          "link": "workCenter/policy/form"
+          "link": "workCenter/policy"
         }
       ]
     },
@@ -42,7 +42,7 @@
           "id": "equipment",
           "label": "Equipos",
           "icon": "description",
-          "link": "office/equipment/form"
+          "link": "office/equipment"
         }
       ]
     },

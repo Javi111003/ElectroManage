@@ -1,11 +1,11 @@
 import { Routes } from "@angular/router";
-import { IndexComponent } from "./components/index/index.component";
+import { EquipmentComponent } from "./components/equipment/equipment.component";
 
 
 export const officeRoutes: Routes = [
   {
-    path:'office/index',
-    component: IndexComponent,
+    path:'office/equipment',
+    component: EquipmentComponent,
     loadChildren: () => import('./office.module').then(m => m.OfficeModule)
   }
 ];

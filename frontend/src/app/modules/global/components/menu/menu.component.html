@@ -11,6 +11,7 @@
   <aside class="sidebar" [class.active]="isSidebarActive">
     <nav class="nav">
       <ul>
+        <!-- Using a for loop to add each item from extern .json -->
         <li *ngFor="let item of menuItems">
           <div *ngIf="!item.subItems" class="dropdown-label" [class.active]="activeOption === item.id">
             <mat-icon>{{item.icon}}</mat-icon>
