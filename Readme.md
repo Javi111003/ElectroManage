@@ -1,6 +1,6 @@
-# Proyecto-IS
+# ElectroManage
 
-Este es el repositorio del proyecto Proyecto-IS.
+Este es el repositorio del proyecto ElectroManage.
 
 ## Descripción
 
@@ -8,10 +8,11 @@ Este proyecto es una API web desarrollada en .NET 8.
 
 ## Estructura del Proyecto
 
-- `Proyecto-IS.WebAPI/`: Contiene la API web.
-- `Proyecto-IS.Domain/`: Contiene las entidades de dominio y configuraciones.
-- `Proyecto-IS.Application/`: Contiene la lógica de aplicación.
+- `ElectroManage.WebAPI/`: Contiene la API web.
+- `ElectroManage.Domain/`: Contiene las entidades de dominio y configuraciones.
+- `ElectroManage.Application/`: Contiene la lógica de aplicación.
 - `backend/`: Contiene la web API y toda la lógica del backend.
+- `frontend/`: Contiene la parte visual de la aplicación web
 
 ## Cómo Empezar
 

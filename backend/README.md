@@ -10,25 +10,25 @@ Comando para **Crear** una migración:
 
 Una vez que modificamos/creamos una entidad y agregamos en caso de ser necesario las configuracines de la misma, en la carpeta Configuration del proyecto de infraestructura, debemos crear la migracion.
 
-`dotnet ef migrations add MigrationName --project Proyecto-IS.Domain.DataAccess\Proyecto-IS.Domain.DataAccess.csproj --startup-project Proyecto-IS.WebAPI\Proyecto-IS.WebAPI.csproj`
+`dotnet ef migrations add MigrationName --project ElectroManage.Domain.DataAccess\ElectroManage.Domain.DataAccess.csproj --startup-project ElectroManage.WebAPI\ElectroManage.WebAPI.csproj`
 
 Comando para **Aplicar** una migración:
 
-`dotnet ef database update --project Proyecto-IS.Infraestructure\Proyecto-IS.Infraestructure.csproj --startup-project Proyecto-IS.WebAPI\Proyecto-IS.WebAPI.csproj`
+`dotnet ef database update --project ElectroManage.Infraestructure\ElectroManage.Infraestructure.csproj --startup-project ElectroManage.WebAPI\ElectroManage.WebAPI.csproj`
 
 Comando para **Regresar** a una migración:
 
 Se desea regresar la bd a una migración anterior se utiliza el siguiente comando, el mismo **NO** elimina migración.
 
-`dotnet ef database update MigrationName --project Proyecto-IS.Infraestructure\Proyecto-IS.Infraestructure.csproj --startup-project Proyecto-IS.WebAPI\Proyecto-IS.WebAPI.csproj`
+`dotnet ef database update MigrationName --project ElectroManage.Infraestructure\ElectroManage.Infraestructure.csproj --startup-project ElectroManage.WebAPI\ElectroManage.WebAPI.csproj`
 
 Comando para **Revertir** la última migración:
 
-`dotnet ef migrations remove --project Proyecto-IS.Domain.DataAccess\Proyecto-IS.Domain.DataAccess.csproj --startup-project Proyecto-IS.WebAPI\Proyecto-IS.WebAPI.csproj`
+`dotnet ef migrations remove --project ElectroManage.Domain.DataAccess\ElectroManage.Domain.DataAccess.csproj --startup-project ElectroManage.WebAPI\ElectroManage.WebAPI.csproj`
 
 # Comando para generar el script de todas las migraciones
 
-En el directorio del proyecto Proyecto-IS.WebAPI:
+En el directorio del proyecto ElectroManage.WebAPI:
 
 `dotnet ef migrations script --idempotent > migrations.sql`
 
