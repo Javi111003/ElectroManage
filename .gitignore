@@ -145,13 +145,13 @@ jwks*.json
 .terraform*
 /backend/.vs
 /backendd/obj
-/backend/AvangTur.WebApi/obj
-/backend/AvangTur.Infraestructure/obj
-/backend/AvangTur.Domain/obj
-/backend/AvangTur.Application/obj
+/backend/ElectroManage.WebApi/obj
+/backend/ElectroManage.Infraestructure/obj
+/backend/ElectroManage.Domain/obj
+/backend/ElectroManage.Application/obj
 /.vs
-/backend/AvangTur.WebApi/appsettings.Development.json
-/backend/AvangTur.WebApi/AvangTur.WebApi.csproj.user
+/backend/ElectroManage.WebApi/appsettings.Development.json
+/backend/ElectroManage.WebApi/ElectroManage.WebApi.csproj.user
 
 # dependencies
 node_modules
@@ -161,4 +161,4 @@ node_modules
 .DS_Store
 
 
-/backend/AvangTur.WebApi/appsettings.json
+/backend/ElectroManage.WebApi/appsettings.json
