@@ -1,23 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { MenuService } from '../../../../services/menu.service';
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })
-export class MenuComponent {
+export class MenuComponent implements OnInit {
+
+  menuItems: any[] = [];
+
+  constructor(private menuService: MenuService) {}
+
+  ngOnInit(): void {
+    this.menuService.getMenuOptions().subscribe(data => {
+      this.menuItems = data.menuItems;
+      console.log(this.menuItems);
+    });
+  }
+
   isSidebarActive = false;
   activeOption = '';
-  dropdownItem = [
-    {
-      id: "workCenter",
-      isOpen: false
-    },
-    {
-      id: "office",
-      isOpen: false
-    }
-  ];
 
   toggleSidebar() {
     this.isSidebarActive = !this.isSidebarActive;
@@ -28,19 +31,16 @@ export class MenuComponent {
   }
 
   isOpen(option: string): boolean {
-    let menuItem = this.dropdownItem.find(item => item.id === option);
-    if (menuItem) {
-      console.log(menuItem.isOpen);
+    let menuItem = this.menuItems.find(item => item.id === option);
+    if (menuItem)
       return menuItem.isOpen
-    }
 
     return false;
   }
 
   toggleOption(option: string) {
-    let menuItem = this.dropdownItem.find(item => item.id === option);
+    let menuItem = this.menuItems.find(item => item.id === option);
     if (menuItem)
       menuItem.isOpen = !menuItem.isOpen;
-    console.log(menuItem);
   }
 }

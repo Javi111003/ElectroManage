@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { GlobalModule } from './modules/global/global.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,8 @@ import { GlobalModule } from './modules/global/global.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    GlobalModule
+    GlobalModule,
+    HttpClientModule
   ],
   providers: [
     provideAnimationsAsync()

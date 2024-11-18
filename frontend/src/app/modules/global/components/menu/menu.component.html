@@ -11,51 +11,26 @@
   <aside class="sidebar" [class.active]="isSidebarActive">
     <nav class="nav">
       <ul>
-        <li>
-          <div class="dropdown-label" [class.active]="activeOption === 'home'">
-              <a id="home" (click)="setActiveOption('home')"
-              routerLink="/">Inicio</a>
+        <li *ngFor="let item of menuItems">
+          <div *ngIf="!item.subItems" class="dropdown-label" [class.active]="activeOption === item.id">
+            <mat-icon>{{item.icon}}</mat-icon>
+            <a id="item.id" (click)="setActiveOption(item.id)" [routerLink]="item.link">
+              {{item.label}}
+            </a>
           </div>
-        </li>
-        <li>
-          <div class="dropdown-label" id="workCenter" (click)="toggleOption('workCenter')">
-            <label>Centro de Trabajo</label>
-            <mat-icon class="arrow">keyboard_arrow_down</mat-icon>
+          <div *ngIf="item.subItems" class="dropdown-label" id="item.id" (click)="toggleOption(item.id)">
+            <mat-icon>{{item.icon}}</mat-icon>
+            <label>{{item.label}}</label>
+            <mat-icon class="arrow" [class.rotate]="isOpen(item.id)">keyboard_arrow_down</mat-icon>
           </div>
-          <ul class="submenu" [class.hidden]="!isOpen('workCenter')">
-            <li [class.active]="activeOption === 'total-consumption'">
-              <a id="total-consumption" (click)="setActiveOption('total-consumption')"
-                routerLink="workCenter/total-consumption/form">
-                Consumo total
+          <ul *ngIf="item.subItems" class="submenu" [class.hidden]="!isOpen(item.id)">
+            <li *ngFor="let subitem of item.subItems" [class.active]="activeOption === subitem.id">
+              <mat-icon>{{subitem.icon}}</mat-icon>
+              <a id="subitem.id" (click)="setActiveOption(subitem.id)" [routerLink]="subitem.link">
+                {{subitem.label}}
               </a>
             </li>
-            <li [class.active]="activeOption === 'avg-consumption'">
-              <a id="avg-consumption" (click)="setActiveOption('avg-consumption')"
-              routerLink="workCenter/avg-consumption/form">Consumo promedio</a>
-            </li>
-            <li [class.active]="activeOption === 'policy'">
-              <a id="policy" (click)="setActiveOption('policy')"
-              routerLink="workCenter/policy/form">Políticas de eficiencia energética</a>
-            </li>
           </ul>
-        </li>
-        <li>
-          <div class="dropdown-label" id="office" (click)="toggleOption('office')">
-            <label>Oficina</label>
-            <mat-icon class="arrow">keyboard_arrow_down</mat-icon>
-          </div>
-          <ul class="submenu" [class.hidden]="!isOpen('office')">
-            <li [class.active]="activeOption === 'equipment'">
-              <a id="equipment" (click)="setActiveOption('equipment')"
-              routerLink="office/equipment/form">Consultoría</a>
-            </li>
-          </ul>
-        </li>
-        <li>
-          <div class="dropdown-label" [class.active]="activeOption === 'about-us'">
-            <a id="about-us" (click)="setActiveOption('about-us')"
-            routerLink="#">Sobre Nosotros</a>
-          </div>
         </li>
       </ul>
     </nav>

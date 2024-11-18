@@ -1,0 +1,56 @@
+{
+  "menuItems": [
+    {
+      "id": "home",
+      "label": "Inicio",
+      "icon": "home",
+      "link": "/"
+    },
+    {
+      "id": "workCenter",
+      "label": "Centro de trabajo",
+      "icon": "business",
+      "isOpen": false,
+      "subItems": [
+        {
+          "id": "total-consumption",
+          "label": "Consumo total",
+          "icon": "people",
+          "link": "workCenter/total-consumption/form"
+        },
+        {
+          "id": "avg-consumption",
+          "label": "Consumo promedio",
+          "icon": "schedule",
+          "link": "workCenter/avg-consumption/form"
+        },
+        {
+          "id": "policy",
+          "label": "Políticas de eficiencia energética",
+          "icon": "task",
+          "link": "workCenter/policy/form"
+        }
+      ]
+    },
+    {
+      "id": "office",
+      "label": "Oficina",
+      "icon": "inventory",
+      "isOpen": false,
+      "subItems": [
+        {
+          "id": "equipment",
+          "label": "Equipos",
+          "icon": "description",
+          "link": "office/equipment/form"
+        }
+      ]
+    },
+    {
+      "id": "aboutUs",
+      "label": "Sobre Nosotros",
+      "icon": "info",
+      "link": "aboutUs"
+    }
+  ]
+}

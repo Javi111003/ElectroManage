@@ -77,16 +77,15 @@
   font-size: 1.5em; /* Enlarges the logo text */
   margin-bottom: 20px; /* Adds spacing below the logo */
 }
-.sidebar-content ul {
+.sidebar ul {
   list-style: none; /* Removes default bullet points */
   padding: 0; /* Removes padding */
   margin: 0; /* Removes margin */
 }
-.sidebar-content li {
+.sidebar li {
   margin-bottom: 1rem; /* Adds spacing between list items */
 }
-.sidebar-content li > a,
-.sidebar-content li > .dropdown-label {
+.sidebar li a, .dropdown-label {
   display: flex; /* Flexbox for alignment */
   align-items: center; /* Centers items vertically */
   padding: 8px; /* Adds padding for clickable area */
@@ -97,7 +96,7 @@
   text-decoration: none; /* Removes underlines */
   transition: background-color 0.3s; /* Smooth hover effect */
 }
-.sidebar-content li a:hover,
+.sidebar li a:hover,
 .sidebar ul li a mat-icon {
   width: 24px; /* Icon width */
   height: 24px; /* Icon height */
@@ -143,8 +142,11 @@
 .dropdown-toggle:checked ~ .dropdown-content {
   max-height: 500px; /* Reveals dropdown items */
 }
-.dropdown-toggle:checked ~ .dropdown-label .arrow {
-  transform: rotate(-90deg); /* Rotates arrow to indicate expanded state */
+.arrow {
+  transition: transform 0.3s ease;
+}
+.rotate {
+  transform: rotate(180deg);
 }
 /* Main content styles */
 .main-content {
