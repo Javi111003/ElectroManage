@@ -10,6 +10,12 @@ export class MenuService {
 
   constructor(private http: HttpClient) {}
 
+
+  /**
+ * get the main menu options from a .json file.
+ *
+ * @returns An observable that emits the menu items.
+ */
   getMenuOptions(): Observable<any> {
     return this.http.get<any>(this.jsonUrl);
   }

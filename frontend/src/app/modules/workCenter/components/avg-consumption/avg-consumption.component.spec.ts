@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FormComponent } from './form.component';
+import { AvgConsumptionComponent } from './avg-consumption.component';
 
-describe('FormComponent', () => {
-  let component: FormComponent;
-  let fixture: ComponentFixture<FormComponent>;
+describe('AvgConsumptionComponent', () => {
+  let component: AvgConsumptionComponent;
+  let fixture: ComponentFixture<AvgConsumptionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [FormComponent]
+      declarations: [AvgConsumptionComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(FormComponent);
+    fixture = TestBed.createComponent(AvgConsumptionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,13 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { NgFor, NgIf } from '@angular/common';
+
+//global components
 import { IndexComponent } from './components/index/index.component';
 import { MenuComponent } from './components/menu/menu.component';
-import { RouterModule } from '@angular/router';
 import { AboutUsComponent } from './components/about-us/about-us.component';
-import { NgFor, NgIf } from '@angular/common';
+
 
 //add the route of each module you need yo import here down.
 import {MatIconModule} from '@angular/material/icon';
+
 
 @NgModule({
   declarations: [
