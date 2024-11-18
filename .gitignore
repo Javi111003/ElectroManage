@@ -145,13 +145,13 @@ jwks*.json
 .terraform*
 /backend/.vs
 /backendd/obj
-/backend/ElectroManage.WebApi/obj
+/backend/ElectroManage.WebAPI/obj
 /backend/ElectroManage.Infraestructure/obj
 /backend/ElectroManage.Domain/obj
 /backend/ElectroManage.Application/obj
 /.vs
-/backend/ElectroManage.WebApi/appsettings.Development.json
-/backend/ElectroManage.WebApi/ElectroManage.WebApi.csproj.user
+/backend/ElectroManage.WebAPI/appsettings.Development.json
+/backend/ElectroManage.WebAPI/ElectroManage.WebAPI.csproj.user
 
 # dependencies
 node_modules
@@ -161,4 +161,4 @@ node_modules
 .DS_Store
 
 
-/backend/ElectroManage.WebApi/appsettings.json
+/backend/ElectroManage.WebAPI/appsettings.json
