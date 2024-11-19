@@ -15,13 +15,13 @@
         {
           "id": "total-consumption",
           "label": "Consumo total",
-          "icon": "people",
+          "icon": "offline_bolt",
           "link": "workCenter/total-consumption"
         },
         {
           "id": "avg-consumption",
           "label": "Consumo promedio",
-          "icon": "schedule",
+          "icon": "monitor_heart",
           "link": "workCenter/avg-consumption"
         },
         {
@@ -41,7 +41,7 @@
         {
           "id": "equipment",
           "label": "Equipos",
-          "icon": "description",
+          "icon": "computer",
           "link": "office/equipment"
         }
       ]
