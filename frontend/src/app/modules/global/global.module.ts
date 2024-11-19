@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -24,11 +25,14 @@ import {MatIconModule} from '@angular/material/icon';
     RouterModule,
     NgFor,
     NgIf,
+    HttpClientModule,
 
     //add all modules you need here down. Remember to add them to export array too.
     MatIconModule,
   ],
   exports: [
+    HttpClientModule,
+
     //add the imported modules here down too.
     MatIconModule,
   ]

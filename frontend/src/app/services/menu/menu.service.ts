@@ -10,7 +10,6 @@ export class MenuService {
 
   constructor(private http: HttpClient) {}
 
-
   /**
  * get the main menu options from a .json file.
  *
