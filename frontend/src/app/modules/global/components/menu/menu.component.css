@@ -85,62 +85,44 @@
 .sidebar li {
   margin-bottom: 1rem; /* Adds spacing between list items */
 }
-.sidebar li a, .dropdown-label {
+.sidebar li a, .dropdown-label{
   display: flex; /* Flexbox for alignment */
-  align-items: center; /* Centers items vertically */
-  padding: 8px; /* Adds padding for clickable area */
+  align-items:center; /* Centers items vertically */
+  padding: 5px 0; /* Adds padding for clickable area */
   gap: 12px; /* Space between text and icon */
-  width: 100%; /* Makes the clickable area full-width */
+  width: 250px; /* Makes the clickable area full-width */
   cursor: pointer; /* Changes cursor to pointer */
-  color: #333; /* Sets dark gray text color */
+  color: #000000; /* Sets dark gray text color */
   text-decoration: none; /* Removes underlines */
   transition: background-color 0.3s; /* Smooth hover effect */
 }
-.sidebar li a:hover,
-.sidebar ul li a mat-icon {
-  width: 24px; /* Icon width */
-  height: 24px; /* Icon height */
-  display: flex; /* Centers icon content */
-  align-items: center; /* Vertically centers content */
-  justify-content: center; /* Horizontally centers content */
-  margin: 0; /* Removes default margin */
+.sidebar li mat-icon {
+  margin-right:1px; /* Añadido margen a la derecha del ícono */
+  flex-shrink: 0; /* Evita que el ícono se reduzca en tamaño */
 }
 /* Dropdown styles */
 .sidebar ul {
   width: 100%;
 }
-.dropdown-label {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  padding: 10px;
+.sidebar li a:hover{
+  color:white;
 }
-.dropdown-label:hover {
+.dropdown-label:hover{
   color: white;
   border-radius: 5px;
   background-color: #045781ad; /* Light blue background on hover */
 }
-.dropdown-label:hover a {
-  color: white;
+.dropdown-label:hover label { 
+  color: white; /* El texto del label también se vuelve blanco */ 
 }
 .dropdown-label label {
-  padding-left: 5px;
-}
-.dropdown-content {
-  max-height: 0; /* Initially hidden */
-  overflow: hidden; /* Prevents visible overflow */
-  transition: max-height 0.3s ease-in-out; /* Smooth dropdown opening */
-  font-size: 0.9em; /* Smaller text size for dropdown items */
-  padding: 6px 0; /* Adjusts spacing inside dropdown */
-}
-.dropdown-content a {
-  margin-left: 35px; /* Indents dropdown items for hierarchy */
+  display: flex; /* Alinea íconos y texto en línea */
+  align-items: center; /* Centra verticalmente el contenido */
+  padding: 5px 0; /* Espaciado uniforme */
+  color: rgb(0, 0, 0);
 }
 .dropdown-toggle {
   display: none; /* Hides the input toggle used for dropdown logic */
-}
-.dropdown-toggle:checked ~ .dropdown-content {
-  max-height: 500px; /* Reveals dropdown items */
 }
 .arrow {
   transition: transform 0.3s ease;
@@ -212,30 +194,34 @@
   font-style: normal;
 }
 /* src/styles.css */
-.sidebar {
-    width: 250px;
-    background-color: white;
-    padding: 20px;
-    border-right: 1px solid #ddd;
-}
 .nav ul {
     list-style-type: none;
     padding: 0;
 }
-.nav a {
-    padding-left: 5px;
-    color: black;
-    text-decoration: none;
-    display: block;
-    transition: background-color 0.3s;
-}
 .submenu {
     padding-left: 20px !important;
+}
+.submenu li {
+  display: flex; /* Flexbox for alignment */
+  align-items:center; /* Centers items vertically */
+  padding: 5px 0; /* Adds padding for clickable area */
+  gap: 12px; /* Space between text and icon */
+  width: 250px; /* Makes the clickable area full-width */
+  cursor: pointer; /* Changes cursor to pointer */
+  color: #000000; /* Sets dark gray text color */
+  text-decoration: none; /* Removes underlines */
+  transition: background-color 0.3s; /* Smooth hover effect */
+  align-items: center; /* Centra verticalmente el contenido */
+}
+.submenu li mat-icon {
+  margin-right: 8px; /* Añadido margen a la derecha del ícono */
+  flex-shrink: 0;
 }
 .nav li .submenu.hidden {
     display: none;
 }
 .nav li .submenu li:hover {
+  color: white;
   border-radius: 5px;
   background-color: #045781ad; /* Light blue background on hover */
 }
@@ -256,3 +242,4 @@
 .nav li .dropdown-label.active a {
   color: white;
 }
+
