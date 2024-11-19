@@ -104,22 +104,31 @@
 .sidebar ul {
   width: 100%;
 }
-.sidebar li a:hover{
-  color:white;
-}
 .dropdown-label:hover{
-  color: white;
+  color: rgb(255, 255, 255);
   border-radius: 5px;
-  background-color: #045781ad; /* Light blue background on hover */
+  background-color: #045881; /* Light blue background on hover */
+}
+.sidebar li a:hover{
+  color: white;
 }
 .dropdown-label:hover label { 
   color: white; /* El texto del label también se vuelve blanco */ 
+}
+.dropdown-label:hover
+.sidebar li a:hover{
+  color: white;
 }
 .dropdown-label label {
   display: flex; /* Alinea íconos y texto en línea */
   align-items: center; /* Centra verticalmente el contenido */
   padding: 5px 0; /* Espaciado uniforme */
   color: rgb(0, 0, 0);
+}
+.sidebar li mat-icon.arrow{
+  margin-left:auto; /* Alinea la flecha a la derecha */
+  margin-right: 40px;
+  
 }
 .dropdown-toggle {
   display: none; /* Hides the input toggle used for dropdown logic */
@@ -134,7 +143,7 @@
 .main-content {
   grid-area: main; /* Assigns this section to the main grid area */
   padding: 1rem; /* Adds padding inside main content */
-  overflow-y: auto; /* Enables vertical scrolling */
+  overflow:auto; /* Enables vertical scrolling */
   transition: margin-left 0.3s ease; /* Smooth transition for size adjustment */
 }
 /* Footer styles */
@@ -194,10 +203,6 @@
   font-style: normal;
 }
 /* src/styles.css */
-.nav ul {
-    list-style-type: none;
-    padding: 0;
-}
 .submenu {
     padding-left: 20px !important;
 }
@@ -223,21 +228,25 @@
 .nav li .submenu li:hover {
   color: white;
   border-radius: 5px;
-  background-color: #045781ad; /* Light blue background on hover */
+  background-color: #045881; /* Light blue background on hover */
 }
 .nav li .submenu li:hover a {
   color: white;
 }
 .nav li .submenu li.active {
+  color: white;
   border-radius: 5px;
-  background-color: #045781ad; /* Light blue background on hover */
+  background-color: #045881; /* Light blue background on hover */
 }
 .nav li .submenu li.active a {
   color: white;
 }
 .nav li .dropdown-label.active {
   border-radius: 5px;
-  background-color: #045781ad; /* Light blue background on hover */
+  background-color: #045881; /* Light blue background on hover */
+}
+.dropdown-label.active mat-icon {
+  color: white; /* Cambia el color del ícono a blanco cuando el dropdown-label está activo */
 }
 .nav li .dropdown-label.active a {
   color: white;
