@@ -3,15 +3,13 @@ import { CommonModule } from '@angular/common';
 import { IndexComponent } from './components/index/index.component';
 import { GlobalModule } from '../global/global.module';
 
-
-
 @NgModule({
   declarations: [
-    IndexComponent
+    IndexComponent,
   ],
   imports: [
     CommonModule,
-    GlobalModule
+    GlobalModule,
   ]
 })
 export class WorkCenterModule { }

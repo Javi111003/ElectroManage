@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { GlobalModule } from '../../../global/global.module';
 import { FormComponent } from './components/form/form.component';
 
-
+import { SharedModule } from '../../../../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -11,7 +11,8 @@ import { FormComponent } from './components/form/form.component';
   ],
   imports: [
     CommonModule,
-    GlobalModule
+    GlobalModule,
+    SharedModule
   ]
 })
 export class TotalConsumptionModule { }

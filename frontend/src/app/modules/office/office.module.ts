@@ -7,7 +7,7 @@ import { GlobalModule } from '../global/global.module';
 
 @NgModule({
   declarations: [
-    IndexComponent
+    IndexComponent,
   ],
   imports: [
     CommonModule,
