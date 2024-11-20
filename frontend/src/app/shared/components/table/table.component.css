@@ -1,0 +1,23 @@
+table {
+  width: 100%;
+}
+tr th {
+  background-color: #045781ad;
+  color: white;
+}
+.showActions button {
+  justify-items: center;
+  padding: 5px;
+  margin-right: 8px;
+  border-radius: 5px;
+  background-color: #045781ad;
+  color: white;
+  width: 26px;
+  height: 26px;
+  border: 0;
+}
+.showActions mat-icon {
+  font-size: 16px;
+  height: auto;
+  width: auto;
+}
