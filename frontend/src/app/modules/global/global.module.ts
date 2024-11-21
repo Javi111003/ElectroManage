@@ -9,9 +9,12 @@ import { IndexComponent } from './components/index/index.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
 
-
 //add the route of each module you need yo import here down.
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
+import { SharedModule } from '../../shared/shared.module';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -29,12 +32,20 @@ import {MatIconModule} from '@angular/material/icon';
 
     //add all modules you need here down. Remember to add them to export array too.
     MatIconModule,
+    SharedModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    ReactiveFormsModule,
   ],
   exports: [
     HttpClientModule,
 
     //add the imported modules here down too.
     MatIconModule,
+    SharedModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    ReactiveFormsModule
   ]
 })
 export class GlobalModule { }
