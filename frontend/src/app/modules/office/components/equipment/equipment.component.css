@@ -1,0 +1,38 @@
+.grid-container {
+    display: grid; /* Define un contenedor de grid */
+    grid-template-columns: 250px 250px auto; /* Dos columnas de igual tamaño y una tercera columna para el botón */
+    grid-template-rows: auto; /* Filas automáticas */
+    grid-template-areas: 
+        "select1 select2 button"
+        "table table table"; /* Área para la tabla ocupa las tres columnas */
+    gap: 10px; /* Espacio entre los elementos del grid */
+}
+
+/* Estilo específico para el primer selector */
+.selector1 {
+    grid-area: select1; /* Asigna el área de grid para el primer selector */
+    justify-self: start; /* Alinea a la izquierda dentro de su celda */
+    margin-left: 10px;
+}
+
+/* Estilo específico para el segundo selector */
+.selector2 {
+    grid-area: select2; /* Asigna el área de grid para el segundo selector */
+    justify-self: start; /* Alinea a la izquierda dentro de su celda */
+}
+
+/* Estilo específico para el contenedor de la tabla */
+.table-container {
+    grid-area: table; /* Asigna el área de grid para la tabla */
+}
+
+/* Estilo específico para el botón */
+.button {
+    grid-area: button; 
+    /* Asigna el área de grid para el botón */ 
+    align-self: center; /* Centra el botón verticalmente en su celda */
+    color: white; /* Color del texto en blanco */ 
+    border: none; /* Sin borde */ 
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    margin-top:-15px;
+}
