@@ -1,1 +1,34 @@
-<p>equipment works!</p>
+<div class="grid-container" [formGroup]="form">
+  <!-- Selector de Centro de Trabajo -->
+  <div class="grid-item selector1">
+    <mat-form-field appearance="fill">
+      <mat-label>Centro de Trabajo</mat-label>
+      <mat-select formControlName="firstSelect" (selectionChange)="onCentroChange($event)">
+        <mat-option *ngFor="let option of options" [value]="option.value">
+          {{ option.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <!-- Selector de Oficina -->
+  <div class="grid-item selector2">
+    <mat-form-field appearance="fill">
+      <mat-label>Oficina</mat-label>
+      <mat-select formControlName="secondSelect" (selectionChange)="onSelectionChange()">
+        <mat-option *ngFor="let option of optionsOficina" [value]="option.value">
+          {{ option.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <!-- Contenedor de la Tabla -->
+  <div class="grid-item table-container" *ngIf="showTable">
+    <app-table
+      [dataSource]="dataSource"
+      [displayedColumns]="displayedColumns"
+      [showActions]="true"
+    ></app-table>
+  </div>
+</div>
+
+
