@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgFor, NgIf } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 //global components
 import { IndexComponent } from './components/index/index.component';
@@ -14,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { SharedModule } from '../../shared/shared.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { ReactiveFormsModule } from '@angular/forms';
+
 
 
 @NgModule({
@@ -29,13 +30,13 @@ import { ReactiveFormsModule } from '@angular/forms';
     NgFor,
     NgIf,
     HttpClientModule,
+    ReactiveFormsModule,
 
     //add all modules you need here down. Remember to add them to export array too.
     MatIconModule,
     SharedModule,
     MatFormFieldModule,
-    MatSelectModule,
-    ReactiveFormsModule,
+    MatSelectModule
   ],
   exports: [
     HttpClientModule,
