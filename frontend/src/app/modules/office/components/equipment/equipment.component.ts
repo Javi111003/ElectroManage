@@ -10,32 +10,20 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./equipment.component.css']
 })
 export class EquipmentComponent implements OnInit {
+
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
+      firstSelect: [''],
+      secondSelect: [{ value: '', disabled: true }]
+    });
+  }
+
   form: FormGroup;
   showTable = false;
-  isSecondSelectDisabled = true; // Inicialmente inactivo
-  options = [
-    { value: 'centro1', label: 'Centro 1' },
-    { value: 'centro2', label: 'Centro 2' },
-    { value: 'centro3', label: 'Centro 3' },
-  ];
-  // Mapeo de oficinas por centro
-  oficinasPorCentro = {
-    centro1: [
-      { value: 'oficina1', label: 'Oficina 1.1' },
-      { value: 'oficina2', label: 'Oficina 1.2' },
-    ],
-    centro2: [
-      { value: 'oficina3', label: 'Oficina 2.1' },
-      { value: 'oficina4', label: 'Oficina 2.2' },
-    ],
-    centro3: [
-      { value: 'oficina5', label: 'Oficina 3.1' },
-      { value: 'oficina6', label: 'Oficina 3.2' },
-    ],
-  };
-  // Opciones dinámicas de oficinas
-  optionsOficina: { value: string; label: string; }[] = [];
-  // Datos de ejemplo para la tabla
+  isSecondSelectDisabled = true; // initially inactive
+  CenterOptions: any[] = [];
+  officeOptions: { value: string; label: string; }[] = [];
+  // Example data for the table
   dataSource: MatTableDataSource<any> = new MatTableDataSource([
     { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
     { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
@@ -48,8 +36,7 @@ export class EquipmentComponent implements OnInit {
     { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
     { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
   ]);
-
-  // Definición de las columnas a mostrar en la tabla
+  // Table Columns
   displayedColumns: ConfigColumn[] = [
     {
       title: 'No.',
@@ -65,36 +52,82 @@ export class EquipmentComponent implements OnInit {
     }
   ];
 
-  constructor(private fb: FormBuilder) {
-    this.form = this.fb.group({
-      firstSelect: [''], // Control para el primer selector
-      secondSelect: [{ value: '', disabled: true }] // Control para el segundo selector inicialmente deshabilitado
-    });
+
+  ngOnInit(): void {
+    this.subscribeToFirstSelectChanges();
+    this.getCenterList();
   }
 
-  ngOnInit() {
+  /**
+   * This function subscribes to the changes of the first select control.
+   * If the value is true, it enables the second select control.
+   * If the value is false, it disables the second select control.
+   */
+  private subscribeToFirstSelectChanges(): void {
     this.form.get('firstSelect')?.valueChanges.subscribe(value => {
-      if (value) {
-        this.form.get('secondSelect')?.enable();
-      } else {
-        this.form.get('secondSelect')?.disable();
-      }
+        if (value) {
+            this.form.get('secondSelect')?.enable();
+        } else {
+            this.form.get('secondSelect')?.disable();
+        }
     });
   }
 
-  // Función que se llama cuando cambia la selección en los selectores
-  onSelectionChange() {
+  /**
+   * Handles the selection change event of the select controls.
+   * Shows or hides the table based on the selection.
+   */
+  onSelectionChange(): void {
     const { firstSelect, secondSelect } = this.form.value;
-    // Mostrar la tabla solo si ambos selectores tienen valores seleccionados
     this.showTable = firstSelect && secondSelect;
   }
-  onCentroChange(event: any) {
-    const selectedCentro: keyof typeof this.oficinasPorCentro = event.value;
 
-    // Reinicia el select de oficina
+  /**
+   * Handles the change event of the first select control.
+   * Resets the second select control and updates its options based on the selected center.
+   * @param event The change event of the first select control.
+   */
+  onCenterChange(event: any): void {
+    const selectedCentroID = event.value;
     this.form.get('secondSelect')?.reset();
+    this.getOfficesByCenter(selectedCentroID);
+    this.form.get('secondSelect')?.enable();
+  }
 
-    // Actualiza las opciones de oficina según el centro seleccionado
-    this.optionsOficina = this.oficinasPorCentro[selectedCentro] || [];
+  /**
+   * This function gets the offices by center ID.
+   * It updates the officeOptions based on the selected center.
+   * @param centerID The ID of the selected center.
+   */
+  getOfficesByCenter(centerID : number): void {
+    // this is a test
+    if (centerID === 1)
+      this.officeOptions = [
+        { value: 'oficina1', label: 'Oficina 1.1' },
+        { value: 'oficina2', label: 'Oficina 1.2' },
+      ];
+    else if (centerID === 2)
+      this.officeOptions = [
+        { value: 'oficina3', label: 'Oficina 2.1' },
+        { value: 'oficina4', label: 'Oficina 2.2' },
+      ];
+    else {
+      this.officeOptions = [
+        { value: 'oficina5', label: 'Oficina 3.1' },
+        { value: 'oficina6', label: 'Oficina 3.2' },
+      ];
+    }
+  }
+
+  /**
+   * Retrieves the list of centers.
+   * This function updates the CenterOptions array with the list of available centers.
+   */
+  getCenterList(): void {
+    this.CenterOptions = [
+      { id: 1, label: 'Centro 1' },
+      { id: 2, label: 'Centro 2' },
+      { id: 3, label: 'Centro 3' },
+    ];
   }
 }
