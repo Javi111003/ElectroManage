@@ -4,7 +4,7 @@
   align-items: center;
 }
 tr th {
-  background-color:#045881;
+  background-color:#00203b;
   color: white;
 }
 th{
@@ -18,7 +18,7 @@ th{
   padding: 5px;
   margin-right: 8px;
   border-radius: 5px;
-  background-color:#045881;
+  background-color:#00203b;
   color: white;
   width: 26px;
   height: 26px;

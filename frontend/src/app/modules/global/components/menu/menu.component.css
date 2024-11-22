@@ -1,22 +1,21 @@
 /* Layout for the main container using CSS Grid */
 .grid-container {
   display: grid; /* Enables CSS Grid layout */
-  font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /* Font stack for wide compatibility */
-  grid-template-areas:
-    "header header" /* Header spans two columns */
-    "sidebar main" /* Sidebar and main content on the same row */
-    "footer footer"; /* Footer spans two columns */
-  grid-template-columns:auto 1fr; /* Sidebar adjusts size, main takes remaining space */
-  grid-template-rows: auto 1fr auto; /* Header and footer adjust based on content, main fills available space */
-  height: 100vh; /* Full viewport height */
-  overflow: hidden; /* Prevents global scrolling */
+    font-family: Roboto,sans-serif;
+    grid-template-areas:
+        "header header"
+        "sidebar main"; /* Sidebar and main content on the same row */
+    grid-template-columns: auto 1fr; /* Sidebar adjusts size, main takes remaining space */
+    grid-template-rows: auto 1fr; /* Header adjusts based on content, main fills available space */
+    height: 100vh; /* Full viewport height */
+    overflow: hidden; /* Prevents global scrolling */
 }
 /* Header styles */
 .header {
   grid-area: header; /* Assigns this section to the header grid area */
-  background-color: #045881; /* Sets a blue background color */
+  background-color: #00203b; /* Sets a blue background color */
   color: white; /* Sets the text color to white */
-  height: 40px; /* Fixed height for the header */
+  height: 50px; /* Fixed height for the header */
   padding: 3px; /* Small padding inside the header */
   display: flex; /* Flexbox layout for alignment */
   align-items: center; /* Vertically centers items */
@@ -28,10 +27,10 @@
 }
 .header p {
   margin: 0;
-  margin-left: 6px;
-  font-family:'AmaticSC';
+  margin-left: 10px;
+  font-family:'Lato',sans-serif;
   flex-grow: 1;
-  font-size: 1.5em;
+  font-size: 1.3em;
   font-weight: bold;
   text-align: left;
 }
@@ -51,24 +50,21 @@
 }
 /* Sidebar styles */
 .sidebar {
-  grid-area: sidebar; /* Assigns this section to the sidebar grid area */
-  position: relative; /* Fixes the sidebar position */
-  top: 0; /* Starts right below the header */
-  left: 0; /* Aligns the sidebar to the left edge */
-  min-width: 240px; /* Minimum width */
-  max-width: 400px; /* Maximum width */
-  width: 100%;
-  height: calc(100vh - 100px); /* Sidebar height minus header and footer */
-  background-color: #ffffff; /* Light gray background color */
-  border-right: 2.3px solid #cacbcc; /* Subtle border */
-  padding: 1rem; /* Internal spacing for sidebar content */
-  overflow-y: auto; /* Enables vertical scrolling */
-  transform: translateX(-100%); /* Hides sidebar by default (off-screen) */
-  transition: transform 0.3s ease-in-out; /* Smooth sidebar slide effect */
-  z-index: 1000; /* Ensures sidebar appears above other elements */
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1); /* Shadow for floating effect */
-  border-radius: 0 3px 3px 0; /* Rounded corners on the right */
-  resize: horizontal;
+  grid-area: sidebar;
+    position: relative;
+    min-width: 240px;
+    max-width: 400px;
+    width: 100%;
+    height: calc(100vh - 50px); /* Full height minus header height */
+    background-color: #ffffff;
+    border-right: 2.3px solid #cacbcc;
+    padding: 1rem;
+    overflow-y: auto;
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    border-radius: 0 3px 3px 0;
+    resize: horizontal;
 }
 .sidebar.active {
   transform: translateX(0); /* Makes sidebar visible */
@@ -107,7 +103,7 @@
 .dropdown-label:hover{
   color: rgb(255, 255, 255);
   border-radius: 5px;
-  background-color: #045881; /* Light blue background on hover */
+  background-color: #00203b; /* Light blue background on hover */
 }
 .sidebar li a:hover{
   color: white;
@@ -149,7 +145,7 @@
 /* Footer styles */
 .footer {
   grid-area: footer; /* Assigns this section to the footer grid area */
-  background-color: #045881; /* Blue background color */
+  background-color: #00203b; /* Blue background color */
   color: white; /* White text color */
   height: 60px; /* Fixed footer height */
   display: flex; /* Flexbox for alignment */
@@ -228,7 +224,7 @@
 .nav li .submenu li:hover {
   color: white;
   border-radius: 5px;
-  background-color: #045881; /* Light blue background on hover */
+  background-color: #00203b; /* Light blue background on hover */
 }
 .nav li .submenu li:hover a {
   color: white;
@@ -236,14 +232,14 @@
 .nav li .submenu li.active {
   color: white;
   border-radius: 5px;
-  background-color: #045881; /* Light blue background on hover */
+  background-color: #00203b; /* Light blue background on hover */
 }
 .nav li .submenu li.active a {
   color: white;
 }
 .nav li .dropdown-label.active {
   border-radius: 5px;
-  background-color: #045881; /* Light blue background on hover */
+  background-color: #00203b; /* Light blue background on hover */
 }
 .dropdown-label.active mat-icon {
   color: white; /* Cambia el color del ícono a blanco cuando el dropdown-label está activo */

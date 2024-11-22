@@ -19,7 +19,7 @@
 }
 .grid-item:hover {
     transform: scale(1.010); /* Aumenta el tamaño del elemento al hacer hover */
-    background-color:#045881;
+    background-color:#00203b;
     color: white;
     cursor: pointer;
 }
