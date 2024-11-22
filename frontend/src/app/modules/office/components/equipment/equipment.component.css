@@ -33,8 +33,9 @@
     margin-top: 8px;
 }
 .custom-button {
-    background-color: #045881; /* Cambia este valor por el color deseado */
+    background-color: #00203b; /* Cambia este valor por el color deseado */
     color: white; /* Cambia el color del texto si es necesario */
+    border-color:#00203b ;
     transition: transform 0.3s ease-in-out; /* Añade una transición suave para la transformación */
 }
 
