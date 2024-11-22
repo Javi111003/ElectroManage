@@ -7,6 +7,12 @@ tr th {
   background-color:#045881;
   color: white;
 }
+th{
+  width: 20000px;
+}
+.actionColumn{
+  width: 3000px;
+}
 .showActions button {
   justify-items: center;
   padding: 5px;
