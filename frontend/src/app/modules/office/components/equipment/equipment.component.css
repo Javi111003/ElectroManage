@@ -27,12 +27,18 @@
 }
 
 /* Estilo específico para el botón */
-.button {
-    grid-area: button; 
-    /* Asigna el área de grid para el botón */ 
-    align-self: center; /* Centra el botón verticalmente en su celda */
-    color: white; /* Color del texto en blanco */ 
-    border: none; /* Sin borde */ 
-    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-    margin-top:-15px;
+.export-button {
+    grid-area: button;
+    justify-self: end;
+    margin-top: 8px;
 }
+.custom-button {
+    background-color: #045881; /* Cambia este valor por el color deseado */
+    color: white; /* Cambia el color del texto si es necesario */
+    transition: transform 0.3s ease-in-out; /* Añade una transición suave para la transformación */
+}
+
+.custom-button:hover {
+    transform: scale(1.05); /* Aumenta el tamaño del botón al 105% */
+}
+  
