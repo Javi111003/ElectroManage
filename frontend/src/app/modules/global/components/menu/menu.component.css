@@ -22,7 +22,7 @@
   justify-content: space-between; /* Space between header items */
 }
 .header img {
-  height: 35px; /* Larger image size */
+  height: 40px; /* Larger image size */
   margin-left: 10px;
 }
 .header p {
@@ -52,9 +52,7 @@
 .sidebar {
   grid-area: sidebar;
     position: relative;
-    min-width: 240px;
-    max-width: 400px;
-    width: 100%;
+    width:240px;
     height: calc(100vh - 50px); /* Full height minus header height */
     background-color: #ffffff;
     border-right: 2.3px solid #cacbcc;
@@ -64,7 +62,6 @@
     z-index: 1000;
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
     border-radius: 0 3px 3px 0;
-    resize: horizontal;
 }
 .sidebar.active {
   transform: translateX(0); /* Makes sidebar visible */
@@ -86,7 +83,7 @@
   align-items:center; /* Centers items vertically */
   padding: 5px 0; /* Adds padding for clickable area */
   gap: 12px; /* Space between text and icon */
-  width: 250px; /* Makes the clickable area full-width */
+  width: 205px; /* Makes the clickable area full-width */
   cursor: pointer; /* Changes cursor to pointer */
   color: #000000; /* Sets dark gray text color */
   text-decoration: none; /* Removes underlines */
@@ -94,6 +91,7 @@
 }
 .sidebar li mat-icon {
   margin-right:1px; /* Añadido margen a la derecha del ícono */
+  margin-left: 10px;
   flex-shrink: 0; /* Evita que el ícono se reduzca en tamaño */
 }
 /* Dropdown styles */
@@ -105,10 +103,10 @@
   border-radius: 5px;
   background-color: #00203b; /* Light blue background on hover */
 }
-.sidebar li a:hover{
-  color: white;
+.dropdown-label:hover a{
+  color:white !important;
 }
-.dropdown-label:hover label { 
+.dropdown-label:hover label{ 
   color: white; /* El texto del label también se vuelve blanco */ 
 }
 .dropdown-label:hover
@@ -206,17 +204,24 @@
   display: flex; /* Flexbox for alignment */
   align-items:center; /* Centers items vertically */
   padding: 5px 0; /* Adds padding for clickable area */
-  gap: 12px; /* Space between text and icon */
-  width: 250px; /* Makes the clickable area full-width */
+  gap: 1px; /* Space between text and icon */
+  width: 190px; /* Makes the clickable area full-width */
   cursor: pointer; /* Changes cursor to pointer */
   color: #000000; /* Sets dark gray text color */
   text-decoration: none; /* Removes underlines */
   transition: background-color 0.3s; /* Smooth hover effect */
   align-items: center; /* Centra verticalmente el contenido */
+  font-size: 13px;
+  margin-top: 10px;
 }
 .submenu li mat-icon {
   margin-right: 8px; /* Añadido margen a la derecha del ícono */
+  margin-left: 10px;
   flex-shrink: 0;
+}
+.submenu mat-icon{
+  font-size:20px;
+  margin-top:3px;
 }
 .nav li .submenu.hidden {
     display: none;
