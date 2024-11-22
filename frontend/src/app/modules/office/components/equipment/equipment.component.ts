@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
 
+import { MatTableDataSource } from '@angular/material/table';
+
 @Component({
   selector: 'app-equipment',
   templateUrl: './equipment.component.html',
@@ -34,7 +36,7 @@ export class EquipmentComponent implements OnInit {
   // Opciones dinámicas de oficinas
   optionsOficina: { value: string; label: string; }[] = [];
   // Datos de ejemplo para la tabla
-  dataSource: any[] = [
+  dataSource: MatTableDataSource<any> = new MatTableDataSource([
     { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
     { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
     { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
@@ -45,7 +47,7 @@ export class EquipmentComponent implements OnInit {
     { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
     { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
     { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-  ];
+  ]);
 
   // Definición de las columnas a mostrar en la tabla
   displayedColumns: ConfigColumn[] = [

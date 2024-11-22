@@ -1,5 +1,7 @@
-table {
-  width: 100%;
+.genericTable {
+  display: grid;
+  justify-content: center;
+  align-items: center;
 }
 tr th {
   background-color:#045881;
@@ -20,4 +22,8 @@ tr th {
   font-size: 16px;
   height: auto;
   width: auto;
+}
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 100%;
 }
