@@ -24,13 +24,22 @@ export class AutocompleteComponent implements OnInit {
     );
   }
 
+  /**
+   * Emits the selected option to the parent component.
+   * @param event The event emitted by the option selection.
+   */
+  onOptionSelected(event: any) {
+    this.optionSelected.emit(event.option.value);
+  }
+
+  /**
+   * Filters the options based on the input value.
+   * @param value The input value to filter options against.
+   * @returns An array of options that match the input value.
+   */
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
     return this.options.filter(option => option.toLowerCase().startsWith(filterValue));
-  }
-
-  onOptionSelected(event: any) {
-    this.optionSelected.emit(event.option.value);
   }
 }
