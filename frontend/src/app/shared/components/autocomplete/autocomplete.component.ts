@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output,SimpleChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -22,6 +22,15 @@ export class AutocompleteComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value || '')),
     );
+  }
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['options']) {
+      // Si las opciones cambian, actualiza los filtros o realiza cualquier acción adicional si es necesario
+      this.filteredOptions = this.myControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value || '')),
+      );
+    }
   }
 
   /**
