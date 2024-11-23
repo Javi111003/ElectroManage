@@ -1,26 +1,19 @@
 <div class="grid-container" [formGroup]="form">
   <!-- Selector de Centro de Trabajo -->
-  <div class="grid-item selector1">
-    <mat-form-field appearance="fill">
-      <mat-label>Centro de Trabajo</mat-label>
-      <mat-select formControlName="firstSelect" (selectionChange)="onCenterChange($event)">
-        <mat-option *ngFor="let option of CenterOptions" [value]="option.id">
-          {{ option.label }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
+  <app-autocomplete
+      [label]="'Centro de Trabajo'"
+      [options]="centerOptions"
+      (optionSelected)="onCenterChange($event)"
+    >
+  </app-autocomplete>
   <!-- Selector de Oficina -->
-  <div class="grid-item selector2">
-    <mat-form-field appearance="fill">
-      <mat-label>Oficina</mat-label>
-      <mat-select formControlName="secondSelect" (selectionChange)="onSelectionChange()">
-        <mat-option *ngFor="let option of officeOptions" [value]="option.id">
-          {{ option.label }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
+  <app-autocomplete
+      [label]="'Oficinas'"
+      [options]="officeOptions"
+      (optionSelected)="handleOptionSelected($event)"
+    >
+  </app-autocomplete>
+  
   <div class="grid-item export-button">
     <button type="button" class="btn btn-primary custom-button">Descargar PDF</button>
   </div>
