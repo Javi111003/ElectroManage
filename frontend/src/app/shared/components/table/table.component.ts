@@ -40,8 +40,4 @@ export class TableComponent implements OnInit, AfterViewInit {
   edit() {
     throw new Error('Method not implemented.');
   }
-
-  createNew() {
-    throw new Error('Method not implemented.');
-  }
 }
