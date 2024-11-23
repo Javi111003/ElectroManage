@@ -1,0 +1,17 @@
+.example-full-width mat-label {
+  color: #00203b;
+  font-weight: 500;
+}
+/* for revision */
+.example-full-width span .mat-calendar-body-cellcontent .mat-focus-indicator .mat-calendar-body-selected {
+  background-color: #00203b;
+  color: white;
+}
+/* for revision */
+.example-full-width .mat-datepicker-content .mat-calendar {
+  border-style: groove;
+  opacity: 1;
+  border-color: #00203b;
+  border-radius: 15px;
+  background-color: white;
+}
