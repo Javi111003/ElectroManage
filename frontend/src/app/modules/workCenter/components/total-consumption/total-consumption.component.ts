@@ -32,4 +32,74 @@ export class TotalConsumptionComponent {
       field: 'name'
     }
   ];
+
+  filterStartDate = (d: Date | null): boolean => {
+    const today = new Date();
+    const Tday = today.getDate();
+    const Tmonth = today.getMonth();
+    const Tyear = today.getFullYear();
+
+    const day = d?.getDate();
+    const month = d?.getMonth();
+    const year = d?.getFullYear();
+
+    if (year !== undefined && month !== undefined && day !== undefined &&
+      (year < Tyear || (year === Tyear && (month < Tmonth) || (month === Tmonth && day < Tday))))
+      return true;
+
+    return false
+  };
+
+  receivedDate: Date = [][0];
+
+  filterEndDate = (d: Date | null): boolean => {
+    let dateSelected = this.receivedDate;
+    const DSday = dateSelected.getDate();
+    const DSmonth = dateSelected.getMonth();
+    const DSyear = dateSelected.getFullYear();
+
+    const today = new Date();
+    const Tday = today.getDate();
+    const Tmonth = today.getMonth();
+    const Tyear = today.getFullYear();
+
+    const day = d?.getDate();
+    const month = d?.getMonth();
+    const year = d?.getFullYear();
+
+    if (year !== undefined && month !== undefined && day !== undefined &&
+      (year > DSyear || (year === DSyear && (month > DSmonth) || (month === DSmonth && day >= DSday))) &&
+      (year < Tyear || (year === Tyear && (month < Tmonth) || (month === Tmonth && day < Tday))))
+      return true;
+
+    return false
+  };
+
+  isTableActive: boolean = false;
+
+  options: string[] = [
+    'Centro 1',
+    'Centro 2',
+    'Centro 3',
+    'Cento 4',
+    'Cento 5',
+    'Cento 6',
+    'Casa'
+  ];
+
+  optionSelected: string = '';
+
+  handleOptionSelected(option: string) {
+    this.optionSelected = option;
+  }
+
+  handleDateSelected(date: Date) {
+    this.receivedDate = date;
+    console.log('Fecha seleccionada:', this.receivedDate);
+  }
+
+  onClick() {
+    this.isTableActive = !this.isTableActive;
+    console.log(this.isTableActive);
+  }
 }

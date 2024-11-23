@@ -106,8 +106,8 @@
 .dropdown-label:hover a{
   color:white !important;
 }
-.dropdown-label:hover label{ 
-  color: white; /* El texto del label también se vuelve blanco */ 
+.dropdown-label:hover label{
+  color: white; /* El texto del label también se vuelve blanco */
 }
 .dropdown-label:hover
 .sidebar li a:hover{
@@ -122,7 +122,7 @@
 .sidebar li mat-icon.arrow{
   margin-left:auto; /* Alinea la flecha a la derecha */
   margin-right: 40px;
-  
+
 }
 .dropdown-toggle {
   display: none; /* Hides the input toggle used for dropdown logic */
@@ -224,7 +224,7 @@
   margin-top:3px;
 }
 .nav li .submenu.hidden {
-    display: none;
+  display: none;
 }
 .nav li .submenu li:hover {
   color: white;

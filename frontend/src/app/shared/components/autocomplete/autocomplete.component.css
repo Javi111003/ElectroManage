@@ -1,0 +1,18 @@
+.example-form {
+  width: auto;
+}
+.example-full-width {
+  width: auto;
+}
+.example-form mat-label {
+  color:#00203b;
+  font-weight: 500;
+}
+.mat-mdc-option.mdc-list-item {
+  align-items: center !important;
+  background: white !important;
+}
+/* for revision */
+.example-form .cdk-overlay-pane:not(.mat-mdc-autocomplete-panel-above) div.mat-mdc-autocomplete-panel {
+  background-color: white !important;
+}

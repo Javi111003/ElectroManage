@@ -15,15 +15,6 @@ export interface ConfigColumn {
   styleUrl: './table.component.css'
 })
 export class TableComponent implements OnInit, AfterViewInit {
-cancelOrDelete() {
-throw new Error('Method not implemented.');
-}
-edit() {
-throw new Error('Method not implemented.');
-}
-createNew() {
-throw new Error('Method not implemented.');
-}
   @Input() dataSource: MatTableDataSource<any> = [][0];
   @Input() displayedColumns: ConfigColumn[] = [];
   @Input() showActions: boolean = false;
@@ -38,9 +29,19 @@ throw new Error('Method not implemented.');
 
   ngOnInit(): void {
     this.headings = this.displayedColumns.map(item => item.field)
-    console.log(this.dataSource);
-    console.log(this.displayedColumns);
     if (this.showActions)
       this.headings.push('actionsColumn')
+  }
+
+  cancelOrDelete() {
+    throw new Error('Method not implemented.');
+  }
+
+  edit() {
+    throw new Error('Method not implemented.');
+  }
+
+  createNew() {
+    throw new Error('Method not implemented.');
   }
 }
