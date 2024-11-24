@@ -1,8 +1,7 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-equipment',
@@ -117,6 +116,12 @@ export class EquipmentComponent implements OnInit {
     ];
   }
 
+  /**
+   * Handles the selection of an office option.
+   * Updates the officeSelected property and checks if both office and center are selected.
+   * If both are selected, it shows the table and retrieves the equipment for the selected office.
+   * @param option The selected office option.
+   */
   handleOptionSelected(option: string) {
     this.officeSelected = option;
     if (this.officeSelected && this.centerSelected) {

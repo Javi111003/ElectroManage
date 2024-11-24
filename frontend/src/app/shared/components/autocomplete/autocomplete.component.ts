@@ -23,6 +23,7 @@ export class AutocompleteComponent implements OnInit {
       map(value => this._filter(value || '')),
     );
   }
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['options']) {
       // Si las opciones cambian, actualiza los filtros o realiza cualquier acción adicional si es necesario
