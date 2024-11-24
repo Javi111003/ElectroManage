@@ -9,7 +9,7 @@ import { MatPaginator } from '@angular/material/paginator';
   templateUrl: './equipment.component.html',
   styleUrls: ['./equipment.component.css']
 })
-export class EquipmentComponent implements OnInit, AfterViewInit {
+export class EquipmentComponent implements OnInit {
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
@@ -25,7 +25,6 @@ export class EquipmentComponent implements OnInit, AfterViewInit {
   officeSelected: string = '';
   // Example data for the table
   dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
-  @ViewChild(MatPaginator) paginator: MatPaginator = [][0];
 
   // Table Columns
   displayedColumns: ConfigColumn[] = [
@@ -45,10 +44,6 @@ export class EquipmentComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getCenterList();
-  }
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
   }
 
   /**
@@ -107,9 +102,7 @@ export class EquipmentComponent implements OnInit, AfterViewInit {
       { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
       { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
     ];
-    this.dataSource = new MatTableDataSource(equipments);
-    this.dataSource.paginator = this.paginator;
-    console.log(this.dataSource);
+    this.dataSource.data = equipments;
   }
 
   /**

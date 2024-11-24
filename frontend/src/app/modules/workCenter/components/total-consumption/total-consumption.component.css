@@ -5,5 +5,22 @@
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
+}
+.form-autocomplete {
+  width: 60%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-between;
+  justify-items: left;
+}
+.form-buttons {
+  width: 18%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  position:relative;
+  top: 8px;
+  left: 0;
 }
