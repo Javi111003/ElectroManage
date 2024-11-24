@@ -15,13 +15,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { PaginatorModifierComponent } from './components/table/paginator-modifier.component';
 
 @NgModule({
   declarations: [
     TableComponent,
     ButtonComponent,
     AutocompleteComponent,
-    DatepickerComponent
+    DatepickerComponent,
   ],
   imports: [
     CommonModule,

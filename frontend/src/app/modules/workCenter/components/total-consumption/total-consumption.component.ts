@@ -95,11 +95,9 @@ export class TotalConsumptionComponent {
 
   handleDateSelected(date: Date) {
     this.receivedDate = date;
-    console.log('Fecha seleccionada:', this.receivedDate);
   }
 
   onClick() {
     this.isTableActive = !this.isTableActive;
-    console.log(this.isTableActive);
   }
 }

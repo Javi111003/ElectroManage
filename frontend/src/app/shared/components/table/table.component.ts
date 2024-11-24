@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
+import { PaginatorModifierComponent } from './paginator-modifier.component';
 
 export interface ConfigColumn {
   title: string;
@@ -12,7 +12,10 @@ export interface ConfigColumn {
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
-  styleUrl: './table.component.css'
+  styleUrl: './table.component.css',
+  providers: [
+    { provide: MatPaginatorIntl, useClass: PaginatorModifierComponent }
+  ],
 })
 export class TableComponent implements OnInit, AfterViewInit {
   @Input() dataSource: MatTableDataSource<any> = [][0];
