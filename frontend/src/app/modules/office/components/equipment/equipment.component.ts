@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
 import { MatTableDataSource } from '@angular/material/table';
+import { OfficeService } from '../../../../services/office/office.service';
+import { WorkCenter } from '../../../../models/workCenter.interface';
+import { Office } from '../../../../models/office.interface';
+import { of } from 'rxjs';
+import { WorkCenterService } from '../../../../services/workCenter/work-center.service';
 
 @Component({
   selector: 'app-equipment',
@@ -10,7 +15,11 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class EquipmentComponent implements OnInit {
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private httpOffice: OfficeService,
+    private httpCenter: WorkCenterService
+  ) {
     this.form = this.fb.group({
       firstSelect: [''],
     });
@@ -18,8 +27,10 @@ export class EquipmentComponent implements OnInit {
 
   form: FormGroup;
   showTable = false;
-  centerOptions: any[] = [];
-  officeOptions: any[] = [];
+  centerOptions: string[] = [];
+  officeOptions: string[] = [];
+  centerObjects: WorkCenter[] = [];
+  officeObjects: Office[] = [];
   centerSelected: string = '';
   officeSelected: string = '';
   // Example data for the table
@@ -53,7 +64,7 @@ export class EquipmentComponent implements OnInit {
   onCenterChange(event: any): void {
     const selectedCentroID = event;
     this.centerSelected = selectedCentroID;
-    this.getOfficesByCenter();
+    this.getOfficesByCenter(0);
     this.showTable = false;
     this.officeSelected = ''; // Reset office selection when center changes
   }
@@ -63,24 +74,11 @@ export class EquipmentComponent implements OnInit {
    * It updates the officeOptions based on the selected center.
    * @param centerID The ID of the selected center.
    */
-  getOfficesByCenter(): void {
-    // this is a test
-    if (this.centerSelected === 'Centro 1') {
-      this.officeOptions = [
-        'Oficina 1.1',
-        'Oficina 1.2',
-      ];
-    } else if (this.centerSelected === 'Centro 2') {
-      this.officeOptions = [
-        'Oficina 2.1',
-        'Oficina 2.2',
-      ];
-    } else {
-      this.officeOptions = [
-        'Oficina 3.1',
-        'Oficina 3.2',
-      ];
-    }
+  getOfficesByCenter(centerID: number): void {
+    this.httpOffice.getOfficeList().subscribe(offices => {
+      this.officeObjects = offices;
+      this.officeOptions = offices.map(item => item.name);
+    })
   }
 
   /**
@@ -109,11 +107,10 @@ export class EquipmentComponent implements OnInit {
    * This function updates the CenterOptions array with the list of available centers.
    */
   getCenterList(): void {
-    this.centerOptions = [
-      'Centro 1',
-      'Centro 2',
-      'Centro 3',
-    ];
+    this.httpCenter.getWorkCenterList().subscribe(workCenters => {
+      this.centerObjects = workCenters;
+      this.centerOptions = workCenters.map(item => item.name);
+    })
   }
 
   /**
@@ -122,7 +119,7 @@ export class EquipmentComponent implements OnInit {
    * If both are selected, it shows the table and retrieves the equipment for the selected office.
    * @param option The selected office option.
    */
-  handleOptionSelected(option: string) {
+  handleOptionSelected(option: any) {
     this.officeSelected = option;
     if (this.officeSelected && this.centerSelected) {
       this.showTable = true; // Show table only when both are selected

@@ -12,7 +12,6 @@ export class AutocompleteComponent implements OnInit {
   @Input() options: string[] = [];
   @Input() label: string = '';
   @Output() optionSelected = new EventEmitter<string>();
-  @Output() isOptionSelected = new EventEmitter<boolean>();
 
   myControl: FormControl = new FormControl('');
   filteredOptions: Observable<string[]> = [][0];
@@ -26,7 +25,6 @@ export class AutocompleteComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['options']) {
-      // Si las opciones cambian, actualiza los filtros o realiza cualquier acción adicional si es necesario
       this.filteredOptions = this.myControl.valueChanges.pipe(
         startWith(''),
         map(value => this._filter(value || '')),
@@ -49,7 +47,6 @@ export class AutocompleteComponent implements OnInit {
    */
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
-
     return this.options.filter(option => option.toLowerCase().startsWith(filterValue));
   }
 }

@@ -1,3 +1,4 @@
 export interface WorkCenter {
-  //add properties here
+  id: number;
+  name: string;
 }

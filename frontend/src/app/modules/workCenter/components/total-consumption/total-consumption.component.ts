@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
-
+import { WorkCenterService } from '../../../../services/workCenter/work-center.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { WorkCenter } from '../../../../models/workCenter.interface';
 
 @Component({
   selector: 'app-total-consumption',
@@ -10,22 +11,27 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TotalConsumptionComponent implements OnInit {
 
+  constructor (
+    private httpService: WorkCenterService
+  ) {}
+
   receivedDate: Date = [][0];
   isTableActive: boolean = false;
   options: string[] = [];
-  optionSelected: string = '';
+  workCenters: WorkCenter[] = [];
+  optionSelected: number = 0;
   dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
   displayedColumns: ConfigColumn[] = [
     {
       title: 'Día',
-      field: 'day'
+      field: 'registerDate'
     },
     {
-      title: 'Consumo',
+      title: 'Consumo (Kw/h)',
       field: 'consumption'
     },
     {
-      title: 'Costo',
+      title: 'Costo ($)',
       field: 'cost'
     }
   ];
@@ -40,34 +46,25 @@ export class TotalConsumptionComponent implements OnInit {
    * It updates the options array with the list of available work centers.
    */
   getWorkCenters(): void {
-    this.options = [
-      'Centro 1',
-      'Centro 2',
-      'Centro 3',
-      'Cento 4',
-      'Cento 5',
-      'Cento 6',
-      'Casa'
-    ];
+    this.httpService.getWorkCenterList().subscribe(workcenters => {
+      this.options = workcenters.map(item => item.name);
+      this.workCenters = workcenters;
+    })
   }
 
   /**
-   * This function generates the table data source.
-   * It updates the MatTableDataSource with data from backend.
-   */
-  generateTable(): void {
-    this.dataSource.data = [
-      {position: 1, name: 'Hydrogen'},
-      {position: 2, name: 'Helium'},
-      {position: 3, name: 'Lithium'},
-      {position: 4, name: 'Beryllium'},
-      {position: 5, name: 'Boron'},
-      {position: 6, name: 'Carbon'},
-      {position: 7, name: 'Nitrogen'},
-      {position: 8, name: 'Oxygen'},
-      {position: 9, name: 'Fluorine'},
-      {position: 10, name: 'Neon'},
-    ];
+   * Fetches registers by center ID and updates the data source.
+   * Makes an HTTP request to get registers for a specified center ID,
+   * formats the register dates, and updates the data source.
+   * @param centerID - The ID of the center to fetch registers for.
+  */
+  getRegistersByCenterId(centerID: number): void {
+    this.httpService.getRegister().subscribe(register => {
+      for (let index = 0; index < register.registers.length; index++) {
+        register.registers[index].registerDate = register.registers[index].registerDate.substring(0, 10);
+      }
+      this.dataSource.data = register.registers;
+    })
   }
 
   /**
@@ -128,7 +125,7 @@ export class TotalConsumptionComponent implements OnInit {
    * Updates the optionSelected property with the selected option.
    * @param option The selected option.
    */
-  handleOptionSelected(option: string) {
+  handleOptionSelected(option: any) {
     this.optionSelected = option;
   }
 
@@ -139,7 +136,6 @@ export class TotalConsumptionComponent implements OnInit {
    */
   handleDateSelected(date: Date) {
     this.receivedDate = date;
-    console.log(this.receivedDate);
   }
 
   /**
@@ -147,7 +143,7 @@ export class TotalConsumptionComponent implements OnInit {
    * Toggles the visibility of the table based on the current state.
    */
   onClick() {
-    this.generateTable();
+    this.getRegistersByCenterId(0);
     this.isTableActive = !this.isTableActive;
   }
 }
