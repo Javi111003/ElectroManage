@@ -22,6 +22,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="FastEndpoints.Swagger" Version="5.30.0" />
+	  <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.11.0" />
+	  <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
+	  <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.11.0" />
+	  <PackageReference Include="Microsoft.CodeAnalysis" Version="4.11.0" />
     <PackageReference Include="HangFire" Version="1.8.15" />
     <PackageReference Include="Hangfire.Dashboard.Basic.Authentication" Version="7.0.1" />
     <PackageReference Include="HangFire.PostgreSql" Version="1.20.10" />
