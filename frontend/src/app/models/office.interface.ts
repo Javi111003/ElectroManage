@@ -1,3 +1,5 @@
 export interface Office {
-  //add properties here
+  id: number;
+  name: string;
+  companyId: number;
 }
