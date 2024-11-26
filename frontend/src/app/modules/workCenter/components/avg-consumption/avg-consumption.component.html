@@ -1,5 +1,34 @@
-<app-checkbox
-  [label]="'Centros de Trabajo'"
-  [options]="options"
-  (selectedOptions)="handleSelectionChange($event)"
-></app-checkbox>
+<div class="form-avg-consumption"> 
+  <div class="checkbox-container">
+    <app-checkbox
+      [label]="'Centros de Trabajo'"
+      [options]="options"
+      (selectedOptions)="handleSelectionChange($event)">
+    </app-checkbox>
+  </div>
+
+  <div class="buttons-container">
+    <app-button
+      [label]="'Consultar'"
+      [function]="onConsultar.bind(this)">
+    </app-button>
+    <app-button
+      [label]="'Proyección'"
+      [function]="onProyeccion.bind(this)">
+    </app-button>
+    <app-button></app-button>
+  </div>
+</div>
+
+<div *ngIf="isTableActive">
+  <div *ngFor="let option of selectedOptions" class="table">
+    <h3>{{ option }}</h3>
+    <app-table
+      [dataSource]="dataSources[option]"
+      [displayedColumns]="displayedColumns"
+      [footer]="footerTable">
+    </app-table>
+  </div>
+</div>
+
+

@@ -29,6 +29,7 @@ export class EquipmentComponent implements OnInit {
   showTable = false;
   centerOptions: string[] = [];
   officeOptions: string[] = [];
+  equipments: string[]=[];
   centerObjects: WorkCenter[] = [];
   officeObjects: Office[] = [];
   centerSelected: string = '';
@@ -87,19 +88,7 @@ export class EquipmentComponent implements OnInit {
    * @param officeID The ID of the selected office.
    */
   getEquipmentsByOffice(office: string): void {
-    const equipments = [
-      { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-      { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-      { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-      { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-      { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-      { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-      { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-      { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-      { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-      { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-    ];
-    this.dataSource.data = equipments;
+    this.dataSource.data = this.equipments;
   }
 
   /**
@@ -121,9 +110,14 @@ export class EquipmentComponent implements OnInit {
    */
   handleOptionSelected(option: any) {
     this.officeSelected = option;
-    if (this.officeSelected && this.centerSelected) {
-      this.showTable = true; // Show table only when both are selected
-      this.getEquipmentsByOffice(this.officeSelected); // Get the equipment for the selected office
+  }
+  onConsultar(): void {
+    if (this.centerSelected && this.officeSelected) {
+      this.showTable = true; // Muestra la tabla si ambos están seleccionados
+      this.getEquipmentsByOffice(this.officeSelected); // Recupera los datos de la tabla
+    } else {
+      this.showTable = false; // Asegura que la tabla no se muestre si faltan selecciones
+      alert('Por favor, selecciona un Centro de Trabajo y una Oficina.');
     }
   }
 }

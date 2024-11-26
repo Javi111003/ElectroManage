@@ -1,0 +1,21 @@
+.form-avg-consumption {
+    display: flex;
+    justify-content: space-between;
+   
+    
+  }
+  .checkbox-container {
+    flex: 1; /* Ocupa espacio proporcional al ancho disponible */
+  }
+  .buttons-container {
+    width: 30%;
+    display: flex;
+    flex-wrap: wrap;
+    position:relative;
+    justify-content: right;
+    top: 3px;
+    left: 0;
+    margin-top: 5px;
+    gap: 8px;
+  }
+  
