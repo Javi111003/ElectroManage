@@ -1,1 +1,5 @@
-<p>avg-consumption works!</p>
+<app-checkbox
+  [label]="'Centros de Trabajo'"
+  [options]="options"
+  (selectedOptions)="handleSelectionChange($event)"
+></app-checkbox>

@@ -1,8 +1,10 @@
+import { DateFilterFn } from '@angular/material/datepicker';
 import { Component, OnInit } from '@angular/core';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
 import { WorkCenterService } from '../../../../services/workCenter/work-center.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { WorkCenter } from '../../../../models/workCenter.interface';
+import { Register } from '../../../../models/register.interface';
 
 @Component({
   selector: 'app-total-consumption',
@@ -21,6 +23,8 @@ export class TotalConsumptionComponent implements OnInit {
   workCenters: WorkCenter[] = [];
   optionSelected: number = 0;
   dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
+  consumptions: number[] = [];
+  costs: number[] = [];
   displayedColumns: ConfigColumn[] = [
     {
       title: 'Día',
@@ -35,6 +39,8 @@ export class TotalConsumptionComponent implements OnInit {
       field: 'cost'
     }
   ];
+
+  footerTable: any[] = [];
 
 
   ngOnInit(): void {
@@ -64,6 +70,9 @@ export class TotalConsumptionComponent implements OnInit {
         register.registers[index].registerDate = register.registers[index].registerDate.substring(0, 10);
       }
       this.dataSource.data = register.registers;
+      this.consumptions = register.registers.map(item => item.consumption);
+      this.costs = register.registers.map(item => item.cost);
+      this.footerTable = ['Total', this.getTotalConsumption().toString(), this.getTotalCost().toString()];
     })
   }
 
@@ -97,7 +106,9 @@ export class TotalConsumptionComponent implements OnInit {
    * @returns A boolean value indicating if the date is valid.
    */
   filterEndDate = (d: Date | null): boolean => {
-    console.log(this.receivedDate);
+    if (!this.receivedDate)
+      return false;
+
     let dateSelected = this.receivedDate;
     const DSday = dateSelected.getDate();
     const DSmonth = dateSelected.getMonth();
@@ -145,5 +156,13 @@ export class TotalConsumptionComponent implements OnInit {
   onClick() {
     this.getRegistersByCenterId(0);
     this.isTableActive = !this.isTableActive;
+  }
+
+  getTotalCost() {
+    return this.costs.reduce((acc, value) => acc + value, 0);
+  }
+
+  getTotalConsumption() {
+    return this.consumptions.reduce((acc, value) => acc + value, 0);
   }
 }
