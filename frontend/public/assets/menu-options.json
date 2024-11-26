@@ -29,6 +29,18 @@
           "label": "Políticas de eficiencia energética",
           "icon": "task",
           "link": "workCenter/policy"
+        },
+        {
+          "id": "ranking",
+          "label": "Ranking por consumo",
+          "icon": "data_thresholding",
+          "link": "workCenter/ranking"
+        },
+        {
+          "id": "alert",
+          "label": "Alertas emitidas",
+          "icon": "warning",
+          "link": "workCenter/alert"
         }
       ]
     },

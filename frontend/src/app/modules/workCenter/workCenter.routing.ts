@@ -2,6 +2,8 @@ import { Routes } from "@angular/router";
 import { TotalConsumptionComponent } from "./components/total-consumption/total-consumption.component";
 import { AvgConsumptionComponent } from "./components/avg-consumption/avg-consumption.component";
 import { PolicyComponent } from "./components/policy/policy.component";
+import { AlertComponent } from "./components/alert/alert.component";
+import { RankingComponent } from "./components/ranking/ranking.component";
 
 
 export const workCenterRoutes: Routes = [
@@ -18,6 +20,16 @@ export const workCenterRoutes: Routes = [
   {
     path:'workCenter/policy',
     component: PolicyComponent,
+    loadChildren: () => import('./workCenter.module').then(m => m.WorkCenterModule)
+  },
+  {
+    path:'workCenter/alert',
+    component: AlertComponent,
+    loadChildren: () => import('./workCenter.module').then(m => m.WorkCenterModule)
+  },
+  {
+    path:'workCenter/ranking',
+    component: RankingComponent,
     loadChildren: () => import('./workCenter.module').then(m => m.WorkCenterModule)
   }
 ];
