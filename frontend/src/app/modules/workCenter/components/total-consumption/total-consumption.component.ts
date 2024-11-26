@@ -78,7 +78,7 @@ export class TotalConsumptionComponent implements OnInit {
 
   /**
    * This function is used to filter the start date.
-   * It checks if the selected date is before the current date.
+hi   * It checks if the selected date is before the current date.
    * @param d The selected date.
    * @returns A boolean value indicating if the date is valid.
    */
