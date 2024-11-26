@@ -1,31 +1,41 @@
-<div class="grid-container" [formGroup]="form">
-  <!-- Selector de Centro de Trabajo -->
-  <app-autocomplete
-      [label]="'Centro de Trabajo'"
-      [options]="centerOptions"
-      (optionSelected)="onCenterChange($event)"
-    >
-  </app-autocomplete>
-  <!-- Selector de Oficina -->
-  <app-autocomplete
-      [label]="'Oficinas'"
-      [options]="officeOptions"
-      (optionSelected)="handleOptionSelected($event)"
-    >
-  </app-autocomplete>
+<div class="form-container" [formGroup]="form">
+  <!-- Contenedor de Autocompletes -->
+  <div class="form-autocomplete">
+    <div class="form-autocomplete-item">
+      <app-autocomplete
+        [label]="'Centro de Trabajo'"
+        [options]="centerOptions"
+        (optionSelected)="onCenterChange($event)">
+      </app-autocomplete>
+    </div>
+    <div class="form-autocomplete-item">
+      <app-autocomplete
+        [label]="'Oficinas'"
+        [options]="officeOptions"
+        (optionSelected)="handleOptionSelected($event)">
+      </app-autocomplete>
+    </div>
+  </div>
 
-  <div class="grid-item export-button">
+  <!-- Botones -->
+  <div class="form-buttons">
+    <app-button
+      [label]="'Consultar'"
+      [function]="onConsultar.bind(this)">
+    </app-button>
     <app-button></app-button>
   </div>
 
   <!-- Contenedor de la Tabla -->
-  <div class="grid-item table-container" *ngIf="showTable">
+  <div class="form-table" *ngIf="showTable">
     <app-table
       [dataSource]="dataSource"
       [displayedColumns]="displayedColumns"
-      [showActions]="true"
-    ></app-table>
+      [showActions]="true">
+    </app-table>
   </div>
 </div>
+
+
 
 
