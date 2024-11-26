@@ -1,0 +1,20 @@
+mat-label {
+  color:#00203b;
+  font-weight: 500;
+}
+.mat-mdc-option.mdc-list-item {
+  align-items: center !important;
+  background: white !important;
+}
+::ng-deep .mat-pseudo-checkbox-full {
+  border-radius: 5px !important;
+  height: 17px !important;
+  width: 17px !important;
+  border-color: #00203b !important;
+}
+::ng-deep .cdk-overlay-pane:not(.mat-mdc-select-panel-above) div.mat-mdc-select-panel {
+  background-color: white !important;
+}
+::ng-deep .mat-pseudo-checkbox-full.mat-pseudo-checkbox-checked {
+  background-color: #00203b !important;
+}

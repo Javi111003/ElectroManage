@@ -33,3 +33,12 @@ th{
   font-size: 14px;
   width: 100%;
 }
+.table-container {
+  position: relative;
+  min-height: 200px;
+  max-height: 400px;
+  overflow: auto;
+}
+tr.mat-mdc-footer-row {
+  font-weight: bold;
+}

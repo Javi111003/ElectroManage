@@ -1,22 +1,26 @@
 <div class="genericTable">
-  <table mat-table [dataSource]="dataSource">
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource">
 
-    <ng-container *ngFor="let item of displayedColumns" matColumnDef="{{item.field}}">
-      <th mat-header-cell *matHeaderCellDef> {{item.title}} </th>
-      <td mat-cell *matCellDef="let element"> {{element[item.field]}} </td>
+      <ng-container *ngFor="let item of displayedColumns" matColumnDef="{{item.field}}">
+        <th mat-header-cell *matHeaderCellDef> {{item.title}} </th>
+        <td mat-cell *matCellDef="let element"> {{element[item.field]}} </td>
+        <td mat-footer-cell *matFooterCellDef> {{footer[displayedColumns.indexOf(item)]}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actionsColumn">
+        <th mat-header-cell *matHeaderCellDef class="actionColumn"></th>
+        <td mat-cell *matCellDef="let row" class="showActions">
+            <button (click)="edit()"><mat-icon>edit</mat-icon></button>
+            <button (click)="cancelOrDelete()"><mat-icon>delete</mat-icon></button>
+        </td>
     </ng-container>
 
-    <ng-container matColumnDef="actionsColumn">
-      <th mat-header-cell *matHeaderCellDef class="actionColumn"></th>
-      <td mat-cell *matCellDef="let row" class="showActions">
-          <button (click)="edit()"><mat-icon>edit</mat-icon></button>
-          <button (click)="cancelOrDelete()"><mat-icon>delete</mat-icon></button>
-      </td>
-  </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="headings"></tr>
-    <tr mat-row *matRowDef="let row; columns: headings;"></tr>
-  </table>
+      <tr mat-header-row *matHeaderRowDef="headings"></tr>
+      <tr mat-row *matRowDef="let row; columns: headings;"></tr>
+      <tr mat-footer-row *matFooterRowDef="headings; sticky: true"></tr>
+    </table>
+  </div>
 
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users" showFirstLastButtons></mat-paginator>
 </div>

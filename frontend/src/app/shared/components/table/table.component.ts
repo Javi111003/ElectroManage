@@ -21,6 +21,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   @Input() dataSource: MatTableDataSource<any> = [][0];
   @Input() displayedColumns: ConfigColumn[] = [];
   @Input() showActions: boolean = false;
+  @Input() footer: any[] = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator = [][0];
 
@@ -31,6 +32,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   headings: string[] = [];
 
   ngOnInit(): void {
+    console.log(this.footer);
     this.headings = this.displayedColumns.map(item => item.field)
     if (this.showActions)
       this.headings.push('actionsColumn')
