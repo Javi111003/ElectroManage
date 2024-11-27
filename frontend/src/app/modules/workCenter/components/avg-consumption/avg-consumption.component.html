@@ -1,8 +1,8 @@
-<div class="form-avg-consumption"> 
+<div class="form-avg-consumption">
   <div class="checkbox-container">
     <app-checkbox
       [label]="'Centros de Trabajo'"
-      [options]="options"
+      [options]="CenterOptions"
       (selectedOptions)="handleSelectionChange($event)">
     </app-checkbox>
   </div>
@@ -10,11 +10,11 @@
   <div class="buttons-container">
     <app-button
       [label]="'Consultar'"
-      [function]="onConsultar.bind(this)">
+      [function]="onConsultClick.bind(this)">
     </app-button>
     <app-button
       [label]="'Proyección'"
-      [function]="onProyeccion.bind(this)">
+      [function]="onProyectionClick.bind(this)">
     </app-button>
     <app-button></app-button>
   </div>

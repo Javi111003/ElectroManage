@@ -1,3 +1,13 @@
 export interface Equipment {
-  //add properties here
+  id: number;
+  officeId: number;
+  companyId: number;
+  name: string;
+  useFrequency: string;
+  maintenanceStatus: string;
+  model: string;
+  efficency: number;
+  brand: string;
+  equipmentType: string;
 }
+
