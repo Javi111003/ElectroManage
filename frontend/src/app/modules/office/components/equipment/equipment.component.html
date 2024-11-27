@@ -21,7 +21,7 @@
   <div class="form-buttons">
     <app-button
       [label]="'Consultar'"
-      [function]="onConsultar.bind(this)">
+      [function]="onConsultClick.bind(this)">
     </app-button>
     <app-button></app-button>
   </div>
@@ -30,8 +30,7 @@
   <div class="form-table" *ngIf="showTable">
     <app-table
       [dataSource]="dataSource"
-      [displayedColumns]="displayedColumns"
-      [showActions]="true">
+      [displayedColumns]="displayedColumns">
     </app-table>
   </div>
 </div>
