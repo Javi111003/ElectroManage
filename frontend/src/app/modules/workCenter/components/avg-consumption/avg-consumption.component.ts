@@ -3,13 +3,22 @@ import { ConfigColumn } from '../../../../shared/components/table/table.componen
 import { WorkCenterService } from '../../../../services/workCenter/work-center.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { WorkCenter } from '../../../../models/workCenter.interface';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'app-avg-consumption',
   templateUrl: './avg-consumption.component.html',
   styleUrl: './avg-consumption.component.css',
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed,void', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ]
 })
 export class AvgConsumptionComponent implements OnInit{
+
   constructor (
     private httpCenter: WorkCenterService
   ) {}
@@ -33,7 +42,9 @@ export class AvgConsumptionComponent implements OnInit{
       field: 'cost'
     }
   ];
-  footerTable: any[] = [];
+  columnsToDisplay = ['Centro de Trabajo'];
+  columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
+  expandedElements: string[] = [];
 
   ngOnInit() {
     this.getWorkCenterList();
@@ -72,5 +83,18 @@ export class AvgConsumptionComponent implements OnInit{
   handleSelectionChange(selected: string[]) {
     this.selectedOptions = selected;
     this.isTableActive=false;
+  }
+
+  toggleRow(element: string) {
+    const index = this.expandedElements.indexOf(element);
+    if (index >= 0) {
+      this.expandedElements.splice(index, 1);
+    } else {
+      this.expandedElements.push(element);
+    }
+  }
+
+  isRowExpanded(element: string): boolean {
+    return this.expandedElements.indexOf(element) >= 0;
   }
 }

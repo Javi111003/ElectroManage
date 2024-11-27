@@ -1,1 +1,47 @@
-<p>policy works!</p>
+<div class="form-total-consumption">
+  <div class="form">
+    <div class="form-autocomplete">
+      <app-autocomplete
+        [label]="'Centro de Trabajo'"
+        [options]="optionsWorkCenter"
+        (optionSelected)="handleOptionSelected($event)"
+      >
+      </app-autocomplete>
+
+      <app-autocomplete
+        [label]="'Política'"
+        [options]="optionsPolicy"
+        (optionSelected)="handleOptionSelected($event)"
+      >
+      </app-autocomplete>
+    </div>
+
+    <div class="form-buttons">
+      <app-button
+        [label]="'Consultar'"
+        [function]="onClick.bind(this)"
+      >
+      </app-button>
+
+      <app-button></app-button>
+    </div>
+  </div>
+
+  <div class="table" [class.hidden]="!isTableActive">
+    <div>
+      <h6>Antes</h6>
+      <app-table class="before"
+        [dataSource]="dataSourceBefore"
+        [displayedColumns]="displayedColumns"
+      ></app-table>
+    </div>
+
+    <div>
+      <h6>Después</h6>
+      <app-table class="after"
+        [dataSource]="dataSourceAfter"
+        [displayedColumns]="displayedColumns"
+      ></app-table>
+    </div>
+  </div>
+</div>
