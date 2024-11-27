@@ -26,7 +26,9 @@ export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator = [][0];
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+    if (this.paginator && this.dataSource) {
+      this.dataSource.paginator = this.paginator;
+    }
   }
 
   headings: string[] = [];
