@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { OfficeService } from '../../../../services/office/office.service';
 import { WorkCenter } from '../../../../models/workCenter.interface';
 import { Office } from '../../../../models/office.interface';
 import { WorkCenterService } from '../../../../services/workCenter/work-center.service';
 import { Equipment } from '../../../../models/equipment.interface';
+import { AutocompleteComponent } from '../../../../shared/components/autocomplete/autocomplete.component';
 
 
 export interface TableItem {
@@ -27,6 +28,7 @@ export interface TableItem {
 })
 
 export class EquipmentComponent implements OnInit {
+@ViewChild('officeAutocomplete') officeAutocomplete!: AutocompleteComponent;
 
   constructor(
     private fb: FormBuilder,
@@ -35,9 +37,9 @@ export class EquipmentComponent implements OnInit {
   ) {
     this.form = this.fb.group({
       firstSelect: [''],
-    });
+      secondSelect:['']
+    }); 
   }
-
   form: FormGroup;
   showTable = false;
   centerOptions: string[] = [];
@@ -110,6 +112,7 @@ export class EquipmentComponent implements OnInit {
     this.showTable = false;
     this.officeSelected = null!;
     this.officeSelectedId = 0;
+    this.officeAutocomplete.resetControl();
   }
 
   /** * Finds the ID of the selected center based on its name.
@@ -158,7 +161,7 @@ export class EquipmentComponent implements OnInit {
           efficiency: item.efficency,
           equipmentType: item.equipmentType
         }));
-  console.log(equipments[0].efficency)
+        console.log(equipments[0].efficency)
         tableitems.forEach(item => console.log(item));
         this.dataSource.data = tableitems;
       })
@@ -193,11 +196,22 @@ export class EquipmentComponent implements OnInit {
   onConsultClick(): void {
     if (this.centerSelected && this.officeSelected) {
       this.showTable = true;
+      this.centerSelectedId = this.findCenterId(this.centerSelected);
       this.getEquipmentsByOffice();
     } else {
       this.showTable = false;
       alert('Por favor, selecciona un Centro de Trabajo y una Oficina.');
     }
+  }
+  onOfficeInputModified(value: string): void {
+    this.centerSelected=value;
+    console.log(this.centerSelected);
+    this.getOfficesByCenter();
+    this.showTable = false;
+    this.officeSelected = null!;
+    this.officeSelectedId = 0;
+    this.officeAutocomplete.resetControl();
+    // Aquí puedes ejecutar cualquier lógica adicional.
   }
 }
 

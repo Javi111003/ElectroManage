@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output,SimpleChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
@@ -12,6 +12,7 @@ export class AutocompleteComponent implements OnInit {
   @Input() options: string[] = [];
   @Input() label: string = '';
   @Output() optionSelected = new EventEmitter<string>();
+  @Output() inputModified = new EventEmitter<string>();
 
   myControl: FormControl = new FormControl('');
   filteredOptions: Observable<string[]> = [][0];
@@ -21,6 +22,15 @@ export class AutocompleteComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value || '')),
     );
+    this.myControl.valueChanges.pipe(
+      startWith(''), // Valor inicial vacío.
+      map(value => {
+        this.inputModified.emit(value); // Emitir el valor modificado al padre.
+        return this._filter(value || ''); // Filtrar las opciones.
+      })
+    ).subscribe(filtered => {
+      this.filteredOptions = of(filtered); // Asegurar que siempre sea un Observable<string[]>.
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -30,6 +40,7 @@ export class AutocompleteComponent implements OnInit {
         map(value => this._filter(value || '')),
       );
     }
+    
   }
 
   /**
@@ -38,6 +49,14 @@ export class AutocompleteComponent implements OnInit {
    */
   onOptionSelected(event: any) {
     this.optionSelected.emit(event.option.value);
+  }
+
+  resetControl(): void {
+    this.myControl.reset(''); // Reinicia el valor del FormControl
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value || '')),
+    );
   }
 
   /**
