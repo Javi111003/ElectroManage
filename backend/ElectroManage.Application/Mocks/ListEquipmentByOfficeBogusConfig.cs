@@ -14,7 +14,7 @@ public class ListEquipmentByOfficeBogusConfig : AutoFaker<ListEquipmentByOfficeR
         RuleFor(x => x.UseFrequency, x => x.PickRandom<UseFrequency>().ToString());
         RuleFor(x => x.MaintenanceStatus, x => x.PickRandom<MaintenanceStatus>().ToString());
         RuleFor(x => x.Model, x => x.Random.Words(1));
-        RuleFor(x => x.Efficency, x => Math.Round(x.Random.Decimal(1, 100),1));
+        RuleFor(x => x.Efficiency, x => Math.Round(x.Random.Decimal(1, 100),1));
         RuleFor(x => x.Brand, x => x.Random.Words(1));
         RuleFor(x => x.EquipmentType, x => x.Random.Words(1));
     }

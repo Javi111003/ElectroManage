@@ -8,7 +8,7 @@ public record ListEquipmentByOfficeResponse
     public string UseFrequency { get; set; } = string.Empty;
     public string MaintenanceStatus { get; set; } = string.Empty;
     public string Model { get; set; } = string.Empty;
-    public decimal Efficency { get; set; }
+    public decimal Efficiency { get; set; }
     public string Brand { get; set; } = string.Empty;
     public string EquipmentType { get; set; } = string.Empty;
 }
