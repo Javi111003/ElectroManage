@@ -1,1 +1,29 @@
-<p>alert works!</p>
+<div class="form-total-consumption">
+  <div class="form">
+    <div class="form-autocomplete">
+      <app-autocomplete
+        [label]="'Centro de Trabajo'"
+        [options]="CenterOptions"
+        (optionSelected)="handleOptionSelected($event)"
+      >
+      </app-autocomplete>
+    </div>
+
+    <div class="form-buttons">
+      <app-button
+        [label]="'Consultar'"
+        [function]="onClick.bind(this)"
+      >
+      </app-button>
+
+      <app-button></app-button>
+    </div>
+  </div>
+
+  <div class="table" [class.hidden]="!isTableActive">
+    <app-table
+      [dataSource]="dataSource"
+      [displayedColumns]="displayedColumns"
+    ></app-table>
+  </div>
+</div>
