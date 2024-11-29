@@ -1,1 +1,44 @@
-<p>index works!</p>
+<div class="dashboard">
+    <section class="work-centers">
+        <div class="total-centers">
+            <!-- Columna izquierda con información -->
+            <div class="info">
+                <div class="total">
+                    <h2><strong>Total Centros:</strong></h2>
+                    <p>50</p>
+                </div>
+                <div class="total">
+                    <h2><strong>Nuevos este mes:</strong></h2>
+                    <p>10</p>
+                </div>
+                <div class="total">
+                    <h2><strong>Cerrados este mes:</strong></h2>
+                    <p>2</p>
+                </div>
+            </div>
+            <!-- Columna derecha con la gráfica -->
+            <div class="graph">
+                <canvas id="centersChart"></canvas>
+            </div>
+            <div>
+                <label for="yearSelect"><strong>Año:</strong></label>
+                <select id="yearSelect" (change)="onYearChange($event)">
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                </select>
+            </div>
+        </div>
+        <div class="pie-chart-container">
+                <div class="text">
+                    <p>
+                        <strong>Cantidad de Oficinas</strong>
+                    </p>
+                </div>
+                <div>
+                    <canvas id="officesChart"></canvas>
+                </div>
+            
+        </div>
+    </section>
+</div>
