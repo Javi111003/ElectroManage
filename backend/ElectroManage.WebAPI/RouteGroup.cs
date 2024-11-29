@@ -6,4 +6,5 @@
             public static string Register = "Register";
             public static string Equipment = "Equipment";
             public static string Office = "Office";
+            public static string Policy = "Policy";
     }

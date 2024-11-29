@@ -1,6 +1,5 @@
 ﻿namespace ElectroManage.Application.DTO_s;
-
-public class DailyCostByCompanyDto
+public record DailyCostByCompanyDto
 {
     public long RegisterId { get; set; }
     public long CompanyId { get; set; }

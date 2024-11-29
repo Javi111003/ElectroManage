@@ -1,5 +1,4 @@
 ﻿namespace ElectroManage.Application.DTO_s;
-
 public record MonthlyCostDTO
 {
     public int Month { get; set; }
