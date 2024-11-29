@@ -1,0 +1,176 @@
+/* Estructura general */
+
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    font-family: Lato,sans-serif;
+}
+
+/* Sección de centros de trabajo */
+.work-centers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: -20px;
+    opacity: 0; /* Los elementos empiezan invisibles */
+    animation: fadeIn 1s forwards 0.5s; /* Animación de aparición con un pequeño retardo */
+}
+
+/* Contenedor total-centers */
+.total-centers {
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* Una columna para "total" y otra más grande para la gráfica */
+    grid-template-rows: auto auto; /* Se agregan dos filas: una para la gráfica y otra para el selector */
+    grid-template-areas: 
+        "info graph"
+        "info year-select"; /* Nueva fila para el selector de año */
+    width: 70%; /* Ocupa todo el ancho disponible */
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #bdc3c7;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    gap: 20px;
+}
+
+/* Área de información (columna izquierda) */
+.info {
+    grid-area: info; /* Asigna el área definida */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Espacio simétrico entre los divs */
+    gap: 10px; /* Espacio entre los divs */
+    height: 100%; /* Ocupa todo el alto disponible */
+}
+
+/* Estilo de los divs dentro de la columna izquierda */
+.total {
+    background-color: #f7f7f7;
+    padding: 10px;
+    border-radius: 5px;
+    color: black;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centra el contenido dentro de cada div */
+    align-items: center; /* Centra el texto */
+    height: 100%; /* Permite que el div se expanda */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideIn 2s forwards;
+}
+
+.total h2 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.total p {
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Área de la gráfica (columna derecha) */
+.graph {
+    grid-area: graph; /* Asigna el área definida */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+}
+/* Estilo para el gráfico de pastel */
+.pie-chart-container {
+    position: relative; /* Necesario para usar position: absolute dentro de este contenedor */
+    display: flex;
+    flex-direction: column; /* Asegura que los elementos se apilen verticalmente */
+    justify-content: flex-end; /* Alinea el contenido al fondo */
+    background-color: #ffffff;
+    border: 1px solid #bdc3c7;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 340px;
+    padding: 10px; /* Espaciado interno para no pegar los bordes */
+    opacity: 0;
+    animation: slideIn 1s forwards;
+    animation-delay: 1.5s; /* Atrasado para aparecer después de la gráfica */
+}
+
+.pie-chart-container p {
+    position: absolute; /* Permite mover el texto con mayor control */
+    top: 10px; /* Mueve el texto hacia la parte superior */
+    left: 10px; /* Mueve el texto hacia la parte izquierda */
+    margin: 0; /* Elimina márgenes innecesarios */
+    margin-left: 10px;
+}
+
+/* Aseguramos que el gráfico de pastel se alinee bien dentro del contenedor */
+#officesChart {
+    
+    width: 100% !important;
+    height: 100% !important; /* Hace que el gráfico ocupe el 100% de la altura del contenedor */
+}
+/* Estilo para el selector de Año */
+#yearSelect {
+    grid-area: year-select;
+    width: 150px; /* Define el ancho del selector */
+    padding: 10px; /* Añade espacio dentro del selector */
+    border-radius: 8px; /* Bordes redondeados para un look más moderno */
+    border: 1px solid #ccc; /* Borde delgado y suave */
+    background-color: #f0f0f0; /* Fondo gris claro */
+    font-size: 1rem; /* Tamaño de fuente adecuado */
+    color: #333; /* Color de texto oscuro */
+    transition: all 0.3s ease; /* Animación suave para interacciones */
+    justify-self: end; /* Hace que el selector se alinee a la derecha */
+}
+
+/* Estilo cuando el selector está en foco (cuando se selecciona o se hace clic en él) */
+#yearSelect:focus {
+    border-color: #3498db; /* Borde azul al hacer foco */
+    background-color: #ffffff; /* Fondo blanco al hacer foco */
+    outline: none; /* Quita el borde por defecto del navegador */
+}
+
+/* Estilo de la etiqueta del selector */
+#yearSelect + label {
+    font-size: 1rem;
+    color: #666; /* Color gris claro */
+    margin-bottom: 5px; /* Espacio entre la etiqueta y el selector */
+    display: inline-block; /* Asegura que la etiqueta esté alineada correctamente */
+}
+/* Animación de desvanecimiento */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.total:nth-child(1) {
+    animation-delay: 0.3s; /* Aparece después del primero */
+}
+
+.total:nth-child(2) {
+    animation-delay: 0.6s; /* Aparece después del segundo */
+}
+
+.total:nth-child(3) {
+    animation-delay: 0.9s; /* Aparece después del tercero */
+}
+
+
+
+

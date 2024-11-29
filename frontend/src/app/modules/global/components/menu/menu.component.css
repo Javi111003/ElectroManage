@@ -1,7 +1,7 @@
 /* Layout for the main container using CSS Grid */
 .grid-container {
   display: grid; /* Enables CSS Grid layout */
-    font-family: Roboto,sans-serif;
+    font-family: Lato,sans-serif;
     grid-template-areas:
         "header header"
         "sidebar main"; /* Sidebar and main content on the same row */
