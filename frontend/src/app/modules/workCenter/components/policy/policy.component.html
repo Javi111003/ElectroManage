@@ -3,15 +3,13 @@
     <div class="form-autocomplete">
       <app-autocomplete
         [label]="'Centro de Trabajo'"
-        [options]="optionsWorkCenter"
-        (optionSelected)="handleOptionSelected($event)"
+        [options]="global.centerStringArray"
       >
       </app-autocomplete>
 
       <app-autocomplete
         [label]="'Política'"
         [options]="optionsPolicy"
-        (optionSelected)="handleOptionSelected($event)"
       >
       </app-autocomplete>
     </div>

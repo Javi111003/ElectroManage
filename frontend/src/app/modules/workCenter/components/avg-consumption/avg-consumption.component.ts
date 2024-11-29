@@ -4,6 +4,7 @@ import { WorkCenterService } from '../../../../services/workCenter/work-center.s
 import { MatTableDataSource } from '@angular/material/table';
 import { WorkCenter } from '../../../../models/workCenter.interface';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import { GlobalModule } from '../../../global/global.module';
 
 @Component({
   selector: 'app-avg-consumption',
@@ -20,11 +21,10 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 export class AvgConsumptionComponent implements OnInit{
 
   constructor (
-    private httpCenter: WorkCenterService
+    private httpCenter: WorkCenterService,
+    public global: GlobalModule
   ) {}
 
-  CenterOptions: string[] = [];
-  CenterObjects: WorkCenter[] = [];
   selectedOptions: string[] = [];
   isTableActive: boolean = false;
   dataSources: { [key: string]: MatTableDataSource<any> } = {};
@@ -47,18 +47,9 @@ export class AvgConsumptionComponent implements OnInit{
   expandedElements: string[] = [];
 
   ngOnInit() {
-    this.getWorkCenterList();
+    this.global.Reset();
+    this.global.getWorkCenters();
     this.isTableActive = false;
-  }
-
-  /** * Retrieves the list of work centers from the WorkCenterService.
-  * Updates the CenterOptions and CenterObjects arrays with the fetched work centers.
-  */
-  getWorkCenterList() {
-    this.httpCenter.getWorkCenterList().subscribe(workCenters => {
-      this.CenterObjects = workCenters;
-      this.CenterOptions = workCenters.map(item => item.name);
-    })
   }
 
   /** * Toggles the visibility of the table.
@@ -85,6 +76,12 @@ export class AvgConsumptionComponent implements OnInit{
     this.isTableActive=false;
   }
 
+  /** * Toggles the expansion state of a row element.
+  * This function checks if the specified element exists in the
+  * `expandedElements` array. If it exists, the function removes it,
+  * otherwise, it adds the element to the array.
+  * * @param {string} element - The row element to be toggled.
+  */
   toggleRow(element: string) {
     const index = this.expandedElements.indexOf(element);
     if (index >= 0) {

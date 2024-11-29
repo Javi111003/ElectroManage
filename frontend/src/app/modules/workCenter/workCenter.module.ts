@@ -7,7 +7,7 @@ import { TotalConsumptionComponent } from './components/total-consumption/total-
 import { AvgConsumptionComponent } from './components/avg-consumption/avg-consumption.component';
 import { PolicyComponent } from './components/policy/policy.component';
 import { AlertComponent } from './components/alert/alert.component';
-import { RankingComponent } from './components/ranking/ranking.component';
+import { ExcessComponent } from './components/excess/excess.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +15,7 @@ import { RankingComponent } from './components/ranking/ranking.component';
     AvgConsumptionComponent,
     PolicyComponent,
     AlertComponent,
-    RankingComponent
+    ExcessComponent
   ],
   imports: [
     CommonModule,

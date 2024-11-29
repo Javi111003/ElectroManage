@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RankingComponent } from './ranking.component';
+import { RankingComponent } from './excess.component';
 
 describe('RankingComponent', () => {
   let component: RankingComponent;

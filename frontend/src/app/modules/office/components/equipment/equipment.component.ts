@@ -3,23 +3,10 @@ import { ConfigColumn } from '../../../../shared/components/table/table.componen
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { OfficeService } from '../../../../services/office/office.service';
-import { WorkCenter } from '../../../../models/workCenter.interface';
-import { Office } from '../../../../models/office.interface';
-import { WorkCenterService } from '../../../../services/workCenter/work-center.service';
 import { Equipment } from '../../../../models/equipment.interface';
 import { AutocompleteComponent } from '../../../../shared/components/autocomplete/autocomplete.component';
+import { GlobalModule } from '../../../global/global.module';
 
-
-export interface TableItem {
-  id: string;
-  name: string;
-  useFrequency: string;
-  maintenanceStatus: string;
-  brand: string;
-  model: string;
-  efficiency: number;
-  equipmentType: string;
-}
 
 @Component({
   selector: 'app-equipment',
@@ -28,31 +15,26 @@ export interface TableItem {
 })
 
 export class EquipmentComponent implements OnInit {
-@ViewChild('officeAutocomplete') officeAutocomplete!: AutocompleteComponent;
+  @ViewChild('officeAutocomplete') officeAutocomplete!: AutocompleteComponent;
 
   constructor(
     private fb: FormBuilder,
     private httpOffice: OfficeService,
-    private httpCenter: WorkCenterService
+    public global: GlobalModule
   ) {
     this.form = this.fb.group({
       firstSelect: [''],
       secondSelect:['']
-    }); 
+    });
   }
   form: FormGroup;
   showTable = false;
-  centerOptions: string[] = [];
-  officeOptions: string[] = [];
-
-  centerObjects: WorkCenter[] = [];
-  officeObjects: Office[] = [];
 
   centerSelected: string = '';
-  centerSelectedId: number = 0;
+  centerSelectedId: number | any = 0;
 
   officeSelected: string = '';
-  officeSelectedId: number = 0;
+  officeSelectedId: number | any = 0;
 
   equipments: string[] = [];
   equipmentObjects: Equipment[] = [];
@@ -97,51 +79,22 @@ export class EquipmentComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.getCenterList();
-  }
-
-  /**
-   * Handles the change event of the first select control.
-   * Resets the second select control and updates its options based on the selected center.
-   * @param event The change event of the first select control.
-   */
-  onCenterChange(event: any): void {
-    this.centerSelected = event;
-    this.centerSelectedId = this.findCenterId(this.centerSelected);
-    this.getOfficesByCenter();
-    this.showTable = false;
-    this.officeSelected = null!;
-    this.officeSelectedId = 0;
-    this.officeAutocomplete.resetControl();
+    this.global.Reset();
+    this.global.getWorkCenters();
   }
 
   /** * Finds the ID of the selected center based on its name.
   * @param centerSelected The name of the selected center.
-  * @returns The ID of the selected center.
   */
-  findCenterId(centerSelected: string): number {
-    const id: number | any = this.centerObjects.find(item => item.name === centerSelected)?.id;
-    return id;
+  findCenterId(centerSelected: string): void {
+    this.centerSelectedId = this.global.centerObjectArray.find(item => item.name === centerSelected)?.id;
   }
 
   /** * Finds the ID of the selected office based on its name.
   * @param officeSelected The name of the selected office.
-  * @returns The ID of the selected office.
   */
-  findOfficeId(officeSelected: string): number {
-    const id: number | any = this.officeObjects.find(item => item.name === officeSelected)?.id;
-    return id;
-  }
-
-  /**
-   * This function gets the offices by center ID.
-   * It updates the officeOptions based on the selected center.
-   */
-  getOfficesByCenter(): void {
-    this.httpOffice.getOfficeList(this.centerSelectedId).subscribe(offices => {
-      this.officeObjects = offices;
-      this.officeOptions = offices.map(item => item.name);
-    })
+  findOfficeId(officeSelected: string): void {
+    this.officeSelectedId = this.global.officeObjectArray.find(item => item.name === officeSelected)?.id;
   }
 
   /**
@@ -151,7 +104,7 @@ export class EquipmentComponent implements OnInit {
   getEquipmentsByOffice(): void {
     this.httpOffice.getEquipmentList(this.centerSelectedId, this.officeSelectedId)
       .subscribe(equipments => {
-        let tableitems: TableItem[] = equipments.map(item => ({
+        this.dataSource.data = equipments.map(item => ({
           id: `${item.companyId}${item.officeId}${item.id}`,
           name: item.name,
           useFrequency: item.useFrequency,
@@ -161,21 +114,7 @@ export class EquipmentComponent implements OnInit {
           efficiency: item.efficency,
           equipmentType: item.equipmentType
         }));
-        console.log(equipments[0].efficency)
-        tableitems.forEach(item => console.log(item));
-        this.dataSource.data = tableitems;
-      })
-  }
-
-  /**
-   * Retrieves the list of centers.
-   * This function updates the CenterOptions array with the list of available centers.
-   */
-  getCenterList(): void {
-    this.httpCenter.getWorkCenterList().subscribe(workCenters => {
-      this.centerObjects = workCenters;
-      this.centerOptions = workCenters.map(item => item.name);
-    })
+      });
   }
 
   /**
@@ -186,7 +125,8 @@ export class EquipmentComponent implements OnInit {
    */
   handleOptionSelected(option: any) {
     this.officeSelected = option;
-    this.officeSelectedId = this.findOfficeId(option);
+    this.findOfficeId(option);
+    this.getEquipmentsByOffice();
   }
 
   /** * Handles the "Consultar" button click event.
@@ -194,24 +134,49 @@ export class EquipmentComponent implements OnInit {
   * If not, displays an alert message.
   */
   onConsultClick(): void {
-    if (this.centerSelected && this.officeSelected) {
+    if (this.isOptionValid(this.global.centerStringArray, this.centerSelected) &&
+        this.isOptionValid(this.global.officeStringArray, this.officeSelected)) {
       this.showTable = true;
-      this.centerSelectedId = this.findCenterId(this.centerSelected);
-      this.getEquipmentsByOffice();
     } else {
       this.showTable = false;
       alert('Por favor, selecciona un Centro de Trabajo y una Oficina.');
     }
   }
-  onOfficeInputModified(value: string): void {
-    this.centerSelected=value;
-    console.log(this.centerSelected);
-    this.getOfficesByCenter();
+
+  /**
+  * Handles the change event of the first select control.
+  * Resets the second select control and updates its options based on the selected center.
+  * @param event The change event of the first select control.
+  */
+  onCenterInputModified(value: string): void {
+    this.centerSelected = value;
+
+    if (this.isOptionValid(this.global.centerStringArray, this.centerSelected)) {
+      this.findCenterId(this.centerSelected);
+      console.log(this.centerSelectedId);
+      this.global.getOfficesByCenter(this.centerSelectedId);
+    }
+
     this.showTable = false;
     this.officeSelected = null!;
     this.officeSelectedId = 0;
     this.officeAutocomplete.resetControl();
-    // Aquí puedes ejecutar cualquier lógica adicional.
+  }
+
+  /** * Checks if the given option exists in the provided array.
+  * * This function iterates over the array to check if the specified
+  * option is present.
+  * @param {string[]} array - The array of strings to search within.
+  * @param {string} option - The option to search for in the array.
+  * @returns {boolean} - Returns `true` if the option is found, `false` otherwise.
+  */
+  isOptionValid(array: string[], option: string): boolean {
+    for (let index = 0; index < array.length; index++) {
+      if (option === array[index])
+        return true;
+    }
+
+    return false;
   }
 }
 
