@@ -1,5 +1,5 @@
 ﻿namespace ElectroManage.Application.DTO_s;
-public class ListRegisterResponse
+public record ListRegisterResponse
 {
     public decimal TotalConsumption { get; set; }
     public decimal TotalCost { get; set; }
