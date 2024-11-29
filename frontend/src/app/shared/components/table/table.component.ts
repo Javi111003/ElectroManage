@@ -34,7 +34,6 @@ export class TableComponent implements OnInit, AfterViewInit {
   headings: string[] = [];
 
   ngOnInit(): void {
-    console.log(this.footer);
     this.headings = this.displayedColumns.map(item => item.field)
     if (this.showActions)
       this.headings.push('actionsColumn')

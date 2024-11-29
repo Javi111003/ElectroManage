@@ -31,10 +31,10 @@
           "link": "workCenter/policy"
         },
         {
-          "id": "ranking",
-          "label": "Ranking por consumo",
-          "icon": "data_thresholding",
-          "link": "workCenter/ranking"
+          "id": "excess",
+          "label": "Exceso de consumo",
+          "icon": "query_stats",
+          "link": "workCenter/excess"
         },
         {
           "id": "alert",

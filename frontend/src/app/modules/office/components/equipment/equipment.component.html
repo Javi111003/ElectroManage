@@ -4,16 +4,15 @@
     <div class="form-autocomplete-item">
       <app-autocomplete
         [label]="'Centro de Trabajo'"
-        [options]="centerOptions"
-        (optionSelected)="onCenterChange($event)"
-        (inputModified)="onOfficeInputModified($event)">
+        [options]="global.centerStringArray"
+        (inputModified)="onCenterInputModified($event)">
       </app-autocomplete>
     </div>
     <div class="form-autocomplete-item">
       <app-autocomplete
         #officeAutocomplete
         [label]="'Oficinas'"
-        [options]="officeOptions"
+        [options]="global.officeStringArray"
         (optionSelected)="handleOptionSelected($event)"
         formControlName="office">
       </app-autocomplete>

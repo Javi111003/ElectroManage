@@ -3,7 +3,7 @@ import { TotalConsumptionComponent } from "./components/total-consumption/total-
 import { AvgConsumptionComponent } from "./components/avg-consumption/avg-consumption.component";
 import { PolicyComponent } from "./components/policy/policy.component";
 import { AlertComponent } from "./components/alert/alert.component";
-import { RankingComponent } from "./components/ranking/ranking.component";
+import { ExcessComponent } from "./components/excess/excess.component";
 
 
 export const workCenterRoutes: Routes = [
@@ -28,8 +28,8 @@ export const workCenterRoutes: Routes = [
     loadChildren: () => import('./workCenter.module').then(m => m.WorkCenterModule)
   },
   {
-    path:'workCenter/ranking',
-    component: RankingComponent,
+    path:'workCenter/excess',
+    component: ExcessComponent,
     loadChildren: () => import('./workCenter.module').then(m => m.WorkCenterModule)
   }
 ];

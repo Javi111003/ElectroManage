@@ -1,10 +1,8 @@
-import { DateFilterFn } from '@angular/material/datepicker';
 import { Component, OnInit } from '@angular/core';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
-import { WorkCenterService } from '../../../../services/workCenter/work-center.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { WorkCenter } from '../../../../models/workCenter.interface';
-import { Register } from '../../../../models/register.interface';
+import { GlobalModule } from '../../../global/global.module';
+import { WorkCenterService } from '../../../../services/workCenter/work-center.service';
 
 @Component({
   selector: 'app-total-consumption',
@@ -14,17 +12,17 @@ import { Register } from '../../../../models/register.interface';
 export class TotalConsumptionComponent implements OnInit {
 
   constructor (
+    public global: GlobalModule,
     private httpService: WorkCenterService
   ) {}
 
   receivedDate: Date = [][0];
   isTableActive: boolean = false;
-  options: string[] = [];
-  workCenters: WorkCenter[] = [];
   optionSelected: number = 0;
   dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
   consumptions: number[] = [];
   costs: number[] = [];
+  footerTable: any[] = [];
   displayedColumns: ConfigColumn[] = [
     {
       title: 'Día',
@@ -40,22 +38,10 @@ export class TotalConsumptionComponent implements OnInit {
     }
   ];
 
-  footerTable: any[] = [];
-
 
   ngOnInit(): void {
-    this.getWorkCenters();
-  }
-
-  /**
-   * This function retrieves the list of work centers.
-   * It updates the options array with the list of available work centers.
-   */
-  getWorkCenters(): void {
-    this.httpService.getWorkCenterList().subscribe(workcenters => {
-      this.options = workcenters.map(item => item.name);
-      this.workCenters = workcenters;
-    })
+    this.global.Reset();
+    this.global.getWorkCenters();
   }
 
   /**
@@ -158,11 +144,21 @@ hi   * It checks if the selected date is before the current date.
     this.isTableActive = !this.isTableActive;
   }
 
-  getTotalCost() {
+  /** * Calculates the total cost.
+  * * This function uses the reduce method to sum up all the values
+  * in the `costs` array and returns the total.
+  * * @returns {number} - The total cost.
+  */
+  getTotalCost(): number {
     return this.costs.reduce((acc, value) => acc + value, 0);
   }
 
-  getTotalConsumption() {
+  /** * Calculates the total consumption.
+  * * This function uses the reduce method to sum up all the values
+  * in the `consumptions` array and returns the total.
+  * * @returns {number} - The total consumption.
+  */
+  getTotalConsumption(): number {
     return this.consumptions.reduce((acc, value) => acc + value, 0);
   }
 }
