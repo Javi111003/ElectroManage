@@ -3,7 +3,11 @@ import { API_URL } from '../../config/api.config';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { WorkCenter } from '../../models/workCenter.interface';
-import { Register } from '../../models/register.interface';
+import { RegisterTotalConsumption } from '../../models/register.interface';
+import { Policy } from '../../models/policy.interface';
+import { Alert } from '../../models/alert.interface';
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -18,7 +22,15 @@ export class WorkCenterService {
     return this.http.get<WorkCenter[]>(this.workCenterListUrl);
   }
 
-  getRegister(): Observable<Register> {
-    return this.http.get<Register>(this.registerUrl);
+  getRegister(): Observable<RegisterTotalConsumption> {
+    return this.http.get<RegisterTotalConsumption>(this.registerUrl);
+  }
+
+  getPolicies(centerID: number): Observable<Policy[]> {
+    return this.http.get<Policy[]>(`${this.workCenterListUrl}/${centerID}/policy`);
+  }
+
+  getAlerts(centerID: number): Observable<Alert> {
+    return this.http.get<Alert>(`${this.workCenterListUrl}/${centerID}/list_warnings`);
   }
 }

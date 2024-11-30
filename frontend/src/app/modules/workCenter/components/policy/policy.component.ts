@@ -2,7 +2,6 @@ import { GlobalModule } from './../../../global/global.module';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
-import { WorkCenter } from '../../../../models/workCenter.interface';
 
 @Component({
   selector: 'app-policy',

@@ -3,7 +3,7 @@
     <div class="form-autocomplete">
       <app-autocomplete
         [label]="'Centro de Trabajo'"
-        [options]="CenterOptions"
+        [options]="this.global.centerStringArray"
         (optionSelected)="handleOptionSelected($event)"
       >
       </app-autocomplete>

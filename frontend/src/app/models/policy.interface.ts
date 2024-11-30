@@ -1,3 +1,6 @@
 export interface Policy {
-  //add properties here
+  id: number;
+  name: string;
+  applyingDate: string;
+  companyId: number;
 }

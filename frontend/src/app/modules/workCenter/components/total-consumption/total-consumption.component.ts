@@ -1,3 +1,4 @@
+import { RegisterTotalConsumption } from './../../../../models/register.interface';
 import { Component, OnInit } from '@angular/core';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
 import { MatTableDataSource } from '@angular/material/table';
@@ -56,8 +57,8 @@ export class TotalConsumptionComponent implements OnInit {
         register.registers[index].registerDate = register.registers[index].registerDate.substring(0, 10);
       }
       this.dataSource.data = register.registers;
-      this.consumptions = register.registers.map(item => item.consumption);
-      this.costs = register.registers.map(item => item.cost);
+      this.consumptions = this.dataSource.data.map(item => item.consumption);
+      this.costs = this.dataSource.data.map(item => item.cost);
       this.footerTable = ['Total', this.getTotalConsumption().toString(), this.getTotalCost().toString()];
     })
   }
