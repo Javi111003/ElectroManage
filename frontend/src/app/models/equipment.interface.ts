@@ -6,7 +6,7 @@ export interface Equipment {
   useFrequency: string;
   maintenanceStatus: string;
   model: string;
-  efficency: number;
+  efficiency: number;
   brand: string;
   equipmentType: string;
 }

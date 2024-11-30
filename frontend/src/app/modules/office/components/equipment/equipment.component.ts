@@ -3,7 +3,6 @@ import { ConfigColumn } from '../../../../shared/components/table/table.componen
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { OfficeService } from '../../../../services/office/office.service';
-import { Equipment } from '../../../../models/equipment.interface';
 import { AutocompleteComponent } from '../../../../shared/components/autocomplete/autocomplete.component';
 import { GlobalModule } from '../../../global/global.module';
 
@@ -37,7 +36,6 @@ export class EquipmentComponent implements OnInit {
   officeSelectedId: number | any = 0;
 
   equipments: string[] = [];
-  equipmentObjects: Equipment[] = [];
 
   // Example data for the table
   dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
@@ -86,14 +84,16 @@ export class EquipmentComponent implements OnInit {
   /** * Finds the ID of the selected center based on its name.
   * @param centerSelected The name of the selected center.
   */
-  findCenterId(centerSelected: string): void {
+  findCenterId(): void {
+    const centerSelected = this.centerSelected;
     this.centerSelectedId = this.global.centerObjectArray.find(item => item.name === centerSelected)?.id;
   }
 
   /** * Finds the ID of the selected office based on its name.
   * @param officeSelected The name of the selected office.
   */
-  findOfficeId(officeSelected: string): void {
+  findOfficeId(): void {
+    const officeSelected = this.officeSelected;
     this.officeSelectedId = this.global.officeObjectArray.find(item => item.name === officeSelected)?.id;
   }
 
@@ -111,7 +111,7 @@ export class EquipmentComponent implements OnInit {
           maintenanceStatus: item.maintenanceStatus,
           brand: item.brand,
           model: item.model,
-          efficiency: item.efficency,
+          efficiency: item.efficiency,
           equipmentType: item.equipmentType
         }));
       });
@@ -125,7 +125,7 @@ export class EquipmentComponent implements OnInit {
    */
   handleOptionSelected(option: any) {
     this.officeSelected = option;
-    this.findOfficeId(option);
+    this.findOfficeId();
     this.getEquipmentsByOffice();
   }
 
@@ -152,15 +152,16 @@ export class EquipmentComponent implements OnInit {
     this.centerSelected = value;
 
     if (this.isOptionValid(this.global.centerStringArray, this.centerSelected)) {
-      this.findCenterId(this.centerSelected);
-      console.log(this.centerSelectedId);
+      this.findCenterId();
       this.global.getOfficesByCenter(this.centerSelectedId);
     }
 
     this.showTable = false;
     this.officeSelected = null!;
     this.officeSelectedId = 0;
-    this.officeAutocomplete.resetControl();
+
+    if (this.officeAutocomplete)
+      this.officeAutocomplete.resetControl();
   }
 
   /** * Checks if the given option exists in the provided array.

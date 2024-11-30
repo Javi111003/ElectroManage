@@ -81,7 +81,6 @@ export class GlobalModule {
     this.httpCenter.getWorkCenterList().subscribe(workcenters => {
       this.centerObjectArray = workcenters;
       this.centerStringArray = workcenters.map(item => item.name);
-      console.log(this.centerStringArray);
     });
   }
 
@@ -90,11 +89,9 @@ export class GlobalModule {
    * It updates the officeOptions based on the selected center.
    */
   getOfficesByCenter(centerID: number): void {
-    console.log(centerID);
     this.httpOffice.getOfficeList(centerID).subscribe(offices => {
       this.officeObjectArray = offices;
       this.officeStringArray = offices.map(item => item.name);
-      console.log(this.officeObjectArray);
     });
   }
 

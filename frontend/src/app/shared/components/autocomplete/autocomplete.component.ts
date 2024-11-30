@@ -40,7 +40,7 @@ export class AutocompleteComponent implements OnInit {
         map(value => this._filter(value || '')),
       );
     }
-    
+
   }
 
   /**
@@ -52,7 +52,7 @@ export class AutocompleteComponent implements OnInit {
   }
 
   resetControl(): void {
-    this.myControl.reset(''); // Reinicia el valor del FormControl
+    this.myControl.reset('');
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || '')),
