@@ -1,7 +1,7 @@
 <div class="dashboard">
     <section class="work-centers">
         <div class="total-centers">
-            <!-- Columna izquierda con información -->
+            <!-- Left column with information -->
             <div class="info">
                 <div class="total">
                     <h2><strong>Total Centros:</strong></h2>
@@ -16,29 +16,55 @@
                     <p>2</p>
                 </div>
             </div>
-            <!-- Columna derecha con la gráfica -->
+            <!-- Right column with the graph -->
             <div class="graph">
                 <canvas id="centersChart"></canvas>
             </div>
             <div>
                 <label for="yearSelect"><strong>Año:</strong></label>
                 <select id="yearSelect" (change)="onYearChange($event)">
+                    <!-- Dropdown for selecting the year -->
                     <option value="2023">2023</option>
                     <option value="2024">2024</option>
                     <option value="2025">2025</option>
                 </select>
             </div>
         </div>
+        <!-- Pie chart section -->
         <div class="pie-chart-container">
-                <div class="text">
-                    <p>
-                        <strong>Cantidad de Oficinas</strong>
-                    </p>
-                </div>
-                <div>
-                    <canvas id="officesChart"></canvas>
-                </div>
-            
+            <!-- Text header for the pie chart -->
+            <div class="text">
+                <p><strong>Cantidad de Oficinas</strong></p>
+            </div>
+            <div>
+                <canvas id="officesChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <section class="consumption">
+        <!-- List of centers with excessive consumption -->
+        <div class="workcenter-limit-list">
+            <h6>Centros con Exceso de Consumo</h6>
+            <ul id="limitList">
+                <!-- Legend item displaying the headers -->
+                <li class="legend">
+                    <span class="center-name"><strong>Nombre</strong></span>
+                    <span class="excess"><strong>Consumo</strong></span>
+                    <span class="limit"><strong>Límite</strong></span>
+                </li>
+                <!-- Dynamically generated list items for work centers -->
+                <li class="workcenter-item" *ngFor="let center of workCenters">
+                    <span>{{ center.name }}</span>
+                    <span style="color: red;">{{ center.consumption }}</span>
+                    <span style="color: gray;">{{ center.limit }}</span>
+                </li>
+            </ul>
+        </div>
+    
+        <!-- Excess consumption chart -->
+        <div class="workcenter-graph">
+            <canvas id="excessChart"></canvas>
         </div>
     </section>
 </div>

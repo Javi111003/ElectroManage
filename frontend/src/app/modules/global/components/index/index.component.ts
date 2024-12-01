@@ -9,79 +9,86 @@ Chart.register(...registerables);
   styleUrls: ['./index.component.css']
 })
 export class IndexComponent implements OnInit {
-  years=['2023','2024','2025']
-  chart: any; // Para almacenar la referencia de la gráfica
-  selectedYear: number = 2023; // Año seleccionado por defecto
+  years = ['2023', '2024', '2025']; // Available years for the charts
+  chart: any; // Line chart
+  pieChart: any; // Pie chart (doughnut)
+  barChart: any; // Bar chart for consumption excess
+  selectedYear: number = 2023; // Default selected year
   dataByYear: any = {
     2023: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60],
     2024: [6, 12, 18, 22, 28, 33, 38, 44, 50, 56, 62, 70],
     2025: [7, 14, 21, 26, 32, 38, 44, 50, 56, 62, 68, 75]
   };
 
+  // Data for work centers with consumption excess
+  workCenters = [
+    { name: 'Center 1', consumption: 150, limit: 70 },
+    { name: 'Center 2', consumption: 140, limit: 120 },
+    { name: 'Center 3', consumption: 130, limit: 90 },
+    { name: 'Center 4', consumption: 125, limit: 110 },
+    { name: 'Center 5', consumption: 120, limit: 74 }
+  ];
+
   constructor() {}
 
+  /**
+   * This method is called when the component is initialized.
+   * It invokes functions to create the charts (line chart, pie chart, bar chart for excess consumption).
+   */
   ngOnInit(): void {
-    // Inicializamos la gráfica al cargar el componente con los datos predeterminados para 2023
-    this.createLineChart();
-    this.createPieChart(); // Agregamos la creación del gráfico de pastel
+    this.createLineChart(); // Initialize the line chart
+    this.createPieChart(); // Initialize the pie chart
+    this.createExcessBarChart(); // Initialize the excess consumption bar chart
   }
 
+  /**
+   * Creates a line chart that shows the number of registered centers by month for the selected year.
+   */
   createLineChart(): void {
     const ctx = document.getElementById('centersChart') as HTMLCanvasElement;
-    
-    // Creamos la gráfica
     this.chart = new Chart(ctx, {
-      type: 'line', // Tipo de gráfica
+      type: 'line',
       data: {
-        labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'], // Meses
+        labels: [
+          'January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December'
+        ],
         datasets: [{
-          label: 'Centros Registrados',
-          data: this.dataByYear[this.selectedYear], // Datos del año seleccionado
-          borderColor: '#3498db', // Color de la línea
-          backgroundColor: 'rgba(52, 152, 219, 0.2)', // Color de relleno bajo la línea
-          borderWidth: 2, // Grosor de la línea
-          pointRadius: 4, // Tamaño de los puntos
-          pointBackgroundColor: '#3498db' // Color de los puntos
+          label: 'Registered Centers',
+          data: this.dataByYear[this.selectedYear], // Data for the selected year
+          borderColor: '#3498db', // Line color
+          backgroundColor: 'rgba(52, 152, 219, 0.2)', // Area color
+          borderWidth: 2,
+          pointRadius: 4,
+          pointBackgroundColor: '#3498db' // Point color
         }]
       },
       options: {
         responsive: true,
         plugins: {
-          legend: {
-            display: true,
-            position: 'top'
-          }
+          legend: { display: true, position: 'top' }
         },
         scales: {
-          x: {
-            title: {
-              display: true,
-              text: 'Meses'
-            }
-          },
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: 'Centros'
-            }
-          }
+          x: { title: { display: true, text: 'Months' } }, // X-axis title
+          y: { beginAtZero: true, title: { display: true, text: 'Centers' } } // Y-axis title
         }
       }
     });
   }
-  // Gráfico de pastel
+
+  /**
+   * Creates a pie chart (doughnut) that shows the distribution of centers.
+   */
   createPieChart(): void {
     const ctx = document.getElementById('officesChart') as HTMLCanvasElement;
-    
-    new Chart(ctx, {
-      type: 'pie', // Tipo de gráfica
+    this.pieChart = new Chart(ctx, {
+      type: 'doughnut',
       data: {
-        labels: ['Centro 1', 'Centro 2', 'Centro 3', 'Centro 4', 'Centro 5'], // Nombres de centros
+        labels: ['Center 1', 'Center 2', 'Center 3', 'Center 4', 'Center 5'], // Labels for each center
         datasets: [{
-          label: 'Distribución de Oficinas',
-          data: [30, 25, 15, 20, 10], // Número de oficinas por cada centro
-          backgroundColor: ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6'], // Colores de cada sección
+          label: 'Office Distribution',
+          data: [30, 25, 15, 20, 10], // Data for each center
+          backgroundColor: ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6'], // Colors for each section
           borderColor: '#ffffff',
           borderWidth: 2
         }]
@@ -89,31 +96,70 @@ export class IndexComponent implements OnInit {
       options: {
         responsive: true,
         plugins: {
-          legend: {
-            position: 'bottom'
-          },
-          tooltip: {
-            callbacks: {
-              label: function(tooltipItem) {
-                return tooltipItem.label + ': ' + tooltipItem.raw + ' Oficinas';
-              }
-            }
-          }
+          legend: { position: 'bottom' } // Position of the legend
         }
       }
     });
   }
-  // Función que se llama cuando el usuario selecciona un año
-  onYearChange(event: any): void {
-    this.selectedYear = +event.target.value; // Obtener el valor del año seleccionado
-    this.updateChartData(); // Actualizar la gráfica con los datos del año seleccionado
+
+  /**
+   * Creates a bar chart showing the consumption and limit for different work centers.
+   */
+  createExcessBarChart(): void {
+    const ctx = document.getElementById('excessChart') as HTMLCanvasElement;
+    this.barChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: this.workCenters.map(center => center.name), // Labels from work center names
+        datasets: [
+          {
+            label: 'Consumption (kWh)',
+            data: this.workCenters.map(center => center.consumption), // Data for consumption
+            backgroundColor: '#ff1900', // Bar color for consumption
+            borderColor: 'rgba(231, 76, 60, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Limit (kWh)',
+            data: this.workCenters.map(center => center.limit), // Data for limit
+            backgroundColor: 'rgba(127, 140, 141, 0.8)', // Bar color for limit
+            borderColor: 'rgba(127, 140, 141, 1)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: true, position: 'top' }
+        },
+        scales: {
+          x: { title: { display: true, text: 'Centers' } }, // X-axis title
+          y: { beginAtZero: true, title: { display: true, text: 'Consumption (kWh)' } } // Y-axis title
+        }
+      }
+    });
   }
 
-  // Función para actualizar los datos de la gráfica
+  /**
+   * Event handler for when the selected year changes.
+   * It updates the data for the chart based on the selected year.
+   * 
+   * @param event - The event containing the selected year value.
+   */
+  onYearChange(event: any): void {
+    this.selectedYear = +event.target.value; // Update the selected year
+    this.updateChartData(); // Update chart data based on the new year
+  }
+
+  /**
+   * Updates the data of the line chart based on the selected year.
+   * It refreshes the chart to reflect the new data.
+   */
   updateChartData(): void {
     if (this.chart) {
-      this.chart.data.datasets[0].data = this.dataByYear[this.selectedYear];
-      this.chart.update(); // Actualizar la gráfica
+      this.chart.data.datasets[0].data = this.dataByYear[this.selectedYear]; // Update data for the selected year
+      this.chart.update(); // Refresh the chart
     }
   }
 }
