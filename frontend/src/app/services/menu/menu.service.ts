@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class MenuService {
   private jsonUrl = 'assets/menu-options.json';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /**
  * get the main menu options from a .json file.

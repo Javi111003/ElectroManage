@@ -25,12 +25,16 @@ export class AlertComponent implements OnInit {
       field:'date'
     },
     {
-      title:'Consumo (kw)',
+      title:'Consumo (kw/h)',
       field:'consumption'
     },
     {
-      title:'Límite Mensual',
+      title:'Límite Mensual (Kw/h)',
       field:'monthlyLimit'
+    },
+    {
+      title:'Exceso (Kw/h)',
+      field:'excess'
     }
   ];
 
@@ -40,6 +44,10 @@ export class AlertComponent implements OnInit {
     this.global.getWorkCenters();
   }
 
+  /**
+   * Toggles the visibility of the table and fetches alerts for the selected center.
+   * This method is triggered when the user clicks on the alert button.
+   */
   onClick() {
     this.findCenterId();
     this.getAlerts(this.centerSelectedId);
@@ -51,19 +59,30 @@ export class AlertComponent implements OnInit {
   */
   findCenterId(): void {
     const centerSelected = this.centerSelected;
-    this.centerSelectedId = this.global.centerObjectArray.find(item => item.name === centerSelected)?.id;
+    this.centerSelectedId = this.global.centerObjectArray.find(
+      item => item.name === centerSelected
+    )?.id;
   }
 
+  /**
+   * Fetches alerts for the specified center ID and updates the data source for the table.
+   * @param centerID The ID of the center for which to fetch alerts.
+   */
   getAlerts(centerID: number): void {
     this.httpAlert.getAlerts(centerID).subscribe(alert => {
       this.dataSource.data = alert.warnings.map(item => ({
         date: `${item.month}/${item.year}`,
-        consumption: item.consumption,
-        monthlyLimit: item.establishedLimit
+        consumption: item.consumption.toFixed(2),
+        monthlyLimit: item.establishedLimit.toFixed(2),
+        excess: (item.consumption - item.establishedLimit).toFixed(2)
       }));
     });
   }
 
+  /**
+   * This function is used to handle the selection of an option.
+   * @param option The selected option.
+   */
   handleOptionSelected(option: string) {
     this.centerSelected = option;
   }
