@@ -154,14 +154,14 @@ export class EquipmentComponent implements OnInit {
     if (this.isOptionValid(this.global.centerStringArray, this.centerSelected)) {
       this.findCenterId();
       this.global.getOfficesByCenter(this.centerSelectedId);
+    } else if (this.officeAutocomplete) {
+      this.officeAutocomplete.resetControl();
+      this.global.officeStringArray = [];
     }
 
     this.showTable = false;
     this.officeSelected = null!;
     this.officeSelectedId = 0;
-
-    if (this.officeAutocomplete)
-      this.officeAutocomplete.resetControl();
   }
 
   /** * Checks if the given option exists in the provided array.

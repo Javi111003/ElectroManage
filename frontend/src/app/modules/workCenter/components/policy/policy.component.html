@@ -4,12 +4,14 @@
       <app-autocomplete
         [label]="'Centro de Trabajo'"
         [options]="global.centerStringArray"
+        (inputModified)="onCenterInputModified($event)"
       >
       </app-autocomplete>
 
-      <app-autocomplete
+      <app-autocomplete #policyAutocomplete
         [label]="'Política'"
         [options]="optionsPolicy"
+        (inputModified)="onPolicyInputModified($event)"
       >
       </app-autocomplete>
     </div>

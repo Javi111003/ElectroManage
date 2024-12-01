@@ -42,3 +42,6 @@ th{
 tr.mat-mdc-footer-row {
   font-weight: bold;
 }
+.hidden {
+  display: none;
+}

@@ -18,7 +18,7 @@
 
       <tr mat-header-row *matHeaderRowDef="headings"></tr>
       <tr mat-row *matRowDef="let row; columns: headings;"></tr>
-      <tr mat-footer-row *matFooterRowDef="headings; sticky: true"></tr>
+      <tr mat-footer-row *matFooterRowDef="headings; sticky: true" [class.hidden]="!showFooter"></tr>
     </table>
   </div>
 
