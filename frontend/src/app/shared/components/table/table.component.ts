@@ -2,7 +2,7 @@ import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/cor
 
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
-import { PaginatorModifierComponent } from './paginator-modifier.component';
+import { PaginatorModifierComponent } from './paginator.modifier';
 
 export interface ConfigColumn {
   title: string;
@@ -22,16 +22,17 @@ export class TableComponent implements OnInit, AfterViewInit {
   @Input() displayedColumns: ConfigColumn[] = [];
   @Input() showActions: boolean = false;
   @Input() footer: any[] = [];
+  @Input() showFooter: boolean = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator = [][0];
+
+  headings: string[] = [];
 
   ngAfterViewInit() {
     if (this.paginator && this.dataSource) {
       this.dataSource.paginator = this.paginator;
     }
   }
-
-  headings: string[] = [];
 
   ngOnInit(): void {
     this.headings = this.displayedColumns.map(item => item.field)

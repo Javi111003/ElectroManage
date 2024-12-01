@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
 import { WorkCenterService } from '../../../../services/workCenter/work-center.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { WorkCenter } from '../../../../models/workCenter.interface';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import { GlobalModule } from '../../../global/global.module';
 
@@ -25,38 +24,49 @@ export class AvgConsumptionComponent implements OnInit{
     public global: GlobalModule
   ) {}
 
+  actualDate: Date = new Date();
+  actualYear: number = 0;
   selectedOptions: string[] = [];
-  isTableActive: boolean = false;
-  dataSources: { [key: string]: MatTableDataSource<any> } = {};
-  displayedColumns: ConfigColumn[] = [
-    {
-      title: 'Mes',
-      field: 'month'
-    },
-    {
-      title: 'Consumo Promedio (Kw/h)',
-      field: 'average'
-    },
-    {
-      title: 'Costo ($)',
-      field: 'cost'
-    }
-  ];
+  dataSource: MatTableDataSource<any> = new MatTableDataSource();
+  displayedColumns: ConfigColumn[] = [];
   columnsToDisplay = ['Centro de Trabajo'];
   columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
   expandedElements: string[] = [];
+  showTable: boolean = false;
 
   ngOnInit() {
     this.global.Reset();
     this.global.getWorkCenters();
-    this.isTableActive = false;
+    this.showTable = false;
+    this.actualYear = this.actualDate.getFullYear();
+    this.displayedColumns = [
+      {
+        title: 'Centro de Trabajo',
+        field: 'workCenter'
+      },
+      {
+        title: `Consumo Promedio (Kw/h) Año ${this.actualYear - 3}`,
+        field: 'month'
+      },
+      {
+        title: `Consumo Promedio (Kw/h) Año ${this.actualYear - 2}`,
+        field: 'average'
+      },
+      {
+        title: `Consumo Promedio (Kw/h) Año ${this.actualYear - 1}`,
+        field: 'cost'
+      }
+    ];
   }
 
   /** * Toggles the visibility of the table.
   * Called when the "Consultar" button is clicked.
   */
   onConsultClick() {
-    this.isTableActive = !this.isTableActive;
+    if (this.selectedOptions.length > 0)
+      this.showTable = true;
+    else
+      alert('Por favor, selecciona al menos un Centro de Trabajo.')
   }
 
   /** * Calculate the proyection of consumption for the next 3 years of the
@@ -73,7 +83,7 @@ export class AvgConsumptionComponent implements OnInit{
   */
   handleSelectionChange(selected: string[]) {
     this.selectedOptions = selected;
-    this.isTableActive=false;
+    this.showTable=false;
   }
 
   /** * Toggles the expansion state of a row element.

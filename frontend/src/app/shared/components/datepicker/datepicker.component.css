@@ -13,3 +13,6 @@
   border-radius: 15px !important;
   background-color: white !important;
 }
+::ng-deep .mdc-text-field__input {
+  color: black !important;
+}
