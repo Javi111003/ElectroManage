@@ -2,5 +2,5 @@
 public record ListMonthlastThreeYearsResponse
 {
     public long CompanyID { get; set; }
-    public ICollection<YearCostDTO> CompanyCost { get; set; } = [];
+    public ICollection<YearCostDTO> YearCostDto { get; set; } = [];
 }
