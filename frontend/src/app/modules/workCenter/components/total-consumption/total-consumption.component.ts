@@ -53,13 +53,20 @@ export class TotalConsumptionComponent implements OnInit {
   */
   getRegistersByCenterId(centerID: number): void {
     this.httpService.getRegister().subscribe(register => {
+      const registers = register.registers
+
       for (let index = 0; index < register.registers.length; index++) {
-        register.registers[index].registerDate = register.registers[index].registerDate.substring(0, 10);
+        registers[index].registerDate = registers[index].registerDate.substring(0, 10);
       }
+
       this.dataSource.data = register.registers;
       this.consumptions = this.dataSource.data.map(item => item.consumption);
       this.costs = this.dataSource.data.map(item => item.cost);
-      this.footerTable = ['Total', this.getTotalConsumption().toString(), this.getTotalCost().toString()];
+      this.footerTable = [
+        'Total',
+        this.getTotalConsumption().toFixed(2).toString(),
+        this.getTotalCost().toFixed(2).toString()
+      ];
     })
   }
 
@@ -148,7 +155,7 @@ hi   * It checks if the selected date is before the current date.
   /** * Calculates the total cost.
   * * This function uses the reduce method to sum up all the values
   * in the `costs` array and returns the total.
-  * * @returns {number} - The total cost.
+  * * @returns - The total cost.
   */
   getTotalCost(): number {
     return this.costs.reduce((acc, value) => acc + value, 0);
@@ -157,7 +164,7 @@ hi   * It checks if the selected date is before the current date.
   /** * Calculates the total consumption.
   * * This function uses the reduce method to sum up all the values
   * in the `consumptions` array and returns the total.
-  * * @returns {number} - The total consumption.
+  * * @returns - The total consumption.
   */
   getTotalConsumption(): number {
     return this.consumptions.reduce((acc, value) => acc + value, 0);
