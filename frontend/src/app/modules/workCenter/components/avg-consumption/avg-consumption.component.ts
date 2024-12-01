@@ -85,23 +85,4 @@ export class AvgConsumptionComponent implements OnInit{
     this.selectedOptions = selected;
     this.showTable=false;
   }
-
-  /** * Toggles the expansion state of a row element.
-  * This function checks if the specified element exists in the
-  * `expandedElements` array. If it exists, the function removes it,
-  * otherwise, it adds the element to the array.
-  * * @param {string} element - The row element to be toggled.
-  */
-  toggleRow(element: string) {
-    const index = this.expandedElements.indexOf(element);
-    if (index >= 0) {
-      this.expandedElements.splice(index, 1);
-    } else {
-      this.expandedElements.push(element);
-    }
-  }
-
-  isRowExpanded(element: string): boolean {
-    return this.expandedElements.indexOf(element) >= 0;
-  }
 }
