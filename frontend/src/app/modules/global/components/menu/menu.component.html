@@ -11,9 +11,9 @@
     <span class="cdk-visually-hidden">
       Example with a home icon with overlaid badge showing the number 15
     </span>
-      <mat-icon>person</mat-icon> <!-- User profile icon -->
+      <mat-icon [routerLink]="login">person</mat-icon> <!-- User profile icon -->
     </div>
-    
+
   </header>
   <!-- Sidebar Section -->
   <aside class="sidebar" [class.active]="isSidebarActive">
