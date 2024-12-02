@@ -23,6 +23,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { WorkCenter } from '../../models/workCenter.interface';
 import { Office } from '../../models/office.interface';
+import {MatBadgeModule} from '@angular/material/badge';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { Office } from '../../models/office.interface';
     MatFormFieldModule,
     MatSelectModule,
     MatButtonModule,
-    MatTableModule
+    MatTableModule,
+    MatBadgeModule
   ],
   exports: [
     HttpClientModule,
