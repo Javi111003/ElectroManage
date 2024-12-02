@@ -22,18 +22,48 @@ export class IndexComponent implements OnInit {
 
   // Data for work centers with consumption excess
   workCenters = [
-    { name: 'Center 1', consumption: 150, limit: 70 },
-    { name: 'Center 2', consumption: 140, limit: 120 },
-    { name: 'Center 3', consumption: 130, limit: 90 },
-    { name: 'Center 4', consumption: 125, limit: 110 },
-    { name: 'Center 5', consumption: 120, limit: 74 }
+    { name: 'Centro 1', consumption: 150, limit: 70 },
+    { name: 'Centro 2', consumption: 140, limit: 120 },
+    { name: 'Centro 3', consumption: 130, limit: 90 },
+    { name: 'Centro 4', consumption: 125, limit: 110 },
+    { name: 'Centro 5', consumption: 120, limit: 74 }
   ];
 
+  // Data for alerts
+  alertData = [
+    {
+      center: "Centro 1",
+      data: [12, 19, 3, 5, 2, 3, 6, 10, 8, 7, 15, 14],
+      actual_data:23
+
+    },
+    {
+      center: "Centro 2",
+      data: [2, 3, 20, 5, 1, 4, 9, 6, 5, 12, 13, 8],
+      actual_data:32
+    },
+    {
+      center: "Centro 3",
+      data: [3, 10, 13, 15, 22, 30, 25, 28, 21, 18, 19, 17],
+      actual_data:4
+    },
+    {
+      center: "Centro 4",
+      data: [5, 9, 10, 6, 7, 8, 11, 14, 10, 12, 9, 6],
+      actual_data:12
+    },
+    {
+      center: "Centro 5",
+      data: [8, 13, 19, 23, 16, 10, 15, 17, 14, 13, 12, 9],
+      actual_data:2
+    }
+  ];
 
   ngOnInit(): void {
     this.createLineChart(); // Initialize the line chart
     this.createPieChart(); // Initialize the pie chart
     this.createExcessBarChart(); // Initialize the excess consumption bar chart
+    this.createAlertTrendChart(); // Initialize the alert trend chart
   }
 
   /**
@@ -45,11 +75,11 @@ export class IndexComponent implements OnInit {
       type: 'line',
       data: {
         labels: [
-          'January', 'February', 'March', 'April', 'May', 'June',
-          'July', 'August', 'September', 'October', 'November', 'December'
+          'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
         ],
         datasets: [{
-          label: 'Registered Centers',
+          label: 'Centros Registrados',
           data: this.dataByYear[this.selectedYear], // Data for the selected year
           borderColor: '#3498db', // Line color
           backgroundColor: 'rgba(52, 152, 219, 0.2)', // Area color
@@ -64,8 +94,8 @@ export class IndexComponent implements OnInit {
           legend: { display: true, position: 'top' }
         },
         scales: {
-          x: { title: { display: true, text: 'Months' } }, // X-axis title
-          y: { beginAtZero: true, title: { display: true, text: 'Centers' } } // Y-axis title
+          x: { title: { display: true, text: 'Meses' } }, // X-axis title
+          y: { beginAtZero: true, title: { display: true, text: 'Centros' } } // Y-axis title
         }
       }
     });
@@ -79,9 +109,9 @@ export class IndexComponent implements OnInit {
     this.pieChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: ['Center 1', 'Center 2', 'Center 3', 'Center 4', 'Center 5'], // Labels for each center
+        labels: ['Centro 1', 'Centro 2', 'Centro 3', 'Centro 4', 'Centro 5'], // Labels for each center
         datasets: [{
-          label: 'Office Distribution',
+          label: 'Distribución de Oficinas',
           data: [30, 25, 15, 20, 10], // Data for each center
           backgroundColor: ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6'], // Colors for each section
           borderColor: '#ffffff',
@@ -108,14 +138,14 @@ export class IndexComponent implements OnInit {
         labels: this.workCenters.map(center => center.name), // Labels from work center names
         datasets: [
           {
-            label: 'Consumption (kWh)',
+            label: 'Consumo (kWh)',
             data: this.workCenters.map(center => center.consumption), // Data for consumption
             backgroundColor: '#ff1900', // Bar color for consumption
             borderColor: 'rgba(231, 76, 60, 1)',
             borderWidth: 1
           },
           {
-            label: 'Limit (kWh)',
+            label: 'Límite (kWh)',
             data: this.workCenters.map(center => center.limit), // Data for limit
             backgroundColor: 'rgba(127, 140, 141, 0.8)', // Bar color for limit
             borderColor: 'rgba(127, 140, 141, 1)',
@@ -129,8 +159,44 @@ export class IndexComponent implements OnInit {
           legend: { display: true, position: 'top' }
         },
         scales: {
-          x: { title: { display: true, text: 'Centers' } }, // X-axis title
-          y: { beginAtZero: true, title: { display: true, text: 'Consumption (kWh)' } } // Y-axis title
+          x: { title: { display: true, text: 'Centros' } }, // X-axis title
+          y: { beginAtZero: true, title: { display: true, text: 'Consumo (kWh)' } } // Y-axis title
+        }
+      }
+    });
+  }
+
+  /**
+   * Creates a line chart showing the alert trends for the top 5 centers.
+   */
+  createAlertTrendChart(): void {
+    const ctx = document.getElementById('alertTrendChart') as HTMLCanvasElement;
+    this.chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [
+          'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+        ],
+        datasets: this.alertData.map((center, index) => ({
+          label: center.center,
+          data: center.data,
+          borderColor: `hsl(${index * 60}, 70%, 50%)`, // Different color for each line
+          fill: false
+        }))
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: true, position: 'top' }
+        },
+        scales: {
+          x: { title: { display: true, text: 'Meses' } }, // X-axis title
+          y: { beginAtZero: true, title: { display: true, text: 'Número de Alertas' } } // Y-axis title
+        },
+        animation: { 
+          duration: 9000,
+          easing: 'easeOutQuart',
         }
       }
     });
@@ -151,10 +217,9 @@ export class IndexComponent implements OnInit {
    * Updates the data of the line chart based on the selected year.
    * It refreshes the chart to reflect the new data.
    */
-  updateChartData(): void {
-    if (this.chart) {
-      this.chart.data.datasets[0].data = this.dataByYear[this.selectedYear]; // Update data for the selected year
-      this.chart.update(); // Refresh the chart
+  updateChartData(): void { 
+    if (this.chart) { 
+      this.chart.data.datasets[0].data = this.dataByYear[this.selectedYear]; // Update data for the selected year this.chart.update(); // Refresh the chart } 
+      }
     }
   }
-}

@@ -67,4 +67,24 @@
             <canvas id="excessChart"></canvas>
         </div>
     </section>
+    <section class="alerts">
+        <div class="workcenter-alerts-list">
+            <h6>Centros con mayor cantidad de Alertas</h6>
+            <ul id="alertList">
+                <!-- Legend item displaying the headers -->
+                <li class="legend">
+                    <span class="center-name"><strong>Nombre</strong></span>
+                    <span class="alerts-legend"><strong>Alertas</strong></span>
+                </li>
+                <!-- Dynamically generated list items for work centers -->
+                <li class="workcenter-item" *ngFor="let alert of alertData">
+                    <span class="name">{{ alert.center }}</span>
+                    <span style="color: red;">{{ alert.actual_data}}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="alert-graph">
+            <canvas id="alertTrendChart"></canvas>
+        </div>
+    </section>
 </div>
