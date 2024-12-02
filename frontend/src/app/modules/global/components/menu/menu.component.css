@@ -34,19 +34,22 @@
   font-weight: bold;
   text-align: left;
 }
-.header mat-icon {
-  width: 30px; /* Sets icon width */
-  height: 30px; /* Sets icon height */
+.header .icons{
+  gap: 4%;
+  width: 20%; /* Sets icon width */
+ /* height: 30px; /* Sets icon height */
+  padding-right: 10px;
   display: flex; /* Centers icon content */
-  align-items: center; /* Vertically centers content */
-  justify-content: center; /* Horizontally centers content */
+  justify-content: right; 
   cursor: pointer; /* Changes cursor to pointer */
-  border-radius: 50%; /* Makes the icon area circular */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Adds smooth hover effects */
+}
+.header mat-icon{
+  border-radius: 50% ;
   transition: background-color 0.3s ease, transform 0.3s ease; /* Adds smooth hover effects */
 }
 .header mat-icon:hover {
-  background-color: rgba(56, 55, 55, 0.404); /* Adds a semi-transparent background on hover */
-  transform: scale(1.05); /* Slightly enlarges the icon on hover */
+  transform: scale(1.25); /* Slightly enlarges the icon on hover */
 }
 /* Sidebar styles */
 .sidebar {
@@ -139,16 +142,6 @@
   padding: 1rem; /* Adds padding inside main content */
   overflow:auto; /* Enables vertical scrolling */
   transition: margin-left 0.3s ease; /* Smooth transition for size adjustment */
-}
-/* Footer styles */
-.footer {
-  grid-area: footer; /* Assigns this section to the footer grid area */
-  background-color: #00203b; /* Blue background color */
-  color: white; /* White text color */
-  height: 60px; /* Fixed footer height */
-  display: flex; /* Flexbox for alignment */
-  justify-content: center; /* Centers content horizontally */
-  align-items: center; /* Centers content vertically */
 }
 /* Responsive styles for smaller screens */
 @media (max-width: 767px) {
