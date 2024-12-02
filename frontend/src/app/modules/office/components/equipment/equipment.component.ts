@@ -30,7 +30,6 @@ export class EquipmentComponent implements OnInit {
   showTable = false;
 
   centerSelected: string = '';
-  centerSelectedId: number | any = 0;
 
   officeSelected: string = '';
   officeSelectedId: number | any = 0;
@@ -81,14 +80,6 @@ export class EquipmentComponent implements OnInit {
     this.global.getWorkCenters();
   }
 
-  /** * Finds the ID of the selected center based on its name.
-  * @param centerSelected The name of the selected center.
-  */
-  findCenterId(): void {
-    const centerSelected = this.centerSelected;
-    this.centerSelectedId = this.global.centerObjectArray.find(item => item.name === centerSelected)?.id;
-  }
-
   /** * Finds the ID of the selected office based on its name.
   * @param officeSelected The name of the selected office.
   */
@@ -102,7 +93,7 @@ export class EquipmentComponent implements OnInit {
    * It updates the dataSource for the MatTable with the list of equipment.
    */
   getEquipmentsByOffice(): void {
-    this.httpOffice.getEquipmentList(this.centerSelectedId, this.officeSelectedId)
+    this.httpOffice.getEquipmentList(this.global.centerSelectedId, this.officeSelectedId)
       .subscribe(equipments => {
         this.dataSource.data = equipments.map(item => ({
           id: `${item.companyId}${item.officeId}${item.id}`,
@@ -134,8 +125,8 @@ export class EquipmentComponent implements OnInit {
   * If not, displays an alert message.
   */
   onConsultClick(): void {
-    if (this.isOptionValid(this.global.centerStringArray, this.centerSelected) &&
-        this.isOptionValid(this.global.officeStringArray, this.officeSelected)) {
+    if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected) &&
+        this.global.isOptionValid(this.global.officeStringArray, this.officeSelected)) {
       this.showTable = true;
     } else {
       this.showTable = false;
@@ -151,9 +142,9 @@ export class EquipmentComponent implements OnInit {
   onCenterInputModified(value: string): void {
     this.centerSelected = value;
 
-    if (this.isOptionValid(this.global.centerStringArray, this.centerSelected)) {
-      this.findCenterId();
-      this.global.getOfficesByCenter(this.centerSelectedId);
+    if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected)) {
+      this.global.findCenterId(this.centerSelected);
+      this.global.getOfficesByCenter(this.global.centerSelectedId);
     } else if (this.officeAutocomplete) {
       this.officeAutocomplete.resetControl();
       this.global.officeStringArray = [];
@@ -162,22 +153,6 @@ export class EquipmentComponent implements OnInit {
     this.showTable = false;
     this.officeSelected = null!;
     this.officeSelectedId = 0;
-  }
-
-  /** * Checks if the given option exists in the provided array.
-  * * This function iterates over the array to check if the specified
-  * option is present.
-  * @param {string[]} array - The array of strings to search within.
-  * @param {string} option - The option to search for in the array.
-  * @returns {boolean} - Returns `true` if the option is found, `false` otherwise.
-  */
-  isOptionValid(array: string[], option: string): boolean {
-    for (let index = 0; index < array.length; index++) {
-      if (option === array[index])
-        return true;
-    }
-
-    return false;
   }
 }
 

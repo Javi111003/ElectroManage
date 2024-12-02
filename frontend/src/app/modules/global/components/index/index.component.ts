@@ -29,12 +29,7 @@ export class IndexComponent implements OnInit {
     { name: 'Center 5', consumption: 120, limit: 74 }
   ];
 
-  constructor() {}
 
-  /**
-   * This method is called when the component is initialized.
-   * It invokes functions to create the charts (line chart, pie chart, bar chart for excess consumption).
-   */
   ngOnInit(): void {
     this.createLineChart(); // Initialize the line chart
     this.createPieChart(); // Initialize the pie chart
@@ -144,7 +139,7 @@ export class IndexComponent implements OnInit {
   /**
    * Event handler for when the selected year changes.
    * It updates the data for the chart based on the selected year.
-   * 
+   *
    * @param event - The event containing the selected year value.
    */
   onYearChange(event: any): void {

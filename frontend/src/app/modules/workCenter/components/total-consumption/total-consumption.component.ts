@@ -19,7 +19,7 @@ export class TotalConsumptionComponent implements OnInit {
 
   receivedDate: Date = [][0];
   isTableActive: boolean = false;
-  optionSelected: number = 0;
+  optionSelected: string = '';
   dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
   consumptions: number[] = [];
   costs: number[] = [];
@@ -148,8 +148,12 @@ hi   * It checks if the selected date is before the current date.
    * Toggles the visibility of the table based on the current state.
    */
   onClick() {
-    this.getRegistersByCenterId(0);
-    this.isTableActive = !this.isTableActive;
+    if (this.global.isOptionValid(this.global.centerStringArray, this.optionSelected)) {
+      this.getRegistersByCenterId(0);
+      this.isTableActive = !this.isTableActive;
+    } else {
+      alert('Por favor, selecciona un Centro de Trabajo.');
+    }
   }
 
   /** * Calculates the total cost.

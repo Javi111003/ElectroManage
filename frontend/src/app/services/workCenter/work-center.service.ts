@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { API_URL } from '../../config/api.config';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { WorkCenter } from '../../models/workCenter.interface';
-import { RegisterTotalConsumption } from '../../models/register.interface';
+import { AvgRegisterConsumption, RegisterTotalConsumption } from '../../models/register.interface';
 import { Policy } from '../../models/policy.interface';
 import { Alert } from '../../models/alert.interface';
 
@@ -55,5 +55,22 @@ export class WorkCenterService {
    */
   getAlerts(centerID: number): Observable<Alert> {
     return this.http.get<Alert>(`${this.workCenterListUrl}/${centerID}/list_warnings`);
+  }
+
+  /**
+   * Fetches the average registers for a given list of work centers from the API.
+   * This method sends an HTTP GET request to the API to retrieve the average registers for a specified list of work centers.
+   * @param centerIDs The IDs of the work centers for which to fetch average registers.
+   * @returns An Observable that resolves to an array of AvgRegisterConsumption objects.
+   */
+  getAvgRegisters(centerIDs: number[]): Observable<AvgRegisterConsumption[]> {
+    let params = new HttpParams();
+    centerIDs.forEach(id => {
+      params = params.append('ids', id.toString());
+    });
+
+    return this.http.get<AvgRegisterConsumption[]>(
+      `${this.workCenterListUrl}/last_three_years`, { params }
+    );
   }
 }

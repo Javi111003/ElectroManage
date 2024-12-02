@@ -13,9 +13,12 @@ export interface RegisterDailyConsumption {
 }
 
 export interface RegisterYearlyConsumption {
-
+  year: number;
+  meanMonthlyCost: number;
+  meanMonthlyConsumption: number
 }
 
-export interface RegisterMonthlyConsumption {
-
+export interface AvgRegisterConsumption {
+  companyID: number;
+  yearCostDto: RegisterYearlyConsumption[]
 }
