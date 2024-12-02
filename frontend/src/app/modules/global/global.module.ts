@@ -73,6 +73,8 @@ export class GlobalModule {
   officeStringArray: string[] = [];
   officeObjectArray: Office[] = [];
 
+  centerSelectedId: number | any = 0;
+
   /**
    * This function retrieves the list of work centers.
    * It updates the options array with the list of available work centers.
@@ -95,6 +97,31 @@ export class GlobalModule {
     });
   }
 
+  /** * Checks if the given option exists in the provided array.
+  * * This function iterates over the array to check if the specified
+  * option is present.
+  * @param array - The array of strings to search within.
+  * @param option - The option to search for in the array.
+  * @returns - Returns `true` if the option is found, `false` otherwise.
+  */
+  isOptionValid(array: string[], option: string): boolean {
+    for (let index = 0; index < array.length; index++) {
+      if (option === array[index])
+        return true;
+    }
+
+    return false;
+  }
+
+  /** * Finds the ID of the selected center based on its name.
+  * @param centerSelected The name of the selected center.
+  */
+  findCenterId(centerSelected: string): void {
+    this.centerSelectedId = this.centerObjectArray.find(
+      item => item.name === centerSelected
+    )?.id;
+  }
+
   /** This function resets all variables
   * to their initial default values. Use this function to
   * clear any temporary states and start fresh.
@@ -104,5 +131,6 @@ export class GlobalModule {
     this.centerObjectArray = [];
     this.officeStringArray = [];
     this.officeObjectArray = [];
+    this.centerSelectedId = -1;
   }
 }

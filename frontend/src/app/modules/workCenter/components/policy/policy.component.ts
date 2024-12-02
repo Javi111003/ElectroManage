@@ -3,6 +3,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
 import { AutocompleteComponent } from '../../../../shared/components/autocomplete/autocomplete.component';
+import { Policy } from '../../../../models/policy.interface';
+import { WorkCenterService } from '../../../../services/workCenter/work-center.service';
 
 @Component({
   selector: 'app-policy',
@@ -12,7 +14,8 @@ import { AutocompleteComponent } from '../../../../shared/components/autocomplet
 export class PolicyComponent implements OnInit {
 
   constructor(
-    public global: GlobalModule
+    public global: GlobalModule,
+    private httpCenter: WorkCenterService
   ) {}
 
   @ViewChild('policyAutocomplete') policyAutocomplete!: AutocompleteComponent;
@@ -23,9 +26,9 @@ export class PolicyComponent implements OnInit {
   policySelected: string = '';
   policySelectedId: number = 0;
 
-  optionsPolicy: string[] = [
-    'politica 1', 'politica 2'
-  ];
+  optionsPolicy: string[] = [];
+  objectsPolicy: Policy[] = [];
+
   isTableActive: boolean = false;
   dataSourceBefore: MatTableDataSource<any> = [][0];
   dataSourceAfter: MatTableDataSource<any> = [][0];
@@ -50,11 +53,14 @@ export class PolicyComponent implements OnInit {
     this.global.getWorkCenters();
   }
 
-  ngAfterViewInit(): void { }
-
+  /**
+   * Handles the click event on the policy component.
+   * Checks if a valid center and policy are selected, and if so, sets the table to be active.
+   * If not, displays an alert message.
+   */
   onClick() {
-    if (this.isOptionValid(this.global.centerStringArray, this.centerSelected) &&
-      this.isOptionValid(this.optionsPolicy, this.policySelected)) {
+    if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected) &&
+      this.global.isOptionValid(this.optionsPolicy, this.policySelected)) {
       this.isTableActive = true;
     } else {
       this.isTableActive = false;
@@ -62,16 +68,32 @@ export class PolicyComponent implements OnInit {
     }
   }
 
+  /**
+   * Retrieves policies based on the selected center ID.
+   * Updates the optionsPolicy array with the names of the policies.
+   * @param centerSelectedId The ID of the selected center.
+   */
+  getPolicies(centerSelectedId: any) {
+    this.httpCenter.getPolicies(centerSelectedId).subscribe(policies => {
+      this.objectsPolicy = policies;
+      this.optionsPolicy = policies.map(policy => policy.name);
+    });
+  }
+
+  /**
+   * Handles changes to the center input.
+   * Resets the policy selection and updates the policies based on the new center selection.
+   * @param value The new value of the center input.
+   */
   onCenterInputModified(value: string) {
     this.centerSelected = value;
     this.isTableActive = false;
     this.policySelected = null!;
     this.policySelectedId = 0;
 
-    if (this.isOptionValid(this.global.centerStringArray, this.centerSelected)) {
-      this.optionsPolicy = [
-        'politica 1', 'politica 2'
-      ];
+    if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected)) {
+      this.global.findCenterId(this.centerSelected);
+      this.getPolicies(this.global.centerSelectedId);
     }
 
     else if (this.policyAutocomplete) {
@@ -80,17 +102,13 @@ export class PolicyComponent implements OnInit {
     }
   }
 
+  /**
+   * Handles changes to the policy input.
+   * Resets the table activity state.
+   * @param value The new value of the policy input.
+   */
   onPolicyInputModified(value: string) {
     this.policySelected = value;
     this.isTableActive = false;
-  }
-
-  isOptionValid(array: string[], option: string): boolean {
-    for (let index = 0; index < array.length; index++) {
-      if (option === array[index])
-        return true;
-    }
-
-    return false;
   }
 }

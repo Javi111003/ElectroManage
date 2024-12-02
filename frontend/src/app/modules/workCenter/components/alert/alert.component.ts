@@ -17,7 +17,6 @@ export class AlertComponent implements OnInit {
 
   isTableActive: boolean = false;
   centerSelected: string = '';
-  centerSelectedId: number | any = 0;
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
     {
@@ -49,19 +48,14 @@ export class AlertComponent implements OnInit {
    * This method is triggered when the user clicks on the alert button.
    */
   onClick() {
-    this.findCenterId();
-    this.getAlerts(this.centerSelectedId);
-    this.isTableActive = !this.isTableActive;
-  }
-
-  /** * Finds the ID of the selected center based on its name.
-  * @param centerSelected The name of the selected center.
-  */
-  findCenterId(): void {
-    const centerSelected = this.centerSelected;
-    this.centerSelectedId = this.global.centerObjectArray.find(
-      item => item.name === centerSelected
-    )?.id;
+    if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected)) {
+      this.global.findCenterId(this.centerSelected);
+      this.getAlerts(this.global.centerSelectedId);
+      this.isTableActive = !this.isTableActive;
+    }
+    else {
+      alert('Por favor, selecciona un Centro de Trabajo.');
+    }
   }
 
   /**
