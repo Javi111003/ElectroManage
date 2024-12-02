@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { IndexComponent } from './components/index/index.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
+import { LoginComponent } from './components/login/login.component';
 
 //global services
 import { WorkCenterService } from '../../services/workCenter/work-center.service';
@@ -30,7 +31,8 @@ import {MatBadgeModule} from '@angular/material/badge';
   declarations: [
     IndexComponent,
     MenuComponent,
-    AboutUsComponent
+    AboutUsComponent,
+    LoginComponent
   ],
   imports: [
     CommonModule,

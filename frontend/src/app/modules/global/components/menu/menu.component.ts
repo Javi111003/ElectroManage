@@ -10,6 +10,7 @@ export class MenuComponent implements OnInit {
 
   //items from .json
   menuItems: any[] = [];
+  login: string = 'login'
 
   constructor(private menuService: MenuService) {}
 
