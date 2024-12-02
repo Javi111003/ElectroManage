@@ -5,7 +5,11 @@
     <div class="menu-btn" (click)="toggleSidebar()">☰</div> <!-- Mobile menu button (toggles sidebar visibility) -->
     <img src="logo.png" alt="Company Logo"> <!-- Company logo -->
     <p>Electro Manage</p> <!-- Application title -->
-    <mat-icon>person</mat-icon> <!-- User profile icon -->
+    <div class="icons">
+      <mat-icon>notifications</mat-icon> <!-- Notification icon -->
+      <mat-icon>person</mat-icon> <!-- User profile icon -->
+    </div>
+    
   </header>
   <!-- Sidebar Section -->
   <aside class="sidebar" [class.active]="isSidebarActive">
