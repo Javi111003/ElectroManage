@@ -24,6 +24,7 @@
 .header img {
   height: 40px; /* Larger image size */
   margin-left: 10px;
+  cursor: pointer;
 }
 .header p {
   margin: 0;
