@@ -1,16 +1,26 @@
 <form class="example-form">
-  <mat-form-field class="example-full-width no-border" appearance="outline">
+  <mat-form-field
+    class="example-full-width no-border"
+    [class.disabled-select]="isDisabled"
+    appearance="outline"
+  >
     <mat-label>{{label}}</mat-label>
     <input type="text"
            placeholder="Elige una opción"
            [attr.aria-label]="label"
            matInput
            [formControl]="myControl"
-           [matAutocomplete]="auto">
+           [matAutocomplete]="auto"
+           [disabled]="isDisabled"
+           [readonly]="isDisabled"
+    >
 
-    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+    <mat-autocomplete
+      autoActiveFirstOption #auto="matAutocomplete"
+      (optionSelected)="onOptionSelected($event)"
+    >
       @for (option of filteredOptions | async; track option) {
-        <mat-option [value]="option">{{option}}</mat-option>
+        <mat-option class="custom-option" [value]="option">{{option}}</mat-option>
       }
     </mat-autocomplete>
   </mat-form-field>

@@ -13,6 +13,7 @@
         #officeAutocomplete
         [label]="'Oficinas'"
         [options]="global.officeStringArray"
+        [isDisabled]="!this.global.isOptionValid(global.centerStringArray, this.centerSelected)"
         (optionSelected)="handleOptionSelected($event)"
         formControlName="office">
       </app-autocomplete>

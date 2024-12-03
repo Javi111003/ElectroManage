@@ -15,3 +15,16 @@
 ::ng-deep .cdk-overlay-pane:not(.mat-mdc-autocomplete-panel-above) div.mat-mdc-autocomplete-panel {
   background-color: white !important;
 }
+.custom-option {
+  border-bottom: 1px solid #ccc;
+  padding: 8px;
+}
+.custom-option:last-child {
+  border-bottom: none;
+}
+.disabled-select {
+  opacity: 0.5;
+}
+.disabled-select mat-select, .disabled-select mat-autocomplete {
+  pointer-events: none;
+}

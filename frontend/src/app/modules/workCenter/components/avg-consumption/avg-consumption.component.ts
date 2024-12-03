@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
-import { WorkCenterService } from '../../../../services/workCenter/work-center.service';
 import { MatTableDataSource } from '@angular/material/table';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { GlobalModule } from '../../../global/global.module';
 
 
@@ -21,7 +20,6 @@ import { GlobalModule } from '../../../global/global.module';
 export class AvgConsumptionComponent implements OnInit{
 
   constructor (
-    private httpCenter: WorkCenterService,
     public global: GlobalModule
   ) {}
 
@@ -74,7 +72,7 @@ export class AvgConsumptionComponent implements OnInit{
    * which are stored in the dataSources object.
    */
   getAvgRegisters() {
-    this.httpCenter.getAvgRegisters(this.selectedOptionsIds).subscribe(registers => {
+    this.global.httpCenter.getAvgRegisters(this.selectedOptionsIds).subscribe(registers => {
       for (let index = 0; index < registers.length; index++) {
         const centerName = this.global.centerObjectArray.find(
           item => item.id === registers[index].companyID

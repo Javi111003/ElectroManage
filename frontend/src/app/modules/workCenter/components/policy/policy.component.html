@@ -12,6 +12,7 @@
         [label]="'Política'"
         [options]="optionsPolicy"
         (inputModified)="onPolicyInputModified($event)"
+        [isDisabled]="!this.global.isOptionValid(global.centerStringArray, this.centerSelected)"
       >
       </app-autocomplete>
     </div>

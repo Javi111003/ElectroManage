@@ -61,14 +61,14 @@ import {MatBadgeModule} from '@angular/material/badge';
     MatSelectModule,
     ReactiveFormsModule,
     MatButtonModule,
-    MatTableModule
+    MatTableModule,
   ]
 })
 export class GlobalModule {
 
   constructor(
-    private httpCenter: WorkCenterService,
-    private httpOffice: OfficeService
+    public httpCenter: WorkCenterService,
+    public httpOffice: OfficeService
   ) {}
 
   centerStringArray: string[] = [];

@@ -4,7 +4,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
 import { AutocompleteComponent } from '../../../../shared/components/autocomplete/autocomplete.component';
 import { Policy } from '../../../../models/policy.interface';
-import { WorkCenterService } from '../../../../services/workCenter/work-center.service';
 
 @Component({
   selector: 'app-policy',
@@ -15,7 +14,7 @@ export class PolicyComponent implements OnInit {
 
   constructor(
     public global: GlobalModule,
-    private httpCenter: WorkCenterService
+    // private httpCenter: WorkCenterService
   ) {}
 
   @ViewChild('policyAutocomplete') policyAutocomplete!: AutocompleteComponent;
@@ -74,7 +73,7 @@ export class PolicyComponent implements OnInit {
    * @param centerSelectedId The ID of the selected center.
    */
   getPolicies(centerSelectedId: any) {
-    this.httpCenter.getPolicies(centerSelectedId).subscribe(policies => {
+    this.global.httpCenter.getPolicies(centerSelectedId).subscribe(policies => {
       this.objectsPolicy = policies;
       this.optionsPolicy = policies.map(policy => policy.name);
     });
