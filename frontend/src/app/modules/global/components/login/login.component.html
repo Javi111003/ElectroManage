@@ -1,13 +1,20 @@
-<!-- frontend/src/app/modules/global/components/login/login.component.html -->
-<div>
-  <h2>Iniciar Sesión</h2>
-  <form (ngSubmit)="login()">
-    <label for="username">Usuario:</label>
-    <input type="text" id="username" name="username" required>
-    <br>
-    <label for="password">Contraseña:</label>
-    <input type="password" id="password" name="password" required>
-    <br>
-    <button type="submit">Iniciar Sesión</button>
-  </form>
+<video autoplay muted loop playsinline id="background-video">
+  <source src="/video.mp4" type="video/mp4" />
+  Tu navegador no soporta el video.
+</video>
+<div class="head">
+  <img src="logo.png" alt="Logo" class="logo">
+    <h2>Electro Manage</h2>
+</div>
+
+<div class="login-container">
+    <form class="login-form" (ngSubmit)="login()">
+      <label for="username">Usuario</label>
+      <input type="text" id="username" name="username" placeholder="Ingresa tu usuario" required>
+      
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+      
+      <button type="submit">Iniciar Sesión</button>
+    </form>
 </div>
