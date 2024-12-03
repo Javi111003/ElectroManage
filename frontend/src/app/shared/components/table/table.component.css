@@ -45,3 +45,10 @@ tr.mat-mdc-footer-row {
 .hidden {
   display: none;
 }
+::ng-deep tfoot.mat-mdc-table-sticky {
+  bottom: -10px !important;
+  z-index: 10 !important;
+}
+::ng-deep tfoot.mat-mdc-table-sticky td {
+  bottom: -10px !important;
+}
