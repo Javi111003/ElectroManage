@@ -1,10 +1,114 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+import { MatDatepicker } from '@angular/material/datepicker';
+
+// Depending on whether rollup is used, moment needs to be imported differently.
+// Since Moment.js doesn't have a default export, we normally need to import using the `* as`
+// syntax. However, rollup creates a synthetic default module and we thus need to import it using
+// the `default as` syntax.
+import _moment from 'moment';
+// tslint:disable-next-line:no-duplicate-imports
+import {default as _rollupMoment, Moment} from 'moment';
+import { MatTableDataSource } from '@angular/material/table';
+import { ConfigColumn } from '../../../../shared/components/table/table.component';
+
+const moment = _rollupMoment || _moment;
+
+// See the Moment.js docs for the meaning of these formats:
+// https://momentjs.com/docs/#/displaying/format/
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'MM/YYYY',
+  },
+  display: {
+    dateInput: 'MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-excess',
   templateUrl: './excess.component.html',
-  styleUrl: './excess.component.css'
+  styleUrl: './excess.component.css',
+  providers: [
+    // Moment can be provided globally to your app by adding `provideMomentDateAdapter`
+    // to your app config. We provide it at the component level here, due to limitations
+    // of our example generation script.
+    provideMomentDateAdapter(MY_FORMATS),
+  ],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExcessComponent {
 
+  dateInitialize: Moment = [][0];
+  readonly date = new FormControl(this.dateInitialize);
+  yearSelected: number = 0;
+  monthSelected: number = 0;
+  showTable: boolean = false;
+  dataSource: MatTableDataSource<any> = new MatTableDataSource();
+  displayedColumns: ConfigColumn[] = [
+    {
+      title:'Centro de Trabajo',
+      field:'workCenter'
+    },
+    {
+      title:'Consumo (kw/h)',
+      field:'consumption'
+    },
+    {
+      title:'Límite Mensual (Kw/h)',
+      field:'monthlyLimit'
+    },
+    {
+      title:'Exceso (Kw/h)',
+      field:'excess'
+    }
+  ];
+
+  /**
+   * Sets the selected month and year to the date control and updates the view.
+   * @param normalizedMonthAndYear The selected month and year.
+   * @param datepicker The datepicker instance to close.
+   */
+  setMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>): void {
+    const ctrlValue = this.date.value ?? moment();
+    ctrlValue.month(normalizedMonthAndYear.month());
+    ctrlValue.year(normalizedMonthAndYear.year());
+    this.yearSelected = ctrlValue.year();
+    this.monthSelected = ctrlValue.month();
+    this.date.setValue(ctrlValue);
+    datepicker.close();
+  }
+
+  /**
+   * Filters the dates to allow only months and years before the current month and year.
+   * @param d The date to be checked.
+   * @returns True if the date is before the current month and year, otherwise false.
+   */
+  filter(d: Moment | null): boolean {
+    const currentYear = moment().year();
+    const currentMonth = moment().month();
+    return d ? d.year() < currentYear || (d.year() === currentYear && d.month() < currentMonth) : false;
+  }
+
+  /**
+   * Displays the table if both the year and month are selected.
+   */
+  onClick(): void {
+    if (this.yearSelected && this.monthSelected)
+      this.showTable = true;
+  }
+
+  /**
+   * Opens the datepicker and hides the table.
+   * @param datepicker The datepicker instance to open.
+   */
+  showDatepicker(datepicker: MatDatepicker<Moment>) {
+    datepicker.open();
+    this.showTable = false;
+  }
 }

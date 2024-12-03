@@ -1,1 +1,34 @@
-<p>excess-consumption works!</p>
+<div class="form-excess">
+  <div class="form">
+    <div class="form-datepicker">
+      <mat-form-field appearance="outline">
+        <mat-label>Mes y Año</mat-label>
+        <input matInput [matDatepickerFilter]="filter" [matDatepicker]="dp"
+        [formControl]="date" readonly="true" (click)="showDatepicker(dp)">
+        <mat-datepicker-toggle matIconSuffix (click)="showDatepicker(dp)"></mat-datepicker-toggle>
+        <mat-datepicker #dp
+                        startView="multi-year"
+                        (monthSelected)="setMonthAndYear($event, dp)"
+                        panelClass="example-month-picker">
+        </mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="form-buttons">
+      <app-button
+        [label]="'Consultar'"
+        [function]="onClick.bind(this)"
+      >
+      </app-button>
+
+      <app-button></app-button>
+    </div>
+  </div>
+
+  <div class="table" [class.hidden]="!showTable">
+    <app-table
+      [dataSource]="dataSource"
+      [displayedColumns]="displayedColumns"
+    ></app-table>
+  </div>
+</div>

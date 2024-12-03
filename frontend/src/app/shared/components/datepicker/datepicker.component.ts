@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, LOCALE_ID } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, LOCALE_ID, ViewEncapsulation } from '@angular/core';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { DateFilterFn } from '@angular/material/datepicker';
 
@@ -12,6 +12,7 @@ import { DateFilterFn } from '@angular/material/datepicker';
     { provide: LOCALE_ID, useValue: 'es' }
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class DatepickerComponent {
   @Input() filter: DateFilterFn<any> = [][0];
