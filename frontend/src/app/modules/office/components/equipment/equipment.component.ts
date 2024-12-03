@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { OfficeService } from '../../../../services/office/office.service';
 import { AutocompleteComponent } from '../../../../shared/components/autocomplete/autocomplete.component';
 import { GlobalModule } from '../../../global/global.module';
 
@@ -18,7 +17,6 @@ export class EquipmentComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private httpOffice: OfficeService,
     public global: GlobalModule
   ) {
     this.form = this.fb.group({
@@ -93,7 +91,7 @@ export class EquipmentComponent implements OnInit {
    * It updates the dataSource for the MatTable with the list of equipment.
    */
   getEquipmentsByOffice(): void {
-    this.httpOffice.getEquipmentList(this.global.centerSelectedId, this.officeSelectedId)
+    this.global.httpOffice.getEquipmentList(this.global.centerSelectedId, this.officeSelectedId)
       .subscribe(equipments => {
         this.dataSource.data = equipments.map(item => ({
           id: `${item.companyId}${item.officeId}${item.id}`,

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
 import { GlobalModule } from '../../../global/global.module';
-import { WorkCenterService } from '../../../../services/workCenter/work-center.service';
 
 @Component({
   selector: 'app-alert',
@@ -11,7 +10,6 @@ import { WorkCenterService } from '../../../../services/workCenter/work-center.s
 })
 export class AlertComponent implements OnInit {
   constructor(
-    private httpAlert: WorkCenterService,
     public global: GlobalModule
   ) {}
 
@@ -63,7 +61,7 @@ export class AlertComponent implements OnInit {
    * @param centerID The ID of the center for which to fetch alerts.
    */
   getAlerts(centerID: number): void {
-    this.httpAlert.getAlerts(centerID).subscribe(alert => {
+    this.global.httpCenter.getAlerts(centerID).subscribe(alert => {
       this.dataSource.data = alert.warnings.map(item => ({
         date: `${item.month}/${item.year}`,
         consumption: item.consumption.toFixed(2),

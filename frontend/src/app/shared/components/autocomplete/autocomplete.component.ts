@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output,SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, input, Input, OnInit, Output,SimpleChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -11,6 +11,7 @@ import { map, startWith } from 'rxjs/operators';
 export class AutocompleteComponent implements OnInit {
   @Input() options: string[] = [];
   @Input() label: string = '';
+  @Input() isDisabled: boolean = false;
   @Output() optionSelected = new EventEmitter<string>();
   @Output() inputModified = new EventEmitter<string>();
 
@@ -51,6 +52,12 @@ export class AutocompleteComponent implements OnInit {
     this.optionSelected.emit(event.option.value);
   }
 
+  /**
+   * Emits the selected option to the parent component.
+   * This function is triggered when an option is selected from the autocomplete dropdown.
+   * It emits the value of the selected option to the parent component through the 'optionSelected' event emitter.
+   * @param event The event emitted by the option selection.
+   */
   resetControl(): void {
     this.myControl.reset('');
     this.filteredOptions = this.myControl.valueChanges.pipe(

@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { GlobalModule } from '../../../global/global.module';
-import { WorkCenterService } from '../../../../services/workCenter/work-center.service';
 
 @Component({
   selector: 'app-total-consumption',
@@ -13,8 +12,7 @@ import { WorkCenterService } from '../../../../services/workCenter/work-center.s
 export class TotalConsumptionComponent implements OnInit {
 
   constructor (
-    public global: GlobalModule,
-    private httpService: WorkCenterService
+    public global: GlobalModule
   ) {}
 
   receivedDate: Date = [][0];
@@ -52,7 +50,7 @@ export class TotalConsumptionComponent implements OnInit {
    * @param centerID - The ID of the center to fetch registers for.
   */
   getRegistersByCenterId(centerID: number): void {
-    this.httpService.getRegister().subscribe(register => {
+    this.global.httpCenter.getRegister().subscribe(register => {
       const registers = register.registers
 
       for (let index = 0; index < register.registers.length; index++) {
