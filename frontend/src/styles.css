@@ -2,3 +2,13 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mat-calendar {
+  border-style: groove !important;
+  opacity: 1 !important;
+  border-color: #00203b !important;
+  border-radius: 15px !important;
+  background-color: white !important;
+  width: 240px !important;
+  height: 300px !important;
+}

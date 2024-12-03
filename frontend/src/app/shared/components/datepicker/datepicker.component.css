@@ -2,17 +2,13 @@
   color: #00203b;
   font-weight: 500;
 }
-::ng-deep .mat-calendar-body-selected {
+.example-full-width .mat-calendar-body-selected {
   background-color: #00203b !important;
   color: white !important;
 }
-::ng-deep .mat-calendar {
-  border-style: groove !important;
-  opacity: 1 !important;
-  border-color: #00203b !important;
-  border-radius: 15px !important;
+.mat-datepicker-content {
   background-color: white !important;
 }
-::ng-deep .mdc-text-field__input {
+.mdc-text-field__input {
   color: black !important;
 }
