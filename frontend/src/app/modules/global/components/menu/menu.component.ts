@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuService } from '../../../../services/menu/menu.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -12,7 +13,7 @@ export class MenuComponent implements OnInit {
   menuItems: any[] = [];
   login: string = 'login'
 
-  constructor(private menuService: MenuService) {}
+  constructor(private menuService: MenuService, private router:Router) {}
 
   ngOnInit(): void {
     this.menuService.getMenuOptions().subscribe(data => {
@@ -61,4 +62,8 @@ export class MenuComponent implements OnInit {
     if (menuItem)
       menuItem.isOpen = !menuItem.isOpen;
   }
+  navigateHome() {
+    this.router.navigate(['/'])
+
+    }
 }
