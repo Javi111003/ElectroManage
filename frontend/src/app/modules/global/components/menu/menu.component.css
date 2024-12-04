@@ -38,10 +38,9 @@
 .header .icons{
   gap: 4%;
   width: 20%; /* Sets icon width */
- /* height: 30px; /* Sets icon height */
   padding-right: 10px;
   display: flex; /* Centers icon content */
-  justify-content: right; 
+  justify-content: right;
   cursor: pointer; /* Changes cursor to pointer */
   transition: background-color 0.3s ease, transform 0.3s ease; /* Adds smooth hover effects */
 }
@@ -55,17 +54,17 @@
 /* Sidebar styles */
 .sidebar {
   grid-area: sidebar;
-    position: relative;
-    width:240px;
-    height: calc(100vh - 50px); /* Full height minus header height */
-    background-color: #ffffff;
-    border-right: 2.3px solid #cacbcc;
-    padding: 1rem;
-    overflow-y: auto;
-    transition: transform 0.3s ease-in-out;
-    z-index: 1000;
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-    border-radius: 0 3px 3px 0;
+  position: relative;
+  width:240px;
+  height: calc(100vh - 50px); /* Full height minus header height */
+  background-color: #ffffff;
+  border-right: 2.3px solid #cacbcc;
+  padding: 1rem;
+  overflow-y: auto;
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  border-radius: 0 3px 3px 0;
 }
 .sidebar.active {
   transform: translateX(0); /* Makes sidebar visible */
@@ -87,7 +86,7 @@
   align-items:center; /* Centers items vertically */
   padding: 5px 0; /* Adds padding for clickable area */
   gap: 12px; /* Space between text and icon */
-  width: 205px; /* Makes the clickable area full-width */
+  /* width: 205px; Makes the clickable area full-width */
   cursor: pointer; /* Changes cursor to pointer */
   color: #000000; /* Sets dark gray text color */
   text-decoration: none; /* Removes underlines */
@@ -95,7 +94,6 @@
 }
 .sidebar li mat-icon {
   margin-right:1px; /* Añadido margen a la derecha del ícono */
-  margin-left: 10px;
   flex-shrink: 0; /* Evita que el ícono se reduzca en tamaño */
 }
 /* Dropdown styles */
@@ -122,11 +120,10 @@
   align-items: center; /* Centra verticalmente el contenido */
   padding: 5px 0; /* Espaciado uniforme */
   color: rgb(0, 0, 0);
+  white-space: nowrap;
 }
 .sidebar li mat-icon.arrow{
   margin-left:auto; /* Alinea la flecha a la derecha */
-  margin-right: 40px;
-
 }
 .dropdown-toggle {
   display: none; /* Hides the input toggle used for dropdown logic */
