@@ -1,11 +1,14 @@
 button {
-  border-radius: 5px;
+  border-radius: 7px;
   border-color: #00203b;
   color: #00203b;
-  font-weight: bold;
-  border-width: 4px;
+  font-weight: 300;
+  border-width: 3px;
   background-color: white;
+  border-bottom-width: thick;
 }
 button:hover {
-  transform: scale(1.05);
+  transform: scale(1.10);
+  background-color: #00203b;
+  color: white;
 }
