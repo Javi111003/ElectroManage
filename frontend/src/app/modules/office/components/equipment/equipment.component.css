@@ -1,29 +1,25 @@
 .form-container {
-    display: flex;
-    flex-wrap: wrap; /* Permite que los elementos se ajusten en varias líneas si es necesario */
-    justify-content: space-between; /* Separación uniforme */
-  }
-  
-  .form-autocomplete {
-    display: flex;
-    flex: 1; /* Todos los elementos ocupan el mismo espacio por defecto */
-    justify-items: left;
-    flex-direction: row;
-    gap:30px;
-  }
-  
-  .form-buttons {
-    width: 18%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    position:relative;
-    top: 3px;
-    left: 0;
-    margin-top: 5px;
-  }
-   
-.buttons-container:hover {
-    transform: scale(1.05); /* Aumenta el tamaño del botón al 105% */
+  display: flex;
+  flex-wrap: wrap; /* Permite que los elementos se ajusten en varias líneas si es necesario */
+  flex-direction: row;
+  justify-content: space-between; /* Separación uniforme */
 }
-  
+.form-autocomplete {
+  width: 60%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: left;
+  gap: 8px;
+}
+.form-buttons {
+  width: 40%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: right;
+  position: relative;
+  top: 3px;
+  left: 0;
+  margin-top: 5px;
+  gap: 8px;
+}
