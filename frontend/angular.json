@@ -34,7 +34,8 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "src/staticwebapp.config.json"
             ],
             "styles": [
               "node_modules/ngx-toastr/toastr.css",
