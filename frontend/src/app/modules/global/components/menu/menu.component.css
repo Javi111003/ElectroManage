@@ -81,12 +81,12 @@
 .sidebar li {
   margin-bottom: 1rem; /* Adds spacing between list items */
 }
-.sidebar li a, .dropdown-label{
+.sidebar li a, .dropdown-label {
+  width: 100%;
   display: flex; /* Flexbox for alignment */
   align-items:center; /* Centers items vertically */
   padding: 5px 0; /* Adds padding for clickable area */
   gap: 12px; /* Space between text and icon */
-  /* width: 205px; Makes the clickable area full-width */
   cursor: pointer; /* Changes cursor to pointer */
   color: #000000; /* Sets dark gray text color */
   text-decoration: none; /* Removes underlines */
@@ -156,6 +156,9 @@
     border: none; /* Removes border */
   }
   .sidebar {
+    position: absolute;
+    top: 50px;
+    left: 0px;
     transform: translateX(-100%); /* Hides sidebar by default */
   }
   .sidebar.active {
@@ -187,9 +190,8 @@
   font-weight: normal;
   font-style: normal;
 }
-/* src/styles.css */
 .submenu {
-    padding-left: 20px !important;
+  padding-left: 20px !important;
 }
 .submenu li {
   display: flex; /* Flexbox for alignment */
@@ -201,12 +203,12 @@
   color: #000000; /* Sets dark gray text color */
   text-decoration: none; /* Removes underlines */
   transition: background-color 0.3s; /* Smooth hover effect */
-  align-items: center; /* Centra verticalmente el contenido */
+  align-items: center;
   font-size: 13px;
   margin-top: 10px;
 }
 .submenu li mat-icon {
-  margin-right: 8px; /* Añadido margen a la derecha del ícono */
+  margin-right: 8px;
   margin-left: 10px;
   flex-shrink: 0;
 }
@@ -238,7 +240,7 @@
   background-color: #00203b; /* Light blue background on hover */
 }
 .dropdown-label.active mat-icon {
-  color: white; /* Cambia el color del ícono a blanco cuando el dropdown-label está activo */
+  color: white;
 }
 .nav li .dropdown-label.active a {
   color: white;

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgFor, NgIf } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DialogComponent } from '../../shared/components/dialog/dialog.component';
 
 //global components
 import { IndexComponent } from './components/index/index.component';
@@ -24,7 +25,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { WorkCenter } from '../../models/workCenter.interface';
 import { Office } from '../../models/office.interface';
-import {MatBadgeModule} from '@angular/material/badge';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @NgModule({
@@ -68,7 +70,8 @@ export class GlobalModule {
 
   constructor(
     public httpCenter: WorkCenterService,
-    public httpOffice: OfficeService
+    public httpOffice: OfficeService,
+    public dialog: MatDialog
   ) {}
 
   centerStringArray: string[] = [];
@@ -101,13 +104,14 @@ export class GlobalModule {
     });
   }
 
-  /** * Checks if the given option exists in the provided array.
-  * * This function iterates over the array to check if the specified
-  * option is present.
-  * @param array - The array of strings to search within.
-  * @param option - The option to search for in the array.
-  * @returns - Returns `true` if the option is found, `false` otherwise.
-  */
+  /**
+   * Checks if the given option exists in the provided array.
+   * This function iterates over the array to check if the specified
+   * option is present.
+   * @param array The array of strings to search within.
+   * @param option The option to search for in the array.
+   * @returns `true` if the option is found, `false` otherwise.
+   */
   isOptionValid(array: string[], option: string): boolean {
     for (let index = 0; index < array.length; index++) {
       if (option === array[index])
@@ -117,18 +121,31 @@ export class GlobalModule {
     return false;
   }
 
-  /** * Finds the ID of the selected center based on its name.
-  * @param centerSelected The name of the selected center.
-  */
+  /**
+   * Finds the ID of the selected center based on its name.
+   * @param centerSelected The name of the selected center.
+   */
   findCenterId(centerSelected: string): void {
     this.centerSelectedId = this.centerObjectArray.find(
       item => item.name === centerSelected
     )?.id;
   }
 
-  /** This function resets all variables
-  * to their initial default values. Use this function to
-  * clear any temporary states and start fresh.
+  /**
+   * Opens a dialog with a specified message.
+   * This function is used to display a message to the user in a dialog box.
+   * @param message The message to be displayed in the dialog.
+   */
+  openDialog(message: string): void {
+    this.dialog.open(DialogComponent, {
+      data: { message: message }
+    });
+  }
+
+  /**
+   * This function resets all variables
+   * to their initial default values. Use this function to
+   * clear any temporary states and start fresh.
   */
   Reset() {
     this.centerStringArray = [];

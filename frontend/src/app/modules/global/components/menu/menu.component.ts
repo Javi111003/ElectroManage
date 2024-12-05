@@ -62,8 +62,4 @@ export class MenuComponent implements OnInit {
     if (menuItem)
       menuItem.isOpen = !menuItem.isOpen;
   }
-  navigateHome() {
-    this.router.navigate(['/'])
-
-    }
 }

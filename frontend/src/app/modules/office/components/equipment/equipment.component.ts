@@ -4,8 +4,6 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { AutocompleteComponent } from '../../../../shared/components/autocomplete/autocomplete.component';
 import { GlobalModule } from '../../../global/global.module';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent } from '../../../../shared/components/dialog/dialog.component';
 
 
 @Component({
@@ -19,8 +17,7 @@ export class EquipmentComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    public global: GlobalModule,
-    public dialog: MatDialog
+    public global: GlobalModule
   ) {
     this.form = this.fb.group({
       firstSelect: [''],
@@ -82,9 +79,10 @@ export class EquipmentComponent implements OnInit {
     this.global.getWorkCenters();
   }
 
-  /** * Finds the ID of the selected office based on its name.
-  * @param officeSelected The name of the selected office.
-  */
+  /**
+   * Finds the ID of the selected office based on its name.
+   * @param officeSelected The name of the selected office.
+   */
   findOfficeId(): void {
     const officeSelected = this.officeSelected;
     this.officeSelectedId = this.global.officeObjectArray.find(item => item.name === officeSelected)?.id;
@@ -122,17 +120,18 @@ export class EquipmentComponent implements OnInit {
     this.getEquipmentsByOffice();
   }
 
-  /** * Handles the "Consultar" button click event.
-  * Checks if both center and office are selected before showing the table.
-  * If not, displays an alert message.
-  */
+  /**
+   * Handles the "Consultar" button click event.
+   * Checks if both center and office are selected before showing the table.
+   * If not, displays an alert message.
+   */
   onConsultClick(): void {
     if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected) &&
         this.global.isOptionValid(this.global.officeStringArray, this.officeSelected)) {
       this.showTable = true;
     } else {
       this.showTable = false;
-      this.openDialog('Por favor, selecciona un Centro de Trabajo y una Oficina.');
+      this.global.openDialog('Por favor, selecciona un Centro de Trabajo y una Oficina.');
     }
   }
 
@@ -155,12 +154,6 @@ export class EquipmentComponent implements OnInit {
     this.showTable = false;
     this.officeSelected = null!;
     this.officeSelectedId = 0;
-  }
-
-  openDialog(message: string): void {
-    this.dialog.open(DialogComponent, {
-      data: { message: message }
-    });
   }
 }
 

@@ -67,7 +67,8 @@ export class IndexComponent implements OnInit {
   }
 
   /**
-   * Creates a line chart that shows the number of registered centers by month for the selected year.
+   * Creates a line chart that shows the number of registered centers
+   * by month for the selected year.
    */
   createLineChart(): void {
     const ctx = document.getElementById('centersChart') as HTMLCanvasElement;
@@ -194,7 +195,7 @@ export class IndexComponent implements OnInit {
           x: { title: { display: true, text: 'Meses' } }, // X-axis title
           y: { beginAtZero: true, title: { display: true, text: 'Número de Alertas' } } // Y-axis title
         },
-        animation: { 
+        animation: {
           duration: 9000,
           easing: 'easeOutQuart',
         }
@@ -205,8 +206,7 @@ export class IndexComponent implements OnInit {
   /**
    * Event handler for when the selected year changes.
    * It updates the data for the chart based on the selected year.
-   *
-   * @param event - The event containing the selected year value.
+   * @param event The event containing the selected year value.
    */
   onYearChange(event: any): void {
     this.selectedYear = +event.target.value; // Update the selected year
@@ -217,9 +217,9 @@ export class IndexComponent implements OnInit {
    * Updates the data of the line chart based on the selected year.
    * It refreshes the chart to reflect the new data.
    */
-  updateChartData(): void { 
-    if (this.chart) { 
-      this.chart.data.datasets[0].data = this.dataByYear[this.selectedYear]; // Update data for the selected year this.chart.update(); // Refresh the chart } 
+  updateChartData(): void {
+    if (this.chart) {
+      this.chart.data.datasets[0].data = this.dataByYear[this.selectedYear]; // Update data for the selected year this.chart.update(); // Refresh the chart }
       }
     }
   }

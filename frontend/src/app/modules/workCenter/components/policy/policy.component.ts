@@ -4,8 +4,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
 import { AutocompleteComponent } from '../../../../shared/components/autocomplete/autocomplete.component';
 import { Policy } from '../../../../models/policy.interface';
-import { DialogComponent } from '../../../../shared/components/dialog/dialog.component';
-import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-policy',
@@ -15,9 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class PolicyComponent implements OnInit {
 
   constructor(
-    public global: GlobalModule,
-    public dialog: MatDialog
-    // private httpCenter: WorkCenterService
+    public global: GlobalModule
   ) {}
 
   @ViewChild('policyAutocomplete') policyAutocomplete!: AutocompleteComponent;
@@ -66,7 +62,7 @@ export class PolicyComponent implements OnInit {
       this.isTableActive = true;
     } else {
       this.isTableActive = false;
-      this.openDialog('Por favor, selecciona un Centro de Trabajo y una Política.');
+      this.global.openDialog('Por favor, selecciona un Centro de Trabajo y una Política.');
     }
   }
 
@@ -112,11 +108,5 @@ export class PolicyComponent implements OnInit {
   onPolicyInputModified(value: string) {
     this.policySelected = value;
     this.isTableActive = false;
-  }
-
-  openDialog(message: string): void {
-    this.dialog.open(DialogComponent, {
-      data: { message: message }
-    });
   }
 }
