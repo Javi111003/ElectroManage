@@ -1,12 +1,11 @@
-/* Estilo para el video de fondo */
 #background-video {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Asegura que el video cubra toda la pantalla */
-  z-index: -1; /* Envía el video al fondo */
+  object-fit: cover;
+  z-index: -1;
 }
 * {
   margin: 0;
@@ -24,7 +23,7 @@ html, body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: -1; /* Asegura que el video quede por detrás de los demás elementos */
+  z-index: -1;
 }
 .head, .login-container {
   position: absolute;
@@ -36,14 +35,14 @@ html, body {
 }
 .head {
   margin-top: -200px;
-  display: flex; /* Activamos el layout Flexbox */
-  flex-direction: column; /* Los elementos hijos se dispondrán en columna */
-  align-items: center; /* Centra los elementos horizontalmente */
-  justify-content: center; /* Centra los elementos verticalmente si tienes más espacio */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
 }
 .logo {
-  width: 100px; /* Ajusta según el tamaño de tu logo */
+  width: 100px;
   height: auto;
 }
 h2 {
@@ -56,7 +55,7 @@ h2 {
   padding: 20px;
   background-color: #032e51;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra suave para dar profundidad */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 .login-form {
   display: flex;
@@ -76,8 +75,8 @@ h2 {
 }
 .login-form button {
   padding: 10px;
-  background: rgba(47, 63, 111, 0.685); /* Fondo semitransparente */
-  backdrop-filter: blur(10px); /* Aplica el desenfoque al fondo detrás */
+  background: rgba(47, 63, 111, 0.685);
+  backdrop-filter: blur(10px);
   color: white;
   border: none;
   border-radius: 4px;
@@ -87,5 +86,4 @@ h2 {
 .login-form button:hover {
   font-size: large;
   font-weight: 500;
-  border-radius: 30px;
 }
