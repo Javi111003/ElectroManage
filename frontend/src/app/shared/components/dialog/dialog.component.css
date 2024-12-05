@@ -1,0 +1,31 @@
+button {
+  border-radius: 7px;
+  border-color: #00203b;
+  color: #00203b;
+  font-weight: 300;
+  border-width: 3px;
+  background-color: whitesmoke;
+  border-bottom-width: thick;
+}
+button:hover {
+  transform: scale(1.10);
+  background-color: #00203b;
+  color: whitesmoke;
+}
+p {
+  font-size: medium;
+}
+.warning {
+  width: 25px;
+  margin-right: 5px;
+  padding-bottom: 5px;
+}
+::ng-deep .mat-mdc-dialog-title {
+  color: #00203b !important;
+  font-weight: 300 !important;
+}
+::ng-deep .mat-mdc-dialog-surface {
+  background-color: whitesmoke !important;
+  border-style: inset !important;
+  border-color: #00203b !important;
+}

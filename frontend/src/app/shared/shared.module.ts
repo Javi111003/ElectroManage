@@ -5,6 +5,7 @@ import { DatepickerComponent } from './components/datepicker/datepicker.componen
 import { ButtonComponent } from './components/button/button.component';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 import { CheckboxComponent } from './components/checkbox/checkbox.component';
+import { DialogComponent } from './components/dialog/dialog.component';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -17,6 +18,7 @@ import { AsyncPipe } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,7 @@ import { MatSelectModule } from '@angular/material/select';
     AutocompleteComponent,
     DatepickerComponent,
     CheckboxComponent,
+    DialogComponent,
   ],
   imports: [
     CommonModule,
@@ -41,7 +44,11 @@ import { MatSelectModule } from '@angular/material/select';
     FormsModule,
     ReactiveFormsModule,
     MatDatepickerModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    MatDialogTitle,
   ],
   exports: [
     TableComponent,
@@ -63,7 +70,11 @@ import { MatSelectModule } from '@angular/material/select';
     FormsModule,
     ReactiveFormsModule,
     MatDatepickerModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    MatDialogTitle,
   ]
 })
 export class SharedModule { }

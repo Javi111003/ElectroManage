@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { GlobalModule } from '../../../global/global.module';
+import { DialogComponent } from '../../../../shared/components/dialog/dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-total-consumption',
@@ -12,7 +14,8 @@ import { GlobalModule } from '../../../global/global.module';
 export class TotalConsumptionComponent implements OnInit {
 
   constructor (
-    public global: GlobalModule
+    public global: GlobalModule,
+    public dialog: MatDialog
   ) {}
 
   receivedDate: Date = [][0];
@@ -41,6 +44,7 @@ export class TotalConsumptionComponent implements OnInit {
   ngOnInit(): void {
     this.global.Reset();
     this.global.getWorkCenters();
+    console.log(this.global.centerStringArray);
   }
 
   /**
@@ -150,7 +154,7 @@ hi   * It checks if the selected date is before the current date.
       this.getRegistersByCenterId(0);
       this.isTableActive = !this.isTableActive;
     } else {
-      alert('Por favor, selecciona un Centro de Trabajo.');
+      this.openDialog('Por favor, selecciona un Centro de Trabajo.');
     }
   }
 
@@ -170,5 +174,11 @@ hi   * It checks if the selected date is before the current date.
   */
   getTotalConsumption(): number {
     return this.consumptions.reduce((acc, value) => acc + value, 0);
+  }
+
+  openDialog(message: string): void {
+    this.dialog.open(DialogComponent, {
+      data: { message: message }
+    });
   }
 }

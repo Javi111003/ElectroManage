@@ -3,6 +3,8 @@ import { ConfigColumn } from '../../../../shared/components/table/table.componen
 import { MatTableDataSource } from '@angular/material/table';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { GlobalModule } from '../../../global/global.module';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../../../../shared/components/dialog/dialog.component';
 
 
 @Component({
@@ -20,7 +22,8 @@ import { GlobalModule } from '../../../global/global.module';
 export class AvgConsumptionComponent implements OnInit{
 
   constructor (
-    public global: GlobalModule
+    public global: GlobalModule,
+    public dialog: MatDialog
   ) {}
 
   selectedOptions: string[] = [];
@@ -94,10 +97,9 @@ export class AvgConsumptionComponent implements OnInit{
     {
       this.showTable = true;
       this.getAvgRegisters();
+    } else {
+      this.openDialog('Por favor, selecciona al menos un Centro de Trabajo.');
     }
-
-    else
-      alert('Por favor, selecciona al menos un Centro de Trabajo.')
   }
 
   /** * Calculate the proyection of consumption for the next 3 years of the
@@ -105,7 +107,7 @@ export class AvgConsumptionComponent implements OnInit{
   * Called when the "Proyección" button is clicked.
   */
   onProyectionClick() {
-    alert("No esta implementado perro")
+    this.openDialog('No esta implementado');
   }
 
   /** * Handles changes in the selected options for work centers.
@@ -116,6 +118,7 @@ export class AvgConsumptionComponent implements OnInit{
     this.selectedOptions = selected;
     this.findCenterIds();
     this.showTable=false;
+    this.expandedElements = [];
   }
 
   /** * Toggles the expansion state of a row element.
@@ -125,11 +128,15 @@ export class AvgConsumptionComponent implements OnInit{
   * * @param {string} element - The row element to be toggled.
   */
   toggleRow(element: string) {
-    const index = this.expandedElements.indexOf(element);
-    if (index >= 0) {
-      this.expandedElements.splice(index, 1);
+    if (this.showTable) {
+      const index = this.expandedElements.indexOf(element);
+      if (index >= 0) {
+        this.expandedElements.splice(index, 1);
+      } else {
+        this.expandedElements.push(element);
+      }
     } else {
-      this.expandedElements.push(element);
+      this.openDialog('Presione consultar para obtener los datos deseados.');
     }
   }
 
@@ -143,5 +150,11 @@ export class AvgConsumptionComponent implements OnInit{
    */
   isRowExpanded(element: string): boolean {
     return this.expandedElements.indexOf(element) >= 0;
+  }
+
+  openDialog(message: string): void {
+    this.dialog.open(DialogComponent, {
+      data: { message: message }
+    });
   }
 }
