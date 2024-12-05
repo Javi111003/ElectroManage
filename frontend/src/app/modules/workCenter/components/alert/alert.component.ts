@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
 import { GlobalModule } from '../../../global/global.module';
+import { DialogComponent } from '../../../../shared/components/dialog/dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-alert',
@@ -10,7 +12,8 @@ import { GlobalModule } from '../../../global/global.module';
 })
 export class AlertComponent implements OnInit {
   constructor(
-    public global: GlobalModule
+    public global: GlobalModule,
+    public dialog: MatDialog
   ) {}
 
   isTableActive: boolean = false;
@@ -52,7 +55,7 @@ export class AlertComponent implements OnInit {
       this.isTableActive = !this.isTableActive;
     }
     else {
-      alert('Por favor, selecciona un Centro de Trabajo.');
+      this.openDialog('Por favor, selecciona un Centro de Trabajo.');
     }
   }
 
@@ -77,5 +80,11 @@ export class AlertComponent implements OnInit {
    */
   handleOptionSelected(option: string) {
     this.centerSelected = option;
+  }
+
+  openDialog(message: string): void {
+    this.dialog.open(DialogComponent, {
+      data: { message: message }
+    });
   }
 }

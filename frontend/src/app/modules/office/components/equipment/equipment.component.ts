@@ -4,6 +4,8 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { AutocompleteComponent } from '../../../../shared/components/autocomplete/autocomplete.component';
 import { GlobalModule } from '../../../global/global.module';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../../../../shared/components/dialog/dialog.component';
 
 
 @Component({
@@ -17,13 +19,15 @@ export class EquipmentComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    public global: GlobalModule
+    public global: GlobalModule,
+    public dialog: MatDialog
   ) {
     this.form = this.fb.group({
       firstSelect: [''],
       secondSelect:['']
     });
   }
+
   form: FormGroup;
   showTable = false;
 
@@ -128,7 +132,7 @@ export class EquipmentComponent implements OnInit {
       this.showTable = true;
     } else {
       this.showTable = false;
-      alert('Por favor, selecciona un Centro de Trabajo y una Oficina.');
+      this.openDialog('Por favor, selecciona un Centro de Trabajo y una Oficina.');
     }
   }
 
@@ -151,6 +155,12 @@ export class EquipmentComponent implements OnInit {
     this.showTable = false;
     this.officeSelected = null!;
     this.officeSelectedId = 0;
+  }
+
+  openDialog(message: string): void {
+    this.dialog.open(DialogComponent, {
+      data: { message: message }
+    });
   }
 }
 
