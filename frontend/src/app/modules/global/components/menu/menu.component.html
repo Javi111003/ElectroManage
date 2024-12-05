@@ -3,7 +3,7 @@
   <!-- Header Section -->
   <header class="header">
     <div class="menu-btn" (click)="toggleSidebar()">☰</div> <!-- Mobile menu button (toggles sidebar visibility) -->
-    <img src="logo.png" alt="Company Logo" (click)="navigateHome()"> <!-- Company logo -->
+    <img src="logo.png" alt="Company Logo" routerLink="/"> <!-- Company logo -->
     <p>Electro Manage</p> <!-- Application title -->
     <div class="icons">
       <mat-icon matBadge="15">notifications</mat-icon>
@@ -22,8 +22,8 @@
         <!-- Using a for loop to add each item from extern .json -->
         <li *ngFor="let item of menuItems">
           <div *ngIf="!item.subItems" class="dropdown-label" [class.active]="activeOption === item.id">
-            <mat-icon>{{item.icon}}</mat-icon>
             <a id="item.id" (click)="setActiveOption(item.id)" [routerLink]="item.link">
+              <mat-icon>{{item.icon}}</mat-icon>
               {{item.label}}
             </a>
           </div>
@@ -34,8 +34,8 @@
           </div>
           <ul *ngIf="item.subItems" class="submenu" [class.hidden]="!isOpen(item.id)">
             <li *ngFor="let subitem of item.subItems" [class.active]="activeOption === subitem.id">
-              <mat-icon>{{subitem.icon}}</mat-icon>
               <a id="subitem.id" (click)="setActiveOption(subitem.id)" [routerLink]="subitem.link">
+                <mat-icon>{{subitem.icon}}</mat-icon>
                 {{subitem.label}}
               </a>
             </li>

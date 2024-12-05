@@ -28,7 +28,8 @@ export class OfficeService {
 
   /**
    * Fetches the list of equipment for a given office from the API.
-   * This method sends an HTTP GET request to the API to retrieve a list of equipment for a specified office.
+   * This method sends an HTTP GET request to the API to retrieve a list of equipment
+   * for a specified office.
    * @param centerID The ID of the work center to which the office belongs.
    * @param officeID The ID of the office for which to fetch equipment.
    * @returns An Observable that resolves to an array of Equipment objects.

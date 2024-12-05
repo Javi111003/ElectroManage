@@ -4,7 +4,12 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
-  private loggedIn = false;
+  private isAuthenticated = false;
+
+  constructor() {
+    // Check local storage for authentication status
+    this.isAuthenticated = sessionStorage.getItem('isAuthenticated') === 'true';
+  }
 
   /**
    * Attempts to log in with the provided username and password.
@@ -15,7 +20,8 @@ export class AuthService {
    */
   login(username: string, password: string): boolean {
     if (username === 'user' && password === 'password') {
-      this.loggedIn = true;
+      this.isAuthenticated = true;
+      sessionStorage.setItem('isAuthenticated', 'true');
       return true;
     }
     return false;
@@ -27,13 +33,15 @@ export class AuthService {
    * @returns True if the user is logged in, false otherwise.
    */
   isLoggedIn(): boolean {
-    return this.loggedIn;
+    console.log(this.isAuthenticated);
+    return this.isAuthenticated;
   }
 
   /**
    * Logs the user out.
    */
   logout(): void {
-    this.loggedIn = false;
+    this.isAuthenticated = false;
+    sessionStorage.removeItem('isAuthenticated');
   }
 }

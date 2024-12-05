@@ -24,13 +24,13 @@ export class AutocompleteComponent implements OnInit {
       map(value => this._filter(value || '')),
     );
     this.myControl.valueChanges.pipe(
-      startWith(''), // Valor inicial vacío.
+      startWith(''),
       map(value => {
-        this.inputModified.emit(value); // Emitir el valor modificado al padre.
-        return this._filter(value || ''); // Filtrar las opciones.
+        this.inputModified.emit(value);
+        return this._filter(value || '');
       })
     ).subscribe(filtered => {
-      this.filteredOptions = of(filtered); // Asegurar que siempre sea un Observable<string[]>.
+      this.filteredOptions = of(filtered);
     });
   }
 

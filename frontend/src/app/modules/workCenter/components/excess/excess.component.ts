@@ -6,8 +6,7 @@ import _moment from 'moment';
 import {default as _rollupMoment, Moment} from 'moment';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent } from '../../../../shared/components/dialog/dialog.component';
+import { GlobalModule } from '../../../global/global.module';
 
 const moment = _rollupMoment || _moment;
 
@@ -39,7 +38,7 @@ export const MY_FORMATS = {
 export class ExcessComponent {
 
   constructor(
-    public dialog: MatDialog
+    public global: GlobalModule
   ) {}
 
   dateInitialize: Moment = [][0];
@@ -100,7 +99,7 @@ export class ExcessComponent {
     if (this.yearSelected && this.monthSelected)
       this.showTable = true;
     else
-      this.openDialog('Por favor, selecciona una fecha válida.');
+      this.global.openDialog('Por favor, selecciona una fecha válida.');
   }
 
   /**
@@ -110,11 +109,5 @@ export class ExcessComponent {
   showDatepicker(datepicker: MatDatepicker<Moment>) {
     datepicker.open();
     this.showTable = false;
-  }
-
-  openDialog(message: string): void {
-    this.dialog.open(DialogComponent, {
-      data: { message: message }
-    });
   }
 }

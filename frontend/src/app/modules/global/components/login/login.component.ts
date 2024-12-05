@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../services/auth/auth.service';
+import { GlobalModule } from '../../global.module';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,8 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    public global: GlobalModule
   ) {}
 
   /**
@@ -25,7 +27,7 @@ export class LoginComponent {
     if (this.authService.login(this.username, this.password)) {
       this.router.navigate(['']);
     } else {
-      alert('Credenciales inválidas');
+      this.global.openDialog('Credenciales inválidas');
     }
   }
 }

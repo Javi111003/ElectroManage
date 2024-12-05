@@ -1,10 +1,7 @@
-import { RegisterTotalConsumption } from './../../../../models/register.interface';
 import { Component, OnInit } from '@angular/core';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
 import { MatTableDataSource } from '@angular/material/table';
-import { GlobalModule } from '../../../global/global.module';
-import { DialogComponent } from '../../../../shared/components/dialog/dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { GlobalModule } from '../../../global/global.module'
 
 @Component({
   selector: 'app-total-consumption',
@@ -14,8 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class TotalConsumptionComponent implements OnInit {
 
   constructor (
-    public global: GlobalModule,
-    public dialog: MatDialog
+    public global: GlobalModule
   ) {}
 
   receivedDate: Date = [][0];
@@ -44,7 +40,6 @@ export class TotalConsumptionComponent implements OnInit {
   ngOnInit(): void {
     this.global.Reset();
     this.global.getWorkCenters();
-    console.log(this.global.centerStringArray);
   }
 
   /**
@@ -52,7 +47,7 @@ export class TotalConsumptionComponent implements OnInit {
    * Makes an HTTP request to get registers for a specified center ID,
    * formats the register dates, and updates the data source.
    * @param centerID - The ID of the center to fetch registers for.
-  */
+   */
   getRegistersByCenterId(centerID: number): void {
     this.global.httpCenter.getRegister().subscribe(register => {
       const registers = register.registers
@@ -74,7 +69,7 @@ export class TotalConsumptionComponent implements OnInit {
 
   /**
    * This function is used to filter the start date.
-hi   * It checks if the selected date is before the current date.
+   * It checks if the selected date is before the current date.
    * @param d The selected date.
    * @returns A boolean value indicating if the date is valid.
    */
@@ -154,31 +149,27 @@ hi   * It checks if the selected date is before the current date.
       this.getRegistersByCenterId(0);
       this.isTableActive = !this.isTableActive;
     } else {
-      this.openDialog('Por favor, selecciona un Centro de Trabajo.');
+      this.global.openDialog('Por favor, selecciona un Centro de Trabajo.');
     }
   }
 
-  /** * Calculates the total cost.
-  * * This function uses the reduce method to sum up all the values
+  /**
+  * Calculates the total cost.
+  * This function uses the reduce method to sum up all the values
   * in the `costs` array and returns the total.
-  * * @returns - The total cost.
+  * @returns The total cost.
   */
   getTotalCost(): number {
     return this.costs.reduce((acc, value) => acc + value, 0);
   }
 
-  /** * Calculates the total consumption.
-  * * This function uses the reduce method to sum up all the values
+  /**
+  * Calculates the total consumption.
+  * This function uses the reduce method to sum up all the values
   * in the `consumptions` array and returns the total.
-  * * @returns - The total consumption.
+  * @returns The total consumption.
   */
   getTotalConsumption(): number {
     return this.consumptions.reduce((acc, value) => acc + value, 0);
-  }
-
-  openDialog(message: string): void {
-    this.dialog.open(DialogComponent, {
-      data: { message: message }
-    });
   }
 }

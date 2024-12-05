@@ -39,7 +39,8 @@ export class WorkCenterService {
 
   /**
    * Fetches the policies for a given work center from the API.
-   * This method sends an HTTP GET request to the API to retrieve the policies for a specified work center.
+   * This method sends an HTTP GET request to the API to retrieve the policies for a
+   * specified work center.
    * @param centerID The ID of the work center for which to fetch policies.
    * @returns An Observable that resolves to an array of Policy objects.
    */
@@ -49,7 +50,8 @@ export class WorkCenterService {
 
   /**
    * Fetches the alerts for a given work center from the API.
-   * This method sends an HTTP GET request to the API to retrieve the alerts for a specified work center.
+   * This method sends an HTTP GET request to the API to retrieve the alerts for
+   * a specified work center.
    * @param centerID The ID of the work center for which to fetch alerts.
    * @returns An Observable that resolves to an Alert object.
    */
@@ -59,7 +61,8 @@ export class WorkCenterService {
 
   /**
    * Fetches the average registers for a given list of work centers from the API.
-   * This method sends an HTTP GET request to the API to retrieve the average registers for a specified list of work centers.
+   * This method sends an HTTP GET request to the API to retrieve the average registers
+   * for a specified list of work centers.
    * @param centerIDs The IDs of the work centers for which to fetch average registers.
    * @returns An Observable that resolves to an array of AvgRegisterConsumption objects.
    */
