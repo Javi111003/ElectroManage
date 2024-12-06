@@ -22,7 +22,7 @@
 
 <table mat-table
        [dataSource]="selectedOptions" multiTemplateDataRows
-       class="mat-elevation-z8">
+       class="mat-elevation-z8" [hidden]="!showTable">
   @for (column of columnsToDisplay; track column) {
     <ng-container matColumnDef="{{column}}">
       <th mat-header-cell *matHeaderCellDef> Centro de Trabajo </th>

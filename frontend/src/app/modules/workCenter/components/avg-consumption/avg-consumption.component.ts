@@ -95,12 +95,14 @@ export class AvgConsumptionComponent implements OnInit{
    * Called when the "Consultar" button is clicked.
    */
   onConsultClick() {
-    if (this.selectedOptions.length > 0)
-    {
-      this.showTable = true;
-      this.getAvgRegisters();
-    } else {
-      this.global.openDialog('Por favor, selecciona al menos un Centro de Trabajo.');
+    if (!this.showTable) {
+      if (this.selectedOptions.length > 0)
+      {
+        this.showTable = true;
+        this.getAvgRegisters();
+      } else {
+        this.global.openDialog('Por favor, selecciona al menos un Centro de Trabajo.');
+      }
     }
   }
 
@@ -133,15 +135,11 @@ export class AvgConsumptionComponent implements OnInit{
    * @param element The row element to be toggled.
    */
   toggleRow(element: string) {
-    if (this.showTable) {
-      const index = this.expandedElements.indexOf(element);
-      if (index >= 0) {
-        this.expandedElements.splice(index, 1);
-      } else {
-        this.expandedElements.push(element);
-      }
+    const index = this.expandedElements.indexOf(element);
+    if (index >= 0) {
+      this.expandedElements.splice(index, 1);
     } else {
-      this.global.openDialog('Presione consultar para obtener los datos deseados.');
+      this.expandedElements.push(element);
     }
   }
 

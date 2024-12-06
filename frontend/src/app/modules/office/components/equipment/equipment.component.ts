@@ -109,29 +109,19 @@ export class EquipmentComponent implements OnInit {
   }
 
   /**
-   * Handles the selection of an office option.
-   * Updates the officeSelected property and checks if both office and center are selected.
-   * If both are selected, it shows the table and retrieves the equipment for the selected office.
-   * @param option The selected office option.
-   */
-  handleOptionSelected(option: any) {
-    this.officeSelected = option;
-    this.findOfficeId();
-    this.getEquipmentsByOffice();
-  }
-
-  /**
    * Handles the "Consultar" button click event.
    * Checks if both center and office are selected before showing the table.
    * If not, displays an alert message.
    */
   onConsultClick(): void {
-    if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected) &&
-        this.global.isOptionValid(this.global.officeStringArray, this.officeSelected)) {
-      this.showTable = true;
-    } else {
-      this.showTable = false;
-      this.global.openDialog('Por favor, selecciona un Centro de Trabajo y una Oficina.');
+    if (!this.showTable) {
+      if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected) &&
+          this.global.isOptionValid(this.global.officeStringArray, this.officeSelected)) {
+        this.showTable = true;
+      } else {
+        this.showTable = false;
+        this.global.openDialog('Por favor, selecciona un Centro de Trabajo y una Oficina.');
+      }
     }
   }
 
@@ -154,6 +144,20 @@ export class EquipmentComponent implements OnInit {
     this.showTable = false;
     this.officeSelected = null!;
     this.officeSelectedId = 0;
+  }
+
+  /**
+   * Handles the change event of the first select control.
+   * @param event The change event of the first select control.
+   */
+  onOfficeInputModified(value: string): void {
+    this.officeSelected = value;
+    this.showTable = false;
+
+    if (this.global.isOptionValid(this.global.officeStringArray, this.officeSelected)) {
+      this.findOfficeId();
+      this.getEquipmentsByOffice();
+    }
   }
 }
 

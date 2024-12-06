@@ -32,6 +32,10 @@ export class MenuComponent implements OnInit {
     this.isSidebarActive = !this.isSidebarActive;
   }
 
+  hideSidebar(): void {
+    this.isSidebarActive = false;
+  }
+
   /**
    * Sets the active option in the menu.
    * @param option The ID of the option to set as active.

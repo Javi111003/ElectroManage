@@ -14,7 +14,7 @@
         [label]="'Oficinas'"
         [options]="global.officeStringArray"
         [isDisabled]="!this.global.isOptionValid(global.centerStringArray, this.centerSelected)"
-        (optionSelected)="handleOptionSelected($event)"
+        (inputModified)="onOfficeInputModified($event)"
         formControlName="office">
       </app-autocomplete>
     </div>

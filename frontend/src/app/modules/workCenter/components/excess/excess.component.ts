@@ -96,10 +96,12 @@ export class ExcessComponent {
    * Displays the table if both the year and month are selected.
    */
   onClick(): void {
-    if (this.yearSelected && this.monthSelected)
-      this.showTable = true;
-    else
-      this.global.openDialog('Por favor, selecciona una fecha válida.');
+    if (!this.showTable) {
+      if (this.yearSelected && this.monthSelected)
+        this.showTable = true;
+      else
+        this.global.openDialog('Por favor, selecciona una fecha válida.');
+    }
   }
 
   /**

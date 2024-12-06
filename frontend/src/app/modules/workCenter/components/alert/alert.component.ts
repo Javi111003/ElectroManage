@@ -13,7 +13,7 @@ export class AlertComponent implements OnInit {
     public global: GlobalModule
   ) {}
 
-  isTableActive: boolean = false;
+  showTable: boolean = false;
   centerSelected: string = '';
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
@@ -46,13 +46,15 @@ export class AlertComponent implements OnInit {
    * This method is triggered when the user clicks on the alert button.
    */
   onClick() {
-    if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected)) {
-      this.global.findCenterId(this.centerSelected);
-      this.getAlerts(this.global.centerSelectedId);
-      this.isTableActive = !this.isTableActive;
-    }
-    else {
-      this.global.openDialog('Por favor, selecciona un Centro de Trabajo.');
+    if (!this.showTable) {
+      if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected)) {
+        this.global.findCenterId(this.centerSelected);
+        this.getAlerts(this.global.centerSelectedId);
+        this.showTable = true;
+      }
+      else {
+        this.global.openDialog('Por favor, selecciona un Centro de Trabajo.');
+      }
     }
   }
 
@@ -77,5 +79,18 @@ export class AlertComponent implements OnInit {
    */
   handleOptionSelected(option: string) {
     this.centerSelected = option;
+  }
+
+  /**
+   * Handles the change event of the first select control.
+   * @param event The change event of the first select control.
+   */
+  onCenterInputModified(value: string): void {
+    this.centerSelected = value;
+    this.showTable = false;
+
+    if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected)) {
+      this.global.findCenterId(this.centerSelected);
+    }
   }
 }
