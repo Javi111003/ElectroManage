@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, LOCALE_ID, ViewEncapsulation } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { DateFilterFn } from '@angular/material/datepicker';
 
@@ -16,6 +17,7 @@ import { DateFilterFn } from '@angular/material/datepicker';
 })
 export class DatepickerComponent {
   @Input() filter: DateFilterFn<any> = [][0];
+  @Input() control: FormControl = new FormControl();
   @Input() label: string = 'Elige una fecha';
   @Output() dateSelected = new EventEmitter<Date>();
 
@@ -26,5 +28,9 @@ export class DatepickerComponent {
   onDateChange(event: any) {
     const selectedDate = event.value;
     this.dateSelected.emit(selectedDate);
+  }
+
+  resetControl(): void {
+    this.control.reset('');
   }
 }

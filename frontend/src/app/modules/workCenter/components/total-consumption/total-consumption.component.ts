@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConfigColumn } from '../../../../shared/components/table/table.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { GlobalModule } from '../../../global/global.module'
+import { DatepickerComponent } from '../../../../shared/components/datepicker/datepicker.component';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-total-consumption',
@@ -11,12 +13,20 @@ import { GlobalModule } from '../../../global/global.module'
 export class TotalConsumptionComponent implements OnInit {
 
   constructor (
-    public global: GlobalModule
-  ) {}
+    public global: GlobalModule,
+    private fb: FormBuilder
+  ) {
+    this.form = this.fb.group({
+      startDateForm: [null],
+      endDateForm: [null],
+    });
+  }
 
-  receivedDate: Date = [][0];
-  isTableActive: boolean = false;
-  optionSelected: string = '';
+  form: FormGroup;
+  startDate: Date = [][0];
+  endDate: Date = [][0];
+  showTable: boolean = false;
+  centerSelected: string = '';
   dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
   consumptions: number[] = [];
   costs: number[] = [];
@@ -36,10 +46,13 @@ export class TotalConsumptionComponent implements OnInit {
     }
   ];
 
-
   ngOnInit(): void {
     this.global.Reset();
     this.global.getWorkCenters();
+  }
+
+  getControl(control: string): FormControl {
+    return this.form.get(control) as FormControl;
   }
 
   /**
@@ -97,10 +110,10 @@ export class TotalConsumptionComponent implements OnInit {
    * @returns A boolean value indicating if the date is valid.
    */
   filterEndDate = (d: Date | null): boolean => {
-    if (!this.receivedDate)
+    if (!this.startDate)
       return false;
 
-    let dateSelected = this.receivedDate;
+    let dateSelected = this.startDate;
     const DSday = dateSelected.getDate();
     const DSmonth = dateSelected.getMonth();
     const DSyear = dateSelected.getFullYear();
@@ -128,7 +141,7 @@ export class TotalConsumptionComponent implements OnInit {
    * @param option The selected option.
    */
   handleOptionSelected(option: any) {
-    this.optionSelected = option;
+    this.centerSelected = option;
   }
 
   /**
@@ -136,8 +149,18 @@ export class TotalConsumptionComponent implements OnInit {
    * Updates the receivedDate property with the selected date.
    * @param date The selected date.
    */
-  handleDateSelected(date: Date) {
-    this.receivedDate = date;
+  handleStartDateSelected(date: Date) {
+    this.startDate = date;
+    this.getControl('endDateForm').reset();
+  }
+
+  /**
+   * Handles the selection of a date.
+   * Updates the receivedDate property with the selected date.
+   * @param date The selected date.
+   */
+  handleEndDateSelected(date: Date) {
+    this.endDate = date;
   }
 
   /**
@@ -145,11 +168,15 @@ export class TotalConsumptionComponent implements OnInit {
    * Toggles the visibility of the table based on the current state.
    */
   onClick() {
-    if (this.global.isOptionValid(this.global.centerStringArray, this.optionSelected)) {
-      this.getRegistersByCenterId(0);
-      this.isTableActive = !this.isTableActive;
-    } else {
-      this.global.openDialog('Por favor, selecciona un Centro de Trabajo.');
+    if (!this.showTable) {
+      console.log(this.form);
+      if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected) &&
+          this.startDate && this.endDate) {
+        this.getRegistersByCenterId(0);
+        this.showTable = !this.showTable;
+      } else {
+        this.global.openDialog('Por favor, selecciona un Centro de Trabajo, fecha de inicio y de fin válidos.');
+      }
     }
   }
 
@@ -171,5 +198,18 @@ export class TotalConsumptionComponent implements OnInit {
   */
   getTotalConsumption(): number {
     return this.consumptions.reduce((acc, value) => acc + value, 0);
+  }
+
+  /**
+   * Handles the change event of the first select control.
+   * @param event The change event of the first select control.
+   */
+  onCenterInputModified(value: string): void {
+    this.centerSelected = value;
+    this.showTable = false;
+
+    if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected)) {
+      this.global.findCenterId(this.centerSelected);
+    }
   }
 }

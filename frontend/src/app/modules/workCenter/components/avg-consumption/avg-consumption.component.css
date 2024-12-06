@@ -1,3 +1,6 @@
+.hidden {
+  display: none;
+}
 .form-avg-consumption {
   display: flex;
   justify-content: space-between;

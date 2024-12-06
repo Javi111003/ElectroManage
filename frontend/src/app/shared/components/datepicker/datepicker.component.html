@@ -1,7 +1,7 @@
 <mat-form-field class="example-full-width" appearance="outline">
   <mat-label>{{label}}</mat-label>
   <input matInput [matDatepickerFilter]="filter" [matDatepicker]="picker" (click)="picker.open()"
-  (dateChange)="onDateChange($event)" readonly="true">
+  (dateChange)="onDateChange($event)" readonly="true" [formControl]="control">
   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
   <mat-datepicker #picker></mat-datepicker>
 </mat-form-field>

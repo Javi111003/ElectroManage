@@ -1,22 +1,25 @@
 <div class="form-total-consumption">
-  <div class="form">
+  <form class="form" [formGroup]="form">
     <div class="form-inputs">
       <app-autocomplete class="autocomplete"
         [label]="'Centro de Trabajo'"
         [options]="global.centerStringArray"
-        (optionSelected)="handleOptionSelected($event)"
+        (inputModified)="onCenterInputModified($event)"
       >
       </app-autocomplete>
 
       <app-datepicker class="startDate"
         [filter]="filterStartDate"
         [label]="'Desde'"
-        (dateSelected)="handleDateSelected($event)"
+        [control]="getControl('startDateForm')"
+        (dateSelected)="handleStartDateSelected($event)"
       ></app-datepicker>
 
       <app-datepicker class="endDate"
         [filter]="filterEndDate"
         [label]="'Hasta'"
+        [control]="getControl('endDateForm')"
+        (dateSelected)="handleEndDateSelected($event)"
       ></app-datepicker>
     </div>
 
@@ -29,9 +32,9 @@
 
       <app-button class="exportPDF"></app-button>
     </div>
-  </div>
+  </form>
 
-  <div class="table" [class.hidden]="!isTableActive">
+  <div class="table" [class.hidden]="!showTable">
     <app-table
       [dataSource]="dataSource"
       [displayedColumns]="displayedColumns"

@@ -27,7 +27,7 @@ export class PolicyComponent implements OnInit {
   optionsPolicy: string[] = [];
   objectsPolicy: Policy[] = [];
 
-  isTableActive: boolean = false;
+  showTable: boolean = false;
   dataSourceBefore: MatTableDataSource<any> = [][0];
   dataSourceAfter: MatTableDataSource<any> = [][0];
   displayedColumns: ConfigColumn[] = [
@@ -57,12 +57,14 @@ export class PolicyComponent implements OnInit {
    * If not, displays an alert message.
    */
   onClick() {
-    if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected) &&
-      this.global.isOptionValid(this.optionsPolicy, this.policySelected)) {
-      this.isTableActive = true;
-    } else {
-      this.isTableActive = false;
-      this.global.openDialog('Por favor, selecciona un Centro de Trabajo y una Política.');
+    if (!this.showTable) {
+      if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected) &&
+        this.global.isOptionValid(this.optionsPolicy, this.policySelected)) {
+        this.showTable = true;
+      } else {
+        this.showTable = false;
+        this.global.openDialog('Por favor, selecciona un Centro de Trabajo y una Política.');
+      }
     }
   }
 
@@ -85,7 +87,7 @@ export class PolicyComponent implements OnInit {
    */
   onCenterInputModified(value: string) {
     this.centerSelected = value;
-    this.isTableActive = false;
+    this.showTable = false;
     this.policySelected = null!;
     this.policySelectedId = 0;
 
@@ -107,6 +109,6 @@ export class PolicyComponent implements OnInit {
    */
   onPolicyInputModified(value: string) {
     this.policySelected = value;
-    this.isTableActive = false;
+    this.showTable = false;
   }
 }
