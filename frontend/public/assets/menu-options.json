@@ -13,10 +13,10 @@
       "isOpen": false,
       "subItems": [
         {
-          "id": "total-consumption",
-          "label": "Consumo total",
-          "icon": "offline_bolt",
-          "link": "workCenter/total-consumption"
+          "id": "register",
+          "label": "Registros de consumo",
+          "icon": "dynamic_form",
+          "link": "workCenter/register"
         },
         {
           "id": "avg-consumption",

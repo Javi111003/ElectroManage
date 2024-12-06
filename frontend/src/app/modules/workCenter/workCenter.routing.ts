@@ -1,5 +1,5 @@
 import { Routes } from "@angular/router";
-import { TotalConsumptionComponent } from "./components/total-consumption/total-consumption.component";
+import { RegisterComponent } from "./components/register/index/register.component";
 import { AvgConsumptionComponent } from "./components/avg-consumption/avg-consumption.component";
 import { PolicyComponent } from "./components/policy/policy.component";
 import { AlertComponent } from "./components/alert/alert.component";
@@ -8,8 +8,13 @@ import { ExcessComponent } from "./components/excess/excess.component";
 
 export const workCenterRoutes: Routes = [
   {
-    path:'workCenter/total-consumption',
-    component: TotalConsumptionComponent,
+    path:'workCenter/register',
+    component: RegisterComponent,
+    loadChildren: () => import('./workCenter.module').then(m => m.WorkCenterModule)
+  },
+  {
+    path: 'workCenter/register/form',
+    component: RegisterComponent,
     loadChildren: () => import('./workCenter.module').then(m => m.WorkCenterModule)
   },
   {

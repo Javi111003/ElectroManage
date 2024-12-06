@@ -1,16 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ConfigColumn } from '../../../../shared/components/table/table.component';
+import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { MatTableDataSource } from '@angular/material/table';
-import { GlobalModule } from '../../../global/global.module'
-import { DatepickerComponent } from '../../../../shared/components/datepicker/datepicker.component';
+import { GlobalModule } from '../../../../global/global.module'
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-total-consumption',
-  templateUrl: './total-consumption.component.html',
-  styleUrl: './total-consumption.component.css'
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.css'
 })
-export class TotalConsumptionComponent implements OnInit {
+export class RegisterComponent implements OnInit {
 
   constructor (
     public global: GlobalModule,
