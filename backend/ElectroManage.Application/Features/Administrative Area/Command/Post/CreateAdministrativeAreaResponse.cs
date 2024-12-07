@@ -1,6 +1,6 @@
 ﻿namespace ElectroManage.Application.Features.Administrative_Area.Command.Post;
 
-public class CreateAdministrativeAreaResponse 
+public record CreateAdministrativeAreaResponse 
 {
     public long Id { get; set; }
     public string Name { get; set; } = string.Empty;

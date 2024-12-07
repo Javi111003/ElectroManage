@@ -31,7 +31,7 @@ public class CreateAdministrativeAreaCommandHandler : CoreCommandHandler<CreateA
         {
             Name = command.Name,
             Description = command.Description,
-            Created = command.Created,
+            Created = DateTime.UtcNow
         };
 
         await administrativeAreaReporitory.SaveAsync(administrativeArea);

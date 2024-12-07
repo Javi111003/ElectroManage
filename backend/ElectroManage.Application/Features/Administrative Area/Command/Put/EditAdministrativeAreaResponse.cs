@@ -1,6 +1,6 @@
 ﻿namespace ElectroManage.Application.Features.Administrative_Area.Command.Put;
 
-public class EditAdministrativeAreaResponse
+public record EditAdministrativeAreaResponse
 {
     public long Id { get; set; }
     public string Name { get; set; } = string.Empty;

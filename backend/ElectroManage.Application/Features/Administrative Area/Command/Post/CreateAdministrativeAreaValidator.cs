@@ -9,9 +9,5 @@ public class CreateAdministrativeAreaValidator : Validator<CreateAdministrativeA
         RuleFor(x => x.Name)
             .NotEmpty()
             .WithMessage("The Admnistrative Area name cannot be empty");
-
-        RuleFor(x => x.Created)
-            .NotEmpty()
-            .WithMessage("The Administrative Area needs a creation date");
     }
 }
