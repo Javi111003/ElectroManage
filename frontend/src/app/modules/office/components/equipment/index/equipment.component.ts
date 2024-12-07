@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ConfigColumn } from '../../../../shared/components/table/table.component';
+import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { AutocompleteComponent } from '../../../../shared/components/autocomplete/autocomplete.component';
-import { GlobalModule } from '../../../global/global.module';
+import { AutocompleteComponent } from '../../../../../shared/components/autocomplete/autocomplete.component';
+import { GlobalModule } from '../../../../global/global.module';
 
 
 @Component({

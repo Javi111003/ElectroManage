@@ -3,6 +3,8 @@ import { RegisterComponent } from "./components/register/index/register.componen
 import { AvgConsumptionComponent } from "./components/avg-consumption/index/avg-consumption.component";
 import { AlertComponent } from "./components/alert/index/alert.component";
 import { ExcessComponent } from "./components/excess/index/excess.component";
+import { ManageComponent } from "./components/manage/index/manage.component";
+import { ManageFormComponent } from "./components/manage/form/manage-form.component";
 
 
 export const workCenterRoutes: Routes = [
@@ -29,6 +31,16 @@ export const workCenterRoutes: Routes = [
   {
     path:'workCenter/excess/index',
     component: ExcessComponent,
+    loadChildren: () => import('./workCenter.module').then(m => m.WorkCenterModule)
+  },
+  {
+    path:'workCenter/manage/index',
+    component: ManageComponent,
+    loadChildren: () => import('./workCenter.module').then(m => m.WorkCenterModule)
+  },
+  {
+    path:'workCenter/manage/form',
+    component: ManageFormComponent,
     loadChildren: () => import('./workCenter.module').then(m => m.WorkCenterModule)
   }
 ];

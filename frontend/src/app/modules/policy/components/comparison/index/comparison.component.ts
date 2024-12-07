@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { AutocompleteComponent } from '../../../../../shared/components/autocomplete/autocomplete.component';
 import { Policy } from '../../../../../models/policy.interface';
+import { PolicyService } from '../../../../../services/policy/policy.service';
 
 @Component({
   selector: 'app-comparison',
@@ -13,7 +14,8 @@ import { Policy } from '../../../../../models/policy.interface';
 export class ComparisonComponent implements OnInit {
 
   constructor(
-    public global: GlobalModule
+    public global: GlobalModule,
+    private httpPolicy: PolicyService
   ) {}
 
   @ViewChild('policyAutocomplete') policyAutocomplete!: AutocompleteComponent;
@@ -74,7 +76,7 @@ export class ComparisonComponent implements OnInit {
    * @param centerSelectedId The ID of the selected center.
    */
   getPolicies(centerSelectedId: any) {
-    this.global.httpCenter.getPolicies(centerSelectedId).subscribe(policies => {
+    this.httpPolicy.getPolicies(centerSelectedId).subscribe(policies => {
       this.objectsPolicy = policies;
       this.optionsPolicy = policies.map(policy => policy.name);
     });
