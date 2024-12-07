@@ -8,4 +8,5 @@
             public static string Office = "Office";
             public static string Policy = "Policy";
             public static string AdminstrativeArea = "Administrative Area";
+            public static string Location = "Location";
     }
