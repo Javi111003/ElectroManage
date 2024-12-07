@@ -1,6 +1,6 @@
 ﻿namespace ElectroManage.Application.Features.Administrative_Area.Query.Get;
 
-public class AdministrativeAreaGetByIdResponse
+public record AdministrativeAreaGetByIdResponse
 {
     public long Id { get; set; }
     public string Name { get; set; } = string.Empty;
