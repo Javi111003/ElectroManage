@@ -7,4 +7,5 @@
             public static string Equipment = "Equipment";
             public static string Office = "Office";
             public static string Policy = "Policy";
+            public static string AdminstrativeArea = "Administrative Area";
     }
