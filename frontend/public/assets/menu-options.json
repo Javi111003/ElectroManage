@@ -35,6 +35,12 @@
           "label": "Alertas emitidas",
           "icon": "warning",
           "link": "workCenter/alert/index"
+        },
+        {
+          "id": "center-manage",
+          "label": "Gestión",
+          "icon": "folder_supervised",
+          "link": "workCenter/manage/index"
         }
       ]
     },
@@ -49,6 +55,12 @@
           "label": "Equipos",
           "icon": "computer",
           "link": "office/equipment/index"
+        },
+        {
+          "id": "office-manage",
+          "label": "Gestión",
+          "icon": "folder_supervised",
+          "link": "office/manage/index"
         }
       ]
     },
@@ -63,6 +75,26 @@
           "label": "Comparar eficiencia",
           "icon": "compare",
           "link": "policy/comparison/index"
+        },
+        {
+          "id": "policy-manage",
+          "label": "Gestión",
+          "icon": "folder_supervised",
+          "link": "policy/manage/index"
+        }
+      ]
+    },
+    {
+      "id": "user",
+      "label": "Usuarios",
+      "icon": "manage_accounts",
+      "isOpen": false,
+      "subItems": [
+        {
+          "id": "user-manage",
+          "label": "Gestión",
+          "icon": "folder_supervised",
+          "link": "user/manage/index"
         }
       ]
     },

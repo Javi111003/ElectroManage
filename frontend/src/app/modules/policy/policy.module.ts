@@ -4,12 +4,16 @@ import { GlobalModule } from '../global/global.module';
 
 //policy components
 import { ComparisonComponent } from './components/comparison/index/comparison.component';
+import { ManageFormComponent } from './components/manage/form/manage-form.component';
+import { ManageComponent } from './components/manage/index/manage.component';
 
 
 
 @NgModule({
   declarations: [
-    ComparisonComponent
+    ComparisonComponent,
+    ManageFormComponent,
+    ManageComponent
   ],
   imports: [
     CommonModule,

@@ -38,17 +38,6 @@ export class WorkCenterService {
   }
 
   /**
-   * Fetches the policies for a given work center from the API.
-   * This method sends an HTTP GET request to the API to retrieve the policies for a
-   * specified work center.
-   * @param centerID The ID of the work center for which to fetch policies.
-   * @returns An Observable that resolves to an array of Policy objects.
-   */
-  getPolicies(centerID: number): Observable<Policy[]> {
-    return this.http.get<Policy[]>(`${this.workCenterListUrl}/${centerID}/policy`);
-  }
-
-  /**
    * Fetches the alerts for a given work center from the API.
    * This method sends an HTTP GET request to the API to retrieve the alerts for
    * a specified work center.

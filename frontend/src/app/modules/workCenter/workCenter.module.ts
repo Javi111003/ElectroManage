@@ -8,6 +8,8 @@ import { AvgConsumptionComponent } from './components/avg-consumption/index/avg-
 import { AlertComponent } from './components/alert/index/alert.component';
 import { ExcessComponent } from './components/excess/index/excess.component';
 import { RegisterFormComponent } from './components/register/form/register-form.component';
+import { ManageComponent } from './components/manage/index/manage.component';
+import { ManageFormComponent } from './components/manage/form/manage-form.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +17,9 @@ import { RegisterFormComponent } from './components/register/form/register-form.
     AvgConsumptionComponent,
     AlertComponent,
     ExcessComponent,
-    RegisterFormComponent
+    RegisterFormComponent,
+    ManageComponent,
+    ManageFormComponent
   ],
   imports: [
     CommonModule,
