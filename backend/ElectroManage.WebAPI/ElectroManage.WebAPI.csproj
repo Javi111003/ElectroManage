@@ -49,4 +49,8 @@
     <ProjectReference Include="..\ElectroManage.Infraestructure\ElectroManage.Infraestructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Endpoint\v1\Sucursal\" />
+  </ItemGroup>
+
 </Project>
