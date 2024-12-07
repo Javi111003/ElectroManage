@@ -1,14 +1,13 @@
 import { Routes } from "@angular/router";
 import { RegisterComponent } from "./components/register/index/register.component";
-import { AvgConsumptionComponent } from "./components/avg-consumption/avg-consumption.component";
-import { PolicyComponent } from "./components/policy/policy.component";
-import { AlertComponent } from "./components/alert/alert.component";
-import { ExcessComponent } from "./components/excess/excess.component";
+import { AvgConsumptionComponent } from "./components/avg-consumption/index/avg-consumption.component";
+import { AlertComponent } from "./components/alert/index/alert.component";
+import { ExcessComponent } from "./components/excess/index/excess.component";
 
 
 export const workCenterRoutes: Routes = [
   {
-    path:'workCenter/register',
+    path:'workCenter/register/index',
     component: RegisterComponent,
     loadChildren: () => import('./workCenter.module').then(m => m.WorkCenterModule)
   },
@@ -18,22 +17,17 @@ export const workCenterRoutes: Routes = [
     loadChildren: () => import('./workCenter.module').then(m => m.WorkCenterModule)
   },
   {
-    path:'workCenter/avg-consumption',
+    path:'workCenter/avg-consumption/index',
     component: AvgConsumptionComponent,
     loadChildren: () => import('./workCenter.module').then(m => m.WorkCenterModule)
   },
   {
-    path:'workCenter/policy',
-    component: PolicyComponent,
-    loadChildren: () => import('./workCenter.module').then(m => m.WorkCenterModule)
-  },
-  {
-    path:'workCenter/alert',
+    path:'workCenter/alert/index',
     component: AlertComponent,
     loadChildren: () => import('./workCenter.module').then(m => m.WorkCenterModule)
   },
   {
-    path:'workCenter/excess',
+    path:'workCenter/excess/index',
     component: ExcessComponent,
     loadChildren: () => import('./workCenter.module').then(m => m.WorkCenterModule)
   }

@@ -16,31 +16,25 @@
           "id": "register",
           "label": "Registros de consumo",
           "icon": "dynamic_form",
-          "link": "workCenter/register"
+          "link": "workCenter/register/index"
         },
         {
           "id": "avg-consumption",
           "label": "Consumo promedio",
           "icon": "monitor_heart",
-          "link": "workCenter/avg-consumption"
-        },
-        {
-          "id": "policy",
-          "label": "Políticas de eficiencia energética",
-          "icon": "task",
-          "link": "workCenter/policy"
+          "link": "workCenter/avg-consumption/index"
         },
         {
           "id": "excess",
           "label": "Exceso de consumo",
           "icon": "query_stats",
-          "link": "workCenter/excess"
+          "link": "workCenter/excess/index"
         },
         {
           "id": "alert",
           "label": "Alertas emitidas",
           "icon": "warning",
-          "link": "workCenter/alert"
+          "link": "workCenter/alert/index"
         }
       ]
     },
@@ -54,7 +48,21 @@
           "id": "equipment",
           "label": "Equipos",
           "icon": "computer",
-          "link": "office/equipment"
+          "link": "office/equipment/index"
+        }
+      ]
+    },
+    {
+      "id": "policy",
+      "label": "Políticas",
+      "icon": "task",
+      "isOpen": false,
+      "subItems": [
+        {
+          "id": "comparison",
+          "label": "Comparar eficiencia",
+          "icon": "compare",
+          "link": "policy/comparison/index"
         }
       ]
     },

@@ -1,16 +1,16 @@
-import { GlobalModule } from './../../../global/global.module';
+import { GlobalModule } from '../../../../global/global.module';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { ConfigColumn } from '../../../../shared/components/table/table.component';
-import { AutocompleteComponent } from '../../../../shared/components/autocomplete/autocomplete.component';
-import { Policy } from '../../../../models/policy.interface';
+import { ConfigColumn } from '../../../../../shared/components/table/table.component';
+import { AutocompleteComponent } from '../../../../../shared/components/autocomplete/autocomplete.component';
+import { Policy } from '../../../../../models/policy.interface';
 
 @Component({
-  selector: 'app-policy',
-  templateUrl: './policy.component.html',
-  styleUrl: './policy.component.css'
+  selector: 'app-comparison',
+  templateUrl: './comparison.component.html',
+  styleUrl: './comparison.component.css'
 })
-export class PolicyComponent implements OnInit {
+export class ComparisonComponent implements OnInit {
 
   constructor(
     public global: GlobalModule

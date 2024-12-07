@@ -5,8 +5,8 @@ import { MatDatepicker } from '@angular/material/datepicker';
 import _moment from 'moment';
 import {default as _rollupMoment, Moment} from 'moment';
 import { MatTableDataSource } from '@angular/material/table';
-import { ConfigColumn } from '../../../../shared/components/table/table.component';
-import { GlobalModule } from '../../../global/global.module';
+import { ConfigColumn } from '../../../../../shared/components/table/table.component';
+import { GlobalModule } from '../../../../global/global.module';
 
 const moment = _rollupMoment || _moment;
 

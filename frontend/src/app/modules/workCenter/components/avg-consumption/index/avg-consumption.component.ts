@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ConfigColumn } from '../../../../shared/components/table/table.component';
+import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { GlobalModule } from '../../../global/global.module';
+import { GlobalModule } from '../../../../global/global.module';
 
 
 @Component({

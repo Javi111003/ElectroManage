@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PolicyComponent } from './policy.component';
+import { ComparisonComponent } from './comparison.component';
 
 describe('PolicyComponent', () => {
-  let component: PolicyComponent;
-  let fixture: ComponentFixture<PolicyComponent>;
+  let component: ComparisonComponent;
+  let fixture: ComponentFixture<ComparisonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PolicyComponent]
+      declarations: [ComparisonComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PolicyComponent);
+    fixture = TestBed.createComponent(ComparisonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
