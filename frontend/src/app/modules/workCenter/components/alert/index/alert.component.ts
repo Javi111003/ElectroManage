@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { ConfigColumn } from '../../../../shared/components/table/table.component';
-import { GlobalModule } from '../../../global/global.module';
+import { ConfigColumn } from '../../../../../shared/components/table/table.component';
+import { GlobalModule } from '../../../../global/global.module';
 
 @Component({
   selector: 'app-alert',

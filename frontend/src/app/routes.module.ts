@@ -5,12 +5,14 @@ import { RouterModule  } from "@angular/router";
 import { globalRoutes } from "./modules/global/global.routing";
 import { workCenterRoutes } from "./modules/workCenter/workCenter.routing";
 import { officeRoutes } from "./modules/office/office.routing";
+import { policyRoutes } from "./modules/policy/policy.routing";
 
 @NgModule({
   imports: [RouterModule.forChild([
     ...globalRoutes,
     ...workCenterRoutes,
-    ...officeRoutes
+    ...officeRoutes,
+    ...policyRoutes
   ])],
   exports: [RouterModule]
 })
