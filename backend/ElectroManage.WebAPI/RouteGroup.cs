@@ -10,4 +10,5 @@
             public static string AdminstrativeArea = "Administrative Area";
             public static string Location = "Location";
             public static string InstallationType = "Installation";
+            public static string Warning = "Warning";
     }
