@@ -21,7 +21,8 @@ public class EditGeneralDataOfficeHandler : CoreCommandHandler<EditGeneralDataOf
         var officeRepository = _unitOfWork.DbRepository<Domain.Entites.Offices.Office>();
         var officeInclude = new List<Expression<Func<Domain.Entites.Offices.Office, object>>>
         {
-            x => x.Company
+            x => x.Company,
+            x => x.Company.Offices
         };
         var office = await officeRepository.FirstAsync(useInactive: true, includes: officeInclude, filters: x => x.Id == command.Id);
         if (office is null)
@@ -30,7 +31,7 @@ public class EditGeneralDataOfficeHandler : CoreCommandHandler<EditGeneralDataOf
             ThrowError($"Office with id {command.Id} not found", 404);
         }
         var companyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Company>();
-        var company = await companyRepository.FirstAsync(useInactive: true, filters: x=> x.Id == command.Id);
+        var company = await companyRepository.FirstAsync(useInactive: true, filters: x=> x.Id == command.CompanyId);
         if (company is null)
         {
             _logger.LogError($"Company with id {command.Id} not found");
