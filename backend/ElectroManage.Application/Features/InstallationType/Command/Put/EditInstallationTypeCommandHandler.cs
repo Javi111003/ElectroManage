@@ -1,4 +1,4 @@
-﻿
+﻿using ElectroManage.Application.Abstractions;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
@@ -9,11 +9,12 @@ public class EditInstallationTypeCommandHandler : CoreCommandHandler<EditInstall
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<EditInstallationTypeCommandHandler> _logger;
-
-    public EditInstallationTypeCommandHandler(IUnitOfWork unitOfWork, ILogger<EditInstallationTypeCommandHandler> logger) : base(unitOfWork)
+    readonly ICheckUniqueService _checkUniqueService; 
+    public EditInstallationTypeCommandHandler(IUnitOfWork unitOfWork, ILogger<EditInstallationTypeCommandHandler> logger, ICheckUniqueService checkUniqueService) : base(unitOfWork)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
+        _checkUniqueService = checkUniqueService;
     }
 
     public async override Task<EditInstallationTypeResponse> ExecuteAsync(EditInstallationTypeCommand command, CancellationToken ct = default)
@@ -30,15 +31,20 @@ public class EditInstallationTypeCommandHandler : CoreCommandHandler<EditInstall
             _logger.LogError($"Installation with id: {command.Id} not found");
             ThrowError($"Installation with id: {command.Id} not found", 404);
         }
-        var checkUniqueName = await installationTypeRepository.CountAsync(useInactive: true, filters: x=> x.Name == command.Name && x.Id != command.Id);
-        if (checkUniqueName > 0)
+        using (var scope = ScopeBeginTransactionAsync())
         {
-            _logger.LogError($"Exist almost one Installation Type with this name");
-            ThrowError($"Installation with id: {command.Id} not found", 404);
+            installationType.Name = command.Name;
+            installationType.Description = command.Description;
+            var checkUniqueName = await _checkUniqueService.CheckUniqueNameAsync(installationType);
+            if (!checkUniqueName)
+            {
+                _logger.LogError($"Exist almost one Installation Type with this name");
+                ThrowError($"Installation with id: {command.Id} not found", 404);
+            }
+            await installationTypeRepository.UpdateAsync(installationType);
+            CommitTransaction(scope);
         }
-        installationType.Name = command.Name;
-        installationType.Description = command.Description;
-        await installationTypeRepository.UpdateAsync(installationType);
+        await UnitOfWork!.SaveChangesAsync();
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
         return new EditInstallationTypeResponse
         {
