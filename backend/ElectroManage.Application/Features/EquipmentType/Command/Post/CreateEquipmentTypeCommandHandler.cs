@@ -1,3 +1,4 @@
+using ElectroManage.Application.Abstractions;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 
@@ -7,11 +8,12 @@ public class CreateEquipmentTypeCommandHandler : CoreCommandHandler<CreateEquipm
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<CreateEquipmentTypeCommandHandler> _logger;
-
-    public CreateEquipmentTypeCommandHandler(IUnitOfWork unitOfWork, ILogger<CreateEquipmentTypeCommandHandler> logger) : base(unitOfWork)
+    readonly ICheckUniqueService _checkUniqueService;
+    public CreateEquipmentTypeCommandHandler(IUnitOfWork unitOfWork, ILogger<CreateEquipmentTypeCommandHandler> logger, ICheckUniqueService checkUniqueService) : base(unitOfWork)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
+        _checkUniqueService = checkUniqueService;
     }
 
     public async override Task<CreateEquipmentTypeResponse> ExecuteAsync(CreateEquipmentTypeCommand command, CancellationToken ct = default)
@@ -19,12 +21,6 @@ public class CreateEquipmentTypeCommandHandler : CoreCommandHandler<CreateEquipm
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
 
         var equipmentTypeRepository = _unitOfWork.DbRepository<Domain.Entites.Equipment.EquipmentType>();
-        var checkUniqueName = await equipmentTypeRepository.CountAsync(useInactive: true, filters: x=>x.Name == command.Name);
-        if (checkUniqueName > 0)
-        {
-            _logger.LogError($"{nameof(ExecuteAsync)} | This name already exists");
-            ThrowError("This name already exists", 400);
-        }
 
         var equipmentType = new Domain.Entites.Equipment.EquipmentType
         {
@@ -33,8 +29,15 @@ public class CreateEquipmentTypeCommandHandler : CoreCommandHandler<CreateEquipm
             Created = DateTime.UtcNow
         };
 
-        await equipmentTypeRepository.SaveAsync(equipmentType);
+        var checkUniqueName = await _checkUniqueService.CheckUniqueNameAsync(equipmentType);
+        if (!checkUniqueName)
+        {
+            _logger.LogError($"{nameof(ExecuteAsync)} | This name already exists");
+            ThrowError("This name already exists", 400);
+        } 
 
+        await equipmentTypeRepository.SaveAsync(equipmentType, false);
+        await _unitOfWork.SaveChangesAsync();
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
         return new CreateEquipmentTypeResponse
         {

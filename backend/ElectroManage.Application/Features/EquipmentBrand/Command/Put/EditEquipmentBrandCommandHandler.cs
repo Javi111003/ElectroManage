@@ -1,3 +1,4 @@
+using ElectroManage.Application.Abstractions;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
@@ -8,11 +9,12 @@ public class EditEquipmentBrandCommandHandler : CoreCommandHandler<EditEquipment
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<EditEquipmentBrandCommandHandler> _logger;
-
-    public EditEquipmentBrandCommandHandler(IUnitOfWork unitOfWork, ILogger<EditEquipmentBrandCommandHandler> logger) : base(unitOfWork)
+    readonly ICheckUniqueService _checkUniqueService;
+    public EditEquipmentBrandCommandHandler(IUnitOfWork unitOfWork, ILogger<EditEquipmentBrandCommandHandler> logger, ICheckUniqueService checkUniqueService) : base(unitOfWork)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
+        _checkUniqueService = checkUniqueService;
     }
 
     public async override Task<EditEquipmentBrandResponse> ExecuteAsync(EditEquipmentBrandCommand command, CancellationToken ct = default)
@@ -32,20 +34,21 @@ public class EditEquipmentBrandCommandHandler : CoreCommandHandler<EditEquipment
             ThrowError($"The equipment brand with id {command.Id} doesn't exist", 404);
         }
 
-        var checkUniqueName = await equipmentBrandRepository.CountAsync(useInactive: true, filters: x => x.Name == command.Name && x.Id != command.Id);
-        if (checkUniqueName > 0)
+        using (var scope = ScopeBeginTransactionAsync())
         {
-            _logger.LogError("This equipment brand name already exists");
-            ThrowError("This equipment brand name already exists", 400);
+            equipmentBrand.Name = command.Name;
+            equipmentBrand.Description = command.Description;
+            var checkUniqueName = await _checkUniqueService.CheckUniqueNameAsync(equipmentBrand);
+            if (!checkUniqueName)
+            {
+                _logger.LogError("This equipment brand name already exists");
+                ThrowError("This equipment brand name already exists", 400);
+            }
+            await equipmentBrandRepository.UpdateAsync(equipmentBrand, false);
+            CommitTransaction(scope);
         }
-
-        equipmentBrand.Name = command.Name;
-        equipmentBrand.Description = command.Description;
-
-        await equipmentBrandRepository.UpdateAsync(equipmentBrand);
-
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
-
+        await _unitOfWork.SaveChangesAsync();
         return new EditEquipmentBrandResponse
         {
             Id = equipmentBrand.Id,
