@@ -10,7 +10,7 @@ public class CreateEfficiencyPolicyCommandHandler : CoreCommandHandler<CreateEff
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<CreateEfficiencyPolicyCommandHandler> _logger;
-    ICheckUniqueService _checkUniqueService;
+    readonly ICheckUniqueService _checkUniqueService;
 
     public CreateEfficiencyPolicyCommandHandler(IUnitOfWork unitOfWork, ILogger<CreateEfficiencyPolicyCommandHandler> logger, ICheckUniqueService checkUniqueService) : base(unitOfWork)
     {
