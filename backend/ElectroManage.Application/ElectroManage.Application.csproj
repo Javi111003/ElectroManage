@@ -10,8 +10,6 @@
   <ItemGroup>
     <Folder Include="Features\Company\" />
     <Folder Include="Mappers\" />
-    <Folder Include="Abstractions\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>

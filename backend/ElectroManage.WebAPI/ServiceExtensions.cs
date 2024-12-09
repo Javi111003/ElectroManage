@@ -14,6 +14,8 @@ using ElectroManage.Infraestructure.Email;
 using ElectroManage.Infraestructure.Services;
 using System.Security.Claims;
 using System.Text;
+using ElectroManage.Application.Abstractions;
+using ElectroManage.Application.Services;
 
 namespace ElectroManage.WebAPI;
 public static class ServiceExtensions
@@ -23,6 +25,7 @@ public static class ServiceExtensions
         services.AddScoped<IUserValidator<AppUser>, CustomUserValidator<AppUser>>();
         services.AddScoped<IDateTimeService, DateTimeService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<ICheckUniqueService, CheckUniqueService>();
         services.AddSingleton<IEmailSender<AppUser>, IdentityEmailSender>();
     }
     public static void AddGenericRepositoryExtension(this IServiceCollection services)
