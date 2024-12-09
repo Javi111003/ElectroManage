@@ -17,34 +17,41 @@ public class EditCostFormulaCommandHandler : CoreCommandHandler<EditCostFormulaC
     public async override Task<EditCostFormulaResponse> ExecuteAsync(EditCostFormulaCommand command, CancellationToken ct = default)
     {
        _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
-
+        var companyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Company>();
         var costFormulaRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.CostFormula>();
         var filter = new Expression<Func<Domain.Entites.Sucursal.CostFormula, bool>>[]
         {
-            x => x.Id == command.Id,
+            x => x.Id == command.FormulaId,
         };
 
         var costFormula = await costFormulaRepository.FirstAsync(useInactive: true, filters: filter);
         if (costFormula is null)
         {
-            _logger.LogError($"The cost formula with id {command.Id} doesn't exist");
-            ThrowError($"The cost formula with id {command.Id} doesn't exist", 404);
+            _logger.LogError($"The cost formula with id {command.FormulaId} doesn't exist");
+            ThrowError($"The cost formula with id {command.FormulaId} doesn't exist", 404);
         }
-
-        var checkUniqueFormula = await costFormulaRepository.CountAsync(useInactive: true, filters: x=>x.ExtraPerCent == command.ExtraPerCent && x.Increase == command.Increase && x.Id != command.Id);
-        if (checkUniqueFormula > 0)
+        var company = await companyRepository.FirstAsync(useInactive: true, filters: c => c.Id == command.CompanyId);
+        if (company is null)
         {
-            _logger.LogError("This administrative area name already exists");
-            ThrowError("This administrative area name already exists", 400);
+            _logger.LogError($"{nameof(ExecuteAsync)} | Company with id {command.CompanyId} does not exists");
+            ThrowError("Company with id {command.CompanyId} does not exists", 404);
         }
-
-        costFormula.ExtraPerCent = command.ExtraPerCent;
-        costFormula.Increase = command.Increase;
-
-        await costFormulaRepository.UpdateAsync(costFormula,false);
-
+        using (var scope = ScopeBeginTransactionAsync())
+        {
+            costFormula.ExtraPerCent = command.ExtraPerCent;
+            costFormula.Increase = command.Increase;
+            costFormula.Company = company;
+            var checkUniqueFormula = await costFormulaRepository.CountAsync(useInactive: true, filters: x => x.ExtraPerCent == command.ExtraPerCent && x.Increase == command.Increase && x.Id != command.FormulaId);
+            if (checkUniqueFormula > 0)
+            {
+                _logger.LogError("This formula already exists");
+                ThrowError("This formula already exists", 400);
+            }
+            await costFormulaRepository.UpdateAsync(costFormula, false);
+            CommitTransaction(scope);
+        }
+        await _unitOfWork.SaveChangesAsync();
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
-        await _unitOfWork.CommitChangesAsync(false);
         return new EditCostFormulaResponse
         {
             Id = costFormula.Id,
