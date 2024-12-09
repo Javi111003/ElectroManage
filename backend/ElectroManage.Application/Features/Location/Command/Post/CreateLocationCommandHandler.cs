@@ -36,10 +36,10 @@ public class CreateLocationCommandHandler : CoreCommandHandler<CreateLocationCom
             Country = command.Address.Country,
         };
 
-        await locationRepository.SaveAsync(location);
+        await locationRepository.SaveAsync(location, false);
 
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
-
+        await UnitOfWork!.SaveChangesAsync(ct);
         return new CreateLocationResponse
         {
             Id = location.Id,

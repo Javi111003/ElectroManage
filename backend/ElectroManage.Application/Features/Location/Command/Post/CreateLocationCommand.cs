@@ -10,9 +10,3 @@ public record CreateLocationCommand : ICommand<CreateLocationResponse>
     public CoordenateDTO Coordenate { get; set; } = null!;
     public AddressDTO Address { get; set; } = null!;
 }
-
-public class CoordenateDTO
-{
-    public double Latitude { get; set; }
-    public double Longitude { get; set; }
-}
