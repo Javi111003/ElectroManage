@@ -20,6 +20,11 @@ public class RegisterGetByIdCommandHandler : CoreCommandHandler<RegisterGetByIdC
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
         var registerRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Register>();
         var register = await registerRepository.FirstAsync(useInactive: true, filters: x => x.Id == command.Id);
+        if (register is null)
+        {
+            _logger.LogError($"Register with id {command.Id} not found");
+            ThrowError($"Register with id {command.Id} not found");
+        }
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
         return new RegisterGetByIdResponse
         {
