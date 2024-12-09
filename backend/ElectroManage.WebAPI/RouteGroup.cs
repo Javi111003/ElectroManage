@@ -11,4 +11,6 @@
             public static string Location = "Location";
             public static string InstallationType = "Installation";
             public static string Warning = "Warning";
+            public static string EquipmentBrand = "Equipment Brand";
+            public static string EquipmentType = "Equipment Type";
     }
