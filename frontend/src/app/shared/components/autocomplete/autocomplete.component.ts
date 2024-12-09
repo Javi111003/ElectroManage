@@ -12,21 +12,18 @@ export class AutocompleteComponent implements OnInit {
   @Input() options: string[] = [];
   @Input() label: string = '';
   @Input() isDisabled: boolean = false;
-  @Output() optionSelected = new EventEmitter<string>();
-  @Output() inputModified = new EventEmitter<string>();
+  @Input() control: FormControl = new FormControl();
 
-  myControl: FormControl = new FormControl('');
   filteredOptions: Observable<string[]> = [][0];
 
   ngOnInit() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
+    this.filteredOptions = this.control.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || '')),
     );
-    this.myControl.valueChanges.pipe(
+    this.control.valueChanges.pipe(
       startWith(''),
       map(value => {
-        this.inputModified.emit(value);
         return this._filter(value || '');
       })
     ).subscribe(filtered => {
@@ -36,34 +33,12 @@ export class AutocompleteComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['options']) {
-      this.filteredOptions = this.myControl.valueChanges.pipe(
+      this.filteredOptions = this.control.valueChanges.pipe(
         startWith(''),
         map(value => this._filter(value || '')),
       );
     }
 
-  }
-
-  /**
-   * Emits the selected option to the parent component.
-   * @param event The event emitted by the option selection.
-   */
-  onOptionSelected(event: any) {
-    this.optionSelected.emit(event.option.value);
-  }
-
-  /**
-   * Emits the selected option to the parent component.
-   * This function is triggered when an option is selected from the autocomplete dropdown.
-   * It emits the value of the selected option to the parent component through the 'optionSelected' event emitter.
-   * @param event The event emitted by the option selection.
-   */
-  resetControl(): void {
-    this.myControl.reset('');
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value || '')),
-    );
   }
 
   /**

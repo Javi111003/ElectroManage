@@ -1,21 +1,21 @@
-<div class="form-container"[formGroup]='form'>
+<div class="form-container" [formGroup]='form'>
   <!-- Contenedor de Autocompletes -->
   <div class="form-autocomplete">
     <div class="form-autocomplete-item">
       <app-autocomplete
         [label]="'Centro de Trabajo'"
         [options]="global.centerStringArray"
-        (inputModified)="onCenterInputModified($event)">
+        [control]="getControl('workCenter')"
+        >
       </app-autocomplete>
     </div>
     <div class="form-autocomplete-item">
       <app-autocomplete
-        #officeAutocomplete
         [label]="'Oficinas'"
         [options]="global.officeStringArray"
-        [isDisabled]="!this.global.isOptionValid(global.centerStringArray, this.centerSelected)"
-        (inputModified)="onOfficeInputModified($event)"
-        formControlName="office">
+        [control]="getControl('office')"
+        [isDisabled]="!this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter'))"
+        >
       </app-autocomplete>
     </div>
   </div>

@@ -4,22 +4,20 @@
       <app-autocomplete class="autocomplete"
         [label]="'Centro de Trabajo'"
         [options]="global.centerStringArray"
-        (inputModified)="onCenterInputModified($event)"
+        [control]="getControl('workCenter')"
       >
       </app-autocomplete>
 
       <app-datepicker class="startDate"
         [filter]="filterStartDate"
         [label]="'Desde'"
-        [control]="getControl('startDateForm')"
-        (dateSelected)="handleStartDateSelected($event)"
+        [control]="getControl('startDate')"
       ></app-datepicker>
 
       <app-datepicker class="endDate"
         [filter]="filterEndDate"
         [label]="'Hasta'"
-        [control]="getControl('endDateForm')"
-        (dateSelected)="handleEndDateSelected($event)"
+        [control]="getControl('endDate')"
       ></app-datepicker>
     </div>
 

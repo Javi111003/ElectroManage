@@ -8,7 +8,7 @@
           placeholder="Elige una opción"
           [attr.aria-label]="label"
           matInput
-          [formControl]="myControl"
+          [formControl]="control"
           [matAutocomplete]="auto"
           [disabled]="isDisabled"
           [readonly]="isDisabled"
@@ -16,7 +16,6 @@
 
   <mat-autocomplete
     autoActiveFirstOption #auto="matAutocomplete"
-    (optionSelected)="onOptionSelected($event)"
   >
     @for (option of filteredOptions | async; track option) {
       <mat-option class="custom-option" [value]="option">{{option}}</mat-option>

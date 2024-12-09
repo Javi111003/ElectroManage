@@ -3,7 +3,8 @@
     <app-checkbox
       [label]="'Centros de Trabajo'"
       [options]="global.centerStringArray"
-      (selectedOptions)="handleSelectionChange($event)">
+      [control]="getControl('workCenters')"
+      >
     </app-checkbox>
   </div>
 
@@ -21,7 +22,7 @@
 </div>
 
 <table mat-table
-       [dataSource]="selectedOptions" multiTemplateDataRows
+       [dataSource]="this.getControlValue('workCenters')" multiTemplateDataRows
        class="mat-elevation-z8" [hidden]="!showTable">
   @for (column of columnsToDisplay; track column) {
     <ng-container matColumnDef="{{column}}">

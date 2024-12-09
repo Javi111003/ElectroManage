@@ -4,15 +4,15 @@
       <app-autocomplete
         [label]="'Centro de Trabajo'"
         [options]="global.centerStringArray"
-        (inputModified)="onCenterInputModified($event)"
+        [control]="getControl('workCenter')"
       >
       </app-autocomplete>
 
       <app-autocomplete #policyAutocomplete
         [label]="'Política'"
         [options]="optionsPolicy"
-        (inputModified)="onPolicyInputModified($event)"
-        [isDisabled]="!this.global.isOptionValid(global.centerStringArray, this.centerSelected)"
+        [control]="getControl('policy')"
+        [isDisabled]="!this.global.isOptionValid(global.centerStringArray, this.getControlValue('workCenter'))"
       >
       </app-autocomplete>
     </div>

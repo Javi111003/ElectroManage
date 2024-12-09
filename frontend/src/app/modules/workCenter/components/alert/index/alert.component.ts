@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { GlobalModule } from '../../../../global/global.module';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-alert',
@@ -9,12 +10,20 @@ import { GlobalModule } from '../../../../global/global.module';
   styleUrl: './alert.component.css'
 })
 export class AlertComponent implements OnInit {
-  constructor(
-    public global: GlobalModule
-  ) {}
 
+  constructor(
+    public global: GlobalModule,
+    private fb: FormBuilder
+  ) {
+    this.form = this.fb.group({
+      workCenter: ''
+    });
+
+    this.form.valueChanges.subscribe(() => { this.showTable = false });
+  }
+
+  form: FormGroup;
   showTable: boolean = false;
-  centerSelected: string = '';
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
     {
@@ -41,14 +50,22 @@ export class AlertComponent implements OnInit {
     this.global.getWorkCenters();
   }
 
+  getControl(control: string): FormControl {
+    return this.form.get(control) as FormControl;
+  }
+
+  getControlValue(control: string): any {
+    return this.form.get(control)?.value;
+  }
+
   /**
    * Toggles the visibility of the table and fetches alerts for the selected center.
    * This method is triggered when the user clicks on the alert button.
    */
   onClick() {
     if (!this.showTable) {
-      if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected)) {
-        this.global.findCenterId(this.centerSelected);
+      if (this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter'))) {
+        this.global.findCenterId(this.getControlValue('workCenter'));
         this.getAlerts(this.global.centerSelectedId);
         this.showTable = true;
       }
@@ -71,26 +88,5 @@ export class AlertComponent implements OnInit {
         excess: (item.consumption - item.establishedLimit).toFixed(2)
       }));
     });
-  }
-
-  /**
-   * This function is used to handle the selection of an option.
-   * @param option The selected option.
-   */
-  handleOptionSelected(option: string) {
-    this.centerSelected = option;
-  }
-
-  /**
-   * Handles the change event of the first select control.
-   * @param event The change event of the first select control.
-   */
-  onCenterInputModified(value: string): void {
-    this.centerSelected = value;
-    this.showTable = false;
-
-    if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected)) {
-      this.global.findCenterId(this.centerSelected);
-    }
   }
 }

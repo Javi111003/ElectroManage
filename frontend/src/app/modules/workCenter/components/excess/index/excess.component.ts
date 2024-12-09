@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatDatepicker } from '@angular/material/datepicker';
 import _moment from 'moment';
@@ -38,13 +38,22 @@ export const MY_FORMATS = {
 export class ExcessComponent {
 
   constructor(
-    public global: GlobalModule
-  ) {}
+    public global: GlobalModule,
+    private fb: FormBuilder
+  ) {
+    this.form = fb.group({
+      month: 0,
+      year: 0
+    });
 
+    this.form.valueChanges.subscribe(() => { this.showTable = false; });
+  }
+
+  form: FormGroup;
   dateInitialize: Moment = [][0];
   readonly date = new FormControl(this.dateInitialize);
-  yearSelected: number = 0;
-  monthSelected: number = 0;
+  // yearSelected: number = 0;
+  // monthSelected: number = 0;
   showTable: boolean = false;
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
@@ -66,6 +75,14 @@ export class ExcessComponent {
     }
   ];
 
+  getControl(control: string): FormControl {
+    return this.form.get(control) as FormControl;
+  }
+
+  getControlValue(control: string): any {
+    return this.form.get(control)?.value;
+  }
+
   /**
    * Sets the selected month and year to the date control and updates the view.
    * @param normalizedMonthAndYear The selected month and year.
@@ -75,8 +92,8 @@ export class ExcessComponent {
     const ctrlValue = this.date.value ?? moment();
     ctrlValue.month(normalizedMonthAndYear.month());
     ctrlValue.year(normalizedMonthAndYear.year());
-    this.yearSelected = ctrlValue.year();
-    this.monthSelected = ctrlValue.month();
+    this.getControl('year').setValue(ctrlValue.year());
+    this.getControl('month').setValue(ctrlValue.month());
     this.date.setValue(ctrlValue);
     datepicker.close();
   }
@@ -97,7 +114,7 @@ export class ExcessComponent {
    */
   onClick(): void {
     if (!this.showTable) {
-      if (this.yearSelected && this.monthSelected)
+      if (this.getControlValue('year') && this.getControlValue('month'))
         this.showTable = true;
       else
         this.global.openDialog('Por favor, selecciona una fecha válida.');

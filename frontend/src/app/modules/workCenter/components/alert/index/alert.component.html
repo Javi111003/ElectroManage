@@ -4,7 +4,7 @@
       <app-autocomplete
         [label]="'Centro de Trabajo'"
         [options]="this.global.centerStringArray"
-        (inputModified)="onCenterInputModified($event)"
+        [control]="getControl('workCenter')"
       >
       </app-autocomplete>
     </div>
