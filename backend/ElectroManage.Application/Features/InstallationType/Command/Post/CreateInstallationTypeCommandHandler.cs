@@ -1,4 +1,5 @@
 ﻿
+using ElectroManage.Application.Abstractions;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 
@@ -8,28 +9,30 @@ public class CreateInstallationTypeCommandHandler : CoreCommandHandler<CreateIns
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<CreateInstallationTypeCommandHandler> _logger;
-
-    public CreateInstallationTypeCommandHandler(IUnitOfWork unitOfWork, ILogger<CreateInstallationTypeCommandHandler> logger) : base(unitOfWork)
+    readonly ICheckUniqueService _checkUniqueService;
+    public CreateInstallationTypeCommandHandler(IUnitOfWork unitOfWork, ILogger<CreateInstallationTypeCommandHandler> logger, ICheckUniqueService checkUniqueService) : base(unitOfWork)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
+        _checkUniqueService = checkUniqueService;
     }
 
     public async override Task<CreateInstallationTypeResponse> ExecuteAsync(CreateInstallationTypeCommand command, CancellationToken ct = default)
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
         var insatallationTypeRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.InstalationType>();
-        var checkUniqueName = await insatallationTypeRepository.CountAsync(useInactive: true, filters: x => x.Name == command.Name);
-        if (checkUniqueName > 0)
-        {
-            _logger.LogError("Exist almost one installation type with this name");
-            ThrowError("Exist almost one installation type with this name", 400);
-        }
+
         var installationType = new Domain.Entites.Sucursal.InstalationType
         {
             Name = command.Name,
             Description = command.Description,
         };
+        var checkUniqueName = await _checkUniqueService.CheckUniqueNameAsync(installationType);
+        if (!checkUniqueName)
+        {
+            _logger.LogError("Exist almost one installation type with this name");
+            ThrowError("Exist almost one installation type with this name", 400);
+        }
         await insatallationTypeRepository.SaveAsync(installationType);
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
         return new CreateInstallationTypeResponse
