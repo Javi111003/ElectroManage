@@ -19,18 +19,4 @@ export class DatepickerComponent {
   @Input() filter: DateFilterFn<any> = [][0];
   @Input() control: FormControl = new FormControl();
   @Input() label: string = 'Elige una fecha';
-  @Output() dateSelected = new EventEmitter<Date>();
-
-  /**
-   * Emits the selected date to the parent component.
-   * @param event The event emitted by the date picker.
-   */
-  onDateChange(event: any) {
-    const selectedDate = event.value;
-    this.dateSelected.emit(selectedDate);
-  }
-
-  resetControl(): void {
-    this.control.reset('');
-  }
 }

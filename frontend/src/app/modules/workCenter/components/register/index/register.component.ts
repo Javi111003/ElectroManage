@@ -16,16 +16,16 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.form = this.fb.group({
-      startDateForm: [null],
-      endDateForm: [null],
+      startDate: [null],
+      endDate: [null],
+      workCenter: ''
     });
+
+    this.form.valueChanges.subscribe(() => { this.showTable = false });
   }
 
   form: FormGroup;
-  startDate: Date = [][0];
-  endDate: Date = [][0];
   showTable: boolean = false;
-  centerSelected: string = '';
   dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
   consumptions: number[] = [];
   costs: number[] = [];
@@ -48,10 +48,15 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     this.global.Reset();
     this.global.getWorkCenters();
+    this.form.get('startDate')?.valueChanges.subscribe(() => { this.getControl('endDate').reset(); });
   }
 
   getControl(control: string): FormControl {
     return this.form.get(control) as FormControl;
+  }
+
+  getControlValue(control: string): any {
+    return this.form.get(control)?.value;
   }
 
   /**
@@ -109,10 +114,10 @@ export class RegisterComponent implements OnInit {
    * @returns A boolean value indicating if the date is valid.
    */
   filterEndDate = (d: Date | null): boolean => {
-    if (!this.startDate)
+    if (!this.getControlValue('startDate') || !d)
       return false;
 
-    let dateSelected = this.startDate;
+    let dateSelected = this.getControlValue('startDate');
     const DSday = dateSelected.getDate();
     const DSmonth = dateSelected.getMonth();
     const DSyear = dateSelected.getFullYear();
@@ -135,44 +140,15 @@ export class RegisterComponent implements OnInit {
   };
 
   /**
-   * Handles the selection of an option.
-   * Updates the optionSelected property with the selected option.
-   * @param option The selected option.
-   */
-  handleOptionSelected(option: any) {
-    this.centerSelected = option;
-  }
-
-  /**
-   * Handles the selection of a date.
-   * Updates the receivedDate property with the selected date.
-   * @param date The selected date.
-   */
-  handleStartDateSelected(date: Date) {
-    this.startDate = date;
-    this.getControl('endDateForm').reset();
-  }
-
-  /**
-   * Handles the selection of a date.
-   * Updates the receivedDate property with the selected date.
-   * @param date The selected date.
-   */
-  handleEndDateSelected(date: Date) {
-    this.endDate = date;
-  }
-
-  /**
    * Handles the click event on the table toggle button.
    * Toggles the visibility of the table based on the current state.
    */
   onClick() {
     if (!this.showTable) {
-      console.log(this.form);
-      if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected) &&
-          this.startDate && this.endDate) {
+      if (this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter')) &&
+      this.getControlValue('startDate') && this.getControlValue('endDate')) {
         this.getRegistersByCenterId(0);
-        this.showTable = !this.showTable;
+        this.showTable = true;
       } else {
         this.global.openDialog('Por favor, selecciona un Centro de Trabajo, fecha de inicio y de fin válidos.');
       }
@@ -197,18 +173,5 @@ export class RegisterComponent implements OnInit {
   */
   getTotalConsumption(): number {
     return this.consumptions.reduce((acc, value) => acc + value, 0);
-  }
-
-  /**
-   * Handles the change event of the first select control.
-   * @param event The change event of the first select control.
-   */
-  onCenterInputModified(value: string): void {
-    this.centerSelected = value;
-    this.showTable = false;
-
-    if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected)) {
-      this.global.findCenterId(this.centerSelected);
-    }
   }
 }

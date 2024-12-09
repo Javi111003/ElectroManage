@@ -5,6 +5,7 @@ import { ConfigColumn } from '../../../../../shared/components/table/table.compo
 import { AutocompleteComponent } from '../../../../../shared/components/autocomplete/autocomplete.component';
 import { Policy } from '../../../../../models/policy.interface';
 import { PolicyService } from '../../../../../services/policy/policy.service';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-comparison',
@@ -15,15 +16,20 @@ export class ComparisonComponent implements OnInit {
 
   constructor(
     public global: GlobalModule,
-    private httpPolicy: PolicyService
-  ) {}
+    private httpPolicy: PolicyService,
+    private fb: FormBuilder
+  ) {
+    this.form = this.fb.group({
+      workCenter: '',
+      policy: ''
+    });
 
-  @ViewChild('policyAutocomplete') policyAutocomplete!: AutocompleteComponent;
+    this.form.valueChanges.subscribe(() => { this.showTable = false });
+  }
 
-  centerSelected: string = '';
+  form: FormGroup;
   centerSelectedId: number = 0;
 
-  policySelected: string = '';
   policySelectedId: number = 0;
 
   optionsPolicy: string[] = [];
@@ -51,6 +57,21 @@ export class ComparisonComponent implements OnInit {
   ngOnInit(): void {
     this.global.Reset();
     this.global.getWorkCenters();
+    this.form.get('workCenter')?.valueChanges.subscribe(() => {
+      this.getControl('policy').reset();
+      if (this.global.isOptionValid(this.global.centerStringArray, this.form.get('workCenter')?.value)) {
+        this.global.findCenterId(this.getControlValue('workCenter'));
+        this.getPolicies(this.global.centerSelectedId);
+      }
+    });
+  }
+
+  getControl(control: string): FormControl {
+    return this.form.get(control) as FormControl;
+  }
+
+  getControlValue(control: string): any {
+    return this.form.get(control)?.value;
   }
 
   /**
@@ -60,8 +81,8 @@ export class ComparisonComponent implements OnInit {
    */
   onClick() {
     if (!this.showTable) {
-      if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected) &&
-        this.global.isOptionValid(this.optionsPolicy, this.policySelected)) {
+      if (this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter')) &&
+        this.global.isOptionValid(this.optionsPolicy, this.getControlValue('policy'))) {
         this.showTable = true;
       } else {
         this.showTable = false;
@@ -80,37 +101,5 @@ export class ComparisonComponent implements OnInit {
       this.objectsPolicy = policies;
       this.optionsPolicy = policies.map(policy => policy.name);
     });
-  }
-
-  /**
-   * Handles changes to the center input.
-   * Resets the policy selection and updates the policies based on the new center selection.
-   * @param value The new value of the center input.
-   */
-  onCenterInputModified(value: string) {
-    this.centerSelected = value;
-    this.showTable = false;
-    this.policySelected = null!;
-    this.policySelectedId = 0;
-
-    if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected)) {
-      this.global.findCenterId(this.centerSelected);
-      this.getPolicies(this.global.centerSelectedId);
-    }
-
-    else if (this.policyAutocomplete) {
-      this.policyAutocomplete.resetControl();
-      this.optionsPolicy = [];
-    }
-  }
-
-  /**
-   * Handles changes to the policy input.
-   * Resets the table activity state.
-   * @param value The new value of the policy input.
-   */
-  onPolicyInputModified(value: string) {
-    this.policySelected = value;
-    this.showTable = false;
   }
 }

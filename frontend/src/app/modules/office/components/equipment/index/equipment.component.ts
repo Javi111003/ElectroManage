@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { AutocompleteComponent } from '../../../../../shared/components/autocomplete/autocomplete.component';
 import { GlobalModule } from '../../../../global/global.module';
 
 
@@ -13,24 +12,22 @@ import { GlobalModule } from '../../../../global/global.module';
 })
 
 export class EquipmentComponent implements OnInit {
-  @ViewChild('officeAutocomplete') officeAutocomplete!: AutocompleteComponent;
 
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule
   ) {
     this.form = this.fb.group({
-      firstSelect: [''],
-      secondSelect:['']
+      workCenter: '',
+      office: ''
     });
+
+    this.form.valueChanges.subscribe(() => { this.showTable = false });
   }
 
   form: FormGroup;
   showTable = false;
 
-  centerSelected: string = '';
-
-  officeSelected: string = '';
   officeSelectedId: number | any = 0;
 
   equipments: string[] = [];
@@ -77,6 +74,27 @@ export class EquipmentComponent implements OnInit {
   ngOnInit(): void {
     this.global.Reset();
     this.global.getWorkCenters();
+    this.form.get('workCenter')?.valueChanges.subscribe(() => {
+      this.getControl('office').reset();
+      if (this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter'))) {
+        this.global.findCenterId(this.getControlValue('workCenter'));
+        this.global.getOfficesByCenter(this.global.centerSelectedId);
+      }
+    });
+    this.form.get('office')?.valueChanges.subscribe(() => {
+      if (this.global.isOptionValid(this.global.officeStringArray, this.getControlValue('office'))) {
+        this.findOfficeId();
+        this.getEquipmentsByOffice();
+      }
+    });
+  }
+
+  getControl(control: string): FormControl {
+    return this.form.get(control) as FormControl;
+  }
+
+  getControlValue(control: string): any {
+    return this.form.get(control)?.value;
   }
 
   /**
@@ -84,7 +102,7 @@ export class EquipmentComponent implements OnInit {
    * @param officeSelected The name of the selected office.
    */
   findOfficeId(): void {
-    const officeSelected = this.officeSelected;
+    const officeSelected = this.getControlValue('office');
     this.officeSelectedId = this.global.officeObjectArray.find(item => item.name === officeSelected)?.id;
   }
 
@@ -115,48 +133,13 @@ export class EquipmentComponent implements OnInit {
    */
   onConsultClick(): void {
     if (!this.showTable) {
-      if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected) &&
-          this.global.isOptionValid(this.global.officeStringArray, this.officeSelected)) {
+      if (this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter')) &&
+          this.global.isOptionValid(this.global.officeStringArray, this.getControlValue('office'))) {
         this.showTable = true;
       } else {
         this.showTable = false;
         this.global.openDialog('Por favor, selecciona un Centro de Trabajo y una Oficina.');
       }
-    }
-  }
-
-  /**
-  * Handles the change event of the first select control.
-  * Resets the second select control and updates its options based on the selected center.
-  * @param event The change event of the first select control.
-  */
-  onCenterInputModified(value: string): void {
-    this.centerSelected = value;
-
-    if (this.global.isOptionValid(this.global.centerStringArray, this.centerSelected)) {
-      this.global.findCenterId(this.centerSelected);
-      this.global.getOfficesByCenter(this.global.centerSelectedId);
-    } else if (this.officeAutocomplete) {
-      this.officeAutocomplete.resetControl();
-      this.global.officeStringArray = [];
-    }
-
-    this.showTable = false;
-    this.officeSelected = null!;
-    this.officeSelectedId = 0;
-  }
-
-  /**
-   * Handles the change event of the first select control.
-   * @param event The change event of the first select control.
-   */
-  onOfficeInputModified(value: string): void {
-    this.officeSelected = value;
-    this.showTable = false;
-
-    if (this.global.isOptionValid(this.global.officeStringArray, this.officeSelected)) {
-      this.findOfficeId();
-      this.getEquipmentsByOffice();
     }
   }
 }

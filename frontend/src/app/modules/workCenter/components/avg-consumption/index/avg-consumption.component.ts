@@ -3,6 +3,7 @@ import { ConfigColumn } from '../../../../../shared/components/table/table.compo
 import { MatTableDataSource } from '@angular/material/table';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { GlobalModule } from '../../../../global/global.module';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 
 @Component({
@@ -20,12 +21,18 @@ import { GlobalModule } from '../../../../global/global.module';
 export class AvgConsumptionComponent implements OnInit{
 
   constructor (
-    public global: GlobalModule
-  ) {}
+    public global: GlobalModule,
+    private fb: FormBuilder
+  ) {
+    this.form = fb.group({
+      workCenters: []
+    });
 
-  selectedOptions: string[] = [];
+    this.form.valueChanges.subscribe(() => { this.showTable = false; })
+  }
+
+  form: FormGroup;
   selectedOptionsIds: number[] | any [] = [];
-  isTableActive: boolean = false;
   dataSources: { [key: string]: MatTableDataSource<any> } = {};
   displayedColumns: ConfigColumn[] = [
     {
@@ -50,7 +57,18 @@ export class AvgConsumptionComponent implements OnInit{
   ngOnInit() {
     this.global.Reset();
     this.global.getWorkCenters();
-    this.showTable = false;
+    this.getControl('workCenters').valueChanges.subscribe(() => {
+      this.findCenterIds();
+      this.expandedElements = [];
+    });
+  }
+
+  getControl(control: string): FormControl {
+    return this.form.get(control) as FormControl;
+  }
+
+  getControlValue(control: string): any {
+    return this.form.get(control)?.value;
   }
 
   /**
@@ -61,7 +79,7 @@ export class AvgConsumptionComponent implements OnInit{
    * stored in the selectedOptionsIds array.
    */
   findCenterIds() {
-    this.selectedOptionsIds = this.selectedOptions.map(item => {
+    this.selectedOptionsIds = this.getControlValue('workCenters').map((item: string) => {
       const id = this.global.centerObjectArray.find(center => center.name === item)?.id
       return id;
     });
@@ -96,7 +114,7 @@ export class AvgConsumptionComponent implements OnInit{
    */
   onConsultClick() {
     if (!this.showTable) {
-      if (this.selectedOptions.length > 0)
+      if (this.getControlValue('workCenters').length > 0)
       {
         this.showTable = true;
         this.getAvgRegisters();
@@ -113,18 +131,6 @@ export class AvgConsumptionComponent implements OnInit{
    */
   onProyectionClick() {
     this.global.openDialog('No esta implementado');
-  }
-
-  /**
-   * Handles changes in the selected options for work centers.
-   * Updates the selectedOptions array and deactivates the table.
-   * @param selected An array of selected options.
-   */
-  handleSelectionChange(selected: string[]) {
-    this.selectedOptions = selected;
-    this.findCenterIds();
-    this.showTable=false;
-    this.expandedElements = [];
   }
 
   /**
