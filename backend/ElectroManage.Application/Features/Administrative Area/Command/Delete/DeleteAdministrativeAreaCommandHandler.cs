@@ -35,7 +35,7 @@ public class DeleteAdministrativeAreaCommandHandler : CoreCommandHandler<DeleteA
 
         adminstrativeArea.StatusBaseEntity = Domain.Enums.StatusEntityType.Delete;
         await administrativeAreaReporitory.UpdateAsync(adminstrativeArea);
-
+        await UnitOfWork!.SaveChangesAsync();
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
 
         return Response<NoContentData>.SuccessWithOutData("OK");

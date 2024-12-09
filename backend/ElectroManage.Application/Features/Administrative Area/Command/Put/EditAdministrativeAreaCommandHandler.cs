@@ -1,4 +1,5 @@
 ﻿
+using ElectroManage.Application.Abstractions;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
@@ -9,11 +10,13 @@ public class EditAdministrativeAreaCommandHandler : CoreCommandHandler<EditAdmin
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<EditAdministrativeAreaCommandHandler> _logger;
+    readonly ICheckUniqueService _checkUniqueService;
 
-    public EditAdministrativeAreaCommandHandler(IUnitOfWork unitOfWork, ILogger<EditAdministrativeAreaCommandHandler> logger) : base(unitOfWork)
+    public EditAdministrativeAreaCommandHandler(IUnitOfWork unitOfWork, ILogger<EditAdministrativeAreaCommandHandler> logger, ICheckUniqueService checkUniqueService) : base(unitOfWork)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
+        _checkUniqueService = checkUniqueService;
     }
 
     public async override Task<EditAdministrativeAreaResponse> ExecuteAsync(EditAdministrativeAreaCommand command, CancellationToken ct = default)
@@ -33,18 +36,21 @@ public class EditAdministrativeAreaCommandHandler : CoreCommandHandler<EditAdmin
             ThrowError("This administrative area with id {command.Id} does'nt exists", 404);
         }
 
-        var checkUniqueName = await administrativeAreaReporitory.CountAsync(useInactive: true, filters: x => x.Name == command.Name && x.Id != command.Id);
-        if (checkUniqueName > 0)
+        using (var scope = ScopeBeginTransactionAsync())
         {
-            _logger.LogError("This administrative area name already exists");
-            ThrowError("This administrative area name already exists", 400);
+            administrativeArea.Name = command.Name;
+            administrativeArea.Description = command.Description;
+            var checkUniqueName = await _checkUniqueService.CheckUniqueNameAsync(administrativeArea);
+            if (!checkUniqueName)
+            {
+                _logger.LogError("This administrative area name already exists");
+                ThrowError("This administrative area name already exists", 400);
+            }
+
+            await administrativeAreaReporitory.UpdateAsync(administrativeArea, false);
+            CommitTransaction(scope);
         }
-
-        administrativeArea.Name = command.Name;
-        administrativeArea.Description = command.Description;
-
-        await administrativeAreaReporitory.UpdateAsync(administrativeArea);
-
+        await UnitOfWork!.SaveChangesAsync();
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
 
         return new EditAdministrativeAreaResponse

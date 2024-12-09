@@ -2,5 +2,5 @@
 
 public record AdministrativeAreaGetByIdCommand : ICommand<AdministrativeAreaGetByIdResponse>
 {
-    public long Id { get; set; }
+    public required long Id { get; set; }
 }
