@@ -1,5 +1,4 @@
-﻿
-using ElectroManage.Domain.DataAccess.Abstractions;
+﻿using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 
 namespace ElectroManage.Application.Features.Company.Command.Post;
@@ -44,15 +43,21 @@ public class CreateCompanyCommandHandler : CoreCommandHandler<CreateCompanyComma
             ThrowError($"Administrative Area with id: {command.AreaId} not found", 404);
         }
 
+        var managementTeamRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.ManagementTeam>();
+        var managementTeam = await managementTeamRepository.FirstAsync(useInactive: true, filters: x => x.Id == command.ManagementTeamId);
+        if (managementTeam is null)
+        {
+            _logger.LogError($"Management Team with id: {command.ManagementTeamId} not found");
+            ThrowError($"Management Team with id: {command.ManagementTeamId} not found", 404);
+        }
+
         var company = new Domain.Entites.Sucursal.Company
         {
             Name = command.Name,
-            InstalationTypeId = installationType.Id,
             InstalationType = installationType,
-            AministrativeAreaId = administrativeArea.Id,
             AministrativeArea = administrativeArea,
-            LocationId = location.Id,
             Location = location,
+            ManagementTeam = managementTeam
         };
         await companyRepository.SaveAsync(company);
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Completed");
@@ -63,6 +68,7 @@ public class CreateCompanyCommandHandler : CoreCommandHandler<CreateCompanyComma
             InstallationType = company.InstalationType.Name,
             Description = company.InstalationType.Description,
             Area = company.AministrativeArea.Name,
+            ManagementTeam = Mappers.ManagementTeamMapper.MapToManagementTeamDto(managementTeam)
         };
     }
 }

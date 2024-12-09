@@ -7,4 +7,5 @@ public record EditGeneralDataCompanyCommand : ICommand<EditGeneralDataCompanyRes
     public long AreaId { get; set; }
     public long InstallationTypeId { get; set; }
     public long LocationId { get; set; }
+    public long ManagementTeamId { get; set; }
 }

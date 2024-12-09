@@ -1,5 +1,7 @@
+using ElectroManage.Application.DTO_s;
+
 namespace ElectroManage.Application.Features.ManagementTeam.Command.UpdateTeam;
-public record UpdateTeamCommand : ICommand<UpdateTeamResponse>
+public record UpdateTeamCommand : ICommand<ManagementTeamDto>
 {
     public required long TeamId { get; set; }
     public string? Name { get; set; }

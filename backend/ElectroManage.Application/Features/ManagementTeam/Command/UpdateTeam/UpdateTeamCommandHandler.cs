@@ -1,17 +1,18 @@
+using ElectroManage.Application.DTO_s;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
 namespace ElectroManage.Application.Features.ManagementTeam.Command.UpdateTeam;
-public class UpdateTeamCommandHandler : CoreCommandHandler<UpdateTeamCommand, UpdateTeamResponse>
+public class UpdateTeamCommandHandler : CoreCommandHandler<UpdateTeamCommand, ManagementTeamDto>
 {
     readonly ILogger<UpdateTeamCommandHandler> _logger;
     public UpdateTeamCommandHandler(ILogger<UpdateTeamCommandHandler> logger, IUnitOfWork unitOfWork) : base(unitOfWork)
     {
         _logger = logger;
     }
-    public override async Task<UpdateTeamResponse> ExecuteAsync(UpdateTeamCommand command, CancellationToken ct = default)
+    public override async Task<ManagementTeamDto> ExecuteAsync(UpdateTeamCommand command, CancellationToken ct = default)
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
         var teamRepository = UnitOfWork!.DbRepository<Domain.Entites.Sucursal.ManagementTeam>();
@@ -46,7 +47,7 @@ public class UpdateTeamCommandHandler : CoreCommandHandler<UpdateTeamCommand, Up
         }
         await UnitOfWork!.SaveChangesAsync();
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
-        var response = Mappers.ManagementTeamMapper.MapToUpdateTeamResponse(team);
+        var response = Mappers.ManagementTeamMapper.MapToManagementTeamDto(team);
         return response;
     }
 }

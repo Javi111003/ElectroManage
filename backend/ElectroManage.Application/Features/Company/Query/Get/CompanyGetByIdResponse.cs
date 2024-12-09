@@ -1,4 +1,6 @@
-﻿namespace ElectroManage.Application.Features.Company.Query.Get;
+﻿using ElectroManage.Application.DTO_s;
+
+namespace ElectroManage.Application.Features.Company.Query.Get;
 
 public record CompanyGetByIdResponse
 {
@@ -8,23 +10,5 @@ public record CompanyGetByIdResponse
     public AdministrativeAreaDTO AdministrativeArea { get; set; } = null!;
     public LocationDTO Location { get; set; } = null!;
     public string Status { get; set; } = string.Empty;
-}
-
-public class InstallationTypeDTO
-{
-    public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; } = string.Empty;
-}
-
-public class AdministrativeAreaDTO
-{
-    public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; } = string.Empty;
-}
-
-public class LocationDTO
-{
-    public string Name { get; set; } = string.Empty;
-    public string Street { get; set; } = string.Empty;
-    public string? Description { get; set; } = string.Empty;
+    public ManagementTeamDto ManagementTeam { get; set; } = null!;
 }
