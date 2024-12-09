@@ -1,3 +1,4 @@
+using ElectroManage.Application.Abstractions;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
@@ -8,11 +9,12 @@ public class EditEquipmentTypeCommandHandler : CoreCommandHandler<EditEquipmentT
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<EditEquipmentTypeCommandHandler> _logger;
-
-    public EditEquipmentTypeCommandHandler(IUnitOfWork unitOfWork, ILogger<EditEquipmentTypeCommandHandler> logger) : base(unitOfWork)
+    readonly ICheckUniqueService _checkUniqueService;
+    public EditEquipmentTypeCommandHandler(IUnitOfWork unitOfWork, ILogger<EditEquipmentTypeCommandHandler> logger, ICheckUniqueService checkUniqueService) : base(unitOfWork)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
+        _checkUniqueService = checkUniqueService;
     }
 
     public async override Task<EditEquipmentTypeResponse> ExecuteAsync(EditEquipmentTypeCommand command, CancellationToken ct = default)
@@ -32,20 +34,22 @@ public class EditEquipmentTypeCommandHandler : CoreCommandHandler<EditEquipmentT
             ThrowError($"The equipment type with id {command.Id} doesn't exist", 404);
         }
 
-        var checkUniqueName = await equipmentTypeRepository.CountAsync(useInactive: true, filters: x => x.Name == command.Name && x.Id != command.Id);
-        if (checkUniqueName > 0)
+        using (var scope = ScopeBeginTransactionAsync())
         {
-            _logger.LogError("This equipment type name already exists");
-            ThrowError("This equipment type name already exists", 400);
+
+            equipmentType.Name = command.Name;
+            equipmentType.Description = command.Description;
+            var checkUniqueName = await _checkUniqueService.CheckUniqueNameAsync(equipmentType);
+            if (!checkUniqueName)
+            {
+                _logger.LogError("This equipment type name already exists");
+                ThrowError("This equipment type name already exists", 400);
+            }
+            await equipmentTypeRepository.UpdateAsync(equipmentType, false);
+            CommitTransaction(scope);
         }
-
-        equipmentType.Name = command.Name;
-        equipmentType.Description = command.Description;
-
-        await equipmentTypeRepository.UpdateAsync(equipmentType);
-
-        _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
-
+         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
+        await _unitOfWork.SaveChangesAsync();
         return new EditEquipmentTypeResponse
         {
             Id = equipmentType.Id,
