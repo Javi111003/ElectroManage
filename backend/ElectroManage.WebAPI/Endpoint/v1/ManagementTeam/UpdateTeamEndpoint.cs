@@ -1,7 +1,8 @@
+using ElectroManage.Application.DTO_s;
 using ElectroManage.Application.Features.ManagementTeam.Command.UpdateTeam;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.ManagementTeam;
-public class UpdateTeamEndpoint : Endpoint<UpdateTeamCommand, UpdateTeamResponse>
+public class UpdateTeamEndpoint : Endpoint<UpdateTeamCommand, ManagementTeamDto>
 {
     public override void Configure()
     {

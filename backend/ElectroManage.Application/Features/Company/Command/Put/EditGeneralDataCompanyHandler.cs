@@ -53,6 +53,13 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
             _logger.LogError($"Installation type with id: {command.InstallationTypeId} not found");
             ThrowError($"Installation type with id: {command.InstallationTypeId} not found", 404);
         }
+        var managementTeamRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.ManagementTeam>();
+        var managementTeam = await managementTeamRepository.FirstAsync(useInactive: true, filters: x => x.Id == command.ManagementTeamId);
+        if (managementTeam is null)
+        {
+            _logger.LogError($"Management Team with id: {command.ManagementTeamId} not found");
+            ThrowError($"Management Team with id: {command.ManagementTeamId} not found", 404);
+        }
 
         company.Name = command.Name;
         company.AministrativeAreaId = command.AreaId;
@@ -61,6 +68,7 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
         company.InstalationType = installationType;
         company.LocationId = command.LocationId;
         company.Location = location;
+        company.ManagementTeam = managementTeam;
 
         await companyRepository.UpdateAsync(company);
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Completed");
@@ -69,7 +77,8 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
             Name = company.Name,
             Area = company.AministrativeArea.Name,
             Installation = company.InstalationType.Name,
-            Location = company.Location.Name
+            Location = company.Location.Name,
+            ManagementTeam = Mappers.ManagementTeamMapper.MapToManagementTeamDto(managementTeam)
         };
     }
 }

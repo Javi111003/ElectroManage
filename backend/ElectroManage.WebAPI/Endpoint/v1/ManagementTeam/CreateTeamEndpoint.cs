@@ -1,7 +1,8 @@
-﻿using ElectroManage.Application.Features.ManagementTeam.Command.CreateTeam;
+﻿using ElectroManage.Application.DTO_s;
+using ElectroManage.Application.Features.ManagementTeam.Command.CreateTeam;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.ManagementTeam;
-public class CreateTeamEndpoint : Endpoint<CreateTeamCommand, CreateTeamResponse>
+public class CreateTeamEndpoint : Endpoint<CreateTeamCommand, ManagementTeamDto>
 {
     public override void Configure()
     {

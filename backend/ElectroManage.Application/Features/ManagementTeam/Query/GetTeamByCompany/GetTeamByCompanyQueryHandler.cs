@@ -1,16 +1,17 @@
+using ElectroManage.Application.DTO_s;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
 namespace ElectroManage.Application.Features.ManagementTeam.Query.GetTeamByCompany;
-public class GetTeamByCompanyQueryHandler : CoreQueryHandler<GetTeamByCompanyQuery, GetTeamByCompanyResponse>
+public class GetTeamByCompanyQueryHandler : CoreQueryHandler<GetTeamByCompanyQuery, ManagementTeamDto>
 {
     readonly ILogger<GetTeamByCompanyQueryHandler> _logger;
     public GetTeamByCompanyQueryHandler(ILogger<GetTeamByCompanyQueryHandler> logger, IUnitOfWork unitOfWork) : base(unitOfWork)
     {
         _logger = logger;
     }
-    public override async Task<GetTeamByCompanyResponse> ExecuteAsync(GetTeamByCompanyQuery query, CancellationToken ct = default)
+    public override async Task<ManagementTeamDto> ExecuteAsync(GetTeamByCompanyQuery query, CancellationToken ct = default)
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
         var companyRepository = UnitOfWork!.DbRepository<Domain.Entites.Sucursal.Company>();
@@ -32,7 +33,7 @@ public class GetTeamByCompanyQueryHandler : CoreQueryHandler<GetTeamByCompanyQue
             ThrowError($"Company with id {query.CompanyId} does not have a management team");
         }
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
-        var response = Mappers.ManagementTeamMapper.MapToGetTeamResponse(team);
+        var response = Mappers.ManagementTeamMapper.MapToManagementTeamDto(team);
         return response;
     }
 }

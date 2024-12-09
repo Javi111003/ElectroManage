@@ -6,6 +6,5 @@ public record CreateCompanyCommand : ICommand<CreateCompanyResponse>
     public long AreaId { get; set; }
     public long InstallationTypeId { get; set; }
     public long LocationId { get; set; }
-
-    //TO DO: Poner aqui Limit Id
+    public long ManagementTeamId { get; set; }
 }

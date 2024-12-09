@@ -1,5 +1,7 @@
-﻿namespace ElectroManage.Application.Features.ManagementTeam.Command.CreateTeam;
-public record CreateTeamCommand : ICommand<CreateTeamResponse>
+﻿using ElectroManage.Application.DTO_s;
+
+namespace ElectroManage.Application.Features.ManagementTeam.Command.CreateTeam;
+public record CreateTeamCommand : ICommand<ManagementTeamDto>
 {
     public string? Name { get; set; }
     public required long CompanyId { get; set; }

@@ -33,27 +33,6 @@ public class CompanyGetByIdCommandHandler : CoreCommandHandler<CompanyGetByIdCom
             ThrowError($"Company with id: {command.Id} not found", 404);
         }
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
-        return new CompanyGetByIdResponse
-        {
-            Id = command.Id,
-            Name = company.Name,
-            InstallationType = new InstallationTypeDTO
-            {
-                Name = company.InstalationType.Name,
-                Description = company.InstalationType.Description,
-            },
-            AdministrativeArea = new AdministrativeAreaDTO
-            {
-                Name = company.AministrativeArea.Name,
-                Description = company.AministrativeArea.Description,
-            },
-            Location = new LocationDTO
-            {
-                Name = company.Location.Name,
-                Street = company.Location.Street,
-                Description = company.Location.Description
-            },
-            Status = company.StatusBaseEntity.ToString(),
-        };
+        return Mappers.CompanyMapper.ToResponse(company);
     }
 }

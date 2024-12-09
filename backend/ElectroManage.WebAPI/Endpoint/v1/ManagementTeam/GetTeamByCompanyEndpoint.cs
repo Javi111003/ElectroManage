@@ -1,7 +1,8 @@
+using ElectroManage.Application.DTO_s;
 using ElectroManage.Application.Features.ManagementTeam.Query.GetTeamByCompany;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.ManagementTeam;
-public class GetTeamByCompanyEndpoint : Endpoint<EmptyRequest, GetTeamByCompanyResponse>
+public class GetTeamByCompanyEndpoint : Endpoint<EmptyRequest, ManagementTeamDto>
 {
     public override void Configure()
     {
