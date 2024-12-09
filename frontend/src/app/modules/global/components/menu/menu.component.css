@@ -55,7 +55,7 @@
 .sidebar {
   grid-area: sidebar;
   position: relative;
-  width:240px;
+  width:250px;
   height: calc(100vh - 50px); /* Full height minus header height */
   background-color: #ffffff;
   border-right: 2.3px solid #cacbcc;

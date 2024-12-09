@@ -138,7 +138,7 @@ export class EquipmentComponent implements OnInit {
         this.showTable = true;
       } else {
         this.showTable = false;
-        this.global.openDialog('Por favor, selecciona un Centro de Trabajo y una Oficina.');
+        this.global.openDialog('Por favor, selecciona un Centro de Trabajo y una Oficina válidos.');
       }
     }
   }
