@@ -86,7 +86,7 @@ export class ComparisonComponent implements OnInit {
         this.showTable = true;
       } else {
         this.showTable = false;
-        this.global.openDialog('Por favor, selecciona un Centro de Trabajo y una Política.');
+        this.global.openDialog('Por favor, selecciona un Centro de Trabajo y una Política válidos.');
       }
     }
   }

@@ -117,7 +117,7 @@ export class ExcessComponent {
       if (this.getControlValue('year') && this.getControlValue('month'))
         this.showTable = true;
       else
-        this.global.openDialog('Por favor, selecciona una fecha válida.');
+        this.global.openDialog('Por favor, selecciona un mes y un año.');
     }
   }
 

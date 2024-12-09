@@ -70,7 +70,7 @@ export class AlertComponent implements OnInit {
         this.showTable = true;
       }
       else {
-        this.global.openDialog('Por favor, selecciona un Centro de Trabajo.');
+        this.global.openDialog('Por favor, selecciona un Centro de Trabajo válido.');
       }
     }
   }
