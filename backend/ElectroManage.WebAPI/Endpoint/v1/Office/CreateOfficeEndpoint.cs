@@ -10,7 +10,7 @@ public class CreateOfficeEndpoint : Endpoint<CreateOfficeCommand, OfficeResponse
         Options(x => x.WithTags(RouteGroup.Office));
         Tags(RouteGroup.Office);
         Version(1);
-        Post("/office/");
+        Post("/office");
         AllowAnonymous();
         Summary(f => f.Summary = "Create a new Office");
     }
