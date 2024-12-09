@@ -1,4 +1,5 @@
 ﻿
+using ElectroManage.Application.Abstractions;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
@@ -9,11 +10,12 @@ public class EditEfficiencyPolicyCommandHandler : CoreCommandHandler<EditEfficie
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<EditEfficiencyPolicyCommandHandler> _logger;
-
-    public EditEfficiencyPolicyCommandHandler(IUnitOfWork unitOfWork, ILogger<EditEfficiencyPolicyCommandHandler> logger) : base(unitOfWork)
+    readonly ICheckUniqueService _checkUniqueService;
+    public EditEfficiencyPolicyCommandHandler(IUnitOfWork unitOfWork, ILogger<EditEfficiencyPolicyCommandHandler> logger, ICheckUniqueService checkUniqueService) : base(unitOfWork)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
+        _checkUniqueService = checkUniqueService;
     }
 
     public async override Task<EditEfficiencyPolicyResponse> ExecuteAsync(EditEfficiencyPolicyCommand command, CancellationToken ct = default)
@@ -31,18 +33,20 @@ public class EditEfficiencyPolicyCommandHandler : CoreCommandHandler<EditEfficie
             _logger.LogError("Efficiency Policy not found");
             ThrowError("Efficiency Policy not found", 404);
         }
-
-        var checkUniqueName = await efficiencyPolicyReporitory.CountAsync(useInactive: true, filters: x => x.Name == command.Name && x.Id != command.Id);
-        if (checkUniqueName > 0)
+        using (var scopeDoWork = ScopeBeginTransactionAsync())
         {
-            _logger.LogError("This Policy's name already exists");
-            ThrowError("This Policy's name already exists", 404);
+            efficiencyPolicy.Name = command.Name;
+            efficiencyPolicy.Description = command.Description;
+            var checkUniqueName = await _checkUniqueService.CheckUniqueNameAsync(efficiencyPolicy);
+            if (!checkUniqueName)
+            {
+                _logger.LogError("This Policy's name already exists");
+                ThrowError("This Policy's name already exists", 404);
+            }
+            await efficiencyPolicyReporitory.UpdateAsync(efficiencyPolicy, false);
+            CommitTransaction(scopeDoWork);
         }
-
-        efficiencyPolicy.Name = command.Name;
-        efficiencyPolicy.Description = command.Description;
-
-        await efficiencyPolicyReporitory.UpdateAsync(efficiencyPolicy);
+        await UnitOfWork!.SaveChangesAsync();
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
 
         return new EditEfficiencyPolicyResponse
