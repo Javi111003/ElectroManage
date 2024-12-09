@@ -15,4 +15,5 @@
             public static string EquipmentType = "Equipment Type";
             public static string ManagementTeam = "Management Team";
             public static string CostFormula = "CostFormula";
+            public static string EquipmentSpecification = "Equipment Specification";
     }
