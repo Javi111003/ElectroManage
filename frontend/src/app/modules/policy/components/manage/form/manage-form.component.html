@@ -1,1 +1,46 @@
-<p>policy manage form works!</p>
+<!-- Modal de Bootstrap -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Formulario de Politica</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="onCloseModal()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="policyName" class="form-label">Nombre de la Politica</label>
+              <input type="text" class="form-control" id="policyName" formControlName="policyName" 
+                [ngClass]="{'is-invalid': form.get('policyName')?.invalid && form.get('policyName')?.touched}">
+              <div *ngIf="form.get('policyName')?.invalid && form.get('policyName')?.touched" class="invalid-feedback">
+                Este campo es obligatorio
+              </div>
+            </div>
+            <div class="mb-3">
+                <label for="workCenter" class="form-label">Descripcion</label>
+                <input type="text" class="form-control" id="description" formControlName="description" 
+                  [ngClass]="{'is-invalid': form.get('description')?.invalid && form.get('description')?.touched}">
+                <div *ngIf="form.get('description')?.invalid && form.get('description')?.touched" class="invalid-feedback">
+                  Este campo es obligatorio
+                </div>
+              </div>
+            <div class="mb-3">
+              <label for="workCenter" class="form-label">Centro de Trabajo Perteneciente</label>
+              <input type="text" class="form-control" id="workCenter" formControlName="workCenter" 
+                [ngClass]="{'is-invalid': form.get('workCenter')?.invalid && form.get('workCenter')?.touched}">
+              <div *ngIf="form.get('workCenter')?.invalid && form.get('workCenter')?.touched" class="invalid-feedback">
+                Este campo es obligatorio
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-custom" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-custom" (click)="onSubmit()">Guardar cambios</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+
