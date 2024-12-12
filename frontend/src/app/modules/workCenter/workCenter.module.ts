@@ -10,6 +10,7 @@ import { ExcessComponent } from './components/excess/index/excess.component';
 import { RegisterFormComponent } from './components/register/form/register-form.component';
 import { ManageComponent } from './components/manage/index/manage.component';
 import { ManageFormComponent } from './components/manage/form/manage-form.component';
+import { LocationComponent } from './components/location/index/location-index.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { ManageFormComponent } from './components/manage/form/manage-form.compon
     ExcessComponent,
     RegisterFormComponent,
     ManageComponent,
-    ManageFormComponent
+    ManageFormComponent,
+    LocationComponent
   ],
   imports: [
     CommonModule,
