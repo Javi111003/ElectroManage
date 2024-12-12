@@ -13,6 +13,12 @@
       "isOpen": false,
       "subItems": [
         {
+          "id": "location",
+          "label": "Ubicación",
+          "icon": "location_on",
+          "link": "workCenter/location/index"
+        },
+        {
           "id": "register",
           "label": "Registros de consumo",
           "icon": "dynamic_form",
