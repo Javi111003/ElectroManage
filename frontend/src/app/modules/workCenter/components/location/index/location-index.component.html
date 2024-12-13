@@ -1,1 +1,13 @@
-<p>location-index works!</p>
+<div class="container-fluid p-0">
+    <div class="d-flex flex-column align-items-center">
+        <app-autocomplete class="mb-3"
+        [label]="'Centro de Trabajo'"
+        [options]="global.centerStringArray"
+        [control]="getControl('workCenter')">
+      </app-autocomplete>
+      <button class="location-btn mb-3" (click)="onClick()">
+        <mat-icon>location_on</mat-icon> <!-- Ícono de ubicación de Material Design -->
+      </button>
+      <div id="map"></div>
+    </div>
+</div>

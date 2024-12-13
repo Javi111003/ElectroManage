@@ -1,0 +1,53 @@
+/* Estilos para el contenedor principal */
+.container-fluid {
+    padding: 0;
+  }
+  
+  /* Estilos para el contenedor del mapa */
+  #map {
+    height: 100vh; /* Hace que el mapa ocupe toda la altura de la pantalla */
+    width: 100%;   /* Hace que el mapa ocupe todo el ancho */
+    z-index: 0;
+  }
+  
+  /* Estilos para el componente autocomplete */
+  app-autocomplete {
+    margin-top: 10px;
+    position: absolute;
+    z-index: 10;     /* Asegura que el autocomplete esté por encima del mapa */
+    background-color: white; /* Fondo blanco para que no sea transparente */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Opcional, para darle sombra al autocomplete */
+  }
+  .location-btn {
+    margin-top: 15px;
+    margin-left: 270px;
+    position: absolute;
+    z-index: 10;     /* Asegura que el autocomplete esté por encima del mapa */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Opcional, para darle sombra al autocomplete */
+    width: 45px;
+    height: 45px;
+    border-radius: 50%; /* Hace el botón circular */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:#00203b; /* Color del botón (puedes cambiarlo) */
+    color:white; /* Color del ícono */
+    border: none; /* Eliminar borde */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Transición para el cambio de color */
+  }
+  .location-btn:hover {
+    transform:scale(1.1)
+  }
+  ::ng-deep .mat-mdc-form-field-bottom-align::before {
+    height:0px !important;
+    display: none !important;
+  }
+  ::ng-deep main-content{
+    padding: 0 !important;
+  }
+  ::ng-deep .leaflet-control-zoom{
+    position: relative !important;
+  }
+  
+  
