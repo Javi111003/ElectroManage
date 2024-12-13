@@ -137,7 +137,6 @@
 /* Main content styles */
 .main-content {
   grid-area: main; /* Assigns this section to the main grid area */
-  padding: 1rem; /* Adds padding inside main content */
   overflow:auto; /* Enables vertical scrolling */
   transition: margin-left 0.3s ease; /* Smooth transition for size adjustment */
 }
