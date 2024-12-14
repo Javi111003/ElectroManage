@@ -4,6 +4,7 @@
 .form-avg-consumption {
   display: flex;
   justify-content: space-between;
+  margin: 20px;
 }
 .checkbox-container {
   flex: 1; /* Ocupa espacio proporcional al ancho disponible */

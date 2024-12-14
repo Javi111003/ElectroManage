@@ -1,8 +1,9 @@
 .form-container {
   display: flex;
-  flex-wrap: wrap; /* Permite que los elementos se ajusten en varias líneas si es necesario */
+  flex-wrap: wrap;
   flex-direction: row;
-  justify-content: space-between; /* Separación uniforme */
+  justify-content: space-between;
+  margin: 20px;
 }
 .form-autocomplete {
   width: 60%;
