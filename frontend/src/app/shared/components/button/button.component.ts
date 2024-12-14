@@ -8,6 +8,8 @@ import { Component, Input } from '@angular/core';
 export class ButtonComponent {
   @Input() label: string = 'Descargar PDF';
   @Input() function: (...args: any[])=>any = this.exportPDF;
+  @Input() showIcon: boolean = false;
+  @Input() icon: string = '';
 
   exportPDF() {}
 }
