@@ -6,6 +6,9 @@ button {
   border-width: 3px;
   background-color: white;
   border-bottom-width: thick;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 button:hover {
   transform: scale(1.10);
