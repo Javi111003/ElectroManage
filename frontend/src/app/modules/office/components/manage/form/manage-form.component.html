@@ -4,22 +4,21 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Formulario de Oficina</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="onCloseModal()" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="mb-3">
               <label for="officeName" class="form-label">Nombre de la Oficina</label>
-              <input type="text" class="form-control" id="officeName" formControlName="officeName" 
+              <input type="text" class="form-control" id="officeName" formControlName="officeName"
                 [ngClass]="{'is-invalid': form.get('officeName')?.invalid && form.get('officeName')?.touched}">
               <div *ngIf="form.get('officeName')?.invalid && form.get('officeName')?.touched" class="invalid-feedback">
                 Este campo es obligatorio
               </div>
             </div>
-  
+
             <div class="mb-3">
               <label for="workCenter" class="form-label">Centro de Trabajo Perteneciente</label>
-              <input type="text" class="form-control" id="workCenter" formControlName="workCenter" 
+              <input type="text" class="form-control" id="workCenter" formControlName="workCenter"
                 [ngClass]="{'is-invalid': form.get('workCenter')?.invalid && form.get('workCenter')?.touched}">
               <div *ngIf="form.get('workCenter')?.invalid && form.get('workCenter')?.touched" class="invalid-feedback">
                 Este campo es obligatorio
@@ -28,11 +27,11 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-custom" data-bs-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-custom" (click)="onSubmit()">Guardar cambios</button>
+          <app-button [label]="'Cerrar'" [function]="onCloseModal.bind(this)" data-bs-dismiss="modal"></app-button>
+          <app-button [label]="'Guardar cambios'" [function]="onSubmit.bind(this)"></app-button>
         </div>
       </div>
     </div>
   </div>
-  
-  
+
+

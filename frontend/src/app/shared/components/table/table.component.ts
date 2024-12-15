@@ -37,7 +37,8 @@ export class TableComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.headings = this.displayedColumns.map(item => item.field)
     if (this.showActions)
-      this.headings.push('actionsColumn')
+      this.headings.push('editColumn');
+      this.headings.push('deleteColumn')
   }
 
   cancelOrDelete() {

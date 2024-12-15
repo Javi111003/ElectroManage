@@ -7,8 +7,10 @@
   background-color: white;
   border-bottom-width: thick;
 }
-
 button:hover {
   background-color: #00203b;
   color: white;
+}
+#teamWork {
+  border: none;
 }

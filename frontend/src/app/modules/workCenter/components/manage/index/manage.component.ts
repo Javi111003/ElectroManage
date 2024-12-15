@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Office } from '../../../../../models/office.interface';
-import { WorkCenter } from '../../../../../models/workCenter.interface';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 
 declare var bootstrap: any;
@@ -12,7 +10,18 @@ declare var bootstrap: any;
   styleUrl: './manage.component.css'
 })
 export class ManageComponent implements OnInit {
-  dataSource: MatTableDataSource<any> = new MatTableDataSource();
+  dataSource: MatTableDataSource<any> = new MatTableDataSource([
+    {
+      name: 'hol',
+      adminAreaName: 'jhg',
+      adminAreaDescription: 'nbhgvfcd',
+      instalationType: 'gfd',
+      address: 'kjnhbg',
+      monthlyConsumptionLimit: 89,
+      formula: 'consumo',
+      teamWork: 'luis'
+    }
+  ]);
   displayedColumns: ConfigColumn[] = [
     {
       title: 'Nombre',

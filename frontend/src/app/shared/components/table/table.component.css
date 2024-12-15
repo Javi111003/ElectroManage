@@ -10,19 +10,21 @@ tr th {
 th{
   width: 20000px;
 }
-.actionColumn{
-  width: 3000px;
+.actionsColumn {
+  width: auto;
 }
 .showActions button {
   justify-items: center;
   padding: 5px;
-  margin-right: 8px;
   border-radius: 5px;
   background-color:#00203b;
   color: white;
   width: 26px;
   height: 26px;
   border: 0;
+}
+.showActions button:hover {
+  transform: scale(1.10);
 }
 .showActions mat-icon {
   font-size: 16px;
