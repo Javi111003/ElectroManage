@@ -33,7 +33,9 @@
   <div class="form-table" *ngIf="showTable">
     <app-table
       [dataSource]="dataSource"
-      [displayedColumns]="displayedColumns">
+      [displayedColumns]="displayedColumns"
+      [showActions]="true"
+      >
     </app-table>
   </div>
 </div>

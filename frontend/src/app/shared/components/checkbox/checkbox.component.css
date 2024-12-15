@@ -6,6 +6,9 @@ mat-label {
   align-items: center !important;
   background: white !important;
 }
+::ng-deep .mat-mdc-select-panel {
+  background: white !important;
+}
 ::ng-deep .mat-pseudo-checkbox-full {
   border-radius: 5px !important;
   height: 17px !important;

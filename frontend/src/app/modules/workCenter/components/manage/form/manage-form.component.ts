@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module';
 
 @Component({
@@ -8,17 +8,37 @@ import { GlobalModule } from '../../../../global/global.module';
   styleUrl: './manage-form.component.css'
 })
 export class ManageFormComponent implements OnInit {
-  form: FormGroup; // Formulario reactivo
 
-  constructor(private fb: FormBuilder, public global: GlobalModule) {
-    // Creamos el formulario con validaciones
+  constructor(
+    private fb: FormBuilder,
+    public global: GlobalModule)
+  {
     this.form = this.fb.group({
-      officeName: ['', Validators.required],  // Campo nombre de la oficina
-      workCenter: ['', Validators.required]    // Campo centro de trabajo
+      name: ['', Validators.required],
+      adminAreaName: ['', Validators.required],
+      adminAreaDescription: '',
+      instalationType: ['', Validators.required],
+      address: ['', Validators.required],
+      monthlyConsumptionLimit: [null, Validators.required],
+      formula: ['', Validators.required],
+      teamWork: [[''], Validators.required]
     });
   }
 
+  form: FormGroup;
+  workers: string[] = [
+    'Juan', 'Pedro', 'Lucia', 'Martin'
+  ];
+
   ngOnInit() {}
+
+  getControl(control: string): FormControl {
+    return this.form.get(control) as FormControl;
+  }
+
+  getControlValue(control: string): any {
+    return this.form.get(control)?.value;
+  }
 
   onCloseModal(): void {
     this.form.reset();
@@ -26,7 +46,7 @@ export class ManageFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.invalid) {
-      confirm('Por favor, rellene todos los campos.');
+      alert('Por favor, rellene todos los campos.');
       this.markAllAsTouched();
       return;
     }
@@ -39,7 +59,7 @@ export class ManageFormComponent implements OnInit {
 
   markAllAsTouched(): void {
     Object.keys(this.form.controls).forEach(field => {
-      const control = this.form.get(field);
+      const control = this.getControl(field);
       control?.markAsTouched();
     });
   }

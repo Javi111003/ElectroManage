@@ -1,1 +1,46 @@
-<p>user manage-form works!</p>
+<!-- Modal de Bootstrap -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Formulario de Centro de Trabajo</h5>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <div class="row">
+              <div class="col-8 col-sm-6">
+                <label for="userName" class="form-label">Usuario</label>
+                <input type="text" class="form-control" id="userName" formControlName="userName"
+                  [ngClass]="{'is-invalid': form.get('userName')?.invalid && form.get('userName')?.touched}">
+                <div *ngIf="form.get('userName')?.invalid && form.get('userName')?.touched" class="invalid-feedback">
+                  Este campo es obligatorio
+                </div>
+              </div>
+              <div class="col-4 col-sm-6">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" formControlName="password"
+                  [ngClass]="{'is-invalid': form.get('password')?.invalid && form.get('password')?.touched}">
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="role" class="form-label">Rol</label>
+            <input type="text" class="form-control" id="role" formControlName="role"
+              [ngClass]="{'is-invalid': form.get('role')?.invalid && form.get('role')?.touched}">
+            <div *ngIf="form.get('role')?.invalid && form.get('role')?.touched" class="invalid-feedback">
+              Este campo es obligatorio
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <app-button [label]="'Cerrar'" [function]="onCloseModal.bind(this)" data-bs-dismiss="modal"></app-button>
+        <app-button [label]="'Guardar cambios'" [function]="onSubmit.bind(this)"></app-button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
