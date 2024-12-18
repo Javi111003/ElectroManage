@@ -1,8 +1,6 @@
-import { Component, OnInit,ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
-import { Office } from '../../../../../models/office.interface';
-import { WorkCenter } from '../../../../../models/workCenter.interface';
 import { DataService } from '../../../../../services/data/data.service';
 import { GlobalModule } from '../../../../global/global.module';
 
@@ -81,4 +79,3 @@ export class ManageComponent implements OnInit {
     modal.show();
   }
 }
-
