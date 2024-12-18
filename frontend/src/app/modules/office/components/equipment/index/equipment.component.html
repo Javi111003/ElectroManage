@@ -23,6 +23,13 @@
   <!-- Botones -->
   <div class="form-buttons">
     <app-button
+    [label]="'Añadir'"
+    [function]="onClick"
+    [showIcon]="true"
+    [icon]="'add'"
+  >
+  </app-button>
+    <app-button
       [label]="'Consultar'"
       [function]="onConsultClick.bind(this)">
     </app-button>
