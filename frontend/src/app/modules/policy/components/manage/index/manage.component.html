@@ -17,6 +17,8 @@
             [dataSource]="dataSource"
             [displayedColumns]="displayedColumns"
             [showActions]="true"
+            [deleteFunction]="delete.bind(this)"
+            [editFunction]="edit.bind(this)"
           ></app-table>
         </div>
       </div>

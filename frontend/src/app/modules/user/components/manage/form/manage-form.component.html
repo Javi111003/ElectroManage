@@ -3,17 +3,17 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Formulario de Centro de Trabajo</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Formulario de Usuario</h5>
       </div>
       <div class="modal-body">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="mb-3">
             <div class="row">
               <div class="col-8 col-sm-6">
-                <label for="userName" class="form-label">Usuario</label>
-                <input type="text" class="form-control" id="userName" formControlName="userName"
-                  [ngClass]="{'is-invalid': form.get('userName')?.invalid && form.get('userName')?.touched}">
-                <div *ngIf="form.get('userName')?.invalid && form.get('userName')?.touched" class="invalid-feedback">
+                <label for="name" class="form-label">Usuario</label>
+                <input type="text" class="form-control" id="name" formControlName="name"
+                  [ngClass]="{'is-invalid': form.get('name')?.invalid && form.get('name')?.touched}">
+                <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="invalid-feedback">
                   Este campo es obligatorio
                 </div>
               </div>
@@ -33,6 +33,18 @@
               Este campo es obligatorio
             </div>
           </div>
+
+          <div class="mb-3">
+            <label for="workCenter" class="form-label">Centros de Trabajo</label>
+            <app-autocomplete class="form-control" id="workCenter"
+              [options]="workCenters"
+              [label]="'Centros de trabajo'"
+              [control]="getControl('workCenter')"
+            ></app-autocomplete>
+            <div *ngIf="form.get('workCenter')?.invalid && form.get('workCenter')?.touched" class="invalid-feedback">
+              Este campo es obligatorio
+            </div>
+          </div>
         </form>
       </div>
       <div class="modal-footer">
@@ -42,5 +54,3 @@
     </div>
   </div>
 </div>
-
-

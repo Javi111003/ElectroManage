@@ -33,7 +33,6 @@ export class AuthService {
    * @returns True if the user is logged in, false otherwise.
    */
   isLoggedIn(): boolean {
-    console.log(this.isAuthenticated);
     return this.isAuthenticated;
   }
 

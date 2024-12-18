@@ -47,14 +47,11 @@ app-autocomplete {
   padding: 0 !important;
 }
 ::ng-deep .leaflet-control-zoom {
-  position: absolute !important;
-  top: 5px !important;
-  left: 5px !important;
+  position: fixed !important;
 }
 ::ng-deep .leaflet-touch .leaflet-control-attribution, .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
   display: none !important;
 }
 ::ng-deep .main-content {
-  overflow: visible !important;
   padding: 0 !important;
 }

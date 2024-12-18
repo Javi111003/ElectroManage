@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
+import { GlobalModule } from '../../../../global/global.module';
+import { DataService } from '../../../../../services/data/data.service';
 
 declare var bootstrap: any;
 
@@ -9,7 +11,7 @@ declare var bootstrap: any;
   templateUrl: './manage.component.html',
   styleUrl: './manage.component.css'
 })
-export class ManageComponent implements OnInit {
+export class ManageComponent {
   dataSource: MatTableDataSource<any> = new MatTableDataSource([
     {
       name: 'hol',
@@ -19,7 +21,7 @@ export class ManageComponent implements OnInit {
       address: 'kjnhbg',
       monthlyConsumptionLimit: 89,
       formula: 'consumo',
-      teamWork: 'luis'
+      teamWork: ['Juan', 'Lucia']
     }
   ]);
   displayedColumns: ConfigColumn[] = [
@@ -57,10 +59,27 @@ export class ManageComponent implements OnInit {
     }
   ];
 
-  ngOnInit() {}
+  constructor (
+    public global: GlobalModule,
+    private dataService: DataService
+  ) {}
 
   onClick(): void {
-      const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
-      modal.show();
+    const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
+    modal.show();
+  }
+
+  delete(): void {
+    this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
+      result => { if (result) {
+        this.global.openDialog('Eliminado');
+      }
+    });
+  }
+
+  edit(item: any): void {
+    this.dataService.setData(item);
+    const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
+    modal.show();
   }
 }
