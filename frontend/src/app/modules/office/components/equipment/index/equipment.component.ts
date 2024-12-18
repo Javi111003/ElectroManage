@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { GlobalModule } from '../../../../global/global.module';
 
+declare var bootstrap: any;  // Declaración de bootstrap para evitar errores de compilación
 
 @Component({
   selector: 'app-equipment',
@@ -141,6 +142,11 @@ export class EquipmentComponent implements OnInit {
         this.global.openDialog('Por favor, selecciona un Centro de Trabajo y una Oficina válidos.');
       }
     }
+  }
+
+  onClick(): void {
+    const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
+    modal.show();
   }
 }
 
