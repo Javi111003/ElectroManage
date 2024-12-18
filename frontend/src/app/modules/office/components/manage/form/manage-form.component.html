@@ -17,9 +17,12 @@
             </div>
 
             <div class="mb-3">
-              <label for="workCenter" class="form-label">Centro de Trabajo Perteneciente</label>
-              <input type="text" class="form-control" id="workCenter" formControlName="workCenter"
-                [ngClass]="{'is-invalid': form.get('workCenter')?.invalid && form.get('workCenter')?.touched}">
+              <label for="workCenter" class="form-label">Centros de Trabajo</label>
+              <app-autocomplete class="form-control" id="workCenter"
+                [options]="workCenters"
+                [label]="'Centros de trabajo'"
+                [control]="getControl('workCenter')"
+              ></app-autocomplete>
               <div *ngIf="form.get('workCenter')?.invalid && form.get('workCenter')?.touched" class="invalid-feedback">
                 Este campo es obligatorio
               </div>

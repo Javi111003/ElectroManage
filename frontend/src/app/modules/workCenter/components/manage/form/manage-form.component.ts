@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module';
+import { DataService } from '../../../../../services/data/data.service';
 
 @Component({
   selector: 'app-center-manage-form',
@@ -11,7 +12,9 @@ export class ManageFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    public global: GlobalModule)
+    public global: GlobalModule,
+    private dataService: DataService
+  )
   {
     this.form = this.fb.group({
       name: ['', Validators.required],
@@ -25,12 +28,18 @@ export class ManageFormComponent implements OnInit {
     });
   }
 
+  data: any;
   form: FormGroup;
-  workers: string[] = [
+  teamWork: string[] = [
     'Juan', 'Pedro', 'Lucia', 'Martin'
   ];
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.dataService.currentData.subscribe(newData => {
+      this.data = newData;
+      this.form.patchValue(this.data);
+    });
+  }
 
   getControl(control: string): FormControl {
     return this.form.get(control) as FormControl;

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
@@ -23,6 +23,8 @@ export class TableComponent implements OnInit, AfterViewInit {
   @Input() showActions: boolean = false;
   @Input() footer: any[] = [];
   @Input() showFooter: boolean = false;
+  @Input() deleteFunction: (...args: any[])=>any = this.cancelOrDelete;
+  @Input() editFunction: (item: any)=>any = this.edit;
 
   @ViewChild(MatPaginator) paginator: MatPaginator = [][0];
 
@@ -41,11 +43,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.headings.push('deleteColumn')
   }
 
-  cancelOrDelete() {
-    throw new Error('Method not implemented.');
-  }
+  cancelOrDelete() {}
 
-  edit() {
-    throw new Error('Method not implemented.');
-  }
+  edit(item: any) {}
 }

@@ -26,7 +26,8 @@ import { MatTableModule } from '@angular/material/table';
 import { WorkCenter } from '../../models/workCenter.interface';
 import { Office } from '../../models/office.interface';
 import { MatBadgeModule } from '@angular/material/badge';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
 
 
 @NgModule({
@@ -136,10 +137,12 @@ export class GlobalModule {
    * This function is used to display a message to the user in a dialog box.
    * @param message The message to be displayed in the dialog.
    */
-  openDialog(message: string): void {
-    this.dialog.open(DialogComponent, {
+  openDialog(message: string): Observable<boolean> {
+    const dialogRef = this.dialog.open(DialogComponent, {
       data: { message: message }
     });
+
+    return dialogRef.afterClosed();
   }
 
   /**

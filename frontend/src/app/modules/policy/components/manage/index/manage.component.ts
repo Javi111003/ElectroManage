@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
-import { Policy } from '../../../../../models/policy.interface';
-import { WorkCenter } from '../../../../../models/workCenter.interface';
+import { GlobalModule } from '../../../../global/global.module';
+import { DataService } from '../../../../../services/data/data.service';
 
 declare var bootstrap: any;  // Declaración de bootstrap para evitar errores de compilación
 @Component({
@@ -11,48 +11,52 @@ declare var bootstrap: any;  // Declaración de bootstrap para evitar errores de
   styleUrl: './manage.component.css'
 })
 export class ManageComponent {
-  dataSource: MatTableDataSource<any> = new MatTableDataSource();
+
+  constructor (
+    public global: GlobalModule,
+    private dataService: DataService
+  ) {}
+
+  dataSource: MatTableDataSource<any> = new MatTableDataSource(
+    [
+      {
+        policyName: 'hola',
+        description: 'njhbgv',
+        workCenter: 'kjhbvgv'
+      }
+    ]
+  );
   displayedColumns: ConfigColumn[] = [
     {
       title: 'Nombre',
-      field: 'name'
+      field: 'policyName'
     },
     {
       title: 'Descripcion',
       field: 'description'
-    }
+    },
+    {
+      title: 'Centro de Trabajo',
+      field: 'workCenter'
+    },
   ];
 
-
-   polices:Policy[] = [
-    { id: 1, name: 'Politica Messi-Ronaldo', applyingDate: "HACE DOS HORAS",companyId:101 },
-    { id: 2, name: 'Politica Vinicius', applyingDate: 'AYER',companyId:102 },
-    { id: 1, name: 'Politica Messi-Ronaldo', applyingDate: "HACE DOS HORAS",companyId:101 },
-    { id: 2, name: 'Politica Vinicius', applyingDate: 'AYER',companyId:102 },
-    { id: 1, name: 'Politica Messi-Ronaldo', applyingDate: "HACE DOS HORAS",companyId:101 },
-    { id: 2, name: 'Politica Vinicius', applyingDate: 'AYER',companyId:102 },
-    { id: 1, name: 'Politica Messi-Ronaldo', applyingDate: "HACE DOS HORAS",companyId:101 },
-    { id: 2, name: 'Politica Vinicius', applyingDate: 'AYER',companyId:102 },
-    { id: 1, name: 'Politica Messi-Ronaldo', applyingDate: "HACE DOS HORAS",companyId:101 },
-    { id: 2, name: 'Politica Vinicius', applyingDate: 'AYER',companyId:102 },
-    { id: 1, name: 'Politica Messi-Ronaldo', applyingDate: "HACE DOS HORAS",companyId:101 },
-    { id: 2, name: 'Politica Vinicius', applyingDate: 'AYER',companyId:102 },
-    { id: 1, name: 'Politica Messi-Ronaldo', applyingDate: "HACE DOS HORAS",companyId:101 },
-    { id: 2, name: 'Politica Vinicius', applyingDate: 'AYER',companyId:102 },
-    { id: 1, name: 'Politica Messi-Ronaldo', applyingDate: "HACE DOS HORAS",companyId:101 },
-    { id: 2, name: 'Politica Vinicius', applyingDate: 'AYER',companyId:102 },
-    { id: 1, name: 'Politica Messi-Ronaldo', applyingDate: "HACE DOS HORAS",companyId:101 },
-    { id: 2, name: 'Politica Vinicius', applyingDate: 'AYER',companyId:102 },{ id: 1, name: 'Politica Messi-Ronaldo', applyingDate: "HACE DOS HORAS",companyId:101 },
-    { id: 2, name: 'Politica Vinicius', applyingDate: 'AYER',companyId:102 },
-
-    
-  ];
-  ngOnInit() {
-    this.dataSource = new MatTableDataSource(this.polices);
-  }
   onClick(): void {
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
-}
+  }
 
+  delete(): void {
+    this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
+      result => { if (result) {
+        this.global.openDialog('Eliminado');
+      }
+    });
+  }
+
+  edit(item: any): void {
+    this.dataService.setData(item);
+    const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
+    modal.show();
+  }
 }

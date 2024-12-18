@@ -1,28 +1,41 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module';
+import { Subscription } from 'rxjs';
+import { DataService } from '../../../../../services/data/data.service';
 
 @Component({
   selector: 'app-user-manage-form',
   templateUrl: './manage-form.component.html',
   styleUrl: './manage-form.component.css'
 })
-export class ManageFormComponent {
+export class ManageFormComponent implements OnInit {
+  data: any;
+  form: FormGroup;
+  workCenters: string[] = [
+    'centro 1', 'centro 2'
+  ];
 
   constructor(
     private fb: FormBuilder,
-    public global: GlobalModule)
+    public global: GlobalModule,
+    private dataService: DataService
+  )
   {
     this.form = this.fb.group({
-      userName: ['', Validators.required],
+      name: ['', Validators.required],
       password: ['', Validators.required],
       role: ['', Validators.required],
+      workCenter: ['', Validators.required]
     });
   }
 
-  form: FormGroup;
-
-  ngOnInit() {}
+  ngOnInit(): void {
+    this.dataService.currentData.subscribe(newData => {
+      this.data = newData;
+      this.form.patchValue(this.data);
+    });
+  }
 
   getControl(control: string): FormControl {
     return this.form.get(control) as FormControl;

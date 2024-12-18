@@ -61,7 +61,7 @@ export class LocationComponent {
     return this.form.get(control)?.value;
   }
   inicializarMapa(): void {
-    this.map = L.map('map').setView([20, 0], 2); // Vista inicial del mapa
+    this.map = L.map('map').setView([22, -80], 7); // Vista inicial del mapa
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19
     }).addTo(this.map);
@@ -71,7 +71,7 @@ export class LocationComponent {
     const empresa = this.empresas.find(e => e.nombre === nombre);
     if (empresa) {
       this.map.setView([empresa.latitud, empresa.longitud], 15); // Centra el mapa en la ubicación de la empresa
-      const popup = L.popup()
+      L.popup()
         .setLatLng([empresa.latitud, empresa.longitud])
         .setContent(`
           <h3>${empresa.nombre}</h3>
@@ -82,7 +82,6 @@ export class LocationComponent {
     }
   }
   onClick() {
-      console.log(this.getControlValue('workCenter'))
       if (this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter'))) {
         this.seleccionarEmpresa(this.getControlValue('workCenter'));
       } else {
