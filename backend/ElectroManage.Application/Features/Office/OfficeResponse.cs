@@ -1,15 +1,11 @@
-﻿namespace ElectroManage.Application.Features.Office;
+﻿using ElectroManage.Application.DTO_s;
+
+namespace ElectroManage.Application.Features.Office;
 
 public record OfficeResponse
 {
     public long Id { get; set; }
     public string? Name { get; set; }
     public string? Description { get; set; }
-    public CompanyDTO Company { get; set; } = null!;
-}
-
-public class CompanyDTO
-{
-    public long Id { get; set; }
-    public string Name { get; set; } = string.Empty;
+    public CompanyResponse Company { get; set; } = null!;
 }
