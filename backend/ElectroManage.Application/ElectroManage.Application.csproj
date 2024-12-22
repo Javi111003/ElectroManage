@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Company\" />
+    <Folder Include="Mappers\" />
     <Folder Include="Mappers\" />
   </ItemGroup>
 
