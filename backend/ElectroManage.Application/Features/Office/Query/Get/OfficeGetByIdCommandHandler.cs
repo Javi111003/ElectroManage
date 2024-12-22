@@ -1,6 +1,4 @@
 ﻿
-using ElectroManage.Application.DTO_s;
-using ElectroManage.Application.Mappers;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
@@ -33,6 +31,16 @@ public class OfficeGetByIdCommandHandler : CoreCommandHandler<OfficeGetByIdComma
             ThrowError($"Office with id {command.Id} not found", 404);
         }
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
-        return OfficeMapper.ToResponse(office);
+        return new OfficeResponse
+        {
+            Id = command.Id,
+            Name = office.Name,
+            Description = office.Description,
+            Company = new CompanyDTO
+            {
+                Id = office.Company.Id,
+                Name = office.Company.Name,
+            }
+        };
     }
 }
