@@ -52,16 +52,6 @@ public class EditGeneralDataOfficeHandler : CoreCommandHandler<EditGeneralDataOf
         await _unitOfWork.SaveChangesAsync();
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
 
-        return new OfficeResponse
-        {
-            Id = office.Id,
-            Name = office.Name,
-            Description = office.Description,
-            Company = new CompanyDTO
-            {
-                Id = company.Id,
-                Name = company.Name,
-            }
-        };
+        return Mappers.OfficeMapper.ToResponse(office);
     }
 }
