@@ -40,24 +40,6 @@ public class EditGeneralDataLocationCommandHandler : CoreCommandHandler<EditGene
         location.Province = command.Address.Province;
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
 
-        return new EditGeneralDataLocationResponse
-        {
-            Id = location.Id,
-            Name = location.Name,
-            Description = location.Description,
-            ZipCode = location.ZipCode,
-            Latitude = location.Latitude,
-            Longitude = location.Longitude,
-            Address = new AddressDTO
-            {
-                Number = location.Number,
-                Street = location.Street,
-                Neighborhood = location.Neighborhood,
-                BeetweenStreets = location.BetweenStreets,
-                Town = location.Town,
-                Country = location.Country,
-                Province = location.Province,
-            }
-        };
+        return Mappers.LocationMapper.ToResponse(location);
     }
 }
