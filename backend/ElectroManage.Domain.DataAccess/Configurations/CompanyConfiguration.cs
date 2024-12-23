@@ -44,7 +44,8 @@ public class CompanyConfiguration : IEntityTypeConfiguration<Company>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(c => c.ConsumptionLimits)
-            .WithMany(l => l.Companies);
+            .WithOne(l => l.Company)
+            .HasForeignKey(l => l.CompanyId);
 
         builder.HasMany(c => c.Warnings)
             .WithOne(w => w.Company)
