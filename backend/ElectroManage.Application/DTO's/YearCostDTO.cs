@@ -2,6 +2,6 @@
 public record YearCostDTO
 {
     public int Year { get; set; }
-    public decimal MeanMonthlyCost { get; set; }
-    public decimal MeanMonthlyConsumption { get; set; }
+    public decimal MeanCost { get; set; }
+    public decimal MeanConsumption { get; set; }
 }
