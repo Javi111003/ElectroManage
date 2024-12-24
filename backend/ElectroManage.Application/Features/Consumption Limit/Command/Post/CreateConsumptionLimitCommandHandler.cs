@@ -1,5 +1,6 @@
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
+using System.Linq.Expressions;
 
 namespace ElectroManage.Application.Features.ConsumptionLimit.Command.Post;
 
@@ -20,8 +21,12 @@ public class CreateConsumptionLimitCommandHandler : CoreCommandHandler<CreateCon
         
         var consumptionLimitRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.ConsumptionLimit>();
         var companyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Company>();
+        var includes = new List<Expression<Func<Domain.Entites.Sucursal.Company,object>>>
+        {
+            x => x.ConsumptionLimits
+        };
     
-        var company = await companyRepository.FirstAsync(useInactive: true, filters: x => x.Id == command.CompanyId);
+        var company = await companyRepository.FirstAsync(useInactive: true, includes: includes, filters: x => x.Id == command.CompanyId);
         if (company is null)
         {
             _logger.LogError($"Company with id: {command.CompanyId} not found");
