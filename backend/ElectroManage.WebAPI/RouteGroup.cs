@@ -16,4 +16,5 @@
             public static string ManagementTeam = "Management Team";
             public static string CostFormula = "CostFormula";
             public static string EquipmentSpecification = "Equipment Specification";
+            public static string ConsumptionLimit = "Consumption Limit";
     }
