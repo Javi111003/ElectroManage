@@ -1,9 +1,9 @@
 ﻿using ElectroManage.Application.DTO_s;
-using ElectroManage.Application.Mocks;
+using ElectroManage.Application.Features.Company.Query.ListWarningsByCompany;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.Company;
 
-public class ListWarningsByCompanyEndpoint : Endpoint<EmptyRequest, ListWarningsByCompanyResponse>
+public class ListWarningsByCompanyEndpoint : Endpoint<ListWarningsByCompanyCommand, ListWarningsByCompanyResponse>
 {
     public override void Configure()
     {
@@ -15,16 +15,10 @@ public class ListWarningsByCompanyEndpoint : Endpoint<EmptyRequest, ListWarnings
         Summary(f => f.Summary = "Listing randoms warnings by company");
     }
 
-    public async override Task HandleAsync(EmptyRequest req, CancellationToken ct)
+    public override async Task HandleAsync(ListWarningsByCompanyCommand req, CancellationToken ct)
     {
-        var companyId = Route<long>("companyId");
-        var faker = new ListWarningsByCompanyBogusConfig();
-        var data = faker.Generate(30);
-        var response = new ListWarningsByCompanyResponse
-        {
-            CompanyID = companyId,
-            Warnings = data.OrderBy(x => x.Year).Reverse().ToList()
-        };
-        await SendAsync(response: response, cancellation: ct);
+        var data = await req.ExecuteAsync(ct);
+        data.Warnings.OrderBy(x => x.Year);
+        await SendAsync(data);
     }
 }
