@@ -23,12 +23,12 @@
   <!-- Botones -->
   <div class="form-buttons">
     <app-button
-    [label]="'Añadir'"
-    [function]="onClick"
-    [showIcon]="true"
-    [icon]="'add'"
-  >
-  </app-button>
+      [label]="'Añadir'"
+      [function]="onClick"
+      [showIcon]="true"
+      [icon]="'add'"
+    >
+    </app-button>
     <app-button
       [label]="'Consultar'"
       [function]="onConsultClick.bind(this)">
@@ -42,11 +42,11 @@
       [dataSource]="dataSource"
       [displayedColumns]="displayedColumns"
       [showActions]="true"
+      [editFunction]="edit.bind(this)"
+      [deleteFunction]="delete.bind(this)"
       >
     </app-table>
   </div>
 </div>
 
-
-
-
+<app-equipment-form></app-equipment-form>

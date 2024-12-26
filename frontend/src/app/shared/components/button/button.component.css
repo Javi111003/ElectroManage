@@ -18,3 +18,7 @@ button:hover {
 .hidden {
   display: none;
 }
+.disabled-select {
+  opacity: 0.5;
+  pointer-events: none;
+}

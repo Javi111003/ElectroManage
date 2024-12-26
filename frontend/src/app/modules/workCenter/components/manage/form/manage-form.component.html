@@ -8,29 +8,66 @@
       <div class="modal-body">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="mb-3">
-            <label for="name" class="form-label">Nombre del Centro</label>
-            <input type="text" class="form-control" id="name" formControlName="name"
-              [ngClass]="{'is-invalid': form.get('name')?.invalid && form.get('name')?.touched}">
-            <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="invalid-feedback">
-              Este campo es obligatorio
+            <div class="row">
+              <div class="col-8 col-sm-6">
+                <label for="name" class="form-label">Nombre del Centro</label>
+                <input type="text" class="form-control" id="name" formControlName="name"
+                  [ngClass]="{'is-invalid': form.get('name')?.invalid && form.get('name')?.touched}">
+                <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="invalid-feedback">
+                  Este campo es obligatorio
+                </div>
+              </div>
             </div>
           </div>
 
           <div class="mb-3">
-            Área Administrativa
             <div class="row">
-              <div class="col-8 col-sm-6">
-                <label for="adminAreaName" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="adminAreaName" formControlName="adminAreaName"
-                  [ngClass]="{'is-invalid': form.get('adminAreaName')?.invalid && form.get('adminAreaName')?.touched}">
+              <div class="col-sm-4">
+                <label for="adminAreaName" class="form-label">Área Administrativa</label>
+                <app-autocomplete class="form-control" id="adminAreaName"
+                  [options]="adminAreas"
+                  [label]="'Áreas'"
+                  [control]="getControl('adminAreaName')"
+                  [showIcon]="true"
+                ></app-autocomplete>
                 <div *ngIf="form.get('adminAreaName')?.invalid && form.get('adminAreaName')?.touched" class="invalid-feedback">
                   Este campo es obligatorio
                 </div>
               </div>
-              <div class="col-4 col-sm-6">
-                <label for="adminAreaDescription" class="form-label">Descripción</label>
-                <input type="text" class="form-control" id="adminAreaDescription" formControlName="adminAreaDescription"
-                  [ngClass]="{'is-invalid': form.get('adminAreaDescription')?.invalid && form.get('adminAreaDescription')?.touched}">
+              <div class="col-sm-1">
+                <label for="addType" class="form-label"><br><br></label>
+                <app-button id="addType"
+                  [isDisabled]="!enableAddArea"
+                  [label]="''"
+                  [showIcon]="true"
+                  [icon]="'add'"
+                  [function]="addArea.bind(this)"
+                >
+                </app-button>
+              </div>
+              <div class="col-sm-1"></div>
+              <div class="col-sm-4">
+                <label for="instalationType" class="form-label">Tipo de instalación</label>
+                <app-autocomplete class="form-control" id="instalationType"
+                  [options]="types"
+                  [label]="'Tipos'"
+                  [control]="getControl('instalationType')"
+                  [showIcon]="true"
+                ></app-autocomplete>
+                <div *ngIf="form.get('instalationType')?.invalid && form.get('instalationType')?.touched" class="invalid-feedback">
+                  Este campo es obligatorio
+                </div>
+              </div>
+              <div class="col-sm-1">
+                <label for="addType" class="form-label"><br><br></label>
+                <app-button id="addType"
+                  [isDisabled]="!enableAddType"
+                  [label]="''"
+                  [showIcon]="true"
+                  [icon]="'add'"
+                  [function]="addType.bind(this)"
+                >
+                </app-button>
               </div>
             </div>
           </div>
@@ -47,10 +84,10 @@
           <div class="mb-3">
             <div class="row">
               <div class="col-8 col-sm-6">
-                <label for="instalationType" class="form-label">Tipo de instalación</label>
-                <input type="text" class="form-control" id="instalationType" formControlName="instalationType"
-                  [ngClass]="{'is-invalid': form.get('instalationType')?.invalid && form.get('instalationType')?.touched}">
-                <div *ngIf="form.get('instalationType')?.invalid && form.get('instalationType')?.touched" class="invalid-feedback">
+                <label for="formula" class="form-label">Fórmula de Costo</label>
+                <input type="text" class="form-control" id="formula" formControlName="formula"
+                  [ngClass]="{'is-invalid': form.get('formula')?.invalid && form.get('formula')?.touched}">
+                <div *ngIf="form.get('formula')?.invalid && form.get('formula')?.touched" class="invalid-feedback">
                   Este campo es obligatorio
                 </div>
               </div>
@@ -66,23 +103,26 @@
           </div>
 
           <div class="mb-3">
-            <label for="formula" class="form-label">Fórmula de costo total</label>
-            <input type="text" class="form-control" id="formula" formControlName="formula"
-              [ngClass]="{'is-invalid': form.get('formula')?.invalid && form.get('formula')?.touched}">
-            <div *ngIf="form.get('formula')?.invalid && form.get('formula')?.touched" class="invalid-feedback">
-              Este campo es obligatorio
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label for="teamWork" class="form-label">Equipo responsable</label>
-            <app-checkbox class="form-control" id="teamWork"
-              [options]="teamWork"
-              [label]="'Trabajadores'"
-              [control]="getControl('teamWork')"
-            ></app-checkbox>
-            <div *ngIf="form.get('teamWork')?.invalid && form.get('teamWork')?.touched" class="invalid-feedback">
-              Este campo es obligatorio
+            <div class="row">
+              <div class="col-8 col-sm-6">
+                <label for="policy" class="form-label">Política</label>
+                <app-autocomplete class="form-control" id="policy"
+                  [options]="policies"
+                  [label]="'Políticas'"
+                  [control]="getControl('policy')"
+                ></app-autocomplete>
+              </div>
+              <div class="col-4 col-sm-6">
+                <label for="teamWork" class="form-label">Equipo responsable</label>
+                <app-checkbox class="form-control" id="teamWork"
+                  [options]="teamWork"
+                  [label]="'Trabajadores'"
+                  [control]="getControl('teamWork')"
+                ></app-checkbox>
+                <div *ngIf="form.get('teamWork')?.invalid && form.get('teamWork')?.touched" class="invalid-feedback">
+                  Este campo es obligatorio
+                </div>
+              </div>
             </div>
           </div>
         </form>

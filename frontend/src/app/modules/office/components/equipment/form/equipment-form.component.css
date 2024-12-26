@@ -1,0 +1,6 @@
+::ng-deep .cdk-overlay-container {
+  z-index: 9999;
+}
+#workCenter, #office, #maintenanceStatus, #useFrequency, #brand, #equipmentType {
+  border: none;
+}

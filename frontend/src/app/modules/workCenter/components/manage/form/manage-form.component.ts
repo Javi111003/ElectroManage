@@ -9,6 +9,8 @@ import { DataService } from '../../../../../services/data/data.service';
   styleUrl: './manage-form.component.css'
 })
 export class ManageFormComponent implements OnInit {
+  enableAddType: boolean = false;
+  enableAddArea: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -19,12 +21,31 @@ export class ManageFormComponent implements OnInit {
     this.form = this.fb.group({
       name: ['', Validators.required],
       adminAreaName: ['', Validators.required],
-      adminAreaDescription: '',
       instalationType: ['', Validators.required],
       address: ['', Validators.required],
+      policy: '',
       monthlyConsumptionLimit: [null, Validators.required],
       formula: ['', Validators.required],
       teamWork: [[''], Validators.required]
+    });
+    this.dataService.setData(null);
+
+    this.form.get('instalationType')!.valueChanges.subscribe(() => {
+      if (String(this.getControlValue('instalationType')).trim() == '') {
+        this.enableAddType = false;
+        return;
+      }
+
+      this.enableAddType = !this.global.isOptionValid(this.types, this.getControlValue('instalationType'))
+    });
+
+    this.form.get('adminAreaName')!.valueChanges.subscribe(() => {
+      if (String(this.getControlValue('adminAreaName')).trim() == '') {
+        this.enableAddArea = false;
+        return;
+      }
+
+      this.enableAddArea = !this.global.isOptionValid(this.adminAreas, this.getControlValue('adminAreaName'))
     });
   }
 
@@ -32,6 +53,18 @@ export class ManageFormComponent implements OnInit {
   form: FormGroup;
   teamWork: string[] = [
     'Juan', 'Pedro', 'Lucia', 'Martin'
+  ];
+
+  policies: string[] = [
+    'jbhg', 'mnbgvc'
+  ];
+
+  adminAreas: string[] = [
+    'jbhg', 'mnbgvc'
+  ];
+
+  types: string[] = [
+    'jbhg', 'mnbgvc'
   ];
 
   ngOnInit() {
@@ -51,6 +84,7 @@ export class ManageFormComponent implements OnInit {
 
   onCloseModal(): void {
     this.form.reset();
+    this.enableAddArea = this.enableAddType = false;
   }
 
   onSubmit(): void {
@@ -71,5 +105,15 @@ export class ManageFormComponent implements OnInit {
       const control = this.getControl(field);
       control?.markAsTouched();
     });
+  }
+
+  addType(): void {
+    console.log("añadir tipo");
+    this.types.push(this.getControlValue('instalationType'));
+  }
+
+  addArea(): void {
+    console.log("añadir area");
+    this.adminAreas.push(this.getControlValue('adminAreaName'));
   }
 }
