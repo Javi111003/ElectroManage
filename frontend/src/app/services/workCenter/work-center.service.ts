@@ -1,10 +1,10 @@
+import { AdminArea, InstallationType, ManagementTeam } from './../../models/workCenter.interface';
 import { Injectable } from '@angular/core';
 import { API_URL } from '../../config/api.config';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { WorkCenter } from '../../models/workCenter.interface';
 import { AvgRegisterConsumption, RegisterTotalConsumption } from '../../models/register.interface';
-import { Policy } from '../../models/policy.interface';
 import { Alert } from '../../models/alert.interface';
 
 
@@ -64,5 +64,79 @@ export class WorkCenterService {
     return this.http.get<AvgRegisterConsumption[]>(
       `${this.workCenterListUrl}/last_three_years`, { params }
     );
+  }
+
+  /**
+   * Posts a new administrative area to the API.
+   * This method sends an HTTP POST request to the API to create a new administrative area.
+   * @param area The AdminArea object to be posted.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  postAdminArea(area: AdminArea): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post<any>(API_URL + '/v1/administrative_area', area, { headers });
+  }
+
+  /**
+   * Deletes an administrative area from the API.
+   * This method sends an HTTP DELETE request to the API to remove an administrative area.
+   * @param id The ID of the administrative area to be deleted.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  deleteAdminArea(id: number): Observable<any> {
+    return this.http.delete<any>(`${API_URL}/v1/administrative_area/${id}`);
+  }
+
+  /**
+   * Posts a new installation type to the API.
+   * This method sends an HTTP POST request to the API to create a new installation type.
+   * @param type The InstallationType object to be posted.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  postInstallationType(type: InstallationType): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post<any>(API_URL + '/v1/installation_type', type, { headers });
+  }
+
+  /**
+   * Deletes an installation type from the API.
+   * This method sends an HTTP DELETE request to the API to remove an installation type.
+   * @param id The ID of the installation type to be deleted.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  deleteInstallationType(id: number): Observable<any> {
+    return this.http.delete<any>(`${API_URL}/v1/installation_type/${id}`);
+  }
+
+  /**
+   * Posts a new management team to the API.
+   * This method sends an HTTP POST request to the API to create a new management team.
+   * @param team The ManagementTeam object to be posted.
+   * @param centerID The ID of the work center associated with the team.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  postManagementTeam(team: ManagementTeam, centerID: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post<any>(`${API_URL}/v1/company/${centerID}/team`, team, { headers });
+  }
+
+  /**
+   * Deletes a management team from the API.
+   * This method sends an HTTP DELETE request to the API to remove a management team.
+   * @param CenterID The ID of the work center associated with the team.
+   * @param teamID The ID of the management team to be deleted.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  deleteManagementTeam(CenterID: number, teamID: number): Observable<any> {
+    return this.http.delete<any>(`${API_URL}/v1/company/${CenterID}/team/${teamID}`);
   }
 }
