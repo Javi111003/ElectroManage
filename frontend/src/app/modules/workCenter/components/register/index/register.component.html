@@ -22,6 +22,13 @@
     </div>
 
     <div class="form-buttons">
+      <app-button
+        [label]="'Añadir'"
+        [function]="add"
+        [showIcon]="true"
+        [icon]="'add'"
+      >
+      </app-button>
       <app-button class="consult"
         [label]="'Consultar'"
         [function]="onClick.bind(this)"
@@ -39,6 +46,10 @@
       [footer]="footerTable"
       [showFooter]="true"
       [showActions]="true"
+      [editFunction]="edit.bind(this)"
+      [deleteFunction]="delete.bind(this)"
     ></app-table>
   </div>
 </div>
+
+<app-register-form></app-register-form>

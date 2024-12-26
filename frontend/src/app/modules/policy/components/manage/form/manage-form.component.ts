@@ -22,8 +22,8 @@ export class ManageFormComponent implements OnInit {
     this.form = this.fb.group({
       policyName: ['', Validators.required],
       description: ['', Validators.required],
-      workCenter: ['', Validators.required],
     });
+    this.dataService.setData(null);
   }
 
   workCenters: string[] = [

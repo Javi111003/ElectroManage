@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { GlobalModule } from '../../../../global/global.module';
+import { DataService } from '../../../../../services/data/data.service';
 
-declare var bootstrap: any;  // Declaración de bootstrap para evitar errores de compilación
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-equipment',
@@ -13,19 +14,7 @@ declare var bootstrap: any;  // Declaración de bootstrap para evitar errores de
 })
 
 export class EquipmentComponent implements OnInit {
-
-  constructor(
-    private fb: FormBuilder,
-    public global: GlobalModule
-  ) {
-    this.form = this.fb.group({
-      workCenter: '',
-      office: ''
-    });
-
-    this.form.valueChanges.subscribe(() => { this.showTable = false });
-  }
-
+  data: any;
   form: FormGroup;
   showTable = false;
 
@@ -43,8 +32,8 @@ export class EquipmentComponent implements OnInit {
       field: 'id'
     },
     {
-      title: 'Nombre',
-      field: 'name'
+      title: 'Fecha de instalación',
+      field: 'instalationDate'
     },
     {
       title: 'Frecuencia de uso',
@@ -71,6 +60,19 @@ export class EquipmentComponent implements OnInit {
       field: 'equipmentType'
     }
   ];
+
+  constructor(
+    private fb: FormBuilder,
+    public global: GlobalModule,
+    private dataService: DataService
+  ) {
+    this.form = this.fb.group({
+      workCenter: '',
+      office: ''
+    });
+
+    this.form.valueChanges.subscribe(() => { this.showTable = false });
+  }
 
   ngOnInit(): void {
     this.global.Reset();
@@ -116,7 +118,6 @@ export class EquipmentComponent implements OnInit {
       .subscribe(equipments => {
         this.dataSource.data = equipments.map(item => ({
           id: `${item.companyId}${item.officeId}${item.id}`,
-          name: item.name,
           useFrequency: item.useFrequency,
           maintenanceStatus: item.maintenanceStatus,
           brand: item.brand,
@@ -145,6 +146,20 @@ export class EquipmentComponent implements OnInit {
   }
 
   onClick(): void {
+    const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
+    modal.show();
+  }
+
+  delete(): void {
+    this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
+      result => { if (result) {
+        this.global.openDialog('Eliminado');
+      }
+    });
+  }
+
+  edit(item: any): void {
+    this.dataService.setData([item, this.getControlValue('workCenter'), this.getControlValue('office')]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }

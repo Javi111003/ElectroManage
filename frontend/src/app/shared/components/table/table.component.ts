@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
@@ -38,9 +38,10 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.headings = this.displayedColumns.map(item => item.field)
-    if (this.showActions)
+    if (this.showActions) {
       this.headings.push('editColumn');
-      this.headings.push('deleteColumn')
+      this.headings.push('deleteColumn');
+    }
   }
 
   cancelOrDelete() {}

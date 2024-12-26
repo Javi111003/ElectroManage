@@ -28,6 +28,8 @@ export class ManageFormComponent implements OnInit {
       role: ['', Validators.required],
       workCenter: ['', Validators.required]
     });
+
+    this.dataService.setData(null);
   }
 
   ngOnInit(): void {

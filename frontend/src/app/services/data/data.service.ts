@@ -10,10 +10,6 @@ export class DataService {
 
   constructor() {}
 
-  changeData(data: any) {
-    this.dataSource.next(data);
-  }
-
   getData() {
     return this.dataSource.value;
   }

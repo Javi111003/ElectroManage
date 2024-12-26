@@ -1,2 +1,2 @@
-<button (click)="function()">
+<button (click)="function()" [class.disabled-select]="isDisabled">
   {{label}}<mat-icon [class.hidden]="!showIcon">{{icon}}</mat-icon></button>

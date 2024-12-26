@@ -13,6 +13,7 @@ export class AutocompleteComponent implements OnInit {
   @Input() label: string = '';
   @Input() isDisabled: boolean = false;
   @Input() control: FormControl = new FormControl();
+  @Input() showIcon: boolean = false;
 
   filteredOptions: Observable<string[]> = [][0];
 
@@ -49,5 +50,10 @@ export class AutocompleteComponent implements OnInit {
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.options.filter(option => option.toLowerCase().startsWith(filterValue));
+  }
+
+  removeOption(option: string): any {
+    this.options = this.options.filter(item => item !== option);
+    this.filteredOptions = this.control.valueChanges.pipe( startWith(''), map(value => this._filter(value)) );
   }
 }
