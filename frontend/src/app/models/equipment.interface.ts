@@ -11,3 +11,12 @@ export interface Equipment {
   equipmentType: string;
 }
 
+export interface EquipmentBrand {
+  name: string;
+  description: string | null;
+}
+
+export interface EquipmentType {
+  name: string;
+  description: string | null;
+}
