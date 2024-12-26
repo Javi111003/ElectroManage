@@ -3,6 +3,9 @@ import { ConfigColumn } from '../../../../../shared/components/table/table.compo
 import { MatTableDataSource } from '@angular/material/table';
 import { GlobalModule } from '../../../../global/global.module'
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { DataService } from '../../../../../services/data/data.service';
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-register',
@@ -13,7 +16,8 @@ export class RegisterComponent implements OnInit {
 
   constructor (
     public global: GlobalModule,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private dataService: DataService
   ) {
     this.form = this.fb.group({
       startDate: [null],
@@ -173,5 +177,24 @@ export class RegisterComponent implements OnInit {
   */
   getTotalConsumption(): number {
     return this.consumptions.reduce((acc, value) => acc + value, 0);
+  }
+
+  add(): void {
+    const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
+    modal.show();
+  }
+
+  delete(): void {
+    this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
+      result => { if (result) {
+        this.global.openDialog('Eliminado');
+      }
+    });
+  }
+
+  edit(item: any): void {
+    this.dataService.setData([item, this.getControlValue('workCenter')]);
+    const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
+    modal.show();
   }
 }

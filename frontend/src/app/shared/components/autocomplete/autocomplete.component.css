@@ -25,3 +25,19 @@
 .disabled-select mat-select, .disabled-select mat-autocomplete {
   pointer-events: none;
 }
+mat-icon {
+  margin-left: auto;
+  color: #8b0000;
+}
+mat-icon:hover {
+  transform: scale(1.15);
+}
+.option {
+  width: 200px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.hidden {
+  display: none;
+}

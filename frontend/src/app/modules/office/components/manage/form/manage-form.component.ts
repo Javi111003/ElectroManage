@@ -25,6 +25,7 @@ export class ManageFormComponent implements OnInit {
       officeName: ['', Validators.required],  // Campo nombre de la oficina
       workCenter: ['', Validators.required]    // Campo centro de trabajo
     });
+    this.dataService.setData(null);
   }
 
   ngOnInit() {

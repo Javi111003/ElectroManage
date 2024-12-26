@@ -1,1 +1,58 @@
-<p>register-form works!</p>
+<!-- Modal de Bootstrap -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Formulario de Registro de Consumo</h5>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <div class="row">
+              <div class="col-8 col-sm-6">
+                <label for="workCenter" class="form-label">Centro de Trabajo</label>
+                <app-autocomplete class="form-control" id="workCenter"
+                  [options]="workCenters"
+                  [label]="'Centros de Trabajo'"
+                  [control]="getControl('workCenter')"
+                ></app-autocomplete>
+                <div *ngIf="form.get('workCenter')?.invalid && form.get('workCenter')?.touched" class="invalid-feedback">
+                  Este campo es obligatorio
+                </div>
+              </div>
+              <div class="col-4 col-sm-6"></div>
+            </div>
+          </div>
+
+
+          <div class="mb-3">
+            <div class="row">
+              <div class="col-8 col-sm-6">
+                <label for="date" class="form-label">Fecha</label> <br>
+                <app-datepicker
+                  [filter]="filterDate"
+                  [control]="getControl('date')"
+                ></app-datepicker>
+                <div *ngIf="form.get('date')?.invalid && form.get('date')?.touched" class="invalid-feedback">
+                  Este campo es obligatorio
+                </div>
+              </div>
+              <div class="col-4 col-sm-6">
+                <label for="consumption" class="form-label">Consumo</label>
+                <input type="number" class="form-control" id="consumption" formControlName="consumption"
+                  [ngClass]="{'is-invalid': form.get('consumption')?.invalid && form.get('consumption')?.touched}">
+                <div *ngIf="form.get('consumption')?.invalid && form.get('consumption')?.touched" class="invalid-feedback">
+                  Este campo es obligatorio
+                </div>
+            </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <app-button [label]="'Cerrar'" [function]="onCloseModal.bind(this)" data-bs-dismiss="modal"></app-button>
+        <app-button [label]="'Guardar cambios'" [function]="onSubmit.bind(this)"></app-button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -10,6 +10,7 @@ export class ButtonComponent {
   @Input() function: (...args: any[])=>any = this.exportPDF;
   @Input() showIcon: boolean = false;
   @Input() icon: string = '';
+  @Input() isDisabled: boolean = false;
 
   exportPDF() {}
 }

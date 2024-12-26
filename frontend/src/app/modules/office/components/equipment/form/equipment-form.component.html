@@ -3,86 +3,194 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Formulario de Centro de Trabajo</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Formulario de Equipo de Consumo</h5>
       </div>
       <div class="modal-body">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="mb-3">
-            <label for="name" class="form-label">Nombre del Centro</label>
-            <input type="text" class="form-control" id="name" formControlName="name"
-              [ngClass]="{'is-invalid': form.get('name')?.invalid && form.get('name')?.touched}">
-            <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="invalid-feedback">
-              Este campo es obligatorio
-            </div>
-          </div>
-
-          <div class="mb-3">
-            Área Administrativa
             <div class="row">
               <div class="col-8 col-sm-6">
-                <label for="adminAreaName" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="adminAreaName" formControlName="adminAreaName"
-                  [ngClass]="{'is-invalid': form.get('adminAreaName')?.invalid && form.get('adminAreaName')?.touched}">
-                <div *ngIf="form.get('adminAreaName')?.invalid && form.get('adminAreaName')?.touched" class="invalid-feedback">
+                <label for="workCenter" class="form-label">Centro de Trabajo</label>
+                <app-autocomplete class="form-control" id="workCenter"
+                  [options]="workCenters"
+                  [label]="'Centros de Trabajo'"
+                  [control]="getControl('workCenter')"
+                ></app-autocomplete>
+                <div *ngIf="form.get('workCenter')?.invalid && form.get('workCenter')?.touched" class="invalid-feedback">
                   Este campo es obligatorio
                 </div>
               </div>
               <div class="col-4 col-sm-6">
-                <label for="adminAreaDescription" class="form-label">Descripción</label>
-                <input type="text" class="form-control" id="adminAreaDescription" formControlName="adminAreaDescription"
-                  [ngClass]="{'is-invalid': form.get('adminAreaDescription')?.invalid && form.get('adminAreaDescription')?.touched}">
+                <label for="office" class="form-label">Oficina</label>
+                <app-autocomplete class="form-control" id="office"
+                  [options]="offices"
+                  [label]="'Oficinas'"
+                  [control]="getControl('office')"
+                ></app-autocomplete>
+                <div *ngIf="form.get('office')?.invalid && form.get('office')?.touched" class="invalid-feedback">
+                  Este campo es obligatorio
+                </div>
               </div>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label for="address" class="form-label">Ubicación</label>
-            <input type="text" class="form-control" id="address" formControlName="address"
-              [ngClass]="{'is-invalid': form.get('address')?.invalid && form.get('address')?.touched}">
-            <div *ngIf="form.get('address')?.invalid && form.get('address')?.touched" class="invalid-feedback">
-              Este campo es obligatorio
             </div>
           </div>
 
           <div class="mb-3">
             <div class="row">
               <div class="col-8 col-sm-6">
-                <label for="instalationType" class="form-label">Tipo de instalación</label>
-                <input type="text" class="form-control" id="instalationType" formControlName="instalationType"
-                  [ngClass]="{'is-invalid': form.get('instalationType')?.invalid && form.get('instalationType')?.touched}">
-                <div *ngIf="form.get('instalationType')?.invalid && form.get('instalationType')?.touched" class="invalid-feedback">
+                <label for="model" class="form-label">Modelo</label>
+                <input type="text" class="form-control" id="model" formControlName="model"
+                  [ngClass]="{'is-invalid': form.get('model')?.invalid && form.get('model')?.touched}">
+                <div *ngIf="form.get('model')?.invalid && form.get('model')?.touched" class="invalid-feedback">
+                  Este campo es obligatorio
+                </div>
+              </div>
+            <div class="col-4 col-sm-6">
+            </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="row">
+              <div class="row">
+                <div class="col-sm-4">
+                  <label for="equipmentType" class="form-label">Tipo</label>
+                  <app-autocomplete class="form-control" id="equipmentType"
+                    [options]="types"
+                    [label]="'Tipos'"
+                    [control]="getControl('equipmentType')"
+                    [showIcon]="true"
+                  ></app-autocomplete>
+                  <div *ngIf="form.get('equipmentType')?.invalid && form.get('equipmentType')?.touched" class="invalid-feedback">
+                    Este campo es obligatorio
+                  </div>
+                </div>
+                <div class="col-sm-1">
+                  <label for="addType" class="form-label"><br><br></label>
+                  <app-button id="addType"
+                    [isDisabled]="!enableAddType"
+                    [label]="''"
+                    [showIcon]="true"
+                    [icon]="'add'"
+                    [function]="addType.bind(this)"
+                  >
+                  </app-button>
+                </div>
+                <div class="col-sm-1"></div>
+                <div class="col-sm-4">
+                  <label for="brand" class="form-label">Marca</label>
+                  <app-autocomplete class="form-control" id="brand"
+                    [options]="brands"
+                    [label]="'Marcas'"
+                    [control]="getControl('brand')"
+                    [showIcon]="true"
+                  ></app-autocomplete>
+                  <div *ngIf="form.get('brand')?.invalid && form.get('brand')?.touched" class="invalid-feedback">
+                    Este campo es obligatorio
+                  </div>
+                </div>
+                <div class="col-sm-1">
+                  <label for="addBrand" class="form-label"><br><br></label>
+                  <app-button id="addBrand"
+                    [isDisabled]="!enableAddBrand"
+                    [label]="''"
+                    [showIcon]="true"
+                    [icon]="'add'"
+                    [function]="addBrand.bind(this)"
+                  >
+                  </app-button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="row">
+              <div class="row">
+                <div class="col-sm">
+                  <label for="capacity" class="form-label">Capacidad (kw)</label>
+                  <input type="number" class="form-control" id="capacity" formControlName="capacity"
+                    [ngClass]="{'is-invalid': form.get('capacity')?.invalid && form.get('capacity')?.touched}">
+                  <div *ngIf="form.get('capacity')?.invalid && form.get('capacity')?.touched" class="invalid-feedback">
+                    Este campo es obligatorio
+                  </div>
+                </div>
+                <div class="col-sm">
+                  <label for="avgConsumption" class="form-label">Consumo promedio</label>
+                  <input type="number" class="form-control" id="avgConsumption" formControlName="avgConsumption"
+                    [ngClass]="{'is-invalid': form.get('avgConsumption')?.invalid && form.get('avgConsumption')?.touched}">
+                  <div *ngIf="form.get('avgConsumption')?.invalid && form.get('avgConsumption')?.touched" class="invalid-feedback">
+                    Este campo es obligatorio
+                  </div>
+                </div>
+                <div class="col-sm">
+                  <label for="efficiency" class="form-label">Eficiencia</label>
+                  <input type="number" class="form-control" id="efficiency" formControlName="efficiency"
+                    [ngClass]="{'is-invalid': form.get('efficiency')?.invalid && form.get('efficiency')?.touched}">
+                  <div *ngIf="form.get('efficiency')?.invalid && form.get('efficiency')?.touched" class="invalid-feedback">
+                    Este campo es obligatorio
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="row">
+              <div class="row">
+                <div class="col-sm">
+                  <label for="useFrequency" class="form-label">Frecuencia de uso</label>
+                  <app-autocomplete class="form-control" id="useFrequency"
+                  [options]="useFrequencies"
+                  [label]="'Frecuencia'"
+                  [control]="getControl('useFrequency')"
+                ></app-autocomplete>
+                <div *ngIf="form.get('useFrequency')?.invalid && form.get('useFrequency')?.touched" class="invalid-feedback">
+                    Este campo es obligatorio
+                  </div>
+                </div>
+                <div class="col-sm">
+                  <label for="maintenanceStatus" class="form-label">Estado de mantenimiento</label>
+                  <app-autocomplete class="form-control" id="maintenanceStatus"
+                    [options]="maintenanceStatus"
+                    [label]="'Estado'"
+                    [control]="getControl('maintenanceStatus')"
+                  ></app-autocomplete>
+                  <div *ngIf="form.get('maintenanceStatus')?.invalid && form.get('maintenanceStatus')?.touched" class="invalid-feedback">
+                    Este campo es obligatorio
+                  </div>
+                </div>
+                <div class="col-sm">
+                  <label for="critical" class="form-label">Sistema de energía crítica</label> <br>
+                  <label> <input type="radio" id="critical" formControlName="critical" [value]="true"> Sí </label> <br>
+                  <label> <input type="radio" id="critical" formControlName="critical" [value]="false"> No </label>
+                  <div *ngIf="form.get('critical')?.invalid && form.get('critical')?.touched" class="invalid-feedback">
+                    Este campo es obligatorio
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="row">
+              <div class="col-8 col-sm-6">
+                <label for="instalationDate" class="form-label">Fecha de instalación</label> <br>
+                <app-datepicker
+                  [filter]="filterInstalationDate"
+                  [control]="getControl('instalationDate')"
+                ></app-datepicker>
+                <div *ngIf="form.get('instalationDate')?.invalid && form.get('instalationDate')?.touched" class="invalid-feedback">
                   Este campo es obligatorio
                 </div>
               </div>
               <div class="col-4 col-sm-6">
-                <label for="monthlyConsumptionLimit" class="form-label">Límite de consumo mensual</label>
-                <input type="number" class="form-control" id="monthlyConsumptionLimit" formControlName="monthlyConsumptionLimit"
-                  [ngClass]="{'is-invalid': form.get('monthlyConsumptionLimit')?.invalid && form.get('monthlyConsumptionLimit')?.touched}">
-                <div *ngIf="form.get('monthlyConsumptionLimit')?.invalid && form.get('monthlyConsumptionLimit')?.touched" class="invalid-feedback">
+                <label for="yearsLife" class="form-label">Años de vida</label>
+                <input type="number" class="form-control" id="yearsLife" formControlName="yearsLife"
+                  [ngClass]="{'is-invalid': form.get('yearsLife')?.invalid && form.get('yearsLife')?.touched}">
+                <div *ngIf="form.get('yearsLife')?.invalid && form.get('yearsLife')?.touched" class="invalid-feedback">
                   Este campo es obligatorio
                 </div>
-              </div>
             </div>
-          </div>
-
-          <div class="mb-3">
-            <label for="formula" class="form-label">Fórmula de costo total</label>
-            <input type="text" class="form-control" id="formula" formControlName="formula"
-              [ngClass]="{'is-invalid': form.get('formula')?.invalid && form.get('formula')?.touched}">
-            <div *ngIf="form.get('formula')?.invalid && form.get('formula')?.touched" class="invalid-feedback">
-              Este campo es obligatorio
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label for="teamWork" class="form-label">Equipo responsable</label>
-            <app-checkbox class="form-control" id="teamWork"
-              [options]="workers"
-              [label]="'Trabajadores'"
-              [control]="getControl('teamWork')"
-            ></app-checkbox>
-            <div *ngIf="form.get('teamWork')?.invalid && form.get('teamWork')?.touched" class="invalid-feedback">
-              Este campo es obligatorio
             </div>
           </div>
         </form>
