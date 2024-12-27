@@ -12,7 +12,7 @@ public class EditEquipmentInstanceValidator : Validator<EditEquipmentInstanceCom
             .GreaterThan(0)
             .WithMessage("The Equipment Id must be greater than 0");
 
-        RuleFor(x=>x.MantainceStatus)
+        RuleFor(x=>x.MaintenanceStatus)
             .NotEmpty()
             .WithMessage("The equipment's maintenance status cannot be empty");
 

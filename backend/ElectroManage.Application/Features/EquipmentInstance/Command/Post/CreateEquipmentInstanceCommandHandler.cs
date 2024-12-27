@@ -1,8 +1,11 @@
 using Bogus.DataSets;
 using ElectroManage.Application.Abstractions;
+using ElectroManage.Application.DTO_s;
+using ElectroManage.Application.Mappers;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using ElectroManage.Domain.Enums.Equipment;
 using Microsoft.Extensions.Logging;
+using System.Linq.Expressions;
 
 namespace ElectroManage.Application.Features.EquipmentInstance.Command.Post;
 
@@ -25,24 +28,34 @@ public class CreateEquipmentInstanceCommandHandler : CoreCommandHandler<CreateEq
         var equipmentSpecificationRepository = _unitOfWork.DbRepository<Domain.Entites.Equipment.EquipmentSpecification>();
         var officeRepository = _unitOfWork.DbRepository<Domain.Entites.Offices.Office>();
 
-        var equipmentSpecification = await equipmentSpecificationRepository.FirstAsync(useInactive: true, filters: x => x.Id == command.EquipmentSpecificationId);
+        var equipmentSpecificationInclude = new List<Expression<Func<Domain.Entites.Equipment.EquipmentSpecification,object>>>
+        {
+            x => x.EquipmentBrand,
+            x => x.EquipmentType
+        };
+        var equipmentSpecification = await equipmentSpecificationRepository.FirstAsync(useInactive: true, filters: x => x.Id == command.EquipmentSpecificationId, includes: equipmentSpecificationInclude);
         if (equipmentSpecification is null)
         {
             _logger.LogError($"Equipment Specification with id: {command.EquipmentSpecificationId} not found");
             ThrowError($"Equipment Specification with id: {command.EquipmentSpecificationId} not found", 404);
         }
+
+        var officeInclude = new List<Expression<Func<Domain.Entites.Offices.Office,object>>>
+        {
+            x => x.Company
+        };
         
-        var office = await officeRepository.FirstAsync(useInactive: true, filters: x => x.Id == command.OfficeId);
+        var office = await officeRepository.FirstAsync(useInactive: true, filters: x => x.Id == command.OfficeId, includes: officeInclude);
         if (office is null)
         {
             _logger.LogError($"Office with id: {command.OfficeId} not found");
             ThrowError($"Office with id: {command.OfficeId} not found", 404);
         }
 
-        if(!Enum.TryParse(command.MantainceStatus, ignoreCase: true, out MaintenanceStatus maintenance))
+        if(!Enum.TryParse(command.MaintenanceStatus, ignoreCase: true, out MaintenanceStatus maintenance))
         {
-            _logger.LogError($"{command.MantainceStatus} is not a valid value for MaintenanceStatus");
-            ThrowError($"{command.MantainceStatus} is not a valid value for MaintenanceStatus", 400);
+            _logger.LogError($"{command.MaintenanceStatus} is not a valid value for MaintenanceStatus");
+            ThrowError($"{command.MaintenanceStatus} is not a valid value for MaintenanceStatus", 400);
         }
         if(!Enum.TryParse(command.UseFrequency, ignoreCase: true, out UseFrequency frequency))
         {
@@ -63,16 +76,11 @@ public class CreateEquipmentInstanceCommandHandler : CoreCommandHandler<CreateEq
 
         await equipmentInstanceRepository.SaveAsync(equipmentInstance,false);
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
-        await UnitOfWork!.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync();
+        
         return new CreateEquipmentInstanceResponse
         {
-            Id = equipmentInstance.Id,
-            InstalationDate = equipmentInstance.InstalationDate,
-            MantainceStatus = command.MantainceStatus,
-            UseFrequency = command.UseFrequency,
-            EquipmentSpecificationId = equipmentInstance.EquipmentSpecificationId,
-            OfficeId = equipmentInstance.OfficeId,
-            OfficeName = office.Name,
+            EquipmentInstance = EquipmentInstanceMapper.MapToEquipmentInstanceDTO(equipmentInstance),
             Created = DateTime.UtcNow,
         };
     }
