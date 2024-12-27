@@ -3,7 +3,7 @@ using Bogus;
 using ElectroManage.Application.DTO_s;
 
 namespace ElectroManage.Application.Mocks;
-public class CompanyBogusConfig : AutoFaker<CompanyResponse>
+public class CompanyBogusConfig : AutoFaker<CompanyDTO>
 {
     public CompanyBogusConfig()
     {

@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Folder Include="Features\Company\" />
+    <Folder Include="Mappers\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,7 +9,7 @@ public class EquipmentTypeGetByIdEndpoint : Endpoint<EquipmentTypeGetByIdCommand
         Options(x => x.WithTags(RouteGroup.EquipmentType));
         Tags(RouteGroup.EquipmentType);
         Version(1);
-        Get("/equipment_type");
+        Get("/equipment_type/{id}");
         AllowAnonymous();
         Summary(f => f.Summary = "Get an equipment type by it's ID");
     }
