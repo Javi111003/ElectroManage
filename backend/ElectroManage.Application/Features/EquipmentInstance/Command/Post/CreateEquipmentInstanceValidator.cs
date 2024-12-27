@@ -5,7 +5,7 @@ public class CreateEquipmentInstanceValidator : Validator<CreateEquipmentInstanc
 {
     public CreateEquipmentInstanceValidator()
     {
-        RuleFor(x=>x.MantainceStatus)
+        RuleFor(x=>x.MaintenanceStatus)
             .NotEmpty()
             .WithMessage("The equipment's maintenance status cannot be empty");
 
