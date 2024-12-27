@@ -8,4 +8,3 @@ public record OfficeResponse
     public string? Description { get; set; }
     public CompanyDTO Company { get; set; } = null!;
 }
-
