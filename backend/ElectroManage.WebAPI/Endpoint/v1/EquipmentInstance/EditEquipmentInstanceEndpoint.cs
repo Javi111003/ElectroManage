@@ -1,8 +1,9 @@
+using ElectroManage.Application.DTO_s;
 using ElectroManage.Application.Features.EquipmentInstance.Command.Put;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.EquipmentInstance;
 
-public class EditEquipmentInstanceEndpoint : Endpoint<EditEquipmentInstanceCommand, EditEquipmentInstanceResponse>
+public class EditEquipmentInstanceEndpoint : Endpoint<EditEquipmentInstanceCommand, EquipmentInstanceDTO>
 {
     public override void Configure()
     {

@@ -1,6 +1,6 @@
 ﻿namespace ElectroManage.Application.DTO_s;
 
-public class AddressDTO
+public record AddressDTO
 {
     public string Number { get; set; } = string.Empty;
     public string Street { get; set; } = string.Empty;

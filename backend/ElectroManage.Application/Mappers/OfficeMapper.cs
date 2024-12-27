@@ -1,4 +1,5 @@
 ﻿using ElectroManage.Application.Features.Office;
+using ElectroManage.Application.DTO_s;
 
 namespace ElectroManage.Application.Mappers;
 
@@ -17,5 +18,19 @@ public static class OfficeMapper
                 Name = office.Company.Name,
             }
         };
+    }
+    public static OfficeDTO MapToOfficeDTO(Domain.Entites.Offices.Office office)
+    {
+        return new OfficeDTO
+        {
+            Id = office.Id,
+            Name = office.Name,
+            Description = office.Description,
+            Company = new CompanyDTO
+            {
+                Id = office.Company.Id,
+                Name = office.Company.Name,
+            }
+        };   
     }
 }

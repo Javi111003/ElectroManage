@@ -1,4 +1,5 @@
 ﻿using ElectroManage.Domain.DataAccess.Abstractions;
+using ElectroManage.Application.DTO_s;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
