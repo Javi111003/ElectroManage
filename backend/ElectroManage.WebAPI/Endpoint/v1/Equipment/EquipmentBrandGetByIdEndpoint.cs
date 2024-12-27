@@ -9,7 +9,7 @@ public class EquipmentBrandGetByIdEndpoint : Endpoint<EquipmentBrandGetByIdComma
         Options(x => x.WithTags(RouteGroup.EquipmentBrand));
         Tags(RouteGroup.EquipmentBrand);
         Version(1);
-        Get("/equipment_brand");
+        Get("/equipment_brand/{id}");
         AllowAnonymous();
         Summary(f => f.Summary = "Get an equipment brand by it's ID");
     }

@@ -3,7 +3,7 @@ using ElectroManage.Application.Mocks;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.Company
 {
-    public class ListCompanyEndpoint : Endpoint<EmptyRequest, List<CompanyResponse>>
+    public class ListCompanyEndpoint : Endpoint<EmptyRequest, List<CompanyDTO>>
     {
         public override void Configure()
         {
