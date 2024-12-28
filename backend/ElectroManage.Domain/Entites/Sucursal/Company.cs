@@ -5,6 +5,7 @@ namespace ElectroManage.Domain.Entites.Sucursal;
 public class Company : Entity<long>
 {
     public string Name { get; set; } = string.Empty;
+    public decimal ConsumptionLimit { get; set; }
     public long InstalationTypeId { get; set; }
     public InstalationType InstalationType { get; set; } = null!;
     public long AministrativeAreaId { get; set; }
@@ -15,7 +16,6 @@ public class Company : Entity<long>
     public ManagementTeam ManagementTeam { get; set; } = null!;
     public ICollection<AppUser> Workers { get; set; } = [];
     public ICollection<Office> Offices { get; set; } = [];
-    public ICollection<ConsumptionLimit> ConsumptionLimits { get; set; } = [];
     public ICollection<Warning> Warnings { get; set; } = [];
     public ICollection<Register> Registers { get; set; } = [];
     public ICollection<CostFormula> CostFormulas { get; set; } = [];
