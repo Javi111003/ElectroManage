@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using ElectroManage.Domain.DataAccess.Abstractions;
 
-namespace ElectroManage.Application.Features.AppUser.Query;
-public class ListAppUsersQueryHandler : CoreQueryHandler<ListAppUsersQuery,ListAppUsersResponse>
+namespace ElectroManage.Application.Features.AppUser.Query.ListAppUsers;
+public class ListAppUsersQueryHandler : CoreQueryHandler<ListAppUsersQuery, ListAppUsersResponse>
 {
     public ListAppUsersQueryHandler(IUnitOfWork unitOfWork) : base(unitOfWork)
     {
