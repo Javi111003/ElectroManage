@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace ElectroManage.Application.Features.CostFormula.Query.Get;
 
-internal class CostFormulaGetByIdCommandHandler : CoreCommandHandler<CostFormulaGetByIdCommand, CostFormulaGetByIdResponse>
+public class CostFormulaGetByIdCommandHandler : CoreQueryHandler<CostFormulaGetByIdCommand, CostFormulaGetByIdResponse>
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<CostFormulaGetByIdCommandHandler> _logger;

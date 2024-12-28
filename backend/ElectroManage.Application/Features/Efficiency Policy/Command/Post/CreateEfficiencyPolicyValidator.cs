@@ -2,7 +2,7 @@
 
 namespace ElectroManage.Application.Features.Efficiency_Policy.Command.Post;
 
-internal class CreateEfficiencyPolicyValidator : Validator<CreateEfficienciPolicyCommand>
+public class CreateEfficiencyPolicyValidator : Validator<CreateEfficienciPolicyCommand>
 {
     public CreateEfficiencyPolicyValidator()
     {
