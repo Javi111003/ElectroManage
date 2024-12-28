@@ -21,11 +21,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.3.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ElectroManage.Domain.DataAccess\ElectroManage.Domain.DataAccess.csproj" />
     <ProjectReference Include="..\ElectroManage.Domain\ElectroManage.Domain.csproj" />
+    <ProjectReference Include="..\ElectroManage.Infraestructure\ElectroManage.Infraestructure.csproj" />
   </ItemGroup>
 
 </Project>
