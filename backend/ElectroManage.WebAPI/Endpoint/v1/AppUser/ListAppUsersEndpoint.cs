@@ -1,4 +1,4 @@
-using ElectroManage.Application.Features.AppUser.Query;
+using ElectroManage.Application.Features.AppUser.Query.ListAppUsers;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.AppUser;
