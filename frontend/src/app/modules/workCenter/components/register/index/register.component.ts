@@ -52,7 +52,9 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     this.global.Reset();
     this.global.getWorkCenters();
-    this.form.get('startDate')?.valueChanges.subscribe(() => { this.getControl('endDate').reset(); });
+    this.form.get('startDate')?.valueChanges.subscribe(() => {
+      this.getControl('endDate').reset();
+    });
   }
 
   getControl(control: string): FormControl {
