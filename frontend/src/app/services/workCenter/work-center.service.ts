@@ -73,11 +73,8 @@ export class WorkCenterService {
    * @returns An Observable that resolves to the response from the API.
    */
   postAdminArea(area: AdminArea): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
 
-    return this.http.post<any>(API_URL + '/v1/administrative_area', area, { headers });
+    return this.http.post<any>(API_URL + '/v1/administrative_area', area);
   }
 
   /**
@@ -97,11 +94,7 @@ export class WorkCenterService {
    * @returns An Observable that resolves to the response from the API.
    */
   postInstallationType(type: InstallationType): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    return this.http.post<any>(API_URL + '/v1/installation_type', type, { headers });
+    return this.http.post<any>(API_URL + '/v1/installation_type', type);
   }
 
   /**
@@ -122,11 +115,7 @@ export class WorkCenterService {
    * @returns An Observable that resolves to the response from the API.
    */
   postManagementTeam(team: ManagementTeam, centerID: number): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    return this.http.post<any>(`${API_URL}/v1/company/${centerID}/team`, team, { headers });
+    return this.http.post<any>(`${API_URL}/v1/company/${centerID}/team`, team);
   }
 
   /**

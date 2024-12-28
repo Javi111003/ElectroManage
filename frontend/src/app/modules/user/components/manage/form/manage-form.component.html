@@ -27,8 +27,11 @@
 
           <div class="mb-3">
             <label for="role" class="form-label">Rol</label>
-            <input type="text" class="form-control" id="role" formControlName="role"
-              [ngClass]="{'is-invalid': form.get('role')?.invalid && form.get('role')?.touched}">
+            <app-checkbox class="form-control" id="role"
+              [options]="TextRoles"
+              [label]="'Roles'"
+              [control]="getControl('role')"
+            ></app-checkbox>
             <div *ngIf="form.get('role')?.invalid && form.get('role')?.touched" class="invalid-feedback">
               Este campo es obligatorio
             </div>
@@ -37,7 +40,7 @@
           <div class="mb-3">
             <label for="workCenter" class="form-label">Centros de Trabajo</label>
             <app-autocomplete class="form-control" id="workCenter"
-              [options]="workCenters"
+              [options]="this.global.centerStringArray"
               [label]="'Centros de trabajo'"
               [control]="getControl('workCenter')"
             ></app-autocomplete>
