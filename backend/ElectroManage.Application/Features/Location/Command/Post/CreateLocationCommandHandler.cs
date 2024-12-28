@@ -33,12 +33,13 @@ public class CreateLocationCommandHandler : CoreCommandHandler<CreateLocationCom
         await UnitOfWork!.SaveChangesAsync(ct);
         return new CreateLocationResponse
         {
+            Id = location.Id,
             AddressDetails = location.AddressDetails,
             Coordenate = new CoordenateDTO
             {
                 Latitude = location.Latitude,
                 Longitude = location.Longitude,
-            },
+            }
         };
     }
 }
