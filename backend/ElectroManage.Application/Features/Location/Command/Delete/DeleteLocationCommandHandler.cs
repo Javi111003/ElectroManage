@@ -3,7 +3,6 @@ using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 
 namespace ElectroManage.Application.Features.Location.Command.Delete;
-
 public class DeleteLocationCommandHandler : CoreCommandHandler<DeleteLocationCommand, Response<NoContentData>>
 {
     readonly IUnitOfWork _unitOfWork;
@@ -26,7 +25,7 @@ public class DeleteLocationCommandHandler : CoreCommandHandler<DeleteLocationCom
             ThrowError($"Location with id: {command.Id} not found", 404);
         }
         location.StatusBaseEntity = Domain.Enums.StatusEntityType.Delete;
-        await locationRepository.UpdateAsync(location);
+        await locationRepository.UpdateAsync(location, false);
         await _unitOfWork.SaveChangesAsync();
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
         return Response<NoContentData>.SuccessWithOutData("OK");
