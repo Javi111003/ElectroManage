@@ -1,12 +1,17 @@
+import { Credential, UserLogged } from './../../models/credential.interface';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { API_URL } from '../../config/api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private isAuthenticated = false;
+  private authURL = API_URL + '/v1/login';
 
-  constructor() {
+  constructor(private http: HttpClient) {
     // Check local storage for authentication status
     this.isAuthenticated = sessionStorage.getItem('isAuthenticated') === 'true';
   }
@@ -18,13 +23,8 @@ export class AuthService {
    * @param password The password to attempt to log in with.
    * @returns True if the login is successful, false otherwise.
    */
-  login(username: string, password: string): boolean {
-    if (username === 'user' && password === 'password') {
-      this.isAuthenticated = true;
-      sessionStorage.setItem('isAuthenticated', 'true');
-      return true;
-    }
-    return false;
+  login(credentials: Credential): Observable<any> {
+    return this.http.post<any>(this.authURL, credentials);
   }
 
   /**

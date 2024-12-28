@@ -1,8 +1,9 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module';
-import { Subscription } from 'rxjs';
 import { DataService } from '../../../../../services/data/data.service';
+import { RegisterUser } from '../../../../../models/credential.interface';
+import { UserService } from '../../../../../services/user/user.service';
 
 @Component({
   selector: 'app-user-manage-form',
@@ -10,16 +11,12 @@ import { DataService } from '../../../../../services/data/data.service';
   styleUrl: './manage-form.component.css'
 })
 export class ManageFormComponent implements OnInit {
-  data: any;
-  form: FormGroup;
-  workCenters: string[] = [
-    'centro 1', 'centro 2'
-  ];
 
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
-    private dataService: DataService
+    private dataService: DataService,
+    private user: UserService
   )
   {
     this.form = this.fb.group({
@@ -32,11 +29,24 @@ export class ManageFormComponent implements OnInit {
     this.dataService.setData(null);
   }
 
+  data: any;
+  form: FormGroup;
+  TextRoles: string[] = [
+    'Administrador', 'Gerente', 'Analista'
+  ];
+  roles: Map<string, string> = new Map<string, string>([
+    ['Administrador', 'Admin'],
+    ['Gerente', 'User'],
+    ['Analista', 'User']
+  ]);
+
   ngOnInit(): void {
     this.dataService.currentData.subscribe(newData => {
       this.data = newData;
       this.form.patchValue(this.data);
     });
+
+    this.global.getWorkCenters();
   }
 
   getControl(control: string): FormControl {
@@ -60,6 +70,37 @@ export class ManageFormComponent implements OnInit {
 
     const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
     if (confirmation) {
+      const rolesSelected: string[] = this.getControlValue('role');
+      const centerSelected: string = this.getControlValue('workCenter');
+      console.log(centerSelected);
+      this.global.findCenterId(centerSelected);
+
+      let rolesToPost: string[] = [];
+
+      for (let i = 0; i < rolesSelected.length; i++) {
+        rolesToPost.push(this.roles.get(rolesSelected[i])!);
+      }
+
+      const registerData: RegisterUser = {
+        email: this.getControlValue('name'),
+        password: this.getControlValue('password'),
+        roles: rolesToPost,
+        companyId: this.global.centerSelectedId
+      };
+
+      console.log('Register data:', registerData);
+
+      this.user.registerUser(registerData).subscribe({
+        next: (response) => {
+          console.log('User registered successfully:', response);
+          window.location.reload();
+        },
+        error: (error) => {
+          console.error('Error registering user:', error);
+          alert('Error al registrar el usuario. Por favor, inténtelo de nuevo.');
+        }
+      });
+
       window.location.reload();
     }
   }

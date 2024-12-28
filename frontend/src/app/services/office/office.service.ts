@@ -46,11 +46,7 @@ export class OfficeService {
    * @returns An Observable that resolves to the response from the API.
    */
   postEquipmentBrand(brand: EquipmentBrand): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    return this.http.post<any>(`${API_URL}/v1/equipment_brand`, brand, { headers });
+    return this.http.post<any>(`${API_URL}/v1/equipment_brand`, brand);
   }
 
   /**
@@ -70,11 +66,7 @@ export class OfficeService {
    * @returns An Observable that resolves to the response from the API.
    */
   postEquipmentType(type: EquipmentType): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    return this.http.post<any>(`${API_URL}/v1/equipment_type`, type, { headers });
+    return this.http.post<any>(`${API_URL}/v1/equipment_type`, type);
   }
 
   /**

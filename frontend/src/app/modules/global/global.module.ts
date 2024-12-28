@@ -28,6 +28,7 @@ import { Office } from '../../models/office.interface';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
+import { UserLogged } from '../../models/credential.interface';
 
 
 @NgModule({
@@ -74,6 +75,8 @@ export class GlobalModule {
     public httpOffice: OfficeService,
     public dialog: MatDialog
   ) {}
+
+  userInfo: UserLogged = [][0];
 
   centerStringArray: string[] = [];
   centerObjectArray: WorkCenter[] = [];
@@ -156,5 +159,6 @@ export class GlobalModule {
     this.officeStringArray = [];
     this.officeObjectArray = [];
     this.centerSelectedId = -1;
+    this.userInfo = [][0];
   }
 }
