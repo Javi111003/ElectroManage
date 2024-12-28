@@ -1,12 +1,11 @@
 ﻿using ElectroManage.Application.DTO_s;
-using ElectroManage.Application.Features.Location.Command.Post;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
 namespace ElectroManage.Application.Features.Location.Query.Get;
 
-public class LocationGetByIdCommandHandler : CoreCommandHandler<LocationGetByIdCommand, LocationGetByIdResponse>
+public class LocationGetByIdCommandHandler : CoreQueryHandler<LocationGetByIdCommand, LocationGetByIdResponse>
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<LocationGetByIdCommandHandler> _logger;
@@ -37,25 +36,12 @@ public class LocationGetByIdCommandHandler : CoreCommandHandler<LocationGetByIdC
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
         return new LocationGetByIdResponse
         {
-            Id = location.Id,
-            Name = location.Name,
-            ZipCode = location.ZipCode,
-            Description = location.Description!,
             Coordenate = new CoordenateDTO
             {
                 Latitude = location.Latitude,
                 Longitude = location.Longitude,
             },
-            Address = new AddressDTO
-            {
-                Street = location.Street,
-                Number = location.Number,
-                BeetweenStreets = location.BetweenStreets,
-                Neighborhood = location.Neighborhood,
-                Town = location.Town,
-                Province = location.Province,
-                Country = location.Country,
-            },
+            AddressDetails = location.AddressDetails
         };
     }
 }

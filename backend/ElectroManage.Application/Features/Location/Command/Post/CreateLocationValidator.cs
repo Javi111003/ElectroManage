@@ -6,16 +6,14 @@ public class CreateLocationValidator : Validator<CreateLocationCommand>
 {
     public CreateLocationValidator()
     {
-        RuleFor(x => x.Name)
+        RuleFor(x => x.Coordenate.Latitude)
             .NotEmpty()
-            .WithMessage("The Location name cannot be empty");
+            .NotNull()
+            .WithMessage("Latitude cannot be empty");
 
-        RuleFor(x => x.ZipCode)
+        RuleFor(x => x.Coordenate.Longitude)
             .NotEmpty()
-            .WithMessage("The Zip Code cannot be empty")
-            .GreaterThanOrEqualTo(100000)
-            .WithMessage("Invalid Zip Code")
-            .LessThanOrEqualTo(999999)
-            .WithMessage("Invalid Zip Code");
+            .NotNull()
+            .WithMessage("Longitude cannot be empty");
     }
 }

@@ -77,7 +77,7 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
             Name = company.Name,
             Area = company.AministrativeArea.Name,
             Installation = company.InstalationType.Name,
-            Location = company.Location.Name,
+            LocationDetails = company.Location.AddressDetails??"",
             ManagementTeam = Mappers.ManagementTeamMapper.MapToManagementTeamDto(managementTeam)
         };
     }

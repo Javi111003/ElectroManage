@@ -22,9 +22,12 @@ public static class CompanyMapper
             },
             Location = new LocationDTO
             {
-                Name = company.Location.Name,
-                Street = company.Location.Street,
-                Description = company.Location.Description
+                AddressDetails = company.Location.AddressDetails,
+                CoordenateDTO = new CoordenateDTO
+                {
+                    Longitude = company.Location.Longitude,
+                    Latitude = company.Location.Latitude
+                }
             },
             Status = company.StatusBaseEntity.ToString(),
             ManagementTeam = company.ManagementTeam is null ? null : ManagementTeamMapper.MapToManagementTeamDto(company.ManagementTeam)
