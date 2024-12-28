@@ -3,7 +3,6 @@ using Hangfire;
 using Hangfire.PostgreSql;
 using HangfireBasicAuthenticationFilter;
 using Microsoft.Extensions.Options;
-using ElectroManage.Domain.Entites.Identity;
 using ElectroManage.Domain.Settings;
 using ElectroManage.WebAPI;
 
@@ -68,7 +67,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.MapIdentityApi<AppUser>();
 app.UseHttpsRedirection();
 
 app.Run();
