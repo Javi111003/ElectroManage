@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace ElectroManage.Application.Features.Administrative_Area.Query.Get;
 
-internal class AdministrativeAreaGetByIdCommandHandler : CoreCommandHandler<AdministrativeAreaGetByIdCommand, AdministrativeAreaGetByIdResponse>
+public class AdministrativeAreaGetByIdCommandHandler : CoreQueryHandler<AdministrativeAreaGetByIdCommand, AdministrativeAreaGetByIdResponse>
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<AdministrativeAreaGetByIdCommandHandler> _logger;

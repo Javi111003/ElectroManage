@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace ElectroManage.Application.Features.EquipmentInstance.Query.Get;
 
-internal class EquipmentInstanceGetByIdCommandHandler : CoreCommandHandler<EquipmentInstanceGetByIdCommand, EquipmentInstanceDTO>
+public class EquipmentInstanceGetByIdCommandHandler : CoreQueryHandler<EquipmentInstanceGetByIdCommand, EquipmentInstanceDTO>
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<EquipmentInstanceGetByIdCommandHandler> _logger;

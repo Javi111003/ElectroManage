@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace ElectroManage.Application.Features.EquipmentSpecification.Query.Get;
 
-internal class EquipmentSpecificationGetByIdCommandHandler : CoreCommandHandler<EquipmentSpecificationGetByIdCommand, EquipmentSpecificationGetByIdResponse>
+public class EquipmentSpecificationGetByIdCommandHandler : CoreQueryHandler<EquipmentSpecificationGetByIdCommand, EquipmentSpecificationGetByIdResponse>
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<EquipmentSpecificationGetByIdCommandHandler> _logger;
