@@ -1,5 +1,6 @@
 ﻿using ElectroManage.Application.DTO_s;
 using ElectroManage.Application.Features.AppUser.Query.GetById;
+using ElectroManage.Application.Features.AppUser.Query.ListAppUsers;
 using User = ElectroManage.Domain.Entites.Identity.AppUser;
 
 namespace ElectroManage.Application.Mappers;
@@ -17,6 +18,20 @@ public static class AppUserMapper
             },
             Roles = roles ?? []
         };
+        return response;
+    }
+    public static IEnumerable<AppUserDto> MapToListUsersResponse(IEnumerable<Domain.Entites.Identity.AppUser> users)
+    {
+        var response = users.Select(u => new AppUserDto
+        {
+            Id = u.Id,
+            Company = new CompanyDTO
+            {
+                Id = u.Company.Id,
+                Name = u.Company.Name
+            },
+            Email = u.Email!
+        });
         return response;
     }
 }
