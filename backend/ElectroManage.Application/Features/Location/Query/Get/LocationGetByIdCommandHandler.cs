@@ -36,6 +36,7 @@ public class LocationGetByIdCommandHandler : CoreQueryHandler<LocationGetByIdCom
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
         return new LocationGetByIdResponse
         {
+            Id = location.Id,
             Coordenate = new CoordenateDTO
             {
                 Latitude = location.Latitude,
