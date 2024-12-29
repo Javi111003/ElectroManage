@@ -22,7 +22,7 @@ export class ManageFormComponent implements OnInit {
     this.form = this.fb.group({
       name: ['', Validators.required],
       password: ['', Validators.required],
-      role: ['', Validators.required],
+      role: [[], Validators.required],
       workCenter: ['', Validators.required]
     });
 
@@ -63,7 +63,7 @@ export class ManageFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.invalid) {
-      alert('Por favor, rellene todos los campos.');
+      this.global.openDialog('Por favor, rellene todos los campos.');
       this.markAllAsTouched();
       return;
     }
@@ -71,6 +71,7 @@ export class ManageFormComponent implements OnInit {
     const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
     if (confirmation) {
       const rolesSelected: string[] = this.getControlValue('role');
+      console.log(rolesSelected);
       const centerSelected: string = this.getControlValue('workCenter');
       console.log(centerSelected);
       this.global.findCenterId(centerSelected);
@@ -88,20 +89,15 @@ export class ManageFormComponent implements OnInit {
         companyId: this.global.centerSelectedId
       };
 
-      console.log('Register data:', registerData);
-
       this.user.registerUser(registerData).subscribe({
         next: (response) => {
           console.log('User registered successfully:', response);
           window.location.reload();
         },
         error: (error) => {
-          console.error('Error registering user:', error);
-          alert('Error al registrar el usuario. Por favor, inténtelo de nuevo.');
+          this.global.openDialog(error.error.errors[0].reason);
         }
       });
-
-      window.location.reload();
     }
   }
 

@@ -13,6 +13,7 @@ import { Credential } from '../../../../models/credential.interface';
 })
 export class LoginComponent {
   form: FormGroup;
+  loading: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -41,15 +42,15 @@ export class LoginComponent {
    * Otherwise, displays an alert with an error message.
    */
   login(): void {
+    this.loading = true;
     const credentials: Credential = {
       email: this.getControlValue('username'),
       password: this.getControlValue('password')
     };
-    console.log(credentials);
     this.authService.login(credentials).subscribe({
       next: (response) => {
-        console.log('Response from server:', response);
         if (response && response.accessToken) {
+          this.loading = false;
           const token: AccessToken = response.accessToken;
           const info: UserInfo = {
             id: response.id,
@@ -60,20 +61,19 @@ export class LoginComponent {
           sessionStorage.setItem('token', token.token);
           sessionStorage.setItem('expiration', token.expiration);
           sessionStorage.setItem('isAuthenticated', 'true');
-
           this.router.navigate(['/']);
 
           this.global.userInfo = {
             info: info,
             roles: response.roles
           }
-
         } else {
           this.global.openDialog("Credenciales Inválidas");
         }
       },
       error: () => {
         this.global.openDialog("Credenciales Inválidas");
+        this.loading = false;
       }
     });
   }
