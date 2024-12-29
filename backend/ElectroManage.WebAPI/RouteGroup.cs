@@ -18,4 +18,5 @@
             public static string CostFormula = "CostFormula";
             public static string EquipmentSpecification = "Equipment Specification";
             public static string Role = "Role";
+            public static string DashBoard = "Dashboard";
     }
