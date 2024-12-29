@@ -1,8 +1,9 @@
-﻿using ElectroManage.Application.Features.Administrative_Area.Query.Get;
+﻿using ElectroManage.Application.DTO_s;
+using ElectroManage.Application.Features.Administrative_Area.Query.Get;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.Administrative_Area;
 
-public class ListAdministrativeAreaEndpoint : Endpoint<EmptyRequest, ListAdministrativeAreaResponse>
+public class ListAdministrativeAreaEndpoint : Endpoint<EmptyRequest, IEnumerable<AdministrativeAreaDTO>>
 {
     public override void Configure()
     {
@@ -16,7 +17,7 @@ public class ListAdministrativeAreaEndpoint : Endpoint<EmptyRequest, ListAdminis
 
     public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
     {
-        var list = new ListAdministrativeAreaCommand();
+        var list = new ListAdministrativeAreaQuery();
         var data = await list.ExecuteAsync(ct);
         await SendAsync(data);
     }

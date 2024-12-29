@@ -1,8 +1,8 @@
 ﻿using ElectroManage.Application.DTO_s;
-using ElectroManage.Application.Mocks;
+using ElectroManage.Application.Features.Office.Query.ListAll;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.Office;
-public class ListOfficeByCompanyEndpoint : Endpoint<EmptyRequest,List<ListOfficeResponse>>
+public class ListOfficeByCompanyEndpoint : Endpoint<EmptyRequest, IEnumerable<OfficeDTO>>
 {
     public override void Configure()
     {
@@ -16,9 +16,8 @@ public class ListOfficeByCompanyEndpoint : Endpoint<EmptyRequest,List<ListOffice
     public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
     {
         var companyId = Route<long>("companyId");
-        var faker = new ListOfficeByCompanyBogusConfig();
-        var data = faker.Generate(20);
-        data.ForEach(d => d.CompanyId = companyId);
+        var query = new ListOfficeByCompanyQuery() { CompanyId = companyId };
+        var data = await query.ExecuteAsync(ct);
         await SendAsync(data, cancellation: ct);
     }
 }
