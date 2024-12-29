@@ -21,13 +21,7 @@ export class ManageComponent {
     private user: UserService
   ) {}
 
-  dataSource: MatTableDataSource<any> = new MatTableDataSource([
-    {
-      name: 'kmjhg',
-      role: 'jh',
-      workCenter: '1'
-    }
-  ]);
+  dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
   displayedColumns: ConfigColumn[] = [
     {
       title: 'ID',
@@ -64,7 +58,9 @@ export class ManageComponent {
   edit(item: any): void {
     this.selectedItem = item;
     this.dataService.setData(item);
-    const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
+    const modal = new bootstrap.Modal(
+      document.getElementById('exampleModal') as HTMLElement
+    );
     modal.show();
   }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuService } from '../../../../services/menu/menu.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-menu',
@@ -13,7 +14,11 @@ export class MenuComponent implements OnInit {
   menuItems: any[] = [];
   login: string = 'login'
 
-  constructor(private menuService: MenuService, private router:Router) {}
+  constructor(
+    private menuService: MenuService,
+    private router: Router,
+    private auth: AuthService
+  ) { }
 
   ngOnInit(): void {
     this.menuService.getMenuOptions().subscribe(data => {
@@ -65,5 +70,10 @@ export class MenuComponent implements OnInit {
     let menuItem = this.menuItems.find(item => item.id === option);
     if (menuItem)
       menuItem.isOpen = !menuItem.isOpen;
+  }
+
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }

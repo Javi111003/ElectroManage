@@ -17,6 +17,11 @@
       <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required
       [formControl]="getControl('password')">
 
-      <button type="submit">Iniciar Sesión</button>
+      <button type="submit" class="submit-button"  [disabled]="loading">
+        <app-progress-spinner
+          [loading]="loading"
+        ></app-progress-spinner>
+        <span *ngIf="!loading">Iniciar Sesión</span>
+      </button>
     </form>
 </div>

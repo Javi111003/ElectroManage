@@ -87,3 +87,10 @@ h2 {
   font-size: large;
   font-weight: 500;
 }
+.submit-button app-progress-spinner {
+  position: relative;
+  left: 45%;
+}
+::ng-deep .mat-mdc-progress-spinner .mdc-circular-progress__indeterminate-circle-graphic {
+  stroke: white !important;
+}
