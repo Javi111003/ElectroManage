@@ -25,5 +25,5 @@ export interface RegisterUser {
   email: string;
   password: string;
   roles: string[];
-  companyId: number
+  companyId: number;
 }

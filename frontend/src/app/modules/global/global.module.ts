@@ -26,17 +26,18 @@ import { MatTableModule } from '@angular/material/table';
 import { WorkCenter } from '../../models/workCenter.interface';
 import { Office } from '../../models/office.interface';
 import { MatBadgeModule } from '@angular/material/badge';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { UserLogged } from '../../models/credential.interface';
-
+import { PasswordValidatorDirective } from '../../directives/password.directive';
 
 @NgModule({
   declarations: [
     IndexComponent,
     MenuComponent,
     AboutUsComponent,
-    LoginComponent
+    LoginComponent,
+    PasswordValidatorDirective
   ],
   imports: [
     CommonModule,
@@ -66,6 +67,7 @@ import { UserLogged } from '../../models/credential.interface';
     ReactiveFormsModule,
     MatButtonModule,
     MatTableModule,
+    PasswordValidatorDirective
   ]
 })
 export class GlobalModule {

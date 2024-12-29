@@ -6,6 +6,7 @@ import { ButtonComponent } from './components/button/button.component';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 import { CheckboxComponent } from './components/checkbox/checkbox.component';
 import { DialogComponent } from './components/dialog/dialog.component';
+import { ProgressSpinnerComponent } from './components/progress-spinner/progress-spinner.component';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -19,6 +20,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } fr
     DatepickerComponent,
     CheckboxComponent,
     DialogComponent,
+    ProgressSpinnerComponent,
   ],
   imports: [
     CommonModule,
@@ -49,6 +52,7 @@ import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } fr
     MatDialogClose,
     MatDialogContent,
     MatDialogTitle,
+    MatProgressSpinnerModule
   ],
   exports: [
     TableComponent,
@@ -56,6 +60,7 @@ import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } fr
     AutocompleteComponent,
     DatepickerComponent,
     CheckboxComponent,
+    ProgressSpinnerComponent,
 
     MatTableModule,
     MatIconModule,
@@ -75,6 +80,7 @@ import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } fr
     MatDialogClose,
     MatDialogContent,
     MatDialogTitle,
+    MatProgressSpinnerModule
   ]
 })
 export class SharedModule { }

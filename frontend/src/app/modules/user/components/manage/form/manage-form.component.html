@@ -19,33 +19,40 @@
               </div>
               <div class="col-4 col-sm-6">
                 <label for="password" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="password" formControlName="password"
+                <input type="password" class="form-control" id="password" formControlName="password" appPassword
                   [ngClass]="{'is-invalid': form.get('password')?.invalid && form.get('password')?.touched}">
+                <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="invalid-feedback">
+                  Requeridos al menos 6 caracteres, incluyendo mayúsculas, dígitos y caracteres
+                  no alfanuméricos.
+                </div>
               </div>
             </div>
           </div>
 
           <div class="mb-3">
-            <label for="role" class="form-label">Rol</label>
-            <app-checkbox class="form-control" id="role"
-              [options]="TextRoles"
-              [label]="'Roles'"
-              [control]="getControl('role')"
-            ></app-checkbox>
-            <div *ngIf="form.get('role')?.invalid && form.get('role')?.touched" class="invalid-feedback">
-              Este campo es obligatorio
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label for="workCenter" class="form-label">Centros de Trabajo</label>
-            <app-autocomplete class="form-control" id="workCenter"
-              [options]="this.global.centerStringArray"
-              [label]="'Centros de trabajo'"
-              [control]="getControl('workCenter')"
-            ></app-autocomplete>
-            <div *ngIf="form.get('workCenter')?.invalid && form.get('workCenter')?.touched" class="invalid-feedback">
-              Este campo es obligatorio
+            <div class="row">
+              <div class="col-8 col-sm-6">
+                <label for="role" class="form-label">Rol</label>
+                <app-checkbox class="form-control" id="role"
+                  [options]="TextRoles"
+                  [label]="'Roles'"
+                  [control]="getControl('role')"
+                ></app-checkbox>
+                <div *ngIf="form.get('role')?.invalid && form.get('role')?.touched" class="invalid-feedback">
+                  Este campo es obligatorio
+                </div>
+              </div>
+              <div class="col-4 col-sm-6">
+                <label for="workCenter" class="form-label">Centros de Trabajo</label>
+                <app-autocomplete class="form-control" id="workCenter"
+                  [options]="this.global.centerStringArray"
+                  [label]="'Centros de trabajo'"
+                  [control]="getControl('workCenter')"
+                ></app-autocomplete>
+                <div *ngIf="form.get('workCenter')?.invalid && form.get('workCenter')?.touched" class="invalid-feedback">
+                  Este campo es obligatorio
+                </div>
+              </div>
             </div>
           </div>
         </form>
