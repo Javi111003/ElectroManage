@@ -16,6 +16,10 @@ import { LoginComponent } from './components/login/login.component';
 import { WorkCenterService } from '../../services/workCenter/work-center.service';
 import { OfficeService } from '../../services/office/office.service';
 
+//global directives
+import { PasswordValidatorDirective } from '../../directives/password/password.directive';
+import { NumberValidationDirective } from '../../directives/numberValidation/number.validation.directive';
+
 //add the route of each module you need yo import here down.
 import { MatIconModule } from '@angular/material/icon';
 import { SharedModule } from '../../shared/shared.module';
@@ -24,13 +28,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { WorkCenter } from '../../models/workCenter.interface';
-import { Office } from '../../models/office.interface';
+import { OfficeInfo } from '../../models/office.interface';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { UserLogged } from '../../models/credential.interface';
-import { PasswordValidatorDirective } from '../../directives/password/password.directive';
-import { NumberValidationDirective } from '../../directives/numberValidation/number.validation.directive';
 
 @NgModule({
   declarations: [
@@ -87,7 +89,7 @@ export class GlobalModule {
   centerObjectArray: WorkCenter[] = [];
 
   officeStringArray: string[] = [];
-  officeObjectArray: Office[] = [];
+  officeObjectArray: OfficeInfo[] = [];
 
   centerSelectedId: number | any = 0;
   officeSelectedId: number | any = 0;

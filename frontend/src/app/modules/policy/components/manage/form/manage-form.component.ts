@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';  // Importar Reactive Forms
-import { GlobalModule } from '../../../../global/global.module'  // Suponiendo que el GlobalModule existe en tu aplicación
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { GlobalModule } from '../../../../global/global.module'
 import { DataService } from '../../../../../services/data/data.service';
+import { PolicyService } from '../../../../../services/policy/policy.service';
+import { Policy } from '../../../../../models/policy.interface';
 
 @Component({
   selector: 'app-policy-manage-form',
@@ -10,25 +12,21 @@ import { DataService } from '../../../../../services/data/data.service';
 })
 export class ManageFormComponent implements OnInit {
   @Input() selectedItem: any = null;
-  form: FormGroup; // Formulario reactivo
+  form: FormGroup;
   data: any;
 
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
-    private dataService: DataService
+    private dataService: DataService,
+    private policyService: PolicyService
   ) {
-    // Creamos el formulario con validaciones
     this.form = this.fb.group({
       policyName: ['', Validators.required],
       description: ['', Validators.required],
     });
     this.dataService.setData(null);
   }
-
-  workCenters: string[] = [
-    'centro 1', 'centro 2'
-  ]
 
   ngOnInit(): void {
     this.dataService.currentData.subscribe(newData => {
@@ -37,38 +35,89 @@ export class ManageFormComponent implements OnInit {
     });
   }
 
+  /**
+   * Initializes the component by setting up the form and subscribing to data changes.
+   */
   getControl(control: string): FormControl {
     return this.form.get(control) as FormControl;
   }
 
+  /**
+   * Retrieves the FormControl object for a given control name from the form.
+   * This method is used to access and manipulate form controls dynamically.
+   * @param control The name of the control to retrieve.
+   * @returns The FormControl object associated with the specified control name.
+   */
   getControlValue(control: string): any {
     return this.form.get(control)?.value;
   }
 
-  // Function to handle modal closure and reset the form
+  /**
+   * Closes the modal window and resets the form.
+   * This method is used to clear the form data and close the modal window.
+   */
   onCloseModal(): void {
-    this.form.reset(); // Reset the form when the modal closes
+    this.form.reset();
   }
 
-  // Function to handle form submission
+  /**
+   * Submits the form data for processing.
+   * This method checks the form validity before attempting to submit the data.
+   * If the form is invalid, it prompts the user to fill in all fields.
+   * If the form is valid, it confirms with the user before proceeding to save the changes.
+   */
   onSubmit(): void {
     if (this.form.invalid) {
-      confirm('Please fill in all fields.'); // Prompt to fill all fields
-      this.markAllAsTouched(); // Mark all fields as touched to show errors
+      confirm('Please fill in all fields.');
+      this.markAllAsTouched();
       return;
     }
 
-    const confirmation = confirm('Are you sure you want to save the changes?'); // Confirmation before saving
+    const confirmation = confirm('Are you sure you want to save the changes?');
     if (confirmation) {
-      window.location.reload();  // Reload the page
+      this.createPolicy();
     }
   }
 
-  // Mark all fields in the form as touched
+  /**
+   * Prepares the form for submission by marking all controls as touched.
+   * This method is used to ensure all form controls are marked as touched,
+   * which can be useful for form validation and error handling.
+   */
   markAllAsTouched(): void {
     Object.keys(this.form.controls).forEach(field => {
       const control = this.form.get(field);
-      control?.markAsTouched(); // Mark each control as touched
+      control?.markAsTouched();
+    });
+  }
+
+  /**
+   * Creates a new policy based on the form data.
+   * This method retrieves the necessary data from the form,
+   * and then attempts to save the policy data to the server. If successful, it logs the response.
+   * If the operation fails, it displays an error message to the user.
+   */
+  createPolicy(): void {
+    const name = this.getControlValue('policyName');
+    const description = this.getControlValue('description');
+    const policy: Policy = {
+      name: name,
+      description: description
+    }
+
+    this.policyService.postPolicy(policy).subscribe({
+      next: (response) => {
+        console.log('Created successfully:', response);
+        // window.location.reload();
+      },
+      error: (error) => {
+        if (error.statusText === 'Unknown Error')
+          this.global.openDialog("Falló la conexión. Intente de nuevo");
+        else if(error.error)
+          this.global.openDialog(error.error.errors[0].reason);
+        else
+          this.global.openDialog('No se ha podido guardar correctamente. Error inesperado');
+      }
     });
   }
 }

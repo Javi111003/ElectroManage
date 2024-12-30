@@ -28,10 +28,21 @@ export class LoginComponent {
     });
   }
 
+  /**
+   * Initializes the login form with the required fields.
+   * This method sets up the form with username and password fields,
+   * each validated to be required.
+   */
   getControl(control: string): FormControl {
     return this.form.get(control) as FormControl;
   }
 
+  /**
+   * Retrieves the FormControl object for a given control name from the login form.
+   * This method is used to access and manipulate form controls dynamically.
+   * @param control The name of the control to retrieve.
+   * @returns The FormControl object associated with the specified control name.
+   */
   getControlValue(control: string): any {
     return this.form.get(control)?.value;
   }
@@ -67,12 +78,13 @@ export class LoginComponent {
             info: info,
             roles: response.roles
           }
-        } else {
-          this.global.openDialog("Credenciales Inválidas");
         }
       },
-      error: () => {
-        this.global.openDialog("Credenciales Inválidas");
+      error: (error) => {
+        if (error.statusText === 'Unknown Error')
+          this.global.openDialog("Falló la conexión. Intente de nuevo");
+        else
+          this.global.openDialog("Credenciales Inválidas");
         this.loading = false;
       }
     });
