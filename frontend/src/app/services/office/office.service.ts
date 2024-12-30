@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { API_URL } from '../../config/api.config';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Office } from '../../models/office.interface';
+import { Office, OfficeInfo } from '../../models/office.interface';
 import { Equipment, EquipmentBrand, EquipmentInstance, EquipmentSpecification, EquipmentType, EquipPropertyInfo } from '../../models/equipment.interface';
 
 @Injectable({
@@ -21,9 +21,13 @@ export class OfficeService {
    * @param centerID The ID of the work center for which to fetch offices.
    * @returns An Observable that resolves to an array of Office objects.
    */
-  getOfficeList(centerID: number): Observable<Office[]> {
+  getOfficeList(centerID: number): Observable<OfficeInfo[]> {
     const url = `${this.officeListUrl}/${centerID}/office`;
-    return this.http.get<Office[]>(url);
+    return this.http.get<OfficeInfo[]>(url);
+  }
+
+  postOffice(office: Office): Observable<any> {
+    return this.http.post<any>(`${API_URL}/v1/office`, office);
   }
 
   /**
@@ -75,14 +79,7 @@ export class OfficeService {
    * @returns An Observable that resolves to the response from the API.
    */
   deleteEquipmentBrand(id: number): Observable<any> {
-    const url = `${API_URL}/v1/equipment_brand/${id}`;
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      }),
-      body: { id }
-    };
-    return this.http.delete<any>(url, options);
+    return this.http.delete<any>(`${API_URL}/v1/equipment_brand/${id}`);
   }
 
   /**
@@ -102,14 +99,7 @@ export class OfficeService {
    * @returns An Observable that resolves to the response from the API.
    */
   deleteEquipmentType(id: number): Observable<any> {
-    const url = `${API_URL}/v1/equipment_type/${id}`;
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      }),
-      body: { id }
-    };
-    return this.http.delete<any>(url, options);
+    return this.http.delete<any>(`${API_URL}/v1/equipment_type/${id}`);
   }
 
   /**

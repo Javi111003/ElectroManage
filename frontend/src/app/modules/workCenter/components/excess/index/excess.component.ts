@@ -27,9 +27,6 @@ export const MY_FORMATS = {
   templateUrl: './excess.component.html',
   styleUrl: './excess.component.css',
   providers: [
-    // Moment can be provided globally to your app by adding `provideMomentDateAdapter`
-    // to your app config. We provide it at the component level here, due to limitations
-    // of our example generation script.
     provideMomentDateAdapter(MY_FORMATS),
   ],
   encapsulation: ViewEncapsulation.None,

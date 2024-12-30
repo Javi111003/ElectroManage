@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { AutocompleteComponent } from '../../../../../shared/components/autocomplete/autocomplete.component';
-import { Policy } from '../../../../../models/policy.interface';
+import { PolicyInfo } from '../../../../../models/policy.interface';
 import { PolicyService } from '../../../../../services/policy/policy.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
@@ -33,7 +33,7 @@ export class ComparisonComponent implements OnInit {
   policySelectedId: number = 0;
 
   optionsPolicy: string[] = [];
-  objectsPolicy: Policy[] = [];
+  objectsPolicy: PolicyInfo[] = [];
 
   showTable: boolean = false;
   dataSourceBefore: MatTableDataSource<any> = [][0];
@@ -66,10 +66,19 @@ export class ComparisonComponent implements OnInit {
     });
   }
 
+  /**
+   * Initializes the component by setting up the form and subscribing to data changes.
+   */
   getControl(control: string): FormControl {
     return this.form.get(control) as FormControl;
   }
 
+  /**
+   * Retrieves the FormControl object for a given control name from the form.
+   * This method is used to access and manipulate form controls dynamically.
+   * @param control The name of the control to retrieve.
+   * @returns The FormControl object associated with the specified control name.
+   */
   getControlValue(control: string): any {
     return this.form.get(control)?.value;
   }
