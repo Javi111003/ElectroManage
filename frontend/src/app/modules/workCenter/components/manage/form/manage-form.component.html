@@ -73,11 +73,21 @@
           </div>
 
           <div class="mb-3">
-            <label for="address" class="form-label">Ubicación</label>
-            <input type="text" class="form-control" id="address" formControlName="address"
-              [ngClass]="{'is-invalid': form.get('address')?.invalid && form.get('address')?.touched}">
-            <div *ngIf="form.get('address')?.invalid && form.get('address')?.touched" class="invalid-feedback">
-              Este campo es obligatorio
+            <div class="d-flex align-items-center mb-2">
+              <label for="address" class="form-label mb-0">Ubicación</label>
+              <button type="button" class="btn btn-custom btn-location ms-2" (click)="openMapModal()">
+                <mat-icon >location_on</mat-icon>
+              </button>
+            </div>
+            <div class="row">
+            </div>
+            <div class="row mt-2">
+              <div class="col-6">
+                <input type="number" class="form-control" formControlName="latitude" placeholder="Latitud" readonly>
+              </div>
+              <div class="col-6">
+                <input type="number" class="form-control" formControlName="longitude" placeholder="Longitud" readonly>
+              </div>
             </div>
           </div>
 
@@ -130,6 +140,24 @@
       <div class="modal-footer">
         <app-button [label]="'Cerrar'" [function]="onCloseModal.bind(this)" data-bs-dismiss="modal"></app-button>
         <app-button [label]="'Guardar cambios'" [function]="onSubmit.bind(this)"></app-button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="mapModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg h-100 m-0 mx-auto">
+    <div class="modal-content h-100">
+      <div class="modal-header">
+        <h5 class="modal-title">Seleccionar Ubicación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div id="map" style="height: calc(100vh - 140px);"></div>
+      </div>
+      <div class="modal-footer">
+        <app-button [label]="'Cerrar'" [function]="onCloseModal.bind(this)" data-bs-dismiss="modal"></app-button>
+        <app-button [label]="'Confirmar'" [function]="confirmLocation.bind(this)"></app-button>
       </div>
     </div>
   </div>
