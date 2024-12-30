@@ -46,6 +46,7 @@ export class ManageFormComponent implements OnInit {
       this.form.patchValue(this.data);
     });
 
+    this.global.Reset();
     this.global.getWorkCenters();
   }
 

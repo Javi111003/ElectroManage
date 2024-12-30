@@ -86,7 +86,7 @@ export class EquipmentComponent implements OnInit {
     });
     this.form.get('office')?.valueChanges.subscribe(() => {
       if (this.global.isOptionValid(this.global.officeStringArray, this.getControlValue('office'))) {
-        this.findOfficeId();
+        this.global.findOfficeId(this.getControlValue('office'));
         this.getEquipmentsByOffice();
       }
     });
@@ -98,15 +98,6 @@ export class EquipmentComponent implements OnInit {
 
   getControlValue(control: string): any {
     return this.form.get(control)?.value;
-  }
-
-  /**
-   * Finds the ID of the selected office based on its name.
-   * @param officeSelected The name of the selected office.
-   */
-  findOfficeId(): void {
-    const officeSelected = this.getControlValue('office');
-    this.officeSelectedId = this.global.officeObjectArray.find(item => item.name === officeSelected)?.id;
   }
 
   /**
@@ -145,7 +136,7 @@ export class EquipmentComponent implements OnInit {
     }
   }
 
-  onClick(): void {
+  onAddClick(): void {
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }
