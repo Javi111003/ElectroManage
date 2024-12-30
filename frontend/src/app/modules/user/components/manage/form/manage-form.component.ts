@@ -36,8 +36,8 @@ export class ManageFormComponent implements OnInit {
   ];
   roles: Map<string, string> = new Map<string, string>([
     ['Administrador', 'Admin'],
-    ['Gerente', 'User'],
-    ['Analista', 'User']
+    ['Gerente', 'Manager'],
+    ['Analista', 'Analist']
   ]);
 
   ngOnInit(): void {
@@ -69,36 +69,14 @@ export class ManageFormComponent implements OnInit {
       return;
     }
 
-    const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
-    if (confirmation) {
-      const rolesSelected: string[] = this.getControlValue('role');
-      console.log(rolesSelected);
-      const centerSelected: string = this.getControlValue('workCenter');
-      console.log(centerSelected);
-      this.global.findCenterId(centerSelected);
-
-      let rolesToPost: string[] = [];
-
-      for (let i = 0; i < rolesSelected.length; i++) {
-        rolesToPost.push(this.roles.get(rolesSelected[i])!);
+    const center = this.getControlValue('workCenter');
+    if (this.global.isOptionValid(this.global.centerStringArray, center)) {
+      const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
+      if (confirmation) {
+        this.register();
       }
-
-      const registerData: RegisterUser = {
-        email: this.getControlValue('name'),
-        password: this.getControlValue('password'),
-        roles: rolesToPost,
-        companyId: this.global.centerSelectedId
-      };
-
-      this.user.registerUser(registerData).subscribe({
-        next: (response) => {
-          console.log('User registered successfully:', response);
-          window.location.reload();
-        },
-        error: (error) => {
-          this.global.openDialog(error.error.errors[0].reason);
-        }
-      });
+    } else {
+      this.global.openDialog('Por favor, selecciona un Centro de Trabajo válido.');
     }
   }
 
@@ -106,6 +84,42 @@ export class ManageFormComponent implements OnInit {
     Object.keys(this.form.controls).forEach(field => {
       const control = this.getControl(field);
       control?.markAsTouched();
+    });
+  }
+
+  register(): void {
+    const rolesSelected: string[] = this.getControlValue('role');
+    console.log(rolesSelected);
+    const centerSelected: string = this.getControlValue('workCenter');
+    console.log(centerSelected);
+    this.global.findCenterId(centerSelected);
+
+    let rolesToPost: string[] = [];
+
+    for (let i = 0; i < rolesSelected.length; i++) {
+      rolesToPost.push(this.roles.get(rolesSelected[i])!);
+    }
+
+    const registerData: RegisterUser = {
+      email: this.getControlValue('name'),
+      password: this.getControlValue('password'),
+      roles: rolesToPost,
+      companyId: this.global.centerSelectedId
+    };
+
+    this.user.registerUser(registerData).subscribe({
+      next: (response) => {
+        console.log('User registered successfully:', response);
+        window.location.reload();
+      },
+      error: (error) => {
+        if (error.statusText === 'Unknown Error')
+          this.global.openDialog("Falló la conexión. Intente de nuevo");
+        else if (error.error)
+          this.global.openDialog(error.error.errors[0].reason);
+        else
+          this.global.openDialog('No se ha podido guardar correctamente. Error inesperado');
+      }
     });
   }
 }

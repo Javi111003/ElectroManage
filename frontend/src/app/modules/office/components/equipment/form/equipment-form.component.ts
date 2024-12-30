@@ -402,7 +402,9 @@ export class EquipmentFormComponent {
         })
       },
       error: (error) => {
-        if(error.error)
+        if (error.statusText === 'Unknown Error')
+          this.global.openDialog("Falló la conexión. Intente de nuevo");
+        else if(error.error)
           this.global.openDialog(error.error.errors[0].reason);
         else
           this.global.openDialog('No se ha podido guardar correctamente. Error inesperado');

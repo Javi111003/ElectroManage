@@ -1,5 +1,5 @@
 <!-- Modal de Bootstrap -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" data-bs-focus="false" (hidden.bs.modal)="onCloseModal()" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -8,18 +8,27 @@
         <div class="modal-body">
           <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="mb-3">
-              <label for="officeName" class="form-label">Nombre de la Oficina</label>
-              <input type="text" class="form-control" id="officeName" formControlName="officeName"
-                [ngClass]="{'is-invalid': form.get('officeName')?.invalid && form.get('officeName')?.touched}">
-              <div *ngIf="form.get('officeName')?.invalid && form.get('officeName')?.touched" class="invalid-feedback">
-                Este campo es obligatorio
+              <div class="row">
+                <div class="col-8 col-sm-6">
+                  <label for="officeName" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="officeName" formControlName="officeName"
+                    [ngClass]="{'is-invalid': form.get('officeName')?.invalid && form.get('officeName')?.touched}">
+                  <div *ngIf="form.get('officeName')?.invalid && form.get('officeName')?.touched" class="invalid-feedback">
+                    Este campo es obligatorio
+                  </div>
+                </div>
+                <div class="col-4 col-sm-6">
+                  <label for="description" class="form-label">Descripción</label>
+                  <input type="text" class="form-control" id="description" formControlName="description"
+                    [ngClass]="{'is-invalid': form.get('description')?.invalid && form.get('description')?.touched}">
+                </div>
               </div>
             </div>
 
             <div class="mb-3">
-              <label for="workCenter" class="form-label">Centros de Trabajo</label>
+              <label for="workCenter" class="form-label">Centro de Trabajo</label>
               <app-autocomplete class="form-control" id="workCenter"
-                [options]="workCenters"
+                [options]="this.global.centerStringArray"
                 [label]="'Centros de trabajo'"
                 [control]="getControl('workCenter')"
               ></app-autocomplete>
