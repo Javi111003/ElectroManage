@@ -3,7 +3,7 @@ import { API_URL } from '../../config/api.config';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Office } from '../../models/office.interface';
-import { Equipment, EquipmentBrand, EquipmentType } from '../../models/equipment.interface';
+import { Equipment, EquipmentBrand, EquipmentInstance, EquipmentSpecification, EquipmentType, EquipPropertyInfo } from '../../models/equipment.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +39,25 @@ export class OfficeService {
     return this.http.get<Equipment[]>(url);
   }
 
+
+  /**
+   * Fetches the list of equipment types from the API.
+   * This method sends an HTTP GET request to the API to retrieve a list of equipment types.
+   * @returns An Observable that resolves to an array of EquipPropertyInfo objects.
+   */
+  getEquipmentTypeList(): Observable<EquipPropertyInfo[]> {
+    return this.http.get<EquipPropertyInfo[]>(`${API_URL}/v1/equipment_type`);
+  }
+
+  /**
+   * Fetches the list of equipment brands from the API.
+   * This method sends an HTTP GET request to the API to retrieve a list of equipment brands.
+   * @returns An Observable that resolves to an array of EquipPropertyInfo objects.
+   */
+  getEquipmentBrandList(): Observable<EquipPropertyInfo[]> {
+    return this.http.get<EquipPropertyInfo[]>(`${API_URL}/v1/equipment_brand`);
+  }
+
   /**
    * Posts a new equipment brand to the API.
    * This method sends an HTTP POST request to the API to create a new equipment brand.
@@ -56,7 +75,14 @@ export class OfficeService {
    * @returns An Observable that resolves to the response from the API.
    */
   deleteEquipmentBrand(id: number): Observable<any> {
-    return this.http.delete<any>(`${API_URL}/v1/equipment_brand/${id}`);
+    const url = `${API_URL}/v1/equipment_brand/${id}`;
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      body: { id }
+    };
+    return this.http.delete<any>(url, options);
   }
 
   /**
@@ -76,6 +102,33 @@ export class OfficeService {
    * @returns An Observable that resolves to the response from the API.
    */
   deleteEquipmentType(id: number): Observable<any> {
-    return this.http.delete<any>(`${API_URL}/v1/equipment_type/${id}`);
+    const url = `${API_URL}/v1/equipment_type/${id}`;
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      body: { id }
+    };
+    return this.http.delete<any>(url, options);
+  }
+
+  /**
+   * Posts a new equipment specification to the API.
+   * This method sends an HTTP POST request to the API to create a new equipment specification.
+   * @param specification The EquipmentSpecification object to be posted.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  postEquipmentSpecification(specification: EquipmentSpecification): Observable<any> {
+    return this.http.post<any>(`${API_URL}/v1/equipment_specification`, specification);
+  }
+
+  /**
+   * Posts a new equipment instance to the API.
+   * This method sends an HTTP POST request to the API to create a new equipment instance.
+   * @param equipment The EquipmentInstance object to be posted.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  postEquipmentInstance(equipment: EquipmentInstance): Observable<any> {
+    return this.http.post<any>(`${API_URL}/v1/equipment`, equipment);
   }
 }

@@ -22,6 +22,12 @@ export class UserService {
     return this.http.get<UserInfo[]>(this.workCenterListUrl);
   }
 
+  /**
+   * Registers a new user in the system.
+   * This method sends an HTTP POST request to the API to create a new user account.
+   * @param registerData The registration data for the new user.
+   * @returns An Observable that resolves to the response from the API.
+   */
   registerUser(registerData: RegisterUser): Observable<any> {
     console.log(registerData);
     return this.http.post<any>(API_URL + '/v1/register/user', registerData);

@@ -42,7 +42,7 @@ export class ManageComponent {
     this.getUserList();
   }
 
-  onClick(): void {
+  onAddClick(): void {
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }

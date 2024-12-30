@@ -29,7 +29,8 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { UserLogged } from '../../models/credential.interface';
-import { PasswordValidatorDirective } from '../../directives/password.directive';
+import { PasswordValidatorDirective } from '../../directives/password/password.directive';
+import { NumberValidationDirective } from '../../directives/numberValidation/number.validation.directive';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { PasswordValidatorDirective } from '../../directives/password.directive'
     MenuComponent,
     AboutUsComponent,
     LoginComponent,
-    PasswordValidatorDirective
+    PasswordValidatorDirective,
+    NumberValidationDirective
   ],
   imports: [
     CommonModule,
@@ -67,7 +69,8 @@ import { PasswordValidatorDirective } from '../../directives/password.directive'
     ReactiveFormsModule,
     MatButtonModule,
     MatTableModule,
-    PasswordValidatorDirective
+    PasswordValidatorDirective,
+    NumberValidationDirective
   ]
 })
 export class GlobalModule {
@@ -87,6 +90,7 @@ export class GlobalModule {
   officeObjectArray: Office[] = [];
 
   centerSelectedId: number | any = 0;
+  officeSelectedId: number | any = 0;
 
   /**
    * This function retrieves the list of work centers.
@@ -138,6 +142,16 @@ export class GlobalModule {
   }
 
   /**
+   * Finds the ID of the selected office based on its name.
+   * @param officeSelected The name of the selected office.
+   */
+  findOfficeId(officeSelected: string): void {
+    this.officeSelectedId = this.officeObjectArray.find(
+      item => item.name === officeSelected
+    )?.id;
+  }
+
+  /**
    * Opens a dialog with a specified message.
    * This function is used to display a message to the user in a dialog box.
    * @param message The message to be displayed in the dialog.
@@ -161,6 +175,7 @@ export class GlobalModule {
     this.officeStringArray = [];
     this.officeObjectArray = [];
     this.centerSelectedId = -1;
+    this.officeSelectedId = -1;
     this.userInfo = [][0];
   }
 }
