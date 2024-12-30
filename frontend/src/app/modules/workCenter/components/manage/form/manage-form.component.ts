@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import * as L from 'leaflet';
+import { Modal } from 'bootstrap';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
@@ -11,6 +13,9 @@ import { DataService } from '../../../../../services/data/data.service';
 export class ManageFormComponent implements OnInit {
   enableAddType: boolean = false;
   enableAddArea: boolean = false;
+  private map!: L.Map;
+  private marker!: L.Marker;
+  private modal!: Modal;
 
   constructor(
     private fb: FormBuilder,
@@ -26,7 +31,9 @@ export class ManageFormComponent implements OnInit {
       policy: '',
       monthlyConsumptionLimit: [null, Validators.required],
       formula: ['', Validators.required],
-      teamWork: [[''], Validators.required]
+      teamWork: [[''], Validators.required],
+      latitude: ['', Validators.required],
+      longitude: ['', Validators.required]
     });
     this.dataService.setData(null);
 
@@ -115,5 +122,46 @@ export class ManageFormComponent implements OnInit {
   addArea(): void {
     console.log("añadir area");
     this.adminAreas.push(this.getControlValue('adminAreaName'));
+  }
+
+  openMapModal() {
+    const mapModalElement = document.getElementById('mapModal');
+    if (mapModalElement) {
+      this.modal = new Modal(mapModalElement);
+    }
+    this.modal.show();
+    
+    setTimeout(() => {
+      if (!this.map) {
+        this.map =L.map('map').setView([22, -80], 7);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
+        
+        this.map.on('click', (e: L.LeafletMouseEvent) => {
+          if (this.marker) {
+            this.map.removeLayer(this.marker);
+          }
+          
+          const customIcon = L.divIcon({
+            html: '<mat-icon class="material-icons" style="color: #00203b; font-size: 32px;">location_on</mat-icon>',
+            className: 'custom-div-icon',
+            iconSize: [32, 32],
+            iconAnchor: [16, 32]
+          });
+
+          this.marker = L.marker(e.latlng, { icon: customIcon }).addTo(this.map);
+        });
+      }
+    }, 500);
+  }
+
+  confirmLocation() {
+    if (this.marker) {
+      const position = this.marker.getLatLng();
+      this.form.patchValue({
+        latitude: position.lat.toFixed(6),
+        longitude: position.lng.toFixed(6)
+      });
+    }
+    this.modal.hide();
   }
 }
