@@ -14,6 +14,7 @@ export class AutocompleteComponent implements OnInit {
   @Input() isDisabled: boolean = false;
   @Input() control: FormControl = new FormControl();
   @Input() showIcon: boolean = false;
+  @Input() deleteOption: (...args: any[]) => any = ()=>{};
 
   filteredOptions: Observable<string[]> = [][0];
 
@@ -52,8 +53,9 @@ export class AutocompleteComponent implements OnInit {
     return this.options.filter(option => option.toLowerCase().startsWith(filterValue));
   }
 
-  removeOption(option: string): any {
+  removeOption(option: string): void {
     this.options = this.options.filter(item => item !== option);
-    this.filteredOptions = this.control.valueChanges.pipe( startWith(''), map(value => this._filter(value)) );
+    this.filteredOptions = this.control.valueChanges.pipe( startWith(''), map(value => this._filter(value)));
+    this.deleteOption(option);
   }
 }
