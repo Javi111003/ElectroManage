@@ -72,11 +72,7 @@ export class EquipmentComponent implements OnInit {
     });
 
     this.form.valueChanges.subscribe(() => { this.showTable = false });
-  }
 
-  ngOnInit(): void {
-    this.global.Reset();
-    this.global.getWorkCenters();
     this.form.get('workCenter')?.valueChanges.subscribe(() => {
       this.getControl('office').reset();
       if (this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter'))) {
@@ -92,10 +88,25 @@ export class EquipmentComponent implements OnInit {
     });
   }
 
+  ngOnInit(): void {
+    this.global.Reset();
+    this.global.getWorkCenters();
+  }
+
+  /**
+   * This function is used to get the form control by its name.
+   * @param control The name of the form control.
+   * @returns The form control with the specified name.
+   */
   getControl(control: string): FormControl {
     return this.form.get(control) as FormControl;
   }
 
+  /**
+   * This function is used to get the value of a form control by its name.
+   * @param control The name of the form control.
+   * @returns The value of the form control with the specified name.
+   */
   getControlValue(control: string): any {
     return this.form.get(control)?.value;
   }
@@ -137,6 +148,9 @@ export class EquipmentComponent implements OnInit {
   }
 
   onAddClick(): void {
+    const center = this.getControlValue('workCenter');
+    const office = this.getControlValue('office');
+    this.dataService.setData([null, center, office]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }

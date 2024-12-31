@@ -26,8 +26,18 @@ export class OfficeService {
     return this.http.get<OfficeInfo[]>(url);
   }
 
+  /**
+   * Posts a new office to the API.
+   * This method sends an HTTP POST request to the API to create a new office.
+   * @param office The Office object to be posted.
+   * @returns An Observable that resolves to the response from the API.
+   */
   postOffice(office: Office): Observable<any> {
     return this.http.post<any>(`${API_URL}/v1/office`, office);
+  }
+
+  editOffice(office: Office, officeID: number): Observable<any> {
+    return this.http.put<any>(`${API_URL}/v1/office/${officeID}`, office);
   }
 
   /**
