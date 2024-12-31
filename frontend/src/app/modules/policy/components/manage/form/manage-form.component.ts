@@ -36,17 +36,20 @@ export class ManageFormComponent implements OnInit {
   }
 
   /**
-   * Initializes the component by setting up the form and subscribing to data changes.
+   * Retrieves the FormControl object for a given control name from the form.
+   * This method is used to access and manipulate form controls dynamically.
+   * @param control The name of the control to retrieve.
+   * @returns The FormControl object associated with the specified control name.
    */
   getControl(control: string): FormControl {
     return this.form.get(control) as FormControl;
   }
 
   /**
-   * Retrieves the FormControl object for a given control name from the form.
-   * This method is used to access and manipulate form controls dynamically.
-   * @param control The name of the control to retrieve.
-   * @returns The FormControl object associated with the specified control name.
+   * Retrieves the value of a given control from the form.
+   * This method is used to access the current value of a form control.
+   * @param control The name of the control to retrieve the value from.
+   * @returns The current value of the specified control.
    */
   getControlValue(control: string): any {
     return this.form.get(control)?.value;

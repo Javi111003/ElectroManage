@@ -109,11 +109,14 @@ export class GlobalModule {
    * This function gets the offices by center ID.
    * It updates the officeOptions based on the selected center.
    */
-  getOfficesByCenter(centerID: number): void {
-    this.httpOffice.getOfficeList(centerID).subscribe(offices => {
+  getOfficesByCenter(centerID: number): Observable<any> {
+    const observable = this.httpOffice.getOfficeList(centerID);
+    observable.subscribe(offices => {
       this.officeObjectArray = offices;
       this.officeStringArray = offices.map(item => item.name);
     });
+
+    return observable;
   }
 
   /**

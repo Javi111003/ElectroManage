@@ -13,6 +13,7 @@ import { OfficeService } from '../../../../../services/office/office.service';
 export class ManageFormComponent implements OnInit {
   data: any;
   form: FormGroup;
+  postMethod: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -31,8 +32,19 @@ export class ManageFormComponent implements OnInit {
 
   ngOnInit() {
     this.dataService.currentData.subscribe(newData => {
-      this.data = newData;
-      this.form.patchValue(this.data);
+      if (newData) {
+        this.data = newData[0];
+        const center = newData[1];
+        const post = newData[2];
+        console.log(newData);
+        if (this.data)
+          this.form.patchValue(this.data);
+
+        if (center)
+          this.getControl('workCenter').setValue(center);
+
+        this.postMethod = post;
+      }
     });
 
     this.global.Reset();
@@ -84,7 +96,13 @@ export class ManageFormComponent implements OnInit {
     if (this.global.isOptionValid(this.global.centerStringArray, center)) {
       const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
       if (confirmation) {
-        this.createOffice();
+
+        if (this.postMethod)
+          this.createOffice();
+        else {
+          this.editOffice();
+          this.postMethod = true;
+        }
       }
     } else {
       this.global.openDialog("Por favor, selecciona un Centro de Trabajo válido.");
@@ -126,7 +144,33 @@ export class ManageFormComponent implements OnInit {
     this.officeService.postOffice(office).subscribe({
       next: (response) => {
         console.log('Created successfully:', response);
-        window.location.reload();
+        this.dataService.notifyDataUpdated();
+      },
+      error: (error) => {
+        if (error.statusText === 'Unknown Error')
+          this.global.openDialog("Falló la conexión. Intente de nuevo");
+        else if(error.error)
+          this.global.openDialog(error.error.errors[0].reason);
+        else
+          this.global.openDialog('No se ha podido guardar correctamente. Error inesperado');
+      }
+    });
+  }
+
+  editOffice(): void {
+    const name = this.getControlValue('officeName');
+    const description = this.getControlValue('description');
+
+    const office: Office = {
+      companyId: this.global.centerSelectedId,
+      name: name,
+      description: description
+    }
+
+    this.officeService.editOffice(office, this.global.officeSelectedId).subscribe({
+      next: (response) => {
+        console.log('Edited successfully:', response);
+        this.dataService.notifyDataUpdated();
       },
       error: (error) => {
         if (error.statusText === 'Unknown Error')
