@@ -1,0 +1,18 @@
+.example-chip-list {
+  width: 100%;
+  align-items: left;
+}
+mat-icon {
+  margin-left: auto;
+  color: #8b0000;
+}
+mat-icon:hover {
+  transform: scale(1.15);
+}
+.option {
+  /* width: 50%; */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
