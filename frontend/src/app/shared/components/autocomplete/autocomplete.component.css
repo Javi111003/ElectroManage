@@ -33,7 +33,6 @@ mat-icon:hover {
   transform: scale(1.15);
 }
 .option {
-  width: 200px;
   display: flex;
   flex-direction: row;
   align-items: center;
