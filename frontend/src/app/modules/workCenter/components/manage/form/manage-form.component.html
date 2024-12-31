@@ -1,12 +1,11 @@
-<!-- Modal de Bootstrap -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" data-bs-focus="false" (hidden.bs.modal)="onCloseModal()" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Formulario de Centro de Trabajo</h5>
       </div>
       <div class="modal-body">
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <form id="form-container" [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="mb-3">
             <div class="row">
               <div class="col-8 col-sm-6">
@@ -14,6 +13,14 @@
                 <input type="text" class="form-control" id="name" formControlName="name"
                   [ngClass]="{'is-invalid': form.get('name')?.invalid && form.get('name')?.touched}">
                 <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="invalid-feedback">
+                  Este campo es obligatorio
+                </div>
+              </div>
+              <div class="col-4 col-sm-6">
+                <label for="monthlyConsumptionLimit" class="form-label">Límite de consumo mensual</label>
+                <input type="number" class="form-control" id="monthlyConsumptionLimit" formControlName="monthlyConsumptionLimit"
+                  [ngClass]="{'is-invalid': form.get('monthlyConsumptionLimit')?.invalid && form.get('monthlyConsumptionLimit')?.touched}">
+                <div *ngIf="form.get('monthlyConsumptionLimit')?.invalid && form.get('monthlyConsumptionLimit')?.touched" class="invalid-feedback">
                   Este campo es obligatorio
                 </div>
               </div>
@@ -83,38 +90,23 @@
             </div>
             <div class="row mt-2">
               <div class="col-6">
-                <input type="number" class="form-control" formControlName="latitude" placeholder="Latitud" readonly>
+                <label for="location" class="form-label mb-0">Dirección</label>
+                <input type="string" id="location" class="form-control" formControlName="location" readonly>
               </div>
-              <div class="col-6">
-                <input type="number" class="form-control" formControlName="longitude" placeholder="Longitud" readonly>
+              <div class="col-3">
+                <label for="latitude" class="form-label mb-0">Latitud</label>
+                <input type="number" id="latitude" class="form-control" formControlName="latitude" readonly>
               </div>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <div class="row">
-              <div class="col-8 col-sm-6">
-                <label for="formula" class="form-label">Fórmula de Costo</label>
-                <input type="text" class="form-control" id="formula" formControlName="formula"
-                  [ngClass]="{'is-invalid': form.get('formula')?.invalid && form.get('formula')?.touched}">
-                <div *ngIf="form.get('formula')?.invalid && form.get('formula')?.touched" class="invalid-feedback">
-                  Este campo es obligatorio
-                </div>
-              </div>
-              <div class="col-4 col-sm-6">
-                <label for="monthlyConsumptionLimit" class="form-label">Límite de consumo mensual</label>
-                <input type="number" class="form-control" id="monthlyConsumptionLimit" formControlName="monthlyConsumptionLimit"
-                  [ngClass]="{'is-invalid': form.get('monthlyConsumptionLimit')?.invalid && form.get('monthlyConsumptionLimit')?.touched}">
-                <div *ngIf="form.get('monthlyConsumptionLimit')?.invalid && form.get('monthlyConsumptionLimit')?.touched" class="invalid-feedback">
-                  Este campo es obligatorio
-                </div>
+              <div class="col-3">
+                <label for="longitude" class="form-label mb-0">Longitud</label>
+                <input type="number" class="form-control" formControlName="longitude" readonly>
               </div>
             </div>
           </div>
 
           <div class="mb-3">
             <div class="row">
-              <div class="col-8 col-sm-6">
+              <div class="col-4 col-sm-4">
                 <label for="policy" class="form-label">Política</label>
                 <app-autocomplete class="form-control" id="policy"
                   [options]="policies"
@@ -122,7 +114,17 @@
                   [control]="getControl('policy')"
                 ></app-autocomplete>
               </div>
-              <div class="col-4 col-sm-6">
+              <div class="col-4 col-sm-4">
+                <label for="date" class="form-label">Fecha de aplicación</label> <br>
+                <app-datepicker
+                  [filter]="filterDate"
+                  [control]="getControl('date')"
+                ></app-datepicker>
+                <div *ngIf="form.get('date')?.invalid && form.get('date')?.touched" class="invalid-feedback">
+                  Este campo es obligatorio
+                </div>
+              </div>
+              <div class="col-4 col-sm-4">
                 <label for="teamWork" class="form-label">Equipo responsable</label>
                 <app-checkbox class="form-control" id="teamWork"
                   [options]="teamWork"
@@ -132,6 +134,45 @@
                 <div *ngIf="form.get('teamWork')?.invalid && form.get('teamWork')?.touched" class="invalid-feedback">
                   Este campo es obligatorio
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="row">
+              <div class="col-sm-9">
+                <label for="formula" class="form-label">Fórmula de Costo</label>
+                <input type="text" class="form-control" id="formula" formControlName="formula"
+                  [ngClass]="{'is-invalid': form.get('formula')?.invalid && form.get('formula')?.touched}">
+                <div *ngIf="form.get('formula')?.invalid && form.get('formula')?.touched" class="invalid-feedback">
+                  Este campo es obligatorio
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <br>
+                <app-button
+                  [label]="'Asignar valores'"
+                  [function]="assignValues.bind(this)"
+                ></app-button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="row">
+              <div class="col-sm-8">
+                <app-chips id="formula-elements"
+                  [allOptions]="formulaVariables"
+                  [options]="options"
+                  [function]="addElementFormula.bind(this)"
+                ></app-chips>
+              </div>
+              <div class="col-sm-4">
+                <app-chips id="formula-elements"
+                  [allOptions]="formulaSymbols"
+                  [function]="addSymbolFormula.bind(this)"
+                  [variable]="false"
+                ></app-chips>
               </div>
             </div>
           </div>

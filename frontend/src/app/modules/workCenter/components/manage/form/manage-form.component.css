@@ -11,7 +11,7 @@ button:hover {
   background-color: #00203b;
   color: white;
 }
-#teamWork, #adminAreaName, #instalationType, #policy {
+#teamWork, #adminAreaName, #instalationType, #policy, #formula-elements {
   border: none;
 }
 ::ng-deep .cdk-overlay-container {
