@@ -1,28 +1,40 @@
-<div class="container-text-center">
-    <div class="row gap-2"> <!-- gap-4 establece un espacio entre los elementos -->
-      <div class="col-12 text-start ms-2">
-        <div class="form-buttons">
-          <app-button
-            [label]="'Añadir'"
-            [function]="onClick"
-            [showIcon]="true"
-            [icon]="'add'"
-          >
-          </app-button>
-        </div>
-      </div>
-      <div class="col-12">
-        <div class="table">
-          <app-table
-            [dataSource]="dataSource"
-            [displayedColumns]="displayedColumns"
-            [showActions]="true"
-            [editFunction]="edit.bind(this)"
-            [deleteFunction]="delete.bind(this)"
-          ></app-table>
-        </div>
-      </div>
+<div class="form-container" [formGroup]='form'>
+  <div class="form-autocomplete">
+    <div class="form-autocomplete-item">
+      <app-autocomplete
+        [label]="'Centro de Trabajo'"
+        [options]="global.centerStringArray"
+        [control]="getControl('workCenter')"
+        >
+      </app-autocomplete>
     </div>
   </div>
 
-  <app-office-manage-form></app-office-manage-form>
+  <div class="form-buttons">
+    <app-button
+      [label]="'Añadir'"
+      [function]="onAddClick.bind(this)"
+      [showIcon]="true"
+      [icon]="'add'"
+    >
+    </app-button>
+    <app-button
+      [label]="'Consultar'"
+      [function]="onConsultClick.bind(this)">
+    </app-button>
+    <app-button></app-button>
+  </div>
+
+  <div class="form-table" *ngIf="showTable">
+    <app-table
+      [dataSource]="dataSource"
+      [displayedColumns]="displayedColumns"
+      [showActions]="true"
+      [editFunction]="edit.bind(this)"
+      [deleteFunction]="delete.bind(this)"
+      >
+    </app-table>
+  </div>
+</div>
+
+<app-office-manage-form></app-office-manage-form>

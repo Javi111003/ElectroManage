@@ -11,7 +11,7 @@
     </div>
     <div class="form-autocomplete-item">
       <app-autocomplete
-        [label]="'Oficinas'"
+        [label]="'Oficina'"
         [options]="global.officeStringArray"
         [control]="getControl('office')"
         [isDisabled]="!this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter'))"
@@ -24,7 +24,7 @@
   <div class="form-buttons">
     <app-button
       [label]="'Añadir'"
-      [function]="onAddClick"
+      [function]="onAddClick.bind(this)"
       [showIcon]="true"
       [icon]="'add'"
     >

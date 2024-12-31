@@ -1,0 +1,25 @@
+.form-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.form-autocomplete {
+  width: 60%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: left;
+  gap: 8px;
+}
+.form-buttons {
+  width: 40%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: right;
+  position: relative;
+  top: 3px;
+  left: 0;
+  margin-top: 5px;
+  gap: 8px;
+}

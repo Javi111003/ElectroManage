@@ -50,18 +50,37 @@ export class ManageFormComponent implements OnInit {
     this.global.getWorkCenters();
   }
 
+  /**
+   * Initializes the component by setting up the form and subscribing to data changes.
+   */
   getControl(control: string): FormControl {
     return this.form.get(control) as FormControl;
   }
 
+  /**
+   * Retrieves the FormControl object for a given control name from the form.
+   * This method is used to access and manipulate form controls dynamically.
+   * @param control The name of the control to retrieve.
+   * @returns The FormControl object associated with the specified control name.
+   */
   getControlValue(control: string): any {
     return this.form.get(control)?.value;
   }
 
+  /**
+   * Closes the modal window and resets the form.
+   * This method is used to clear the form data and close the modal window.
+   */
   onCloseModal(): void {
     this.form.reset();
   }
 
+  /**
+   * Submits the form data for processing.
+   * This method checks the form validity before attempting to submit the data.
+   * If the form is invalid, it prompts the user to fill in all fields.
+   * If the form is valid, it confirms with the user before proceeding to save the changes.
+   */
   onSubmit(): void {
     if (this.form.invalid) {
       this.global.openDialog('Por favor, rellene todos los campos.');
@@ -80,6 +99,11 @@ export class ManageFormComponent implements OnInit {
     }
   }
 
+  /**
+   * Prepares the form for submission by marking all controls as touched.
+   * This method is used to ensure all form controls are marked as touched,
+   * which can be useful for form validation and error handling.
+   */
   markAllAsTouched(): void {
     Object.keys(this.form.controls).forEach(field => {
       const control = this.getControl(field);
@@ -87,6 +111,12 @@ export class ManageFormComponent implements OnInit {
     });
   }
 
+  /**
+   * Registers a new user based on the form data.
+   * This method retrieves the necessary data from the form, validates the work center selection,
+   * and then attempts to save the user data to the server. If successful, it reloads the page.
+   * If the operation fails, it displays an error message to the user.
+   */
   register(): void {
     const rolesSelected: string[] = this.getControlValue('role');
     console.log(rolesSelected);
