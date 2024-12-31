@@ -32,7 +32,7 @@ public class ListEquipmentByOfficeQueryHandler : CoreQueryHandler<ListEquipmentB
             .ThenInclude(x => x.EquipmentSpecification)
             .ThenInclude(x => x.EquipmentType)
         .ToListAsync();
-        if (office == null)
+        if (office.Count == 0)
         {
             _logger.LogError($"{nameof(ExecuteAsync)} | Office with id {command.OfficeId} not found");
             ThrowError($"Office with id {command.OfficeId} not found", 404);
