@@ -1,0 +1,42 @@
+<mat-form-field class="example-chip-list" appearance="outline" *ngIf="variable">
+  <mat-label>Fórmula</mat-label>
+  <mat-chip-grid #chipGrid aria-label="Option selection">
+    @for (option of options(); track $index) {
+      <mat-chip-row (removed)="remove(option)">
+        {{option}}
+        <button matChipRemove [attr.aria-label]="'remove ' + option">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip-row>
+    }
+  </mat-chip-grid>
+  <input
+    name="currentOption"
+    placeholder="Añadir elemento..."
+    #optionInput
+    [(ngModel)]="currentOption"
+    [matChipInputFor]="chipGrid"
+    [matAutocomplete]="auto"
+    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+    (matChipInputTokenEnd)="add($event)"
+  />
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+    @for (option of filteredOptions(); track option) {
+      <mat-option [value]="option">
+        <div class="option">
+          <mat-icon (click)="removeOption(option); $event.stopPropagation();">do_not_disturb_on</mat-icon>
+          {{option}}
+        </div>
+      </mat-option>
+    }
+  </mat-autocomplete>
+</mat-form-field>
+
+<mat-chip-set *ngIf="!variable"
+  class="example-chip"
+  cdkDropListOrientation="horizontal"
+>
+  @for (option of allOptions; track option) {
+    <mat-chip class="example-box" (click)="action(option)">{{option}}</mat-chip>
+  }
+</mat-chip-set>

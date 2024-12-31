@@ -7,6 +7,7 @@ import { AutocompleteComponent } from './components/autocomplete/autocomplete.co
 import { CheckboxComponent } from './components/checkbox/checkbox.component';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { ProgressSpinnerComponent } from './components/progress-spinner/progress-spinner.component';
+import { ChipsComponent } from './components/chips/chips.component';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -21,6 +22,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -31,6 +34,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     CheckboxComponent,
     DialogComponent,
     ProgressSpinnerComponent,
+    ChipsComponent,
   ],
   imports: [
     CommonModule,
@@ -52,7 +56,10 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatDialogClose,
     MatDialogContent,
     MatDialogTitle,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    CdkDrag,
+    CdkDropList,
+    MatChipsModule
   ],
   exports: [
     TableComponent,
@@ -61,6 +68,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     DatepickerComponent,
     CheckboxComponent,
     ProgressSpinnerComponent,
+    ChipsComponent,
 
     MatTableModule,
     MatIconModule,
@@ -80,7 +88,10 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatDialogClose,
     MatDialogContent,
     MatDialogTitle,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    CdkDrag,
+    CdkDropList,
+    MatChipsModule
   ]
 })
 export class SharedModule { }
