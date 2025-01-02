@@ -4,5 +4,5 @@ namespace ElectroManage.Application.Features.Company.Query.MeanCostLastThreeYear
 
 public record GetMeanCostLastThreeYearsCompanysResponse
 {
-    public ICollection<ListMonthlastThreeYearsResponse> Response { get; set; } = [];
+    public IEnumerable<ListMonthlastThreeYearsResponse> Response { get; set; } = new HashSet<ListMonthlastThreeYearsResponse>();
 }
