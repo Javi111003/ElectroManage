@@ -32,12 +32,12 @@ public class GetMeanCostLastThreeYearsCompanysQueryHandler : CoreCommandHandler<
             AddError(message: $"Company with id: {id} not found", errorCode: "404");
         }
         ThrowIfAnyErrors();
-        ICollection<ListMonthlastThreeYearsResponse> response = [];
+        List<ListMonthlastThreeYearsResponse> response = [];
         foreach (var company in companies)
         {
-            int year = company.Created.Year - 1;
-            ICollection<YearCostDTO> years = [];
-            while (year > company.Created.Year - 4)
+            int year = DateTime.Now.Year - 1;
+            List<YearCostDTO> years = [];
+            while (year > DateTime.Now.Year - 4)
             {
                 years.Add(new YearCostDTO
                 {
@@ -45,7 +45,7 @@ public class GetMeanCostLastThreeYearsCompanysQueryHandler : CoreCommandHandler<
                     MeanCost = company.Registers.Where(x => x.Created.Year == year).Sum(x => x.Cost) / 365,
                     MeanConsumption = company.Registers.Where(X => X.Created.Year == year).Sum(x => x.Consumption) / 365,
                 });
-                year--;
+                year -= 1;
             }
             response.Add(new ListMonthlastThreeYearsResponse
             {
