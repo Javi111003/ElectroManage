@@ -1,5 +1,4 @@
-﻿
-using ElectroManage.Domain.DataAccess.Abstractions;
+﻿using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
@@ -55,12 +54,15 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
         }
         var managementTeamRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.ManagementTeam>();
         var managementTeam = await managementTeamRepository.FirstAsync(useInactive: true, filters: x => x.Id == command.ManagementTeamId);
-        if (managementTeam is null)
+        if (managementTeam is null && command.ManagementTeamId > 0)
         {
             _logger.LogError($"Management Team with id: {command.ManagementTeamId} not found");
             ThrowError($"Management Team with id: {command.ManagementTeamId} not found", 404);
         }
-
+        if(managementTeam is not null)
+        {
+            company.ManagementTeam = managementTeam;
+        }
         company.Name = command.Name;
         company.AministrativeAreaId = command.AreaId;
         company.AministrativeArea = area;
@@ -68,7 +70,6 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
         company.InstalationType = installationType;
         company.LocationId = command.LocationId;
         company.Location = location;
-        company.ManagementTeam = managementTeam;
 
         await companyRepository.UpdateAsync(company);
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Completed");
@@ -78,7 +79,7 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
             Area = company.AministrativeArea.Name,
             Installation = company.InstalationType.Name,
             LocationDetails = company.Location.AddressDetails??"",
-            ManagementTeam = Mappers.ManagementTeamMapper.MapToManagementTeamDto(managementTeam)
+            ManagementTeam = managementTeam is null ? null : Mappers.ManagementTeamMapper.MapToManagementTeamDto(managementTeam)
         };
     }
 }
