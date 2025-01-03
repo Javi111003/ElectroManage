@@ -11,14 +11,10 @@ public class DeleteRoleCommandHandler : CoreCommandHandler<DeleteRoleCommand, Re
 {
     readonly ILogger<DeleteRoleCommandHandler> _logger;
     readonly RoleManager<AppRole> _roleManager;
-    readonly IConfiguration _configuration;
-    readonly IFileWriterService _fileWriter;
-    public DeleteRoleCommandHandler(ILogger<DeleteRoleCommandHandler> logger, RoleManager<AppRole> roleManager, IFileWriterService fileWriter ,IConfiguration configuration, IUnitOfWork unitOfWork) : base(unitOfWork)
+    public DeleteRoleCommandHandler(ILogger<DeleteRoleCommandHandler> logger, RoleManager<AppRole> roleManager, IFileWriterService fileWriter , IUnitOfWork unitOfWork) : base(unitOfWork)
     {
         _logger = logger;
         _roleManager = roleManager;
-        _configuration = configuration;
-        _fileWriter = fileWriter;
     }
     public override async Task<Response<NoContentData>> ExecuteAsync(DeleteRoleCommand command, CancellationToken ct = default)
     {
@@ -40,7 +36,6 @@ public class DeleteRoleCommandHandler : CoreCommandHandler<DeleteRoleCommand, Re
             }
             ThrowIfAnyErrors(404);
         }
-        _fileWriter.UpdateAllowedRoles(role.Name!, true);
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
         return new Response<NoContentData>();
     }
