@@ -38,22 +38,12 @@ public class RegisterUserCommandHandler : CoreCommandHandler<RegisterModel, Resp
             UserName = command.Email,
             Company = company
         };
-        var result = await _userManager.CreateAsync(appUser, command.Password);
-        if (!result.Succeeded)
-        {
-            foreach (var error in result.Errors)
-            {
-                _logger.LogWarning($"{nameof(ExecuteAsync)} | Error creating new account -> {error.Description}");
-                AddError(error.Description);
-            }
-            ThrowIfAnyErrors();
-        }
         var allowedRoles = _configuration["AllowedRoles"].Split(',').ToList();
-        var nonExistantRoles = command.Roles.Except(allowedRoles);
+        var nonExistantRoles = command.Roles.Except(allowedRoles, StringComparer.InvariantCultureIgnoreCase);
         foreach(var role in nonExistantRoles)
         {
-            _logger.LogError($"{nameof(ExecuteAsync)} | Role \"{role}\" not found");
-            AddError($"Role with id : \"{role}\" not found");
+            _logger.LogError($"{nameof(ExecuteAsync)} | Role: \"{role}\" not found");
+            AddError($"Role with name : \"{role}\" not found");
         }
         ThrowIfAnyErrors(404);
         foreach (var rol in command.Roles)
@@ -72,7 +62,20 @@ public class RegisterUserCommandHandler : CoreCommandHandler<RegisterModel, Resp
                     ThrowIfAnyErrors();
                 }
             }
-            var addToRoleResult = await _userManager.AddToRoleAsync(appUser, rol);
+        }
+        var result = await _userManager.CreateAsync(appUser, command.Password);
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+            {
+                _logger.LogWarning($"{nameof(ExecuteAsync)} | Error creating new account -> {error.Description}");
+                AddError(error.Description);
+            }
+            ThrowIfAnyErrors();
+        }
+        foreach (var role in command.Roles)
+        {
+            var addToRoleResult = await _userManager.AddToRoleAsync(appUser, role);
             if (!addToRoleResult.Succeeded)
             {
                 foreach (var error in addToRoleResult.Errors)

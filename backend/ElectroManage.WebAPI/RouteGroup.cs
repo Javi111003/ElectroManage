@@ -1,7 +1,7 @@
 ﻿namespace ElectroManage.WebAPI;
     public static class RouteGroup
     {
-    public static string Auth = "Auth";
+            public static string Auth = "Auth";
             public static string User = "User";
             public static string Company = "Company";
             public static string Register = "Register";
@@ -17,4 +17,5 @@
             public static string ManagementTeam = "Management Team";
             public static string CostFormula = "CostFormula";
             public static string EquipmentSpecification = "Equipment Specification";
+            public static string Role = "Role";
     }
