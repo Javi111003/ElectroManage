@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Company\" />
+    <Folder Include="Features\Company\Query\MeanCostLastThreeYears\" />
     <Folder Include="Mappers\" />
   </ItemGroup>
 
