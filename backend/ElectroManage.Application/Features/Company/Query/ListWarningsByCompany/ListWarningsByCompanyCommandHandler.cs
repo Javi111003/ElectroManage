@@ -1,5 +1,6 @@
 ﻿
 using ElectroManage.Application.DTO_s;
+using ElectroManage.Application.Mappers;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
@@ -32,17 +33,6 @@ public class ListWarningsByCompanyCommandHandler : CoreCommandHandler<ListWarnin
             ThrowError($"Company with id {command.CompanyId} not found", 404);
         }
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
-        return new ListWarningsByCompanyResponse
-        {
-            CompanyID = company.Id,
-            CompanyName = company.Name,
-            Warnings = company.Warnings.Select(w => new DTO_s.WarningDTO
-            {
-                Consumption = w.Consumption,
-                EstablishedLimit = w.EstablishedLimit,
-                Month = w.Created.Month,
-                Year = w.Created.Year,
-            }).ToList(),
-        };
+        return ListWarningMapper.ToResponse(company);
     }
 }
