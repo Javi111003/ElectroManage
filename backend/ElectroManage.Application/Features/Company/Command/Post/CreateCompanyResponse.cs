@@ -9,5 +9,5 @@ public record CreateCompanyResponse
     public string InstallationType {  get; set; } = string.Empty;
     public string? Description { get; set; } = string.Empty;
     public string Area { get; set; } = string.Empty;
-    public ManagementTeamDto ManagementTeam { get; set; } = null!;
+    public ManagementTeamDto? ManagementTeam { get; set; }
 }

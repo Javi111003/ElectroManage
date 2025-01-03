@@ -45,12 +45,11 @@ public class CreateCompanyCommandHandler : CoreCommandHandler<CreateCompanyComma
 
         var managementTeamRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.ManagementTeam>();
         var managementTeam = await managementTeamRepository.FirstAsync(useInactive: true, filters: x => x.Id == command.ManagementTeamId);
-        if (managementTeam is null)
+        if (managementTeam is null && command.ManagementTeamId > 0)
         {
             _logger.LogError($"Management Team with id: {command.ManagementTeamId} not found");
             ThrowError($"Management Team with id: {command.ManagementTeamId} not found", 404);
         }
-
         var company = new Domain.Entites.Sucursal.Company
         {
             Name = command.Name,
@@ -68,7 +67,7 @@ public class CreateCompanyCommandHandler : CoreCommandHandler<CreateCompanyComma
             InstallationType = company.InstalationType.Name,
             Description = company.InstalationType.Description,
             Area = company.AministrativeArea.Name,
-            ManagementTeam = Mappers.ManagementTeamMapper.MapToManagementTeamDto(managementTeam)
+            ManagementTeam = managementTeam is null ? null : Mappers.ManagementTeamMapper.MapToManagementTeamDto(managementTeam)
         };
     }
 }

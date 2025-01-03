@@ -8,5 +8,5 @@ public record EditGeneralDataCompanyResponse
     public string Area { get; set; } = string.Empty;
     public string Installation {  get; set; } = string.Empty;
     public string LocationDetails {  get; set; } = string.Empty;
-    public ManagementTeamDto ManagementTeam { get; set; } = null!;
+    public ManagementTeamDto? ManagementTeam { get; set; }
 }
