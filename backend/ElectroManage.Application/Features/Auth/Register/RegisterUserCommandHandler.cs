@@ -3,7 +3,7 @@ using ElectroManage.Domain.DataAccess.Abstractions;
 using ElectroManage.Domain.Entites.Identity;
 using ElectroManage.WebAPI.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using User = ElectroManage.Domain.Entites.Identity.AppUser;
 
@@ -13,18 +13,17 @@ public class RegisterUserCommandHandler : CoreCommandHandler<RegisterModel, Resp
     readonly ILogger<RegisterUserCommandHandler> _logger;
     readonly RoleManager<AppRole> _roleManager;
     readonly UserManager<User> _userManager;
-    readonly IConfiguration _configuration;
-    public RegisterUserCommandHandler(ILogger<RegisterUserCommandHandler> logger, RoleManager<AppRole> roleManager, UserManager<User> userManager, IConfiguration configuration, IUnitOfWork unitOfWork) : base(unitOfWork)
+    public RegisterUserCommandHandler(ILogger<RegisterUserCommandHandler> logger, RoleManager<AppRole> roleManager, UserManager<User> userManager, IUnitOfWork unitOfWork) : base(unitOfWork)
     {
         _logger = logger;
         _roleManager = roleManager;
         _userManager = userManager;
-        _configuration = configuration;
     }
 
     public override async Task<Response<NoContentData>> ExecuteAsync(RegisterModel command, CancellationToken ct = default)
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
+        var roleRepository = UnitOfWork!.DbRepository<AppRole>();
         var companyRepository = UnitOfWork!.DbRepository<Domain.Entites.Sucursal.Company>();
         var company = await companyRepository.FirstAsync(useInactive: true, filters: x => x.Id == command.CompanyId);
         if(company == null)
@@ -38,7 +37,7 @@ public class RegisterUserCommandHandler : CoreCommandHandler<RegisterModel, Resp
             UserName = command.Email,
             Company = company
         };
-        var allowedRoles = _configuration["AllowedRoles"].Split(',').ToList();
+        var allowedRoles = await roleRepository.GetAllListOnly(useInactive: true).Select(r => r.Name).ToListAsync();
         var nonExistantRoles = command.Roles.Except(allowedRoles, StringComparer.InvariantCultureIgnoreCase);
         foreach(var role in nonExistantRoles)
         {
