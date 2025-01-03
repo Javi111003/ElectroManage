@@ -9,7 +9,7 @@ public class ListEquipmentByOfficeEndpoint : Endpoint<EmptyRequest, IEnumerable<
         Options(x => x.WithTags(RouteGroup.Equipment));
         Tags(RouteGroup.Equipment);
         Version(1);
-        Get("/office/{officeId}/list_policies");
+        Get("/office/{officeId}/list_equipment");
         AllowAnonymous();
         Summary(f => f.Summary = "List all equipment instances associated to an Office.");
     }    

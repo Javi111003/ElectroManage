@@ -8,13 +8,15 @@ public class ListPoliciesByCompanyEndpoint : Endpoint<ListEfficiencyPoliciesByCo
         Options(x => x.WithTags(RouteGroup.Policy));
         Tags(RouteGroup.Policy);
         Version(1);
-        Get("/company/list_policies_by_company");
+        Get("/company/{companyId}/list_policies");
         AllowAnonymous();
         Summary(f => f.Summary = "List all policies applied to a company");
     }
     public override async Task HandleAsync(ListEfficiencyPoliciesByCompanyQuery req, CancellationToken ct)
     {
-        var data = await req.ExecuteAsync(ct);
+        var companyId = Route<long>("companyId");
+        var query = new ListEfficiencyPoliciesByCompanyQuery() { CompanyId = companyId };
+        var data = await query.ExecuteAsync(ct);
         await SendAsync(data, cancellation:ct);
     }
 }
