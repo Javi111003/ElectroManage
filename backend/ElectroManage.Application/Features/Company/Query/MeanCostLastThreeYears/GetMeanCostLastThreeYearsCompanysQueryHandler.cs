@@ -24,15 +24,17 @@ public class GetMeanCostLastThreeYearsCompanysQueryHandler : CoreCommandHandler<
         {
             x => x.Registers
         };
-        ICollection<ListMonthlastThreeYearsResponse> response = [];
-        foreach (var id in command.CompanyIds)
+        var companies = companyRepository.GetAll(useInactive: true, includes: companyInclude).Where(x => command.CompanyIds.Contains(x.Id));
+        var notFound = command.CompanyIds.Except(companies.Select(x => x.Id));
+        foreach (var id in notFound)
         {
-            var company = companyRepository.GetAllListOnly(useInactive: true, includes: companyInclude, filters: x => x.Id == id).FirstOrDefault();
-            if (company is null)
-            {
-                _logger.LogInformation($"Company with id: {id} not found");
-                ThrowError($"Company with id: {id} not found", 404);
-            }
+            _logger.LogInformation($"Company with id: {id} not found");
+            AddError(message: $"Company with id: {id} not found", errorCode: "404");
+        }
+        ThrowIfAnyErrors();
+        ICollection<ListMonthlastThreeYearsResponse> response = [];
+        foreach (var company in companies)
+        {
             int year = company.Created.Year - 1;
             ICollection<YearCostDTO> years = [];
             while (year > company.Created.Year - 4)
@@ -47,7 +49,7 @@ public class GetMeanCostLastThreeYearsCompanysQueryHandler : CoreCommandHandler<
             }
             response.Add(new ListMonthlastThreeYearsResponse
             {
-                CompanyID = id,
+                CompanyID = company.Id,
                 YearCostDto = years
             });
         }
