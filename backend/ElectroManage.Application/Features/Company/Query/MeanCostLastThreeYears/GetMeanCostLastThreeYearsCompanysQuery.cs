@@ -2,5 +2,5 @@
 
 public record GetMeanCostLastThreeYearsCompanysQuery : ICommand<GetMeanCostLastThreeYearsCompanysResponse>
 {
-    public ICollection<long> CompanyIds { get; set; } = [];
+    public IEnumerable<long> CompanyIds { get; set; } = new HashSet<long>();
 }
