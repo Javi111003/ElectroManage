@@ -46,6 +46,7 @@ public class CreateEfficiencyPolicyCommandHandler : CoreCommandHandler<CreateEff
             Id = efficiencyPolicy.Id,
             Name = efficiencyPolicy.Name,
             Description = efficiencyPolicy.Description,
+            Created = DateTime.UtcNow
         };
     }
 }
