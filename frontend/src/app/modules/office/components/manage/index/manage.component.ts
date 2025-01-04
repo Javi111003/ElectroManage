@@ -1,10 +1,10 @@
-import { OfficeService } from './../../../../../services/office/office.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { DataService } from '../../../../../services/data/data.service';
 import { GlobalModule } from '../../../../global/global.module';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 declare var bootstrap: any;
 @Component({
@@ -12,8 +12,8 @@ declare var bootstrap: any;
   templateUrl: './manage.component.html',
   styleUrls: ['./manage.component.css']
 })
-export class ManageComponent implements OnInit {
-
+export class ManageComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription = new Subscription();
   form: FormGroup;
   showTable: boolean = false;
 
@@ -32,8 +32,7 @@ export class ManageComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
-    private dataService: DataService,
-    private OfficeService: OfficeService
+    private dataService: DataService
   ) {
     this.form = this.fb.group({
       workCenter: ''
@@ -54,7 +53,7 @@ export class ManageComponent implements OnInit {
     this.global.Reset();
     this.global.getWorkCenters();
 
-    this.dataService.dataUpdated$.subscribe(() => {
+    const sub = this.dataService.dataUpdated$.subscribe(() => {
       const center = this.getControlValue('workCenter');
       if (this.global.isOptionValid(this.global.centerStringArray, center)) {
         this.global.getOfficesByCenter(this.global.centerSelectedId).subscribe(offices => {
@@ -62,6 +61,11 @@ export class ManageComponent implements OnInit {
         });
       }
     });
+    this.subscriptions.add(sub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   /**

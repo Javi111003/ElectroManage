@@ -6,6 +6,7 @@ import { DataService } from '../../../../../services/data/data.service';
 import { OfficeService } from '../../../../../services/office/office.service';
 import { EquipmentBrand, EquipmentSpecification, EquipmentType, EquipPropertyInfo } from '../../../../../models/equipment.interface';
 import { Subscription } from 'rxjs';
+import $ from 'jquery';
 
 @Component({
   selector: 'app-equipment-form',
@@ -189,20 +190,34 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter')) &&
-        this.global.isOptionValid(this.global.officeStringArray, this.getControlValue('office'))) {
-          const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
-          if (confirmation) {
-            if (this.postMethod)
-              this.createEquipment();
-            else {
-              this.editEquipment();
-              this.postMethod = true;
-              console.log("edited");
-            }
-          }
+    const searchFrom = [
+      this.global.centerStringArray, this.global.officeStringArray,
+      this.typeStringArray, this.brandStringArray, this.useFrequencies,
+      this.maintenanceStatus
+    ];
+    const options = [
+      this.getControlValue('workCenter'), this.getControlValue('office'),
+      this.getControlValue('type'), this.getControlValue('brand'),
+      this.getControlValue('useFrequency'), this.getControlValue('maintenanceStatus')
+    ];
+    const response = [
+      'Centro de Trabajo', 'Nombre de Oficina', 'Tipo de Instalación',
+      'Nombre de Marca', 'Tipo de Frecuencia de Uso', 'Estado de Mantenimiento'
+    ];
+    const valid = this.global.AllValid(searchFrom, options, response);
+
+    if (valid[0]) {
+      const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
+      if (confirmation) {
+        if (this.postMethod)
+          this.createEquipment();
+        else {
+          this.editEquipment();
+          this.postMethod = true;
+        }
+      }
     } else {
-        this.global.openDialog('Por favor, selecciona un Centro de Trabajo y una Oficina válidos.');
+        this.global.openDialog(`Por favor, selecciona un ${valid[1]} válido.`);
       }
   }
 
@@ -477,11 +492,22 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
       next: (response) => {
         console.log(isEdit ? 'Edited successfully:' : 'Created successfully:', response);
         this.dataService.notifyDataUpdated();
+        this.activateCloseButton();
       },
       error: (error) => {
         this.handleError(error);
       }
     });
+  }
+
+  /**
+   * This function is used to activate the close button of the modal.
+   * It retrieves the close button element and simulates a click event on it,
+   * effectively closing the modal.
+   */
+  activateCloseButton(): void {
+    const closeButton = document.getElementById('close-button') as HTMLButtonElement;
+    closeButton.click();
   }
 
   /**
