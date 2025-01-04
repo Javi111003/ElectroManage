@@ -2,6 +2,6 @@
 
 public record TopFiveCompaniesCountWarningDTO
 {
-    public long CompanyId { get; set; }
+    public CompanyDTO Company { get; set; } = null!;
     public long CountWarning { get; set; }
 }

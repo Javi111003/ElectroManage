@@ -1,5 +1,7 @@
-﻿namespace ElectroManage.Application.Features.Company.Query.TopFiveCountWarnings;
+﻿using ElectroManage.Application.DTO_s;
 
-public record GetTopFiveCompaiesCountWarningCommand : ICommand<GetTopFiveCompaiesCountWarningResponse>
+namespace ElectroManage.Application.Features.Company.Query.TopFiveCountWarnings;
+
+public record GetTopFiveCompaiesCountWarningCommand : ICommand<IEnumerable<TopFiveCompaniesCountWarningDTO>>
 {
 }

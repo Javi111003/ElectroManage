@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ElectroManage.Application.Features.Company.Query.TopFiveCountWarnings;
 
-public class GetTopFiveCompaiesCountWarningCommandHandler : CoreCommandHandler<GetTopFiveCompaiesCountWarningCommand, GetTopFiveCompaiesCountWarningResponse>
+public class GetTopFiveCompaiesCountWarningCommandHandler : CoreCommandHandler<GetTopFiveCompaiesCountWarningCommand, IEnumerable<TopFiveCompaniesCountWarningDTO>>
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<GetTopFiveCompaiesCountWarningCommandHandler> _logger;
@@ -22,7 +22,7 @@ public class GetTopFiveCompaiesCountWarningCommandHandler : CoreCommandHandler<G
         _logger = logger;
     }
 
-    public override async Task<GetTopFiveCompaiesCountWarningResponse> ExecuteAsync(GetTopFiveCompaiesCountWarningCommand command, CancellationToken ct = default)
+    public override async Task<IEnumerable<TopFiveCompaniesCountWarningDTO>> ExecuteAsync(GetTopFiveCompaiesCountWarningCommand command, CancellationToken ct = default)
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
         var companyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Company>();
@@ -30,16 +30,17 @@ public class GetTopFiveCompaiesCountWarningCommandHandler : CoreCommandHandler<G
         {
             x => x.Warnings
         };
-        var companies = await companyRepository.GetAll(useInactive: true)
+        var topFiveCompaniesCountWarnings = await companyRepository.GetAll(useInactive: true)
             .Select(x => new TopFiveCompaniesCountWarningDTO
             {
-                CompanyId = x.Id,
+                Company = new CompanyDTO
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                },
                 CountWarning = x.Warnings.Count(),
             }).Take(5).OrderBy(x => x.CountWarning).ToListAsync();
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
-        return new GetTopFiveCompaiesCountWarningResponse
-        {
-            TopFiveCompaniesCountWarnings = companies,
-        };
+        return topFiveCompaniesCountWarnings;
     }
 }
