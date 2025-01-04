@@ -1,14 +1,12 @@
+import { OfficeInfo } from "./office.interface";
+
 export interface Equipment {
   id: number;
-  officeId: number;
-  companyId: number;
-  name: string;
+  instalationDate: string;
   useFrequency: string;
   maintenanceStatus: string;
-  model: string;
-  efficiency: number;
-  brand: string;
-  equipmentType: string;
+  equipmentSpecification: EquipSpecificationInfo;
+  office: OfficeInfo;
 }
 
 export interface EquipmentBrand {
@@ -30,6 +28,30 @@ export interface EquipmentSpecification {
   efficiency: number;
   equipmentBrandId: number;
   equipmentTypeId: number;
+}
+
+export interface EquipmentSpecificationEdited {
+  id: number;
+  model: string;
+  capacity: number;
+  criticalEnergySystem: boolean;
+  averageConsumption: number;
+  lifeSpanYears: number;
+  efficiency: number;
+  equipmentBrandId: number;
+  equipmentTypeId: number;
+}
+
+export interface EquipSpecificationInfo {
+  id: number;
+  model: string;
+  capacity: number;
+  criticalEnergySystem: boolean;
+  averageConsumption: number;
+  lifeSpanYears: number;
+  efficiency: number;
+  equipmentBrand: EquipPropertyInfo;
+  equipmentType: EquipPropertyInfo;
 }
 
 export interface EquipmentInstance {

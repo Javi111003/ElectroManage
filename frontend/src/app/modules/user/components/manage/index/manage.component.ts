@@ -40,6 +40,9 @@ export class ManageComponent {
 
   ngOnInit() {
     this.getUserList();
+    this.dataService.dataUpdated$.subscribe(() => {
+      this.getUserList();
+    });
   }
 
   onAddClick(): void {
@@ -66,13 +69,16 @@ export class ManageComponent {
 
   getUserList(): void {
     this.user.getUsersList().subscribe(users => {
-      console.log(users);
       const appUsers: UserInfo[] = users.appUsers;
-      this.dataSource.data = appUsers.map(user => ({
-        id: user.id,
-        email: user.email,
-        center: user.company.name
-      }));
+      this.reloadTableData(appUsers);
     });
+  }
+
+  reloadTableData(offices: any[]) {
+    this.dataSource.data = offices.map(item => ({
+      id: item.id,
+      email: item.email,
+      center: item.company.name
+    }));
   }
 }

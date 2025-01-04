@@ -1,3 +1,4 @@
+import { Equipment } from './../../../../../models/equipment.interface';
 import { Component, OnInit } from '@angular/core';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
@@ -18,22 +19,53 @@ export class EquipmentComponent implements OnInit {
   form: FormGroup;
   showTable = false;
 
-  officeSelectedId: number | any = 0;
-
+  equipmentObjects: Equipment[] = [];
   equipments: string[] = [];
 
-  // Example data for the table
-  dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
+  useFrequency: Map<string, string> = new Map<string, string>([
+    ['High', 'Alta'],
+    ['Medium', 'Media'],
+    ['Low', 'Baja']
+  ]);
+
+  maintenanceStatus: Map<string, string> = new Map<string, string>([
+    ['Good', 'Bueno'],
+    ['Regular', 'Regular'],
+    ['Bad', 'Malo']
+  ]);
+
+  criticalEnergySystem: Map<boolean, string> = new Map<boolean, string>([
+    [true, 'Sí'],
+    [false, 'No']
+  ]);
+
+  dataSource: MatTableDataSource<any> = new MatTableDataSource();
 
   // Table Columns
   displayedColumns: ConfigColumn[] = [
     {
-      title: 'No. Inventario',
-      field: 'id'
-    },
-    {
       title: 'Fecha de instalación',
       field: 'instalationDate'
+    },
+    {
+      title: 'Modelo',
+      field: 'model'
+    },
+    {
+      title: 'Tipo',
+      field: 'type'
+    },
+    {
+      title: 'Marca',
+      field: 'brand'
+    },
+    {
+      title: 'Capacidad(Kw)',
+      field: 'capacity'
+    },
+    {
+      title: 'Consumo Promedio(Kw/h)',
+      field: 'averageConsumption'
     },
     {
       title: 'Frecuencia de uso',
@@ -44,20 +76,16 @@ export class EquipmentComponent implements OnInit {
       field: 'maintenanceStatus'
     },
     {
-      title: 'Marca',
-      field: 'brand'
-    },
-    {
-      title: 'Modelo',
-      field: 'model'
+      title: 'Años de vida',
+      field: 'lifeSpanYears'
     },
     {
       title: 'Eficiencia',
       field: 'efficiency'
     },
     {
-      title: 'Tipo',
-      field: 'equipmentType'
+      title: 'Sistema de Energía Crítica',
+      field: 'criticalEnergySystem'
     }
   ];
 
@@ -81,8 +109,9 @@ export class EquipmentComponent implements OnInit {
       }
     });
     this.form.get('office')?.valueChanges.subscribe(() => {
-      if (this.global.isOptionValid(this.global.officeStringArray, this.getControlValue('office'))) {
-        this.global.findOfficeId(this.getControlValue('office'));
+      const office = this.getControlValue('office');
+      if (this.global.isOptionValid(this.global.officeStringArray, office)) {
+        this.global.findOfficeId(office);
         this.getEquipmentsByOffice();
       }
     });
@@ -91,6 +120,14 @@ export class EquipmentComponent implements OnInit {
   ngOnInit(): void {
     this.global.Reset();
     this.global.getWorkCenters();
+
+    this.dataService.dataUpdated$.subscribe(() => {
+      const office = this.getControlValue('office');
+      if (this.global.isOptionValid(this.global.officeStringArray, office)) {
+        this.global.findOfficeId(office);
+        this.getEquipmentsByOffice();
+      }
+    });
   }
 
   /**
@@ -116,17 +153,10 @@ export class EquipmentComponent implements OnInit {
    * It updates the dataSource for the MatTable with the list of equipment.
    */
   getEquipmentsByOffice(): void {
-    this.global.httpOffice.getEquipmentList(this.global.centerSelectedId, this.officeSelectedId)
+    this.global.httpOffice.getEquipmentList(this.global.officeSelectedId)
       .subscribe(equipments => {
-        this.dataSource.data = equipments.map(item => ({
-          id: `${item.companyId}${item.officeId}${item.id}`,
-          useFrequency: item.useFrequency,
-          maintenanceStatus: item.maintenanceStatus,
-          brand: item.brand,
-          model: item.model,
-          efficiency: item.efficiency,
-          equipmentType: item.equipmentType
-        }));
+        this.equipmentObjects = equipments;
+        this.reloadTableData(equipments);
       });
   }
 
@@ -150,23 +180,60 @@ export class EquipmentComponent implements OnInit {
   onAddClick(): void {
     const center = this.getControlValue('workCenter');
     const office = this.getControlValue('office');
-    this.dataService.setData([null, center, office]);
+    this.dataService.setData([null, center, office, true]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }
 
-  delete(): void {
+  delete(item: any): void {
     this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
       result => { if (result) {
-        this.global.openDialog('Eliminado');
+        this.global.httpOffice.deleteEquipmentInstance(item.id).subscribe({
+          next: (response) => {
+            console.log('Deleted successfully:', response);
+            this.dataService.notifyDataUpdated();
+          },
+          error: (error) => {
+            this.global.openDialog(error.error.errors[0].reason);
+          }
+        });
+        this.global.httpOffice.deleteEquipmentSpecification(item.specifId).subscribe({
+          next: (response) => {
+            console.log('Deleted successfully:', response);;
+          },
+          error: (error) => {
+            this.global.openDialog(error.error.errors[0].reason);
+          }
+        });
       }
     });
   }
 
   edit(item: any): void {
-    this.dataService.setData([item, this.getControlValue('workCenter'), this.getControlValue('office')]);
-    const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
+    this.dataService.setData([item, this.getControlValue('workCenter'), this.getControlValue('office'), false]);
+    const modalElement = document.getElementById('exampleModal') as HTMLElement;
+    const modal = new bootstrap.Modal(modalElement);
     modal.show();
+  }
+
+  reloadTableData(equipments: Equipment[]): void {
+    this.dataSource.data = equipments.map(item => ({
+      id: item.id,
+      specifId: item.equipmentSpecification.id,
+      instalationDate: item.instalationDate.substring(0, 10),
+      model: item.equipmentSpecification.model,
+      type: item.equipmentSpecification.equipmentType.name,
+      brand: item.equipmentSpecification.equipmentBrand.name,
+      capacity: item.equipmentSpecification.capacity,
+      averageConsumption: item.equipmentSpecification.averageConsumption,
+      useFrequency: this.useFrequency.get(item.useFrequency),
+      maintenanceStatus: this.maintenanceStatus.get(item.maintenanceStatus),
+      lifeSpanYears: item.equipmentSpecification.lifeSpanYears,
+      efficiency: item.equipmentSpecification.efficiency,
+      criticalEnergySystem: this.criticalEnergySystem.get(
+        item.equipmentSpecification.criticalEnergySystem
+      )
+    }));
   }
 }
 

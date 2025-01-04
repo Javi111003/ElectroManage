@@ -1,16 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module'
 import { DataService } from '../../../../../services/data/data.service';
 import { PolicyService } from '../../../../../services/policy/policy.service';
 import { Policy } from '../../../../../models/policy.interface';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-policy-manage-form',
   templateUrl: './manage-form.component.html',
   styleUrl: './manage-form.component.css'
 })
-export class ManageFormComponent implements OnInit {
+export class ManageFormComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription = new Subscription();
   @Input() selectedItem: any = null;
   form: FormGroup;
   data: any;
@@ -29,10 +31,15 @@ export class ManageFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dataService.currentData.subscribe(newData => {
+    const sub = this.dataService.currentData.subscribe(newData => {
       this.data = newData;
       this.form.patchValue(this.data);
     });
+    this.subscriptions.add(sub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   /**

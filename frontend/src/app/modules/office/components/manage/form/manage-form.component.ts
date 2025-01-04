@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module'
 import { DataService } from '../../../../../services/data/data.service';
 import { Office } from '../../../../../models/office.interface';
 import { OfficeService } from '../../../../../services/office/office.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-office-manage-form',
   templateUrl: './manage-form.component.html',
   styleUrls: ['./manage-form.component.css']
 })
-export class ManageFormComponent implements OnInit {
+export class ManageFormComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription = new Subscription();
   data: any;
   form: FormGroup;
   postMethod: boolean = true;
@@ -31,12 +33,12 @@ export class ManageFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dataService.currentData.subscribe(newData => {
+    const sub = this.dataService.currentData.subscribe(newData => {
       if (newData) {
         this.data = newData[0];
         const center = newData[1];
         const post = newData[2];
-        console.log(newData);
+
         if (this.data)
           this.form.patchValue(this.data);
 
@@ -47,8 +49,13 @@ export class ManageFormComponent implements OnInit {
       }
     });
 
+    this.subscriptions.add(sub);
     this.global.Reset();
     this.global.getWorkCenters();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   /**
@@ -129,58 +136,65 @@ export class ManageFormComponent implements OnInit {
    * If the operation fails, it displays an error message to the user.
    */
   createOffice(): void {
-    const center = this.getControlValue('workCenter');
-    this.global.findCenterId(center);
+    const office = this.getOfficeObject();
+    this.handleOffice(office, 'create');
+  }
 
+  /**
+   * This function is used to create a new office instance.
+   * It retrieves the necessary information from the form controls and creates a new office instance.
+   * The office instance is then posted to the server for creation.
+   */
+  getOfficeObject(): Office {
     const name = this.getControlValue('officeName');
     const description = this.getControlValue('description');
 
-    const office: Office = {
+    return {
       companyId: this.global.centerSelectedId,
       name: name,
       description: description
-    }
+    };
+  }
 
-    this.officeService.postOffice(office).subscribe({
+  /**
+   * This function is used to handle the creation or editing of an office.
+   * It determines whether to create or edit based on the `action` parameter.
+   * It calls the appropriate service method (either `postOffice` or `editOffice`)
+   * with the provided `office` and handles the response or error accordingly.
+   * If successful, it reloads the page and notifies the data service to update the data.
+   * @param office The office instance to be created or edited.
+   * @param action A string indicating whether to create or edit an office.
+   */
+  handleOffice(office: Office, action: 'create' | 'edit'): void {
+    const serviceCall = action === 'create'
+      ? this.officeService.postOffice(office)
+      : this.officeService.editOffice(office, this.global.officeSelectedId);
+
+    serviceCall.subscribe({
       next: (response) => {
-        console.log('Created successfully:', response);
+        console.log(`${action.charAt(0).toUpperCase() + action.slice(1)}d successfully:`, response);
         this.dataService.notifyDataUpdated();
       },
       error: (error) => {
-        if (error.statusText === 'Unknown Error')
+        if (error.statusText === 'Unknown Error') {
           this.global.openDialog("Falló la conexión. Intente de nuevo");
-        else if(error.error)
+        } else if (error.error) {
           this.global.openDialog(error.error.errors[0].reason);
-        else
+        } else {
           this.global.openDialog('No se ha podido guardar correctamente. Error inesperado');
+        }
       }
     });
   }
 
+  /**
+   * Edits an existing office instance.
+   * This function retrieves the necessary information from the form controls to update an office instance.
+   * It then calls the `handleOffice` function to handle the editing process.
+   */
   editOffice(): void {
-    const name = this.getControlValue('officeName');
-    const description = this.getControlValue('description');
-
-    const office: Office = {
-      companyId: this.global.centerSelectedId,
-      name: name,
-      description: description
-    }
-
-    this.officeService.editOffice(office, this.global.officeSelectedId).subscribe({
-      next: (response) => {
-        console.log('Edited successfully:', response);
-        this.dataService.notifyDataUpdated();
-      },
-      error: (error) => {
-        if (error.statusText === 'Unknown Error')
-          this.global.openDialog("Falló la conexión. Intente de nuevo");
-        else if(error.error)
-          this.global.openDialog(error.error.errors[0].reason);
-        else
-          this.global.openDialog('No se ha podido guardar correctamente. Error inesperado');
-      }
-    });
+    const office = this.getOfficeObject();
+    this.handleOffice(office, 'edit');
   }
 }
 
