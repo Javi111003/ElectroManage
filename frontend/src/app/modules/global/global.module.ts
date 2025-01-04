@@ -137,6 +137,26 @@ export class GlobalModule {
   }
 
   /**
+   * Checks if all the provided options are valid for the corresponding data.
+   * This function iterates over the data and checks if the specified options are present.
+   * @param data The array of arrays of strings to search within.
+   * @param options The array of options to search for in the data.
+   * @param response The array to store the response for each option.
+   * @returns `[true, '']` if all the options are found, `[false, response[i]]` otherwise.
+   */
+  AllValid(data: string[][], options: string[], response: string[]): [boolean, string] {
+    console.log(data);
+    console.log(options);
+    console.log(response);
+    for (let i = 0; i < data.length; i++) {
+      if (!data[i].includes(options[i]))
+        return [false, response[i]];
+    }
+
+    return [true, ''];
+  }
+
+  /**
    * Finds the ID of the selected center based on its name.
    * @param centerSelected The name of the selected center.
    */

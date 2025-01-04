@@ -1,10 +1,11 @@
 import { Equipment } from './../../../../../models/equipment.interface';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
+import { Subscription } from 'rxjs';
 
 declare var bootstrap: any;
 
@@ -14,7 +15,8 @@ declare var bootstrap: any;
   styleUrls: ['./equipment.component.css']
 })
 
-export class EquipmentComponent implements OnInit {
+export class EquipmentComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription = new Subscription();
   data: any;
   form: FormGroup;
   showTable = false;
@@ -121,13 +123,18 @@ export class EquipmentComponent implements OnInit {
     this.global.Reset();
     this.global.getWorkCenters();
 
-    this.dataService.dataUpdated$.subscribe(() => {
+    const sub = this.dataService.dataUpdated$.subscribe(() => {
       const office = this.getControlValue('office');
       if (this.global.isOptionValid(this.global.officeStringArray, office)) {
         this.global.findOfficeId(office);
         this.getEquipmentsByOffice();
       }
     });
+    this.subscriptions.add(sub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   /**
@@ -177,6 +184,12 @@ export class EquipmentComponent implements OnInit {
     }
   }
 
+  /**
+   * This function is used to handle the "Add" button click event.
+   * It retrieves the values of 'workCenter' and 'office' from the form controls,
+   * sets them along with a null value and a boolean indicating it's a new entry,
+   * and then opens the modal for adding a new equipment.
+   */
   onAddClick(): void {
     const center = this.getControlValue('workCenter');
     const office = this.getControlValue('office');
@@ -185,6 +198,13 @@ export class EquipmentComponent implements OnInit {
     modal.show();
   }
 
+  /**
+   * This function is used to handle the "Delete" button click event.
+   * It prompts the user for confirmation before deleting the selected equipment.
+   * If the user confirms, it deletes the equipment instance and specification from the server.
+   * If the user cancels, it does nothing.
+   * @param item The equipment instance to be deleted.
+   */
   delete(item: any): void {
     this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
       result => { if (result) {
@@ -209,6 +229,13 @@ export class EquipmentComponent implements OnInit {
     });
   }
 
+  /**
+   * This function is used to handle the "Edit" button click event.
+   * It retrieves the values of 'workCenter' and 'office' from the form controls,
+   * sets them along with the selected equipment item and a boolean indicating it's an edit operation,
+   * and then opens the modal for editing an existing equipment.
+   * @param item The equipment instance to be edited.
+   */
   edit(item: any): void {
     this.dataService.setData([item, this.getControlValue('workCenter'), this.getControlValue('office'), false]);
     const modalElement = document.getElementById('exampleModal') as HTMLElement;
@@ -216,6 +243,12 @@ export class EquipmentComponent implements OnInit {
     modal.show();
   }
 
+  /**
+   * Reloads the table data with the provided list of equipment.
+   * This function updates the data source of the table with the new list of equipment,
+   * transforming each equipment item into a format suitable for display in the table.
+   * @param equipments The list of equipment to be used to reload the table data.
+   */
   reloadTableData(equipments: Equipment[]): void {
     this.dataSource.data = equipments.map(item => ({
       id: item.id,
