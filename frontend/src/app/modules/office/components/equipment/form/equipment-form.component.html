@@ -54,15 +54,15 @@
             <div class="row">
               <div class="row">
                 <div class="col-sm-4">
-                  <label for="equipmentType" class="form-label">Tipo</label>
-                  <app-autocomplete class="form-control" id="equipmentType"
+                  <label for="type" class="form-label">Tipo</label>
+                  <app-autocomplete class="form-control" id="type"
                     [options]="typeStringArray"
                     [label]="'Tipos'"
-                    [control]="getControl('equipmentType')"
+                    [control]="getControl('type')"
                     [showIcon]="true"
                     [deleteOption]="deleteType.bind(this)"
                   ></app-autocomplete>
-                  <div *ngIf="form.get('equipmentType')?.invalid && form.get('equipmentType')?.touched" class="invalid-feedback">
+                  <div *ngIf="form.get('type')?.invalid && form.get('type')?.touched" class="invalid-feedback">
                     Este campo es obligatorio
                   </div>
                 </div>
@@ -118,10 +118,10 @@
                   </div>
                 </div>
                 <div class="col-sm">
-                  <label for="avgConsumption" class="form-label">Consumo promedio (kw/h)</label>
-                  <input type="number" class="form-control" id="avgConsumption" formControlName="avgConsumption" appNumberValidation
-                    [ngClass]="{'is-invalid': form.get('avgConsumption')?.invalid && form.get('avgConsumption')?.touched}">
-                  <div *ngIf="form.get('avgConsumption')?.invalid && form.get('avgConsumption')?.touched" class="invalid-feedback">
+                  <label for="averageConsumption" class="form-label">Consumo promedio (kw/h)</label>
+                  <input type="number" class="form-control" id="averageConsumption" formControlName="averageConsumption" appNumberValidation
+                    [ngClass]="{'is-invalid': form.get('averageConsumption')?.invalid && form.get('averageConsumption')?.touched}">
+                  <div *ngIf="form.get('averageConsumption')?.invalid && form.get('averageConsumption')?.touched" class="invalid-feedback">
                     Este campo es obligatorio
                   </div>
                 </div>
@@ -163,10 +163,10 @@
                   </div>
                 </div>
                 <div class="col-sm">
-                  <label for="critical" class="form-label">Sistema de energía crítica</label> <br>
-                  <label> <input type="radio" id="critical" formControlName="critical" [value]="true"> Sí </label> <br>
-                  <label> <input type="radio" id="critical" formControlName="critical" [value]="false"> No </label>
-                  <div *ngIf="form.get('critical')?.invalid && form.get('critical')?.touched" class="invalid-feedback">
+                  <label for="criticalEnergySystem" class="form-label">Sistema de energía crítica</label> <br>
+                  <label> <input type="radio" id="criticalEnergySystem" formControlName="criticalEnergySystem" [value]="true"> Sí </label> <br>
+                  <label> <input type="radio" id="criticalEnergySystem" formControlName="criticalEnergySystem" [value]="false"> No </label>
+                  <div *ngIf="form.get('criticalEnergySystem')?.invalid && form.get('criticalEnergySystem')?.touched" class="invalid-feedback">
                     Este campo es obligatorio
                   </div>
                 </div>
@@ -187,10 +187,10 @@
                 </div>
               </div>
               <div class="col-4 col-sm-6">
-                <label for="yearsLife" class="form-label">Años de vida</label>
-                <input type="number" class="form-control" id="yearsLife" formControlName="yearsLife" appNumberValidation
-                  [ngClass]="{'is-invalid': form.get('yearsLife')?.invalid && form.get('yearsLife')?.touched}">
-                <div *ngIf="form.get('yearsLife')?.invalid && form.get('yearsLife')?.touched" class="invalid-feedback">
+                <label for="lifeSpanYears" class="form-label">Años de vida</label>
+                <input type="number" class="form-control" id="lifeSpanYears" formControlName="lifeSpanYears" appNumberValidation
+                  [ngClass]="{'is-invalid': form.get('lifeSpanYears')?.invalid && form.get('lifeSpanYears')?.touched}">
+                <div *ngIf="form.get('lifeSpanYears')?.invalid && form.get('lifeSpanYears')?.touched" class="invalid-feedback">
                   Este campo es obligatorio
                 </div>
             </div>
@@ -200,7 +200,7 @@
       </div>
       <div class="modal-footer">
         <app-button [label]="'Cerrar'" [function]="onCloseModal.bind(this)" data-bs-dismiss="modal"></app-button>
-        <app-button [label]="'Guardar cambios'" [function]="onSubmit.bind(this)"></app-button>
+        <app-button [label]="'Guardar cambios'" [function]="onSubmit.bind(this)" data-bs-dismiss="modal"></app-button>
       </div>
     </div>
   </div>

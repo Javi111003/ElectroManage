@@ -1,20 +1,23 @@
-import { EquipmentInstance } from './../../../../../models/equipment.interface';
-import { Component, Input } from '@angular/core';
+import { EquipmentInstance, EquipmentSpecificationEdited } from './../../../../../models/equipment.interface';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
 import { OfficeService } from '../../../../../services/office/office.service';
 import { EquipmentBrand, EquipmentSpecification, EquipmentType, EquipPropertyInfo } from '../../../../../models/equipment.interface';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-equipment-form',
   templateUrl: './equipment-form.component.html',
   styleUrl: './equipment-form.component.css'
 })
-export class EquipmentFormComponent {
+export class EquipmentFormComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription = new Subscription();
   @Input() data: any;
   enableAddType: boolean = false;
   enableAddBrand: boolean = false;
+  postMethod: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -27,30 +30,30 @@ export class EquipmentFormComponent {
     this.form = this.fb.group({
       workCenter: ['', Validators.required],
       office: ['', Validators.required],
-      equipmentType: ['', Validators.required],
+      type: ['', Validators.required],
       brand: ['', Validators.required],
       model: ['', Validators.required],
       useFrequency: ['', Validators.required],
       maintenanceStatus: ['', Validators.required],
       efficiency: [null, Validators.required],
       capacity: [null, Validators.required],
-      critical: [null, Validators.required],
-      avgConsumption: [null, Validators.required],
-      yearsLife: [null, Validators.required],
+      criticalEnergySystem: [null, Validators.required],
+      averageConsumption: [null, Validators.required],
+      lifeSpanYears: [null, Validators.required],
       instalationDate: [today, Validators.required],
     });
     this.dataService.setData(null);
 
 
-    this.form.get('equipmentType')!.valueChanges.subscribe(() => {
-      if (String(this.getControlValue('equipmentType')).trim() == '') {
+    this.form.get('type')!.valueChanges.subscribe(() => {
+      if (String(this.getControlValue('type')).trim() == '') {
         this.enableAddType = false;
         return;
       }
 
       this.enableAddType = !this.global.isOptionValid(
         this.typeStringArray,
-        this.getControlValue('equipmentType')
+        this.getControlValue('type')
       );
     });
 
@@ -85,6 +88,10 @@ export class EquipmentFormComponent {
     ['Bueno', 'Good'],
     ['Regular', 'Regular'],
     ['Malo', 'Bad']
+  ]);
+  criticalMatch: Map<string, boolean> = new Map<string, boolean>([
+    ['Sí', true],
+    ['No', false]
   ])
 
   typeStringArray: string[] = [];
@@ -94,14 +101,28 @@ export class EquipmentFormComponent {
   brandObjectArray: EquipPropertyInfo[] = [];
 
   ngOnInit() {
-    this.dataService.currentData.subscribe(newData => {
+    const sub = this.dataService.currentData.subscribe(newData => {
       if (newData) {
         this.data = newData[0];
+        const post = newData[3];
         this.form.patchValue(this.data);
         this.getControl('workCenter').setValue(newData[1]);
         this.getControl('office').setValue(newData[2]);
+        if (this.data) {
+          this.getControl('criticalEnergySystem').setValue(this.criticalMatch.get(this.data.criticalEnergySystem));
+          if (this.data.instalationDate) {
+            const dateString = this.data.instalationDate;
+            const dateParts = dateString.split('-');
+            const dateObject = new Date(Date.UTC(+dateParts[0], +dateParts[1] - 1, +dateParts[2] + 1));
+            this.getControl('instalationDate').setValue(dateObject);
+          }
+        }
+        this.postMethod = post;
+        console.log(this.data);
       }
     });
+
+    this.subscriptions.add(sub);
 
     this.global.Reset();
     this.global.getWorkCenters();
@@ -119,6 +140,10 @@ export class EquipmentFormComponent {
         this.global.getOfficesByCenter(this.global.centerSelectedId);
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   /**
@@ -168,7 +193,13 @@ export class EquipmentFormComponent {
         this.global.isOptionValid(this.global.officeStringArray, this.getControlValue('office'))) {
           const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
           if (confirmation) {
-            this.createEquipment();
+            if (this.postMethod)
+              this.createEquipment();
+            else {
+              this.editEquipment();
+              this.postMethod = true;
+              console.log("edited");
+            }
           }
     } else {
         this.global.openDialog('Por favor, selecciona un Centro de Trabajo y una Oficina válidos.');
@@ -219,7 +250,7 @@ export class EquipmentFormComponent {
   addType(): void {
     this.enableAddType = !this.enableAddType;
     const eqType: EquipmentType = {
-      name: this.getControlValue('equipmentType'),
+      name: this.getControlValue('type'),
       description: null
     }
     this.officeService.postEquipmentType(eqType).subscribe({
@@ -292,6 +323,7 @@ export class EquipmentFormComponent {
       },
       error: (error) => {
         this.global.openDialog(error.error.errors[0].reason);
+        console.log(eqBrand);
       }
     });
   }
@@ -335,80 +367,138 @@ export class EquipmentFormComponent {
   /**
    * Creates a new equipment instance.
    * This function gathers the necessary information from the form controls and creates a new equipment instance.
-   * It posts the equipment specification to the server and then uses the response to create an equipment instance.
    * The equipment instance is then posted to the server for creation.
    */
   createEquipment(): void {
-    const typeID = this.findId(
-      this.getControlValue('equipmentType'),
-      this.typeObjectArray
-    );
-    const brandID = this.findId(
-      this.getControlValue('brand'),
-      this.brandObjectArray
-    );
-    const useFrequency = this.useFrequencyMatch.get(
-      this.getControlValue('useFrequency')
-    )!;
-    const maintenanceStatus = this.maintenanceStatusMatch.get(
-      this.getControlValue('maintenanceStatus')
-    )!;
+    const commonValues = this.getCommonValues();
+    const specification: EquipmentSpecification = {
+      model: commonValues.model,
+      capacity: commonValues.capacity,
+      criticalEnergySystem: commonValues.critical,
+      averageConsumption: commonValues.avgConsumption,
+      lifeSpanYears: commonValues.lifeSpanYears,
+      efficiency: commonValues.efficiency,
+      equipmentBrandId: commonValues.brandID,
+      equipmentTypeId: commonValues.typeID
+    };
+    this.createOrEditSpecification(false, specification, commonValues);
+  }
+
+  /**
+   * Edits an equipment instance.
+   * This function gathers the necessary information from the form controls and edits an equipment instance.
+   * The equipment instance is then put to the server for edition.
+   */
+  editEquipment(): void {
+    const commonValues = this.getCommonValues();
+    const specification: EquipmentSpecificationEdited = {
+      id: this.data.specifId,
+      model: commonValues.model,
+      capacity: commonValues.capacity,
+      criticalEnergySystem: commonValues.critical,
+      averageConsumption: commonValues.avgConsumption,
+      lifeSpanYears: commonValues.lifeSpanYears,
+      efficiency: commonValues.efficiency,
+      equipmentBrandId: commonValues.brandID,
+      equipmentTypeId: commonValues.typeID
+    };
+    this.createOrEditSpecification(true, specification, commonValues);
+  }
+
+  /**
+   * This function is used to get the common values from the form controls.
+   * It retrieves the necessary information from the form controls and returns them as an object.
+   * @returns An object containing the common values from the form controls.
+   */
+  getCommonValues() {
+    const typeID = this.findId(this.getControlValue('type'), this.typeObjectArray);
+    const brandID = this.findId(this.getControlValue('brand'), this.brandObjectArray);
+    const useFrequency = this.useFrequencyMatch.get(this.getControlValue('useFrequency'))!;
+    const maintenanceStatus = this.maintenanceStatusMatch.get(this.getControlValue('maintenanceStatus'))!;
     const model = this.getControlValue('model');
     const capacity = this.getControlValue('capacity');
-    const critical = this.getControlValue('critical');
-    const avgConsumption = this.getControlValue('avgConsumption');
-    const lifeSpanYears = this.getControlValue('yearsLife');
+    const critical = this.getControlValue('criticalEnergySystem');
+    const avgConsumption = this.getControlValue('averageConsumption');
+    const lifeSpanYears = this.getControlValue('lifeSpanYears');
     const efficiency = this.getControlValue('efficiency');
     const installDate = this.getControlValue('instalationDate');
     const office = this.getControlValue('office');
 
     this.global.findOfficeId(office);
 
-    const specification: EquipmentSpecification = {
-      model: model,
-      capacity: capacity,
-      criticalEnergySystem: critical,
-      averageConsumption: avgConsumption,
-      lifeSpanYears: lifeSpanYears,
-      efficiency: efficiency,
-      equipmentBrandId: brandID,
-      equipmentTypeId: typeID
+    return {
+      typeID, brandID, useFrequency, maintenanceStatus, model, capacity, critical,
+      avgConsumption, lifeSpanYears, efficiency, installDate
     };
+  }
 
-    this.officeService.postEquipmentSpecification(specification).subscribe({
+  /**
+   * This function is used to create or edit an equipment specification.
+   * It determines whether to create or edit based on the `isEdit` parameter.
+   * It calls the appropriate service method (either `editEquipmentSpecification` or `postEquipmentSpecification`)
+   * with the provided `specification` and handles the response or error accordingly.
+   * If successful, it also creates or edits an equipment instance.
+   * @param isEdit A boolean indicating whether to edit or create a new equipment specification.
+   * @param specification The equipment specification to be created or edited.
+   * @param commonValues The common values required for creating or editing an equipment instance.
+   */
+  createOrEditSpecification(isEdit: boolean, specification: any, commonValues: any) {
+    const serviceMethod = isEdit ? this.officeService.editEquipmentSpecification : this.officeService.postEquipmentSpecification;
+    serviceMethod.call(this.officeService, specification).subscribe({
       next: (response) => {
-        console.log('Created successfully:', response);
+        console.log(isEdit ? 'Edited successfully:' : 'Created successfully:', response);
         const equipment: EquipmentInstance = {
-          instalationDate: installDate.toISOString(),
-          maintenanceStatus: maintenanceStatus,
-          useFrequency: useFrequency,
+          instalationDate: this.global.formatLocalDate(commonValues.installDate),
+          maintenanceStatus: commonValues.maintenanceStatus,
+          useFrequency: commonValues.useFrequency,
           equipmentSpecificationId: response.id,
           officeId: this.global.officeSelectedId
         };
-
-        console.log(equipment);
-
-        this.officeService.postEquipmentInstance(equipment).subscribe({
-          next: (response) => {
-            console.log('Created successfully:', response);
-            window.location.reload();
-          },
-          error: (error) => {
-            if(error.error)
-              this.global.openDialog(error.error.errors[0].reason);
-            else
-              this.global.openDialog('No se ha podido guardar correctamente. Error inesperado');
-          }
-        })
+        this.createOrEditInstance(isEdit, equipment);
       },
       error: (error) => {
-        if (error.statusText === 'Unknown Error')
-          this.global.openDialog("Falló la conexión. Intente de nuevo");
-        else if(error.error)
-          this.global.openDialog(error.error.errors[0].reason);
-        else
-          this.global.openDialog('No se ha podido guardar correctamente. Error inesperado');
+        this.handleError(error);
       }
     });
+  }
+
+  /**
+   * This function is used to create or edit an equipment instance.
+   * It determines whether to create or edit based on the `isEdit` parameter.
+   * It calls the appropriate service method (either `editEquipmentInstance` or `postEquipmentInstance`)
+   * with the provided `equipment` and handles the response or error accordingly.
+   * If successful, it notifies the data service to update the data.
+   * @param isEdit A boolean indicating whether to edit or create a new equipment instance.
+   * @param equipment The equipment instance to be created or edited.
+   */
+  createOrEditInstance(isEdit: boolean, equipment: EquipmentInstance) {
+    const serviceMethod = isEdit ? this.officeService.editEquipmentInstance : this.officeService.postEquipmentInstance;
+    serviceMethod.call(this.officeService, equipment, this.data?.id).subscribe({
+      next: (response) => {
+        console.log(isEdit ? 'Edited successfully:' : 'Created successfully:', response);
+        this.dataService.notifyDataUpdated();
+      },
+      error: (error) => {
+        this.handleError(error);
+      }
+    });
+  }
+
+  /**
+   * This function is used to handle errors.
+   * It checks the error status and displays a corresponding message to the user.
+   * If the error status is 'Unknown Error', it prompts the user to try again.
+   * If the error has a specific reason, it displays that reason.
+   * If the error is unexpected, it displays a generic error message.
+   * @param error The error object to be handled.
+   */
+  handleError(error: any) {
+    if (error.statusText === 'Unknown Error') {
+      this.global.openDialog("Falló la conexión. Intente de nuevo");
+    } else if (error.error) {
+      this.global.openDialog(error.error.errors[0].reason);
+    } else {
+      this.global.openDialog('No se ha podido guardar correctamente. Error inesperado');
+    }
   }
 }

@@ -14,13 +14,12 @@
         [label]="'Oficina'"
         [options]="global.officeStringArray"
         [control]="getControl('office')"
-        [isDisabled]="!this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter'))"
+        [isDisabled]="!this.global.isOptionValid.bind(this.global.centerStringArray, this.getControlValue('workCenter'))"
         >
       </app-autocomplete>
     </div>
   </div>
 
-  <!-- Botones -->
   <div class="form-buttons">
     <app-button
       [label]="'Añadir'"
@@ -36,7 +35,6 @@
     <app-button></app-button>
   </div>
 
-  <!-- Contenedor de la Tabla -->
   <div class="form-table" *ngIf="showTable">
     <app-table
       [dataSource]="dataSource"

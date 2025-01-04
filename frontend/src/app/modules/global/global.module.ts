@@ -170,6 +170,25 @@ export class GlobalModule {
   }
 
   /**
+   * Formats a given date into a string in the ISO 8601 format.
+   * This function takes a Date object and returns a string representation
+   * of the date in the ISO 8601 format, which is YYYY-MM-DDTHH:MM:SS.SSS.
+   * @param date The Date object to be formatted.
+   * @returns A string representation of the date in ISO 8601 format.
+   */
+  formatLocalDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    const hours = ('0' + date.getHours()).slice(-2);
+    const minutes = ('0' + date.getMinutes()).slice(-2);
+    const seconds = ('0' + date.getSeconds()).slice(-2);
+    const milliseconds = ('00' + date.getMilliseconds()).slice(-3);
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+  }
+
+  /**
    * This function resets all variables
    * to their initial default values. Use this function to
    * clear any temporary states and start fresh.

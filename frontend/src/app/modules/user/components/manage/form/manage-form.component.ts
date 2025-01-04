@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
 import { RegisterUser } from '../../../../../models/credential.interface';
 import { UserService } from '../../../../../services/user/user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-user-manage-form',
   templateUrl: './manage-form.component.html',
   styleUrl: './manage-form.component.css'
 })
-export class ManageFormComponent implements OnInit {
+export class ManageFormComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private fb: FormBuilder,
@@ -41,13 +43,18 @@ export class ManageFormComponent implements OnInit {
   ]);
 
   ngOnInit(): void {
-    this.dataService.currentData.subscribe(newData => {
+    const sub = this.dataService.currentData.subscribe(newData => {
       this.data = newData;
       this.form.patchValue(this.data);
     });
 
+    this.subscriptions.add(sub);
     this.global.Reset();
     this.global.getWorkCenters();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   /**
@@ -140,7 +147,7 @@ export class ManageFormComponent implements OnInit {
     this.user.registerUser(registerData).subscribe({
       next: (response) => {
         console.log('User registered successfully:', response);
-        window.location.reload();
+        this.dataService.notifyDataUpdated();
       },
       error: (error) => {
         if (error.statusText === 'Unknown Error')
