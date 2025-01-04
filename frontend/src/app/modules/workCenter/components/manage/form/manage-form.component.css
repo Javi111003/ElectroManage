@@ -11,27 +11,23 @@ button:hover {
   background-color: #00203b;
   color: white;
 }
-#teamWork, #adminAreaName, #instalationType, #policy, #formula-elements {
+#teamWork, #adminAreaName, #instalationType, #policy, #formula-elements, #applyingDate {
   border: none;
 }
 ::ng-deep .cdk-overlay-container {
   z-index: 9999;
 }
-
 #map {
   width: 100%;
   height: 400px;
   border-radius: 8px;
 }
-
 .modal-dialog {
   max-width: 800px;
 }
-
 .modal-content {
   border-radius: 12px;
 }
-
 .btn-location {
   padding: 0;
   height: 32px;
@@ -40,7 +36,6 @@ button:hover {
   align-items: center;
   justify-content: center;
 }
-
 .btn-location mat-icon {
   font-size: 20px;
   height: 20px;
@@ -49,4 +44,16 @@ button:hover {
   align-items: center;
   justify-content: center;
   margin: 0;
+}
+::ng-deep mat-chip {
+  width: 30px;
+  height: 30px;
+}
+#formula, #location, #longitude, #latitude {
+  background-color:#e6e6ec;
+  border: none;
+}
+#formula-elements ::ng-deep .mat-mdc-chip-set .mdc-evolution-chip-set__chips {
+  overflow: auto !important;
+  max-height: 90px !important;
 }

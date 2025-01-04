@@ -1,9 +1,9 @@
 <mat-form-field class="example-chip-list" appearance="outline" *ngIf="variable">
-  <mat-label>Fórmula</mat-label>
+  <mat-label>{{label}}</mat-label>
   <mat-chip-grid #chipGrid aria-label="Option selection">
     @for (option of options(); track $index) {
       <mat-chip-row (removed)="remove(option)">
-        {{option}}
+        {{option.name}}
         <button matChipRemove [attr.aria-label]="'remove ' + option">
           <mat-icon>cancel</mat-icon>
         </button>
@@ -20,12 +20,14 @@
     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
     (matChipInputTokenEnd)="add($event)"
   />
-  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedOption($event)">
     @for (option of filteredOptions(); track option) {
-      <mat-option [value]="option">
+      <mat-option [value]="option" (click)="selected(option)">
         <div class="option">
-          <mat-icon (click)="removeOption(option); $event.stopPropagation();">do_not_disturb_on</mat-icon>
-          {{option}}
+          <mat-icon (click)="removeOption(option); $event.stopPropagation();"
+          *ngIf="option.name != 'consumo' && option.name != 'por_ciento_extra' && option.name != 'aumento'"
+          >do_not_disturb_on</mat-icon>
+          {{option.name}}
         </div>
       </mat-option>
     }
@@ -37,6 +39,6 @@
   cdkDropListOrientation="horizontal"
 >
   @for (option of allOptions; track option) {
-    <mat-chip class="example-box" (click)="action(option)">{{option}}</mat-chip>
+    <mat-chip class="example-box" (click)="action(option)">{{option.name}}</mat-chip>
   }
 </mat-chip-set>

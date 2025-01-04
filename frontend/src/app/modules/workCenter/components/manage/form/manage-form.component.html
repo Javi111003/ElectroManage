@@ -5,7 +5,7 @@
         <h5 class="modal-title" id="exampleModalLabel">Formulario de Centro de Trabajo</h5>
       </div>
       <div class="modal-body">
-        <form id="form-container" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <form id="form-container" [formGroup]="form" (ngSubmit)="onSubmit.bind(this)">
           <div class="mb-3">
             <div class="row">
               <div class="col-8 col-sm-6">
@@ -42,8 +42,8 @@
                 </div>
               </div>
               <div class="col-sm-1">
-                <label for="addType" class="form-label"><br><br></label>
-                <app-button id="addType"
+                <label for="addArea" class="form-label"><br><br></label>
+                <app-button id="addArea"
                   [isDisabled]="!enableAddArea"
                   [label]="''"
                   [showIcon]="true"
@@ -83,7 +83,7 @@
             <div class="d-flex align-items-center mb-2">
               <label for="address" class="form-label mb-0">Ubicación</label>
               <button type="button" class="btn btn-custom btn-location ms-2" (click)="openMapModal()">
-                <mat-icon >location_on</mat-icon>
+                <mat-icon>location_on</mat-icon>
               </button>
             </div>
             <div class="row">
@@ -99,7 +99,7 @@
               </div>
               <div class="col-3">
                 <label for="longitude" class="form-label mb-0">Longitud</label>
-                <input type="number" class="form-control" formControlName="longitude" readonly>
+                <input type="number" id="longitude" class="form-control" formControlName="longitude" readonly>
               </div>
             </div>
           </div>
@@ -115,12 +115,12 @@
                 ></app-autocomplete>
               </div>
               <div class="col-4 col-sm-4">
-                <label for="date" class="form-label">Fecha de aplicación</label> <br>
-                <app-datepicker
+                <label for="applyingDate" class="form-label">Fecha de aplicación</label> <br>
+                <app-datepicker class="form-control" id="applyingDate"
                   [filter]="filterDate"
-                  [control]="getControl('date')"
+                  [control]="getControl('applyingDate')"
                 ></app-datepicker>
-                <div *ngIf="form.get('date')?.invalid && form.get('date')?.touched" class="invalid-feedback">
+                <div *ngIf="form.get('applyingDate')?.invalid && form.get('applyingDate')?.touched" class="invalid-feedback">
                   Este campo es obligatorio
                 </div>
               </div>
@@ -139,36 +139,27 @@
           </div>
 
           <div class="mb-3">
+            Fórmula de Costo
             <div class="row">
               <div class="col-sm-9">
-                <label for="formula" class="form-label">Fórmula de Costo</label>
-                <input type="text" class="form-control" id="formula" formControlName="formula"
-                  [ngClass]="{'is-invalid': form.get('formula')?.invalid && form.get('formula')?.touched}">
-                <div *ngIf="form.get('formula')?.invalid && form.get('formula')?.touched" class="invalid-feedback">
-                  Este campo es obligatorio
-                </div>
-              </div>
-              <div class="col-sm-3">
                 <br>
-                <app-button
-                  [label]="'Asignar valores'"
-                  [function]="assignValues.bind(this)"
-                ></app-button>
-              </div>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <div class="row">
-              <div class="col-sm-8">
+                <div class="col-sm-10 d-flex align-items-center">
+                  <label for="formula" class="col-sm-2">Costo =</label>
+                  <input type="string" id="formula" class="form-control col-sm-8" formControlName="formula" readonly
+                  [ngClass]="{'is-invalid': form.get('formula')?.invalid && form.get('formula')?.touched}">
+                </div>
+                <br>
                 <app-chips id="formula-elements"
+                  [label]="'Crear Fórmula'"
                   [allOptions]="formulaVariables"
                   [options]="options"
                   [function]="addElementFormula.bind(this)"
+                  [validateOption]="validateOption.bind(this)"
                 ></app-chips>
               </div>
-              <div class="col-sm-4">
-                <app-chips id="formula-elements"
+              <div class="col-sm-3">
+                <br>
+                <app-chips id="formula-symbols"
                   [allOptions]="formulaSymbols"
                   [function]="addSymbolFormula.bind(this)"
                   [variable]="false"
