@@ -3,7 +3,6 @@ using ElectroManage.Application.Mappers;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Linq.Expressions;
 
 namespace ElectroManage.Application.Features.EquipmentInstance.Query.ListEquipmentByOffice;
 
@@ -22,23 +21,23 @@ public class ListEquipmentByOfficeQueryHandler : CoreQueryHandler<ListEquipmentB
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Started");
         var officeRepository = _unitOfWork.DbRepository<Domain.Entites.Offices.Office>();
-        
-        var office = await officeRepository.GetAllListOnly(useInactive: true, filters: x => x.Id == command.OfficeId)
-        .Include(x => x.Company)
-        .Include(x => x.Equipments)
-            .ThenInclude(x => x.EquipmentSpecification)
-            .ThenInclude(x => x.EquipmentBrand)
-        .Include(x => x.Equipments)
-            .ThenInclude(x => x.EquipmentSpecification)
-            .ThenInclude(x => x.EquipmentType)
-        .ToListAsync();
-        if (office.Count == 0)
+        var equipmentsRepository = _unitOfWork.DbRepository<Domain.Entites.Equipment.EquipmentInstance>();
+        var office = await officeRepository.FirstAsync(useInactive: true, filters: x => x.Id == command.OfficeId);
+        if (office is null)
         {
             _logger.LogError($"{nameof(ExecuteAsync)} | Office with id {command.OfficeId} not found");
             ThrowError($"Office with id {command.OfficeId} not found", 404);
         }
-        var equipments = office[0].Equipments.Select(x => EquipmentInstanceMapper.MapToEquipmentInstanceDTO(x)).ToList();
+        var equipments = await equipmentsRepository.GetAllListOnly(filters: e => e.OfficeId == command.OfficeId)
+                .Include(x => x.Office)
+                    .ThenInclude(x => x.Company)
+                .Include(x => x.EquipmentSpecification)
+                    .ThenInclude(x => x.EquipmentBrand)
+                .Include(x => x.EquipmentSpecification)
+                    .ThenInclude(x => x.EquipmentType)
+                .ToListAsync();
+        var equipmentDtos = equipments.Select(x => EquipmentInstanceMapper.MapToEquipmentInstanceDTO(x)).ToList();
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Completed");
-        return equipments;
+        return equipmentDtos;
     }
 }

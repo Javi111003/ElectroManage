@@ -1,5 +1,6 @@
 ﻿using ElectroManage.Application.DTO_s;
 using ElectroManage.Domain.DataAccess.Abstractions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
@@ -20,6 +21,7 @@ public class ListOfficeQueryHandler : CoreQueryHandler<ListOfficeByCompanyQuery,
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Started");
         var companyRepository = UnitOfWork!.DbRepository<Domain.Entites.Sucursal.Company>();
+        var officeRepository = UnitOfWork!.DbRepository<Domain.Entites.Offices.Office>();
         var include = new List<Expression<Func<Domain.Entites.Sucursal.Company, object>>>
         {
             x => x.Offices
@@ -30,13 +32,14 @@ public class ListOfficeQueryHandler : CoreQueryHandler<ListOfficeByCompanyQuery,
             _logger.LogError($"{nameof(ExecuteAsync)} | Company with id {command.CompanyId} not found");
             ThrowError($"Company with id {command.CompanyId} not found", 404);
         }
-        var offices = company.Offices.Select(x => new OfficeDTO
-        {
-            Id = x.Id,
-            Name = x.Name,
-            Description = x.Description,
-            Company = new CompanyDTO { Id = company.Id, Name = company.Name}
-        }).ToList();
+        var offices = await officeRepository.GetAll(filters: x => x.CompanyId == command.CompanyId)
+            .Select(x => new OfficeDTO
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description,
+                Company = new CompanyDTO { Id = company.Id, Name = company.Name }
+            }).ToListAsync();
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Completed");
         return offices;
     }
