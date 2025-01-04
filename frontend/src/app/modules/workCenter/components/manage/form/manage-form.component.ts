@@ -4,6 +4,7 @@ import { Modal } from 'bootstrap';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
+import { chipElement } from '../../../../../shared/components/chips/chips.component';
 
 @Component({
   selector: 'app-center-manage-form',
@@ -16,17 +17,35 @@ export class ManageFormComponent implements OnInit {
   private map!: L.Map;
   private marker!: L.Marker;
   private modal!: Modal;
-  formulaVariables: string[] = [
-    'consumo', 'por ciento extra', 'aumento',
+  formulaVariables: chipElement[] = [
+    { id: 0, name: 'consumo' },
+    { id: 1, name: 'por_ciento_extra' },
+    { id: 2, name: 'aumento' }
   ];
 
-  formulaSymbols: string[] = [
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-    '+', '-', '*', '/', '^', '\u221A', '(', ')'
+  formulaSymbols: chipElement[] = [
+    { id: -1, name: 'C' }, { id: -2, name: '^' },
+    { id: -3, name: '\u221A' }, { id: -4, name: '.' },
+    { id: -5, name: '7' }, { id: -6, name: '8' },
+    { id: -7, name: '9' }, { id: -8, name: '+' },
+    { id: -9, name: '4' }, { id: -10, name: '5' },
+    { id: -11, name: '6' }, { id: -12, name: '-' },
+    { id: -13, name: '1' }, { id: -14, name: '2' },
+    { id: -15, name: '3' }, { id: -16, name: '*' },
+    { id: -17, name: '(' }, { id: -18, name: '0' },
+    { id: -19, name: ')' }, { id: -20, name: '/' }
   ];
 
   options = signal([
-    'consumo', '*', '(', '1', '+', 'por ciento extra', ')', '+', 'aumento'
+    { id: 0, name: 'consumo' },
+    { id: -16, name: '*' },
+    { id: -17, name: '(' },
+    { id: -13, name: '1' },
+    { id: -8, name: '+' },
+    { id: 1, name: 'por_ciento_extra' },
+    { id: -19, name: ')' },
+    { id: -8, name: '+' },
+    { id: 2, name: 'aumento' }
   ]);
 
   myControls: string[] = [
@@ -72,8 +91,6 @@ export class ManageFormComponent implements OnInit {
 
       this.enableAddArea = !this.global.isOptionValid(this.adminAreas, this.getControlValue('adminAreaName'))
     });
-
-    this.addElementFormula(this.options());
   }
 
   data: any;
@@ -99,6 +116,8 @@ export class ManageFormComponent implements OnInit {
       this.data = newData;
       this.form.patchValue(this.data);
     });
+
+    this.addElementFormula();
   }
 
   getControl(control: string): FormControl {
@@ -127,9 +146,19 @@ export class ManageFormComponent implements OnInit {
     });
     this.enableAddArea = this.enableAddType = false;
     this.options = signal([
-      'consumo', '*', '(', '1', '+', 'por ciento extra', ')', '+', 'aumento'
+      { id: 0, name: 'consumo' },
+      { id: -16, name: '*' },
+      { id: -17, name: '(' },
+      { id: -13, name: '1' },
+      { id: -8, name: '+' },
+      { id: 1, name: 'por_ciento_extra' },
+      { id: -19, name: ')' },
+      { id: -8, name: '+' },
+      { id: 2, name: 'aumento' }
     ]);
-    this.addElementFormula(this.options());
+
+
+    this.addElementFormula();
   }
 
   onSubmit(): void {
@@ -153,12 +182,10 @@ export class ManageFormComponent implements OnInit {
   }
 
   addType(): void {
-    console.log("añadir tipo");
     this.types.push(this.getControlValue('instalationType'));
   }
 
   addArea(): void {
-    console.log("añadir area");
     this.adminAreas.push(this.getControlValue('adminAreaName'));
   }
 
@@ -218,7 +245,6 @@ export class ManageFormComponent implements OnInit {
         longitude: position.lng.toFixed(6),
         location: location
       });
-      console.log(this.getControlValue('location'));
     }
     this.modal.hide();
   }
@@ -234,15 +260,35 @@ export class ManageFormComponent implements OnInit {
     }
   }
 
-  addElementFormula(options: string[]): void {
+  addElementFormula(): void {
+    const names = this.options().map(option => option.name);
     this.form.patchValue({
-      formula: this.options().join(' ')
+      formula: names.join(' ')
     });
+
+    this.assignValues();
   }
 
-  addSymbolFormula(option: string): void {
+  addSymbolFormula(option: chipElement): void {
+    if (option.name === 'C') {
+      this.options = signal([]);
+      this.addElementFormula();
+      return;
+    }
+
     this.options = signal([...this.options(), option]);
-    this.addElementFormula(this.options());
+    this.addElementFormula();
+  }
+
+  validateOption(option: string): boolean {
+    const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    const symbols = ['`', '~', '%', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '+', '=', '{', '}', '[', ']', '|', '\\', ':', ';', '"', '\'', '<', '>', ',', '.', '?', '/'];
+
+    if (numbers.includes(option[0]) || symbols.find(symbol => option.includes(symbol)) != undefined) {
+      return false;
+    }
+
+    return true;
   }
 
   clearForm(): void {
@@ -267,8 +313,10 @@ export class ManageFormComponent implements OnInit {
     let row: HTMLDivElement | null = null;
     let usedOptions: string[] = [];
     for (const option of this.options()) {
-      if (!this.formulaSymbols.includes(option) && option != 'consumo' && !usedOptions.includes(option)) {
-        this.form.addControl(option, new FormControl('', Validators.required));
+      if (this.formulaSymbols.every(symbol => symbol.id != option.id && symbol.name != option.name)
+        && option.name != 'consumo' && !usedOptions.includes(option.name)) {
+
+        this.form.addControl(option.name, this.fb.control('', Validators.required));
         const formContainer = document.getElementById('form-container');
         if (formContainer) {
           if (i % 3 == 0) {
@@ -281,14 +329,13 @@ export class ManageFormComponent implements OnInit {
           column.className = 'col-sm-4';
 
           const label = document.createElement('label');
-          label.htmlFor = option;
-          label.innerText = option;
+          label.htmlFor = option.name;
+          label.innerText = option.name;
 
           const input = document.createElement('input');
           input.type = 'number';
           input.className = 'form-control';
-          input.id = option;
-          input.name = option;
+          input.id = option.name;
 
           column.appendChild(label);
           column.appendChild(input);
@@ -297,7 +344,7 @@ export class ManageFormComponent implements OnInit {
           }
 
           i++;
-          usedOptions.push(option);
+          usedOptions.push(option.name);
         }
       }
     }

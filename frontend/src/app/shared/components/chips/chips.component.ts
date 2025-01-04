@@ -1,9 +1,14 @@
 import { Component, Input } from '@angular/core';
-import { InputModalityDetector, LiveAnnouncer } from '@angular/cdk/a11y';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { computed, inject, model, signal } from '@angular/core';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
+
+export interface chipElement {
+  id: number,
+  name: string
+}
 
 @Component({
   selector: 'app-chips',
@@ -11,19 +16,25 @@ import { MatChipInputEvent } from '@angular/material/chips';
   styleUrl: './chips.component.css'
 })
 export class ChipsComponent {
-  @Input() options = signal(['']);
-  @Input() allOptions: string[] = [];
-  @Input() function: (...arg: any[]) => void = () => {};
-  @Input() actionOption: (option: string) => void = (option: string) => {};
-  @Input() deleteOption: (...args: any[]) => any = ()=>{};
+  @Input() label: string = '';
+  @Input() options = signal([
+    {
+      id: 0,
+      name: ''
+    }
+  ]);
+  @Input() allOptions: chipElement[] = [];
   @Input() variable: boolean = true;
+  @Input() function: (...arg: any[]) => void = () => {};
+  @Input() deleteOption: (...args: any[]) => any = ()=>{};
+  @Input() validateOption: (...args: any[]) => boolean = ()=>{ return true; };
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   readonly currentOption = model('');
-  readonly filteredOptions = computed(() => {
+  filteredOptions = computed(() => {
     const currentOption = this.currentOption().toLowerCase();
     return currentOption
-      ? this.allOptions.filter(option => option.toLowerCase().includes(currentOption))
+      ? this.allOptions.filter(option => option.name.toLowerCase().includes(currentOption))
       : this.allOptions.slice();
   });
 
@@ -31,19 +42,28 @@ export class ChipsComponent {
 
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
+    const id = this.allOptions.length;
+    const obj = {
+      id: id,
+      name: value
+    };
 
-    // Add our fruit
-    if (value) {
-      this.options.update(options => [...options, value]);
-      this.allOptions.push(value);
+    if (this.allOptions.find(option => option.name === value) != undefined)
+      return;
+
+    if (value && this.validateOption(value)) {
+      this.options.update(options => [...options, obj]);
+      this.allOptions.push(obj);
       this.function(this.options());
     }
 
-    // Clear the input value
     this.currentOption.set('');
+    if (!this.validateOption(value)) {
+      alert('Opción inválida');
+    }
   }
 
-  remove(option: string): void {
+  remove(option: chipElement): void {
     this.options.update(options => {
       const index = options.indexOf(option);
       if (index < 0) {
@@ -54,22 +74,34 @@ export class ChipsComponent {
       this.announcer.announce(`Removed ${option}`);
       return [...options];
     });
+
     this.function(this.options());
   }
 
-  selected(event: MatAutocompleteSelectedEvent): void {
-    this.options.update(options => [...options, event.option.viewValue]);
-    this.currentOption.set('');
+  selectedOption(event: MatAutocompleteSelectedEvent) {
     event.option.deselect();
+  }
+
+  selected(event: chipElement): void {
+    const option = event;
+    this.options.update(options => [...options, option]);
+    this.currentOption.set('');
     this.function(this.options());
   }
 
-  action(option: string): void {
+  action(option: chipElement): void {
     this.function(option);
   }
 
-  removeOption(option: string): void {
-    this.options.update(options => options = this.options().filter(item => item !== option));
+  removeOption(option: chipElement): void {
+    this.allOptions = this.allOptions.filter(item => item !== option);
+    this.options.update(options => options = this.options().filter(item => item.name !== option.name));
+    this.filteredOptions = computed(() => {
+      const currentOption = this.currentOption().toLowerCase();
+      return currentOption
+        ? this.allOptions.filter(option => option.name.toLowerCase().includes(currentOption))
+        : this.allOptions.slice();
+    });
     this.deleteOption(option);
   }
 }

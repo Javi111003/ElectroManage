@@ -1,0 +1,9 @@
+:host {
+  display: flex;
+}
+mat-progress-bar {
+  width: 400px;
+}
+::ng-deep .mat-mdc-snack-bar-container .mat-mdc-snackbar-surface {
+  background-color: #00203b !important;
+}
