@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
+import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
 
 declare var bootstrap: any;
 
@@ -61,8 +62,10 @@ export class ManageComponent {
 
   constructor (
     public global: GlobalModule,
-    private dataService: DataService
+    private dataService: DataService,
+    private snackbarService: SnackbarService
   ) {}
+
 
   onClick(): void {
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
@@ -72,7 +75,7 @@ export class ManageComponent {
   delete(): void {
     this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
       result => { if (result) {
-        this.global.openDialog('Eliminado');
+        this.snackbarService.openSnackBar('Eliminado exitosamente...');
       }
     });
   }

@@ -15,4 +15,12 @@ mat-icon:hover {
   flex-direction: row;
   align-items: center;
 }
-
+::ng-deep .mat-mdc-chip-remove {
+  display: none;
+}
+::ng-deep .mat-mdc-chip-remove {
+  visibility: hidden !important;
+}
+::ng-deep .mat-mdc-standard-chip:hover .mat-mdc-chip-remove {
+  visibility: visible !important;
+}
