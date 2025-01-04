@@ -109,7 +109,7 @@ export class ComparisonComponent implements OnInit {
    * @param centerSelectedId The ID of the selected center.
    */
   getPolicies(centerSelectedId: any) {
-    this.httpPolicy.getPolicies(centerSelectedId).subscribe(policies => {
+    this.httpPolicy.getPoliciesByCenter(centerSelectedId).subscribe(policies => {
       this.objectsPolicy = policies;
       this.optionsPolicy = policies.map(policy => policy.name);
     });

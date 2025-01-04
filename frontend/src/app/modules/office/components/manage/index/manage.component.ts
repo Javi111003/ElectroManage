@@ -82,6 +82,12 @@ export class ManageComponent implements OnInit {
     return this.form.get(control)?.value;
   }
 
+  /**
+   * This function is used to handle the "Add" button click event.
+   * It retrieves the value of 'workCenter' from the form control,
+   * sets it along with a null value and a boolean indicating it's a new entry,
+   * and then opens the modal for adding a new equipment.
+   */
   onAddClick(): void {
     const center = this.getControlValue('workCenter');
     this.dataService.setData([null, center, true]);
@@ -99,10 +105,7 @@ export class ManageComponent implements OnInit {
     if (condition) {
       const center = this.getControlValue('workCenter');
       if (this.global.isOptionValid(this.global.centerStringArray, center)) {
-        this.dataSource.data = this.global.officeObjectArray.map(item => ({
-          officeName: item.name,
-          description: item.description
-        }))
+        this.reloadTableData(this.global.officeObjectArray)
         this.showTable = true;
       }
       else {
@@ -111,14 +114,37 @@ export class ManageComponent implements OnInit {
     }
   }
 
-  delete(): void {
+  /**
+   * Handles the deletion of an office.
+   * This function prompts the user for confirmation before deleting the selected office.
+   * If the user confirms, it deletes the office from the server and notifies the data service to update the data.
+   * If the user cancels, it does nothing.
+   * @param item The office instance to be deleted.
+   */
+  delete(item: any): void {
     this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
       result => { if (result) {
-        this.global.openDialog('Eliminado');
+        this.global.findOfficeId(item.officeName);
+        this.global.httpOffice.deleteOffice(this.global.officeSelectedId).subscribe({
+          next: (response) => {
+            console.log('Deleted successfully:', response);
+            this.dataService.notifyDataUpdated();
+          },
+          error: (error) => {
+            this.global.openDialog(error.error.errors[0].reason);
+          }
+        });
       }
     });
   }
 
+  /**
+   * This function is used to handle the "Edit" button click event.
+   * It retrieves the values of 'workCenter' and 'office' from the form controls,
+   * sets them along with the selected office item and a boolean indicating it's an edit operation,
+   * and then opens the modal for editing an existing office.
+   * @param item The office instance to be edited.
+   */
   edit(item: any): void {
     this.global.findOfficeId(item.officeName);
     this.dataService.setData([item, this.getControlValue('workCenter'), false]);
@@ -127,8 +153,13 @@ export class ManageComponent implements OnInit {
     modal.show();
   }
 
+  /**
+   * This function is used to reload the table data.
+   * It takes an array of office instances as a parameter and maps them to the data source.
+   * The data source is then updated with the new data.
+   * @param offices An array of office instances to be mapped to the data source.
+   */
   reloadTableData(offices: any[]) {
-    console.log(offices);
     this.dataSource.data = offices.map(item => ({
       officeName: item.name,
       description: item.description

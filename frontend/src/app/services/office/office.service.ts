@@ -3,7 +3,10 @@ import { API_URL } from '../../config/api.config';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Office, OfficeInfo } from '../../models/office.interface';
-import { Equipment, EquipmentBrand, EquipmentInstance, EquipmentSpecification, EquipmentType, EquipPropertyInfo } from '../../models/equipment.interface';
+import {
+  Equipment, EquipmentBrand, EquipmentInstance, EquipmentSpecification,
+  EquipmentSpecificationEdited, EquipmentType, EquipPropertyInfo
+} from '../../models/equipment.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -36,20 +39,36 @@ export class OfficeService {
     return this.http.post<any>(`${API_URL}/v1/office`, office);
   }
 
+  /**
+   * Edits an existing office.
+   * This method sends an HTTP PUT request to the API to update an existing office.
+   * @param office The Office object to be updated.
+   * @param officeID The ID of the office to be updated.
+   * @returns An Observable that resolves to the response from the API.
+   */
   editOffice(office: Office, officeID: number): Observable<any> {
     return this.http.put<any>(`${API_URL}/v1/office/${officeID}`, office);
+  }
+
+  /**
+   * Deletes an office from the API.
+   * This method sends an HTTP DELETE request to the API to remove an existing office.
+   * @param officeID The ID of the office to be deleted.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  deleteOffice(officeID: number): Observable<any> {
+    return this.http.delete<any>(`${API_URL}/v1/office/${officeID}`);
   }
 
   /**
    * Fetches the list of equipment for a given office from the API.
    * This method sends an HTTP GET request to the API to retrieve a list of equipment
    * for a specified office.
-   * @param centerID The ID of the work center to which the office belongs.
    * @param officeID The ID of the office for which to fetch equipment.
    * @returns An Observable that resolves to an array of Equipment objects.
    */
-  getEquipmentList(centerID: number, officeID: number): Observable<Equipment[]> {
-    const url = `${this.officeListUrl}/${centerID}/office/${officeID}/equipments`;
+  getEquipmentList(officeID: number): Observable<Equipment[]> {
+    const url = `${API_URL}/v1/office/${officeID}/list_equipment`;
     return this.http.get<Equipment[]>(url);
   }
 
@@ -123,6 +142,26 @@ export class OfficeService {
   }
 
   /**
+   * Deletes an equipment specification from the API.
+   * This method sends an HTTP DELETE request to the API to remove an equipment specification.
+   * @param id The ID of the equipment specification to be deleted.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  deleteEquipmentSpecification(id: number): Observable<any> {
+    return this.http.delete<any>(`${API_URL}/v1/equipment_specification/${id}`);
+  }
+
+  /**
+   * Edits an existing equipment specification in the API.
+   * This method sends an HTTP PUT request to the API to update an equipment specification.
+   * @param specification The EquipmentSpecificationEdited object to be updated.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  editEquipmentSpecification(specification: EquipmentSpecificationEdited): Observable<any> {
+    return this.http.put<any>(`${API_URL}/v1/equipment_specification`, specification);
+  }
+
+  /**
    * Posts a new equipment instance to the API.
    * This method sends an HTTP POST request to the API to create a new equipment instance.
    * @param equipment The EquipmentInstance object to be posted.
@@ -130,5 +169,26 @@ export class OfficeService {
    */
   postEquipmentInstance(equipment: EquipmentInstance): Observable<any> {
     return this.http.post<any>(`${API_URL}/v1/equipment`, equipment);
+  }
+
+  /**
+   * Deletes an equipment instance from the API.
+   * This method sends an HTTP DELETE request to the API to remove an equipment instance.
+   * @param equipmentID The ID of the equipment instance to be deleted.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  deleteEquipmentInstance(equipmentID: number) {
+    return this.http.delete<any>(`${API_URL}/v1/equipment/${equipmentID}`);
+  }
+
+  /**
+   * Edits an existing equipment instance in the API.
+   * This method sends an HTTP PUT request to the API to update an equipment instance.
+   * @param equipment The EquipmentInstance object to be updated.
+   * @param equipmentID The ID of the equipment instance to be updated.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  editEquipmentInstance(equipment: EquipmentInstance, equipmentID: number): Observable<any> {
+    return this.http.put<any>(`${API_URL}/v1/equipment/${equipmentID}`, equipment);
   }
 }
