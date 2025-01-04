@@ -1,8 +1,9 @@
-﻿using ElectroManage.Application.Features.Company.Query.TopFiveCountWarnings;
+﻿using ElectroManage.Application.DTO_s;
+using ElectroManage.Application.Features.Company.Query.TopFiveCountWarnings;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.DashBoard;
 
-public class GetTopFiveCompaniesCountWarningEndpoint : Endpoint<EmptyRequest, GetTopFiveCompaiesCountWarningResponse>
+public class GetTopFiveCompaniesCountWarningEndpoint : Endpoint<EmptyRequest, IEnumerable<TopFiveCompaniesCountWarningDTO>>
 {
     public override void Configure()
     {
