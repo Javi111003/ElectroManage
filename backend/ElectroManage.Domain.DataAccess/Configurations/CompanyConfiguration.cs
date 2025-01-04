@@ -31,7 +31,7 @@ public class CompanyConfiguration : IEntityTypeConfiguration<Company>
         builder.HasOne(c => c.ManagementTeam)
             .WithOne(m => m.Company)
             .HasForeignKey<Company>(c => c.ManagementTeamId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasMany(c => c.Workers)
             .WithOne(w => w.Company)

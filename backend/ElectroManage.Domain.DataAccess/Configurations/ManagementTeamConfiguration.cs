@@ -17,6 +17,6 @@ public class ManagementTeamConfiguration : IEntityTypeConfiguration<ManagementTe
         builder.HasMany(mt => mt.Members)
             .WithOne(m => m.ManagementTeam)
             .HasForeignKey(m => m.ManagementTeamId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }
