@@ -54,9 +54,9 @@
                     <span class="limit"><strong>Límite</strong></span>
                 </li>
                 <!-- Dynamically generated list items for work centers -->
-                <li class="workcenter-item" *ngFor="let center of workCenters">
-                    <span>{{ center.name }}</span>
-                    <span style="color: red;">{{ center.consumption }}</span>
+                <li class="workcenter-item" *ngFor="let center of topConsumingCenters">
+                    <span>{{ center.companyId }}</span>
+                    <span style="color: red;">{{ center.totalConsumption }}</span>
                     <span style="color: gray;">{{ center.limit }}</span>
                 </li>
             </ul>
@@ -77,9 +77,9 @@
                     <span class="alerts-legend"><strong>Alertas</strong></span>
                 </li>
                 <!-- Dynamically generated list items for work centers -->
-                <li class="workcenter-item" *ngFor="let alert of alertData">
-                    <span class="name">{{ alert.center }}</span>
-                    <span style="color: red;">{{ alert.actual_data}}</span>
+                <li class="workcenter-item" *ngFor="let alert of topWarnedCenters">
+                    <span class="name">{{ alert.company.name }}</span>
+                    <span style="color: red;">{{ alert.countWarning}}</span>
                 </li>
             </ul>
         </div>
