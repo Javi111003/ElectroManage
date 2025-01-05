@@ -58,11 +58,11 @@ public static class ServiceExtensions
                     // Configuración para registrar eventos, como fallos de autenticación
                     options.Events = new JwtBearerEvents
                     {
-                        OnMessageReceived = context =>
-                        {
-                            Console.WriteLine($"Token recibido: {context.Request.Headers["Authorization"]}");
-                            return Task.CompletedTask;
-                        },
+                        //OnMessageReceived = context =>
+                        //{
+                        //    Console.WriteLine($"Token recibido: {context.Request.Headers["Authorization"]}");
+                        //    return Task.CompletedTask;
+                        //},
                         OnAuthenticationFailed = context =>
                         {
                             Console.WriteLine($"Token inválido: {context.Exception.ToString()}");
