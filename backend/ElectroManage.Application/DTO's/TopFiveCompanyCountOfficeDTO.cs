@@ -3,5 +3,6 @@
 public record TopFiveCompanyCountOfficeDTO
 {
     public long CompanyId { get; set; }
-    public long CountOffice { get; set; }
+    public string CompanyName { get; set; } = string.Empty;
+    public long OfficeCount { get; set; }
 }

@@ -1,8 +1,9 @@
-﻿using ElectroManage.Application.Features.Company.Query.TopFiveCountOffice;
+﻿using ElectroManage.Application.DTO_s;
+using ElectroManage.Application.Features.Company.Query.TopFiveCountOffice;
 
-namespace ElectroManage.WebAPI.Endpoint.v1.DashBoard;
+namespace ElectroManage.WebAPI.Endpoint.v1.Dashboard;
 
-public class GetTopFiveCompanyCountOfficesEndpoint : Endpoint<EmptyRequest, GetTopFiveCompaniesCountOfficeResponse>
+public class GetTopFiveCompanyCountOfficesEndpoint : Endpoint<EmptyRequest, IEnumerable<TopFiveCompanyCountOfficeDTO>>
 {
     public override void Configure()
     {
@@ -16,8 +17,8 @@ public class GetTopFiveCompanyCountOfficesEndpoint : Endpoint<EmptyRequest, GetT
 
     public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
     {
-        var topFive = new GetTopFiveCompaniesCountOfficeCommand();
-        var data = await topFive.ExecuteAsync(ct);
+        var topFiveQuery = new GetTopFiveCompaniesCountOfficeQuery();
+        var data = await topFiveQuery.ExecuteAsync(ct);
         await SendAsync(data);
     }
 }
