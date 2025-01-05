@@ -22,6 +22,7 @@ public static class CompanyMapper
             },
             Location = new LocationDTO
             {
+                Id = company.Location.Id,
                 AddressDetails = company.Location.AddressDetails,
                 CoordenateDTO = new CoordenateDTO
                 {
