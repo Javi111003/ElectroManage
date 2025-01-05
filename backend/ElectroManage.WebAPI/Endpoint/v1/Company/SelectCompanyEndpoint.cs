@@ -1,7 +1,7 @@
 using ElectroManage.Application.DTO_s;
 using ElectroManage.Application.Features.Company.Query.ListSelect;
 
-namespace ElectroManage.WebAPI.Endpoint.v1.Role;
+namespace ElectroManage.WebAPI.Endpoint.v1.Company;
 public class SelectCompanyEndpoint : Endpoint<EmptyRequest, IEnumerable<CompanyDTO>>
 {
     public override void Configure()

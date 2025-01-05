@@ -1,8 +1,9 @@
 ﻿using ElectroManage.Application.Features.Company.Query.Get;
+using ElectroManage.Application.DTO_s;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.Company;
 
-public class CompanyGetByIdEndpoint : Endpoint<CompanyGetByIdCommand,  CompanyGetByIdResponse>
+public class CompanyGetByIdEndpoint : Endpoint<CompanyGetByIdCommand,  CompanyResponse>
 {
     public override void Configure()
     {

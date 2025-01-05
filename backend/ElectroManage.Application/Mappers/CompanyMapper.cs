@@ -4,9 +4,9 @@ using ElectroManage.Application.Features.Company.Query.Get;
 namespace ElectroManage.Application.Mappers;
 public static class CompanyMapper
 {
-    public static CompanyGetByIdResponse ToResponse(Domain.Entites.Sucursal.Company company)
+    public static CompanyResponse ToResponse(Domain.Entites.Sucursal.Company company)
     {
-        return new CompanyGetByIdResponse
+        return new CompanyResponse
         {
             Id = company.Id,
             Name = company.Name,
