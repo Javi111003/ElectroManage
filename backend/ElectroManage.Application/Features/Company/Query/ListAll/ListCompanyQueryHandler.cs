@@ -19,7 +19,7 @@ public class ListCompanyQueryHandler : CoreQueryHandler<ListCompanyQuery, IEnume
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
         var companyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Company>();
-        var companies = await companyRepository.GetAll(useInactive: true)
+        var companies = await companyRepository.GetAll(useInactive: false)
         .Include(x => x.AministrativeArea)
         .Include(x => x.InstalationType)
         .Include(x => x.Location)

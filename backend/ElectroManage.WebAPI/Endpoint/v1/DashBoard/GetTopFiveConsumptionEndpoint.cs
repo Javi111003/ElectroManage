@@ -7,8 +7,8 @@ public class GetTopFiveConsumptionEndpoint : Endpoint<EmptyRequest, IEnumerable<
 {
     public override void Configure()
     {
-        Options(x => x.WithTags(RouteGroup.DashBoard));
-        Tags(RouteGroup.DashBoard);
+        Options(x => x.WithTags(RouteGroup.Dashboard));
+        Tags(RouteGroup.Dashboard);
         Version(1);
         Get("/dashboard/top_five/company_consumption");
         AllowAnonymous();

@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace ElectroManage.Application.Features.Company.Query.CountDeleteCompanies;
+namespace ElectroManage.Application.Features.Company.Query.CountDeletedCompanies;
 
-public class CountDeleteCompaniesValidator : Validator<CountDeleteCompaniesCommand>
+public class CountDeletedCompaniesValidator : Validator<CountDeletedCompaniesQuery>
 {
-    public CountDeleteCompaniesValidator()
+    public CountDeletedCompaniesValidator()
     {
         RuleFor(x => x.Year)
             .NotEmpty()

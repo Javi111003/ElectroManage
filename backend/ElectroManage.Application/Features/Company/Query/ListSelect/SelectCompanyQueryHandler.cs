@@ -16,7 +16,7 @@ public class SelectCompanyQueryHandler : CoreQueryHandler<SelectCompanyQuery, IE
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
         var companyRepository = UnitOfWork!.DbRepository<Domain.Entites.Sucursal.Company>();
-        var companies = await companyRepository.GetAll(useInactive: true)
+        var companies = await companyRepository.GetAll(useInactive: false)
             .ToListAsync();
         var companiesDtos = companies.Select(c => new CompanyDTO
         {
