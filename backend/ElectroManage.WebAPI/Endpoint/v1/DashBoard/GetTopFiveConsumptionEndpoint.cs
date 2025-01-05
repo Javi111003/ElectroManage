@@ -1,22 +1,23 @@
-﻿using ElectroManage.Application.Features.Company.Query.TopFiveMostConsumption;
+﻿using ElectroManage.Application.DTO_s;
+using ElectroManage.Application.Features.Company.Query.TopFiveMostConsumption;
 
-namespace ElectroManage.WebAPI.Endpoint.v1.Company;
+namespace ElectroManage.WebAPI.Endpoint.v1.Dashboard;
 
-public class GetTopFiveConsumptionEndpoint : Endpoint<EmptyRequest, GetTopFiveMostConsumptionResponse>
+public class GetTopFiveConsumptionEndpoint : Endpoint<EmptyRequest, IEnumerable<ConsumptionDTO>>
 {
     public override void Configure()
     {
         Options(x => x.WithTags(RouteGroup.DashBoard));
         Tags(RouteGroup.DashBoard);
         Version(1);
-        Get("/company/top_five/consumption");
+        Get("/dashboard/top_five/company_consumption");
         AllowAnonymous();
         Summary(f => f.Summary = "Get Top Five companies with most consumption");
     }
 
     public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
     {
-        var topFive = new GetTopFiveMostConsumptionCommand();
+        var topFive = new GetTopFiveMostConsumptionQuery();
         var data = await topFive.ExecuteAsync(ct);
         await SendAsync(data);
     }
