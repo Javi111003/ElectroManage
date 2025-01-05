@@ -68,6 +68,7 @@ export class ManageComponent {
 
 
   onClick(): void {
+    this.dataService.setData([null, true]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }
@@ -81,7 +82,7 @@ export class ManageComponent {
   }
 
   edit(item: any): void {
-    this.dataService.setData(item);
+    this.dataService.setData([item, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }

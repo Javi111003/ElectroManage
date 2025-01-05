@@ -6,7 +6,6 @@ import { DataService } from '../../../../../services/data/data.service';
 import { OfficeService } from '../../../../../services/office/office.service';
 import { EquipmentBrand, EquipmentSpecification, EquipmentType, EquipPropertyInfo } from '../../../../../models/equipment.interface';
 import { Subscription } from 'rxjs';
-import $ from 'jquery';
 
 @Component({
   selector: 'app-equipment-form',
@@ -201,7 +200,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
       this.getControlValue('useFrequency'), this.getControlValue('maintenanceStatus')
     ];
     const response = [
-      'Centro de Trabajo', 'Nombre de Oficina', 'Tipo de Instalación',
+      'Centro de Trabajo', 'Nombre de Oficina', 'Tipo de Equipo',
       'Nombre de Marca', 'Tipo de Frecuencia de Uso', 'Estado de Mantenimiento'
     ];
     const valid = this.global.AllValid(searchFrom, options, response);
@@ -263,7 +262,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
    * and posts it to the server. If successful, it retrieves the updated list of types.
    */
   addType(): void {
-    this.enableAddType = !this.enableAddType;
+    this.enableAddType = false;
     const eqType: EquipmentType = {
       name: this.getControlValue('type'),
       description: null
