@@ -10,7 +10,7 @@ public class GetTopFiveCompanyCountOfficesEndpoint : Endpoint<EmptyRequest, IEnu
         Options(x => x.WithTags(RouteGroup.DashBoard));
         Tags(RouteGroup.DashBoard);
         Version(1);
-        Get("/dash_board/top_five/company_count_offices");
+        Get("/dashboard/top_five/company_count_offices");
         AllowAnonymous();
         Summary(f => f.Summary = "Get top five companies with most offices");
     }

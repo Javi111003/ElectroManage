@@ -10,14 +10,14 @@ public class GetTopFiveCompaniesCountWarningEndpoint : Endpoint<EmptyRequest, IE
         Options(x => x.WithTags(RouteGroup.DashBoard));
         Tags(RouteGroup.DashBoard);
         Version(1);
-        Get("/dash_board/top_five/company_count_warnings");
+        Get("/dashboard/top_five/company_count_warnings");
         AllowAnonymous();
         Summary(f => f.Summary = "Get top five companies with most warnings");
     }
 
     public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
     {
-        var topFive = new GetTopFiveCompaiesCountWarningCommand();
+        var topFive = new GetTopFiveCompaiesCountWarningQuery();
         var data = await topFive.ExecuteAsync(ct);
         await SendAsync(data);
     }
