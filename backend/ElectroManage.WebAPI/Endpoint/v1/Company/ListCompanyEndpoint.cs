@@ -1,9 +1,9 @@
 ﻿using ElectroManage.Application.DTO_s;
-using ElectroManage.Application.Mocks;
+using ElectroManage.Application.Features.Company.Query.ListAll;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.Company
 {
-    public class ListCompanyEndpoint : Endpoint<EmptyRequest, List<CompanyDTO>>
+    public class ListCompanyEndpoint : Endpoint<EmptyRequest, IEnumerable<CompanyResponse>>
     {
         public override void Configure()
         {
@@ -12,13 +12,13 @@ namespace ElectroManage.WebAPI.Endpoint.v1.Company
             Version(1);
             Get("/company");
             AllowAnonymous();
-            Summary(f => f.Summary = "Listing all companies");
+            Summary(f => f.Summary = "Listing all companies's general data");
         }
-        public override Task HandleAsync(EmptyRequest req, CancellationToken ct)
+        public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
         {
-            var faker = new CompanyBogusConfig();
-            var data = faker.Generate(15);
-            return SendAsync(data, cancellation: ct);
+            var query = new ListCompanyQuery();
+            var data = await query.ExecuteAsync(ct);
+            await SendAsync(data, cancellation: ct);
         }
     }
 }

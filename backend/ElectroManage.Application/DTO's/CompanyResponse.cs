@@ -1,8 +1,5 @@
-﻿using ElectroManage.Application.DTO_s;
-
-namespace ElectroManage.Application.Features.Company.Query.Get;
-
-public record CompanyGetByIdResponse
+namespace ElectroManage.Application.DTO_s;
+public record CompanyResponse
 {
     public long Id { get; set; }
     public string Name { get; set; } = string.Empty;
