@@ -2,27 +2,20 @@
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ElectroManage.Application.Features.Company.Query.TopFiveCountWarnings;
-
-public class GetTopFiveCompaiesCountWarningCommandHandler : CoreCommandHandler<GetTopFiveCompaiesCountWarningCommand, IEnumerable<TopFiveCompaniesCountWarningDTO>>
+public class GetTopFiveCompaiesCountWarningQueryHandler : CoreCommandHandler<GetTopFiveCompaiesCountWarningQuery, IEnumerable<TopFiveCompaniesCountWarningDTO>>
 {
     readonly IUnitOfWork _unitOfWork;
-    readonly ILogger<GetTopFiveCompaiesCountWarningCommandHandler> _logger;
+    readonly ILogger<GetTopFiveCompaiesCountWarningQueryHandler> _logger;
 
-    public GetTopFiveCompaiesCountWarningCommandHandler(IUnitOfWork unitOfWork, ILogger<GetTopFiveCompaiesCountWarningCommandHandler> logger) : base(unitOfWork)
+    public GetTopFiveCompaiesCountWarningQueryHandler(IUnitOfWork unitOfWork, ILogger<GetTopFiveCompaiesCountWarningQueryHandler> logger) : base(unitOfWork)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
     }
-
-    public override async Task<IEnumerable<TopFiveCompaniesCountWarningDTO>> ExecuteAsync(GetTopFiveCompaiesCountWarningCommand command, CancellationToken ct = default)
+    public override async Task<IEnumerable<TopFiveCompaniesCountWarningDTO>> ExecuteAsync(GetTopFiveCompaiesCountWarningQuery command, CancellationToken ct = default)
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
         var companyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Company>();
@@ -30,7 +23,7 @@ public class GetTopFiveCompaiesCountWarningCommandHandler : CoreCommandHandler<G
         {
             x => x.Warnings
         };
-        var topFiveCompaniesCountWarnings = await companyRepository.GetAll(useInactive: true)
+        var topFiveCompaniesCountWarnings = await companyRepository.GetAll(useInactive: true, includes: include)
             .Select(x => new TopFiveCompaniesCountWarningDTO
             {
                 Company = new CompanyDTO
@@ -38,8 +31,9 @@ public class GetTopFiveCompaiesCountWarningCommandHandler : CoreCommandHandler<G
                     Id = x.Id,
                     Name = x.Name,
                 },
-                CountWarning = x.Warnings.Count(),
-            }).Take(5).OrderBy(x => x.CountWarning).ToListAsync();
+                CountWarning = x.Warnings.Where(w => w.StatusBaseEntity != Domain.Enums.StatusEntityType.Delete).Count(),
+            }).Take(5).OrderBy(x => x.CountWarning)
+            .ToListAsync(ct);
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
         return topFiveCompaniesCountWarnings;
     }
