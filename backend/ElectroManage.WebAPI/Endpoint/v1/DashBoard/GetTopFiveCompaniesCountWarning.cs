@@ -1,7 +1,7 @@
 ﻿using ElectroManage.Application.DTO_s;
 using ElectroManage.Application.Features.Company.Query.TopFiveCountWarnings;
 
-namespace ElectroManage.WebAPI.Endpoint.v1.DashBoard;
+namespace ElectroManage.WebAPI.Endpoint.v1.Dashboard;
 
 public class GetTopFiveCompaniesCountWarningEndpoint : Endpoint<EmptyRequest, IEnumerable<TopFiveCompaniesCountWarningDTO>>
 {
