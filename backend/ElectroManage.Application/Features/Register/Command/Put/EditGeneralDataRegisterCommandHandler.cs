@@ -1,13 +1,16 @@
-﻿
-using ElectroManage.Domain.DataAccess.Abstractions;
+﻿using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
-using System.Linq.Expressions;
 
 namespace ElectroManage.Application.Features.Register.Command.Put;
 public class EditGeneralDataRegisterCommandHandler : CoreCommandHandler<EditGeneralDataRegisterCommand, EditGeneralDataRegisterResponse>
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<EditGeneralDataRegisterCommandHandler> _logger;
+    public EditGeneralDataRegisterCommandHandler(IUnitOfWork unitOfWork, ILogger<EditGeneralDataRegisterCommandHandler> logger) : base(unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+        _logger = logger;
+    }
     public override async Task<EditGeneralDataRegisterResponse> ExecuteAsync(EditGeneralDataRegisterCommand command, CancellationToken ct = default)
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution starter");

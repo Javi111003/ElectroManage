@@ -22,7 +22,7 @@ public class LoginUserCommandHandler : CoreCommandHandler<LoginModel, LoginUserR
     }
     public override async Task<LoginUserResponse> ExecuteAsync(LoginModel command, CancellationToken ct = default)
     {
-        User appUser = null;
+        User? appUser = null;
         var userRepository = UnitOfWork!.DbRepository<User>();
         var include = new List<Expression<Func<User, object>>>
         {

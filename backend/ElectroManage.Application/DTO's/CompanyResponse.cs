@@ -7,5 +7,5 @@ public record CompanyResponse
     public AdministrativeAreaDTO AdministrativeArea { get; set; } = null!;
     public LocationDTO Location { get; set; } = null!;
     public string Status { get; set; } = string.Empty;
-    public ManagementTeamDto ManagementTeam { get; set; } = null!;
+    public ManagementTeamDto? ManagementTeam { get; set; }
 }
