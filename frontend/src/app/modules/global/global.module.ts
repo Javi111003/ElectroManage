@@ -145,9 +145,6 @@ export class GlobalModule {
    * @returns `[true, '']` if all the options are found, `[false, response[i]]` otherwise.
    */
   AllValid(data: string[][], options: string[], response: string[]): [boolean, string] {
-    console.log(data);
-    console.log(options);
-    console.log(response);
     for (let i = 0; i < data.length; i++) {
       if (!data[i].includes(options[i]))
         return [false, response[i]];

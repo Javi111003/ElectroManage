@@ -13,7 +13,21 @@ export interface InstallationType {
   description: string | null;
 }
 
+export interface CenterPropertyInfo {
+  id: number;
+  name: string;
+  description: string;
+}
+
 export interface ManagementTeam {
   name: string | null;
   userIds: number[];
+}
+
+export interface Location {
+  addressDetails: string;
+  coordenate: {
+    latitude: number;
+    longitude: number;
+  }
 }

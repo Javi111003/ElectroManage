@@ -1,4 +1,4 @@
-import { AdminArea, InstallationType, ManagementTeam } from './../../models/workCenter.interface';
+import { AdminArea, CenterPropertyInfo, InstallationType, Location, ManagementTeam } from './../../models/workCenter.interface';
 import { Injectable } from '@angular/core';
 import { API_URL } from '../../config/api.config';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
@@ -66,6 +66,10 @@ export class WorkCenterService {
     );
   }
 
+  getAdminAreas(): Observable<CenterPropertyInfo[]> {
+    return this.http.get<CenterPropertyInfo[]>(API_URL + '/v1/administrative_area');
+  }
+
   /**
    * Posts a new administrative area to the API.
    * This method sends an HTTP POST request to the API to create a new administrative area.
@@ -73,7 +77,6 @@ export class WorkCenterService {
    * @returns An Observable that resolves to the response from the API.
    */
   postAdminArea(area: AdminArea): Observable<any> {
-
     return this.http.post<any>(API_URL + '/v1/administrative_area', area);
   }
 
@@ -85,6 +88,10 @@ export class WorkCenterService {
    */
   deleteAdminArea(id: number): Observable<any> {
     return this.http.delete<any>(`${API_URL}/v1/administrative_area/${id}`);
+  }
+
+  getInstallationType(): Observable<CenterPropertyInfo[]> {
+    return this.http.get<CenterPropertyInfo[]>(API_URL + '/v1/installation_type');
   }
 
   /**
@@ -127,5 +134,13 @@ export class WorkCenterService {
    */
   deleteManagementTeam(CenterID: number, teamID: number): Observable<any> {
     return this.http.delete<any>(`${API_URL}/v1/company/${CenterID}/team/${teamID}`);
+  }
+
+  postLocation(location: Location): Observable<any> {
+    return this.http.post<any>(`${API_URL}/v1/location`, location);
+  }
+
+  editLocation(location: Location, locationID: number): Observable<any> {
+    return this.http.put<any>(`${API_URL}/v1/location/${locationID}`, location);
   }
 }

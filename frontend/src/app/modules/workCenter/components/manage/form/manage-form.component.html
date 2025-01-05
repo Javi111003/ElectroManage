@@ -18,7 +18,7 @@
               </div>
               <div class="col-4 col-sm-6">
                 <label for="monthlyConsumptionLimit" class="form-label">Límite de consumo mensual</label>
-                <input type="number" class="form-control" id="monthlyConsumptionLimit" formControlName="monthlyConsumptionLimit"
+                <input type="number" class="form-control" id="monthlyConsumptionLimit" formControlName="monthlyConsumptionLimit" appNumberValidation
                   [ngClass]="{'is-invalid': form.get('monthlyConsumptionLimit')?.invalid && form.get('monthlyConsumptionLimit')?.touched}">
                 <div *ngIf="form.get('monthlyConsumptionLimit')?.invalid && form.get('monthlyConsumptionLimit')?.touched" class="invalid-feedback">
                   Este campo es obligatorio
@@ -32,10 +32,11 @@
               <div class="col-sm-4">
                 <label for="adminAreaName" class="form-label">Área Administrativa</label>
                 <app-autocomplete class="form-control" id="adminAreaName"
-                  [options]="adminAreas"
+                  [options]="areaStringArray"
                   [label]="'Áreas'"
                   [control]="getControl('adminAreaName')"
                   [showIcon]="true"
+                  [deleteOption]="deleteArea.bind(this)"
                 ></app-autocomplete>
                 <div *ngIf="form.get('adminAreaName')?.invalid && form.get('adminAreaName')?.touched" class="invalid-feedback">
                   Este campo es obligatorio
@@ -56,10 +57,11 @@
               <div class="col-sm-4">
                 <label for="instalationType" class="form-label">Tipo de instalación</label>
                 <app-autocomplete class="form-control" id="instalationType"
-                  [options]="types"
+                  [options]="typeStringArray"
                   [label]="'Tipos'"
                   [control]="getControl('instalationType')"
                   [showIcon]="true"
+                  [deleteOption]="deleteType.bind(this)"
                 ></app-autocomplete>
                 <div *ngIf="form.get('instalationType')?.invalid && form.get('instalationType')?.touched" class="invalid-feedback">
                   Este campo es obligatorio
@@ -114,7 +116,7 @@
                   [control]="getControl('policy')"
                 ></app-autocomplete>
               </div>
-              <div class="col-4 col-sm-4">
+              <div *ngIf="this.global.isOptionValid(this.policies, this.getControlValue('policy'))" class="col-4 col-sm-4">
                 <label for="applyingDate" class="form-label">Fecha de aplicación</label> <br>
                 <app-datepicker class="form-control" id="applyingDate"
                   [filter]="filterDate"
@@ -124,7 +126,7 @@
                   Este campo es obligatorio
                 </div>
               </div>
-              <div class="col-4 col-sm-4">
+              <div *ngIf="!postMethod" class="col-4 col-sm-4">
                 <label for="teamWork" class="form-label">Equipo responsable</label>
                 <app-checkbox class="form-control" id="teamWork"
                   [options]="teamWork"

@@ -1,22 +1,28 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import * as L from 'leaflet';
 import { Modal } from 'bootstrap';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
 import { chipElement } from '../../../../../shared/components/chips/chips.component';
+import { AdminArea, CenterPropertyInfo, InstallationType } from '../../../../../models/workCenter.interface';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-center-manage-form',
   templateUrl: './manage-form.component.html',
   styleUrl: './manage-form.component.css'
 })
-export class ManageFormComponent implements OnInit {
+export class ManageFormComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription = new Subscription();
   enableAddType: boolean = false;
   enableAddArea: boolean = false;
+  postMethod: boolean = true;
+
   private map!: L.Map;
   private marker!: L.Marker;
   private modal!: Modal;
+
   formulaVariables: chipElement[] = [
     { id: 0, name: 'consumo' },
     { id: 1, name: 'por_ciento_extra' },
@@ -80,7 +86,9 @@ export class ManageFormComponent implements OnInit {
         return;
       }
 
-      this.enableAddType = !this.global.isOptionValid(this.types, this.getControlValue('instalationType'))
+      this.enableAddType = !this.global.isOptionValid(
+        this.typeStringArray, this.getControlValue('instalationType')
+      );
     });
 
     this.form.get('adminAreaName')!.valueChanges.subscribe(() => {
@@ -89,7 +97,9 @@ export class ManageFormComponent implements OnInit {
         return;
       }
 
-      this.enableAddArea = !this.global.isOptionValid(this.adminAreas, this.getControlValue('adminAreaName'))
+      this.enableAddArea = !this.global.isOptionValid(
+        this.areaStringArray, this.getControlValue('adminAreaName')
+      );
     });
   }
 
@@ -103,21 +113,38 @@ export class ManageFormComponent implements OnInit {
     'jbhg', 'mnbgvc'
   ];
 
-  adminAreas: string[] = [
-    'jbhg', 'mnbgvc'
-  ];
-
-  types: string[] = [
-    'jbhg', 'mnbgvc'
-  ];
+  areaStringArray: string[] = [];
+  typeStringArray: string[] = [];
+  typeObjectArray: CenterPropertyInfo[] = [];
+  areaObjectArray: CenterPropertyInfo[] = [];
 
   ngOnInit() {
-    this.dataService.currentData.subscribe(newData => {
-      this.data = newData;
-      this.form.patchValue(this.data);
+    const sub = this.dataService.currentData.subscribe(newData => {
+      if (newData) {
+        this.data = newData[0];
+        const post = newData[1];
+        this.form.patchValue(this.data);
+        if (this.data) {
+          if (this.data.applyingDate) {
+            const dateString = this.data.applyingDate;
+            const dateParts = dateString.split('-');
+            const dateObject = new Date(Date.UTC(+dateParts[0], +dateParts[1] - 1, +dateParts[2] + 1));
+            this.getControl('applyingDate').setValue(dateObject);
+          }
+        }
+        this.postMethod = post;
+      }
     });
 
+    this.subscriptions.add(sub);
+
     this.addElementFormula();
+    this.getAreas();
+    this.getTypes();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   getControl(control: string): FormControl {
@@ -163,15 +190,39 @@ export class ManageFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.invalid) {
-      alert('Por favor, rellene todos los campos.');
+      this.global.openDialog('Por favor, rellene todos los campos.');
       this.markAllAsTouched();
       return;
     }
 
-    const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
-    if (confirmation) {
-      window.location.reload();
-    }
+    const searchFrom = [
+      this.areaStringArray, this.typeStringArray, this.policies
+    ];
+    const options = [
+      this.getControlValue('adminAreaName'), this.getControlValue('instalationType'),
+      this.getControlValue('policy')
+    ];
+    const response = [
+      'Nombre de Área', 'Tipo de Instalación', 'Nombre de Política'
+    ];
+    const valid = this.global.AllValid(searchFrom, options, response);
+
+    if(valid[1] == 'Nombre de Política' && this.getControlValue('policy') === "")
+      valid[0] = true;
+
+    if (valid[0]) {
+      const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
+      if (confirmation) {
+        if (this.postMethod)
+          this.createCenter();
+        else {
+          this.editCenter();
+          this.postMethod = true;
+        }
+      }
+    } else {
+        this.global.openDialog(`Por favor, selecciona un ${valid[1]} válido.`);
+      }
   }
 
   markAllAsTouched(): void {
@@ -182,11 +233,132 @@ export class ManageFormComponent implements OnInit {
   }
 
   addType(): void {
-    this.types.push(this.getControlValue('instalationType'));
+    this.enableAddType = false;
+    const instType: InstallationType = {
+      name: this.getControlValue('instalationType'),
+      description: null
+    };
+
+    this.global.httpCenter.postInstallationType(instType).subscribe({
+      next: (response) => {
+        console.log('Created successfully:', response);
+        this.getTypes();
+      },
+      error: (error) => {
+        if (error.status === 0) {
+          this.global.openDialog("Error inesperado al conectar con el servidor.");
+        }
+        else
+          this.global.openDialog(error.error.errors[0].reason);
+      }
+    });
+  }
+
+  /**
+   * Retrieves the list of installation types.
+   * This function fetches the list of installation types from the server and updates the component's state.
+   * It populates the `typeObjectArray` with the fetched types and `typeStringArray` with their names.
+   */
+  getTypes(): void {
+    this.global.httpCenter.getInstallationType().subscribe(types => {
+      this.typeObjectArray = types;
+      this.typeStringArray = types.map(type => type.name);
+    });
+  }
+
+  /**
+   * Deletes an installation type.
+   * This function is used to remove an installation type from the system.
+   * It finds the ID of the type to be deleted, posts the deletion request to the server,
+   * and if successful, retrieves the updated list of types.
+   * @param type The name of the installation type to be deleted.
+   */
+  deleteType(type: string): void {
+    const typeID = this.findId(type, this.typeObjectArray);
+    this.global.httpCenter.deleteInstallationType(typeID).subscribe({
+      next: (response) => {
+        console.log('Deleted successfully:', response);
+        this.getTypes();
+      },
+      error: (error) => {
+        if (error.status === 0) {
+          this.global.openDialog("Error inesperado al conectar con el servidor.");
+        }
+        else
+          this.global.openDialog(error.error.errors[0].reason);
+      }
+    });
   }
 
   addArea(): void {
-    this.adminAreas.push(this.getControlValue('adminAreaName'));
+    this.enableAddArea = false;
+
+    const area: AdminArea = {
+      name: this.getControlValue('adminAreaName'),
+      description: null
+    };
+
+    this.global.httpCenter.postAdminArea(area).subscribe({
+      next: (response) => {
+        console.log('Created successfully:', response);
+        this.getTypes();
+      },
+      error: (error) => {
+        if (error.status === 0) {
+          this.global.openDialog("Error inesperado al conectar con el servidor.");
+        }
+        else
+          this.global.openDialog(error.error.errors[0].reason);
+      }
+    });
+  }
+
+  /**
+   * Retrieves the list of administrative areas.
+   * This function fetches the list of administrative areas from the server and updates the component's state.
+   * It populates the `areaObjectArray` with the fetched areas and `areaStringArray` with their names.
+   */
+  getAreas(): void {
+    this.global.httpCenter.getAdminAreas().subscribe(areas => {
+      this.areaObjectArray = areas;
+      this.areaStringArray = areas.map(area => area.name);
+    });
+  }
+
+  /**
+   * Deletes an administrative area.
+   * This function is used to remove an administrative area from the system.
+   * It finds the ID of the area to be deleted, posts the deletion request to the server,
+   * and if successful, retrieves the updated list of areas.
+   * @param area The name of the area to be deleted.
+   */
+  deleteArea(area: string): void {
+    const areaID = this.findId(area, this.areaObjectArray);
+    this.global.httpCenter.deleteAdminArea(areaID).subscribe({
+      next: (response) => {
+        console.log('Deleted successfully:', response);
+        this.getAreas();
+      },
+      error: (error) => {
+        if (error.status === 0) {
+          this.global.openDialog("Error inesperado al conectar con el servidor.");
+        }
+        else
+          this.global.openDialog(error.error.errors[0].reason);
+      }
+    });
+  }
+
+  /**
+   * This function finds the ID of a specific item based on its name within an array.
+   * It iterates through the array to find the item with a matching name and returns its ID.
+   * If no match is found, it returns -1.
+   * @param name The name of the item to find.
+   * @param array The array of items to search within.
+   * @returns The ID of the item if found, otherwise -1.
+   */
+  findId(name: string, array: any[]): number {
+    return array.find(item => item.name === name)?.id;
   }
 
   filterDate = (d: Date | null): boolean => {
@@ -251,7 +423,9 @@ export class ManageFormComponent implements OnInit {
 
   async getAddressFromCoordinates(lat: number, lng: number) {
     try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`);
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
+      );
       const data = await response.json();
       return data.display_name;
     } catch (error) {
@@ -303,6 +477,105 @@ export class ManageFormComponent implements OnInit {
       for (let i = 0; i < formContainer.length; i++) {
         formContainer[i].remove();
       }
+    }
+  }
+
+  /**
+   * Creates a new work center.
+   * This function gathers the necessary information from the form controls and
+   * creates a new work center.
+   * The work center is then posted to the server for creation.
+   */
+  createCenter(): void {
+    // const commonValues = this.getCommonValues();
+    // const specification: EquipmentSpecification = {
+    //   model: commonValues.model,
+    //   capacity: commonValues.capacity,
+    //   criticalEnergySystem: commonValues.critical,
+    //   averageConsumption: commonValues.avgConsumption,
+    //   lifeSpanYears: commonValues.lifeSpanYears,
+    //   efficiency: commonValues.efficiency,
+    //   equipmentBrandId: commonValues.brandID,
+    //   equipmentTypeId: commonValues.typeID
+    // };
+    // this.createOrEditSpecification(false, specification, commonValues);
+  }
+
+  /**
+   * Edits a work center.
+   * This function gathers the necessary information from the form controls
+   * and edits a work center.
+   * The work center is then put to the server for edition.
+   */
+  editCenter(): void {
+    // const commonValues = this.getCommonValues();
+    // const specification: EquipmentSpecificationEdited = {
+    //   id: this.data.specifId,
+    //   model: commonValues.model,
+    //   capacity: commonValues.capacity,
+    //   criticalEnergySystem: commonValues.critical,
+    //   averageConsumption: commonValues.avgConsumption,
+    //   lifeSpanYears: commonValues.lifeSpanYears,
+    //   efficiency: commonValues.efficiency,
+    //   equipmentBrandId: commonValues.brandID,
+    //   equipmentTypeId: commonValues.typeID
+    // };
+    // this.createOrEditSpecification(true, specification, commonValues);
+  }
+
+  /**
+   * This function is used to get the common values from the form controls.
+   * It retrieves the necessary information from the form controls and returns them as an object.
+   * @returns An object containing the common values from the form controls.
+   */
+  getCommonValues() {
+    // const typeID = this.findId(this.getControlValue('type'), this.typeObjectArray);
+    // const brandID = this.findId(this.getControlValue('brand'), this.brandObjectArray);
+    // const useFrequency = this.useFrequencyMatch.get(this.getControlValue('useFrequency'))!;
+    // const maintenanceStatus = this.maintenanceStatusMatch.get(this.getControlValue('maintenanceStatus'))!;
+    // const model = this.getControlValue('model');
+    // const capacity = this.getControlValue('capacity');
+    // const critical = this.getControlValue('criticalEnergySystem');
+    // const avgConsumption = this.getControlValue('averageConsumption');
+    // const lifeSpanYears = this.getControlValue('lifeSpanYears');
+    // const efficiency = this.getControlValue('efficiency');
+    // const installDate = this.getControlValue('instalationDate');
+    // const office = this.getControlValue('office');
+
+    // this.global.findOfficeId(office);
+
+    // return {
+    //   typeID, brandID, useFrequency, maintenanceStatus, model, capacity, critical,
+    //   avgConsumption, lifeSpanYears, efficiency, installDate
+    // };
+  }
+
+
+  /**
+   * This function is used to activate the close button of the modal.
+   * It retrieves the close button element and simulates a click event on it,
+   * effectively closing the modal.
+   */
+  activateCloseButton(): void {
+    const closeButton = document.getElementById('close-button') as HTMLButtonElement;
+    closeButton.click();
+  }
+
+  /**
+   * This function is used to handle errors.
+   * It checks the error status and displays a corresponding message to the user.
+   * If the error status is 'Unknown Error', it prompts the user to try again.
+   * If the error has a specific reason, it displays that reason.
+   * If the error is unexpected, it displays a generic error message.
+   * @param error The error object to be handled.
+   */
+  handleError(error: any) {
+    if (error.statusText === 'Unknown Error') {
+      this.global.openDialog("Falló la conexión. Intente de nuevo");
+    } else if (error.error) {
+      this.global.openDialog(error.error.errors[0].reason);
+    } else {
+      this.global.openDialog('No se ha podido guardar correctamente. Error inesperado');
     }
   }
 
