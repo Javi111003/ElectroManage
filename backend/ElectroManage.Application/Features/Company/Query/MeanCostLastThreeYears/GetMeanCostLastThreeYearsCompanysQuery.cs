@@ -1,6 +1,8 @@
-﻿namespace ElectroManage.Application.Features.Company.Query.MeanCostLastThreeYears;
+﻿using ElectroManage.Application.DTO_s;
 
-public record GetMeanCostLastThreeYearsCompanysQuery : ICommand<GetMeanCostLastThreeYearsCompanysResponse>
+namespace ElectroManage.Application.Features.Company.Query.MeanCostLastThreeYears;
+
+public record GetMeanCostLastThreeYearsCompanysQuery : ICommand<IEnumerable<ListMonthlastThreeYearsDto>>
 {
     public IEnumerable<long> CompanyIds { get; set; } = new HashSet<long>();
 }
