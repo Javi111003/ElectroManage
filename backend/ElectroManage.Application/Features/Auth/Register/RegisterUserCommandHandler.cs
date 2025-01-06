@@ -34,7 +34,7 @@ public class RegisterUserCommandHandler : CoreCommandHandler<RegisterModel, Resp
         var appUser = new User
         {
             Email = command.Email,
-            UserName = command.Email,
+            UserName = command.Username != null ? command.Username : "",
             Company = company
         };
         var allowedRoles = await roleRepository.GetAllListOnly(useInactive: true).Select(r => r.Name).ToListAsync();
