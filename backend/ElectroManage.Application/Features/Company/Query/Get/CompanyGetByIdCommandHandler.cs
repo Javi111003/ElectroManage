@@ -28,7 +28,7 @@ public class CompanyGetByIdCommandHandler : CoreCommandHandler<CompanyGetByIdCom
             x => x.InstalationType,
             x => x.ManagementTeam
         };
-        var company = await companyRepository.FirstAsync(useInactive: true, includes: include, filters: x => x.Id == command.Id);
+        var company = await companyRepository.FirstAsync(useInactive: false, includes: include, filters: x => x.Id == command.Id);
         if (company is null)
         {
             _logger.LogInformation($"Company with id: {command.Id} not found");

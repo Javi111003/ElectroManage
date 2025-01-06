@@ -1,10 +1,13 @@
-﻿namespace ElectroManage.Application.Features.Company.Command.Post;
+﻿using ElectroManage.Application.DTO_s;
 
-public record CreateCompanyCommand : ICommand<CreateCompanyResponse>
+namespace ElectroManage.Application.Features.Company.Command.Post;
+
+public record CreateCompanyCommand : ICommand<CompanyResponse>
 {
     public string Name { get; set; } = string.Empty;
     public long AreaId { get; set; }
     public long InstallationTypeId { get; set; }
     public long LocationId { get; set; }
     public long ManagementTeamId { get; set; }
+    public decimal ConsumptionLimit { get; set; }
 }

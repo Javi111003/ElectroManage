@@ -63,7 +63,9 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
         {
             company.ManagementTeam = managementTeam;
         }
+
         company.Name = command.Name;
+        company.ConsumptionLimit = command.ConsumptionLimit;
         company.AministrativeAreaId = command.AreaId;
         company.AministrativeArea = area;
         company.InstalationTypeId = command.InstallationTypeId;
@@ -76,6 +78,7 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
         return new EditGeneralDataCompanyResponse
         {
             Name = company.Name,
+            ConsumptionLimit = company.ConsumptionLimit,
             Area = company.AministrativeArea.Name,
             Installation = company.InstalationType.Name,
             LocationDetails = company.Location.AddressDetails??"",

@@ -1,9 +1,11 @@
-﻿using ElectroManage.Domain.DataAccess.Abstractions;
+﻿using ElectroManage.Application.DTO_s;
+using ElectroManage.Application.Mappers;
+using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 
 namespace ElectroManage.Application.Features.Company.Command.Post;
 
-public class CreateCompanyCommandHandler : CoreCommandHandler<CreateCompanyCommand, CreateCompanyResponse>
+public class CreateCompanyCommandHandler : CoreCommandHandler<CreateCompanyCommand, CompanyResponse>
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<CreateCompanyCommandHandler> _logger;
@@ -14,7 +16,7 @@ public class CreateCompanyCommandHandler : CoreCommandHandler<CreateCompanyComma
         _logger = logger;
     }
 
-    public override async Task<CreateCompanyResponse> ExecuteAsync(CreateCompanyCommand command, CancellationToken ct = default)
+    public override async Task<CompanyResponse> ExecuteAsync(CreateCompanyCommand command, CancellationToken ct = default)
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Started");
         var companyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Company>();
@@ -56,18 +58,11 @@ public class CreateCompanyCommandHandler : CoreCommandHandler<CreateCompanyComma
             InstalationType = installationType,
             AministrativeArea = administrativeArea,
             Location = location,
-            ManagementTeam = managementTeam
+            ManagementTeam = managementTeam,
+            ConsumptionLimit = command.ConsumptionLimit
         };
         await companyRepository.SaveAsync(company);
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Completed");
-        return new CreateCompanyResponse
-        {
-            Id = company.Id,
-            Name = company.Name,
-            InstallationType = company.InstalationType.Name,
-            Description = company.InstalationType.Description,
-            Area = company.AministrativeArea.Name,
-            ManagementTeam = managementTeam is null ? null : Mappers.ManagementTeamMapper.MapToManagementTeamDto(managementTeam)
-        };
+        return CompanyMapper.ToResponse(company);
     }
 }
