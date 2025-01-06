@@ -3,7 +3,6 @@ using ElectroManage.Application.Mappers;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Linq.Expressions;
 
 namespace ElectroManage.Application.Features.Efficiency_Policy.Query.ListAll;
 

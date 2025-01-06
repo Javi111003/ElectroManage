@@ -24,7 +24,7 @@ public class ListEfficiencyPoliciesByCompanyQueryHandler : CoreQueryHandler<List
         var companyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Company>();
         var companyInclude = new List<Expression<Func<Domain.Entites.Sucursal.Company,object>>>
         {
-            x => x.EfficiencyPolicies,
+            x => x.EfficiencyPoliciesApplyed,
         };
         var company = await companyRepository.FirstAsync(useInactive: true, includes: companyInclude, filters: x => x.Id == command.CompanyId);
         if (company is null)
@@ -33,7 +33,7 @@ public class ListEfficiencyPoliciesByCompanyQueryHandler : CoreQueryHandler<List
             ThrowError($"The company with id {command.CompanyId} doesn't exist", 404);
         }
         
-        var policies = company.EfficiencyPolicies.Select(x => EfficiencyPolicyMapper.MapToEfficiencyPolicyDTO(x)).ToList();
+        var policies = company.EfficiencyPoliciesApplyed.Select(x => EfficiencyPolicyMapper.MapToEfficiencyPolicyCompanyDTO(x)).ToList();
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Completed");
         return policies;
     }
