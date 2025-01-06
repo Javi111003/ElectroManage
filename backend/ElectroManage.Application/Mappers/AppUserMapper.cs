@@ -11,6 +11,7 @@ public static class AppUserMapper
         var response = new GetUserByIdResponse()
         {
             Email = user.Email!,
+            Username = user.UserName!,
             Company = new CompanyDTO
             {
                 Id = user.Company.Id,
@@ -30,7 +31,8 @@ public static class AppUserMapper
                 Id = u.Company.Id,
                 Name = u.Company.Name
             },
-            Email = u.Email!
+            Email = u.Email!,
+            Username = u.UserName!,
         });
         return response;
     }
