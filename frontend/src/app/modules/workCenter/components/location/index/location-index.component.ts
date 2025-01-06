@@ -2,15 +2,7 @@ import { Component } from '@angular/core';
 import * as L from 'leaflet';
 import { GlobalModule } from '../../../../global/global.module';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-interface Empresa {
-  id: number;
-  nombre: string;
-  direccion: string;
-  latitud: number;
-  longitud: number;
-  informacion: string;
-}
-
+import { WorkCenterService } from '../../../../../services/workCenter/work-center.service';
 
 @Component({
   selector: 'app-location-index',
@@ -18,9 +10,16 @@ interface Empresa {
   styleUrl: './location-index.component.css'
 })
 export class LocationComponent {
+  /**
+   * Constructor that initializes the required services and form
+   * @param global Global module service for shared functionalities
+   * @param fb Form builder service for creating reactive forms
+   * @param http Work center service for API communications
+   */
   constructor (
     public global: GlobalModule,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private http: WorkCenterService
   ) {
     this.form = this.fb.group({
       startDate: [null],
@@ -28,59 +27,94 @@ export class LocationComponent {
       workCenter: ''
     });
   }
+
+  /** Array to store the work centers location data */
+  centerLocationData:any[]=[];
+
+  /** Form group for handling user inputs */
   form: FormGroup;
+
+  /** Leaflet map instance */
   map!: L.Map;
-  empresas: Empresa[] = [
-    {
-      id: 1,
-      nombre: 'Dickinson - Huel',
-      direccion: 'Dirección: por Manzanillo puripalla',
-      latitud: 40.73061,
-      longitud: -73.935242,
-      informacion: 'Son buena gente'
-    },
-    {
-      id: 2,
-      nombre: 'Barrows and Sons',
-      direccion: 'Dirección:Izquierda , Derecha, Izquierda',
-      latitud: 34.052235,
-      longitud: -118.243683,
-      informacion: 'Son Mr.Barrow y sus hijos que te puedo decir'
-    }
-    // Agrega más empresas aquí
-  ];
+
+  /**
+   * Lifecycle hook that initializes the component
+   * Sets up the map and loads necessary data
+   */
   ngOnInit(): void {
     this.inicializarMapa();
     this.global.Reset();
     this.global.getWorkCenters();
+    this.getCenterDetailsList();
   }
+
+  /**
+   * Retrieves the list of work centers details from the server
+   * and stores them in centerLocationData
+   */
+  getCenterDetailsList():void{
+    this.http.getCenterDetailsList().subscribe(centers => {
+      centers.map((center: any) => {
+        this.centerLocationData.push(center);
+      })
+      console.log(centers);
+      console.log(this.centerLocationData);
+    });
+  }
+
+  /**
+   * Gets a form control by its name
+   * @param control Name of the control to retrieve
+   * @returns FormControl instance
+   */
   getControl(control: string): FormControl {
     return this.form.get(control) as FormControl;
   }
+
+  /**
+   * Gets the value of a form control
+   * @param control Name of the control to get value from
+   * @returns The value of the specified control
+   */
   getControlValue(control: string): any {
     return this.form.get(control)?.value;
   }
+
+  /**
+   * Initializes the Leaflet map with default settings
+   * Centers the map view on Cuba
+   */
   inicializarMapa(): void {
     this.map = L.map('map').setView([22, -80], 7); // Vista inicial del mapa
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19
     }).addTo(this.map);
   }
-   // Este método será llamado cuando el nombre de la empresa se seleccione
-   seleccionarEmpresa(nombre: string): void {
-    const empresa = this.empresas.find(e => e.nombre === nombre);
+
+  /**
+   * Selects and displays a work center on the map
+   * @param nombre Name of the work center to display
+   * Shows a popup with the work center's details
+   */
+  seleccionarEmpresa(nombre: string): void {
+    const empresa = this.centerLocationData.find(e => e.name === nombre);
     if (empresa) {
-      this.map.setView([empresa.latitud, empresa.longitud], 15); // Centra el mapa en la ubicación de la empresa
+      this.map.setView([empresa.location.coordenateDTO.latitude, empresa.location.coordenateDTO.longitude], 15); // Centra el mapa en la ubicación de la empresa
       L.popup()
-        .setLatLng([empresa.latitud, empresa.longitud])
+        .setLatLng([empresa.location.coordenateDTO.latitude, empresa.location.coordenateDTO.longitude])
         .setContent(`
-          <h3>${empresa.nombre}</h3>
-          <p><b>Dirección:</b> ${empresa.direccion}</p>
-          <p>${empresa.informacion}</p>
+          <h3>${empresa.name}</h3>
+          <p><b>Dirección:</b> ${empresa.location.addressDetails}</p>
+          <p><b>Descripción</b>:Esta empresa pertenece al area administrativa <b>${empresa.administrativeArea.name}</b> y su tipo de instalacion es <b>${empresa.installationType.name}</b></p>
         `)
         .openOn(this.map);
     }
   }
+
+  /**
+   * Handles the click event for selecting a work center
+   * Validates the selection and displays the location on the map
+   */
   onClick() {
       if (this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter'))) {
         this.seleccionarEmpresa(this.getControlValue('workCenter'));
