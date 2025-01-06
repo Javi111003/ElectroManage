@@ -5,6 +5,5 @@ public class EfficiencyPolicy : Entity<long>
 {
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
-    public DateTime ApplyingDate { get; set; }
-    public ICollection<Company> Companies { get; set; } = null!; 
+    public ICollection<EfficiencyPolicyCompany> EfficiencyPolicyCompanies { get; set; } = new List<EfficiencyPolicyCompany>();
 }

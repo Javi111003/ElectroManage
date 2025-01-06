@@ -19,5 +19,5 @@ public class Company : Entity<long>
     public ICollection<Warning> Warnings { get; set; } = [];
     public ICollection<Register> Registers { get; set; } = [];
     public ICollection<CostFormula> CostFormulas { get; set; } = [];
-    public ICollection<EfficiencyPolicy> EfficiencyPolicies { get; set; } = [];
+    public ICollection<EfficiencyPolicyCompany> EfficiencyPoliciesApplyed { get; set; } = [];
 }

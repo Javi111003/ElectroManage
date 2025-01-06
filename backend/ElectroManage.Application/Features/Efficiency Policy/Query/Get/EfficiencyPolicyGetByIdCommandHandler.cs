@@ -38,9 +38,8 @@ public class EfficiencyPolicyGetByIdCommandHandler : CoreCommandHandler<Efficien
         {
             Id = efficiencyPolicy.Id,
             Name = efficiencyPolicy.Name,
-            Description = efficiencyPolicy.Description!,
-            Created = efficiencyPolicy.Created,
-            ApplyingDate = efficiencyPolicy.ApplyingDate,
+            Description = efficiencyPolicy.Description??"",
+            Created = efficiencyPolicy.Created
         };
     }
 }

@@ -9,7 +9,9 @@ public class EfficiencyPolicyConfiguration : IEntityTypeConfiguration<Efficiency
     {
         builder.HasKey(ep => ep.Id);
 
-        builder.HasMany(ep => ep.Companies)
-            .WithMany(c => c.EfficiencyPolicies);
+        builder.HasMany(epc => epc.EfficiencyPolicyCompanies)
+            .WithOne(epc => epc.EfficiencyPolicy)
+            .HasForeignKey(epc => epc.EfficiencyPolicyId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

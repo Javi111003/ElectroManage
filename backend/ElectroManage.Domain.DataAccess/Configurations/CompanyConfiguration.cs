@@ -58,7 +58,9 @@ public class CompanyConfiguration : IEntityTypeConfiguration<Company>
             .HasForeignKey(cf => cf.CompanyId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasMany(c => c.EfficiencyPolicies)
-            .WithMany(ep => ep.Companies);
+        builder.HasMany(c => c.EfficiencyPoliciesApplyed)
+            .WithOne(ep => ep.Company)
+            .HasForeignKey(ep => ep.CompanyId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
