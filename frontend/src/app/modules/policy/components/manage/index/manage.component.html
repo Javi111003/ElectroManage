@@ -4,7 +4,7 @@
         <div class="form-buttons">
           <app-button
             [label]="'Añadir'"
-            [function]="onClick"
+            [function]="onAddClick.bind(this)"
             [showIcon]="true"
             [icon]="'add'"
           >

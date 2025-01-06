@@ -16,6 +16,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   @Input() selectedItem: any = null;
   form: FormGroup;
   data: any;
+  postMethod: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -32,8 +33,11 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const sub = this.dataService.currentData.subscribe(newData => {
-      this.data = newData;
-      this.form.patchValue(this.data);
+      if (newData) {
+        this.data = newData[0];
+        this.postMethod = newData[1];
+        this.form.patchValue(this.data);
+      }
     });
     this.subscriptions.add(sub);
   }
@@ -78,14 +82,19 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   onSubmit(): void {
     if (this.form.invalid) {
-      confirm('Please fill in all fields.');
+      this.global.openDialog('Por favor rellene todos los campos requeridos.')
       this.markAllAsTouched();
       return;
     }
 
-    const confirmation = confirm('Are you sure you want to save the changes?');
+    const confirmation = confirm('Seguro que quieres guardar los cambios ?');
     if (confirmation) {
-      this.createPolicy();
+      if(this.postMethod)
+        this.createPolicy();
+      else {
+        this.editPolicy();
+        this.postMethod = true;
+      }
     }
   }
 
@@ -102,32 +111,62 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Creates a new policy based on the form data.
+   * Creates or edits a policy based on the form data.
    * This method retrieves the necessary data from the form,
    * and then attempts to save the policy data to the server. If successful, it logs the response.
    * If the operation fails, it displays an error message to the user.
+   * @param isEdit - Whether the operation is an edit (true) or create (false)
    */
-  createPolicy(): void {
+  handlePolicy(isEdit: boolean): void {
     const name = this.getControlValue('policyName');
     const description = this.getControlValue('description');
-    const policy: Policy = {
-      name: name,
-      description: description
+    const policy: Policy = { name, description };
+
+    let request$;
+    if (isEdit) {
+      request$ = this.policyService.editPolicy(policy, this.data.id);
+    } else {
+      request$ = this.policyService.postPolicy(policy);
     }
 
-    this.policyService.postPolicy(policy).subscribe({
+    request$.subscribe({
       next: (response) => {
-        console.log('Created successfully:', response);
-        // window.location.reload();
+        console.log('Operación exitosa:', response);
+        this.dataService.notifyDataUpdated();
+        this.activateCloseButton();
       },
       error: (error) => {
-        if (error.statusText === 'Unknown Error')
-          this.global.openDialog("Falló la conexión. Intente de nuevo");
-        else if(error.error)
-          this.global.openDialog(error.error.errors[0].reason);
-        else
-          this.global.openDialog('No se ha podido guardar correctamente. Error inesperado');
+        console.log(error);
       }
     });
+  }
+
+  /**
+   * Initiates the creation of a new policy.
+   * This method calls the `handlePolicy` function with `false` as the argument,
+   * indicating that a new policy should be created.
+   */
+  createPolicy(): void {
+    this.handlePolicy(false);
+  }
+
+  /**
+   * This function is used to edit an existing policy.
+   * It retrieves the necessary information from the form controls to update a policy.
+   * It then calls the `handlePolicy` function to handle the editing process.
+   */
+  editPolicy(): void {
+    this.handlePolicy(true);
+  }
+
+
+  /**
+   * This function is used to activate the close button of the modal.
+   * It retrieves the close button element and simulates a click event on it,
+   * effectively closing the modal.
+   */
+  activateCloseButton(): void {
+    const closeButton = document.getElementById('close-button') as HTMLButtonElement;
+    closeButton.click();
   }
 }

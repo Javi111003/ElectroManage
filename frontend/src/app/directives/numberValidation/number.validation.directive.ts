@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import { Directive, HostListener } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
@@ -7,14 +7,11 @@ import { NgControl } from '@angular/forms';
 
 export class NumberValidationDirective {
 
-  constructor(
-    private ngControl: NgControl,
-    private el: ElementRef
-  ) { }
+  constructor(private ngControl: NgControl) { }
 
   @HostListener('input', ['$event'])
   onInputChange(event: KeyboardEvent): void {
-    const input = (this.el.nativeElement as HTMLInputElement).value;
+    const input = (event.target as HTMLInputElement).value;
 
     const sanitizedInput = input.replace(/[^0-9]/g, '');
     this.ngControl.control!.setValue(sanitizedInput);
@@ -23,7 +20,7 @@ export class NumberValidationDirective {
   @HostListener('keypress', ['$event'])
   onKeyPress(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;
-    console.log("hola");
+
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
       event.preventDefault();
       return false;

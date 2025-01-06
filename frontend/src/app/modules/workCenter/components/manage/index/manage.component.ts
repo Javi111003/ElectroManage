@@ -1,9 +1,12 @@
-import { Component, ViewChild } from '@angular/core';
+import { AdminArea } from './../../../../../models/workCenter.interface';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
+import { CenterDetails } from '../../../../../models/workCenter.interface';
+import { Subscription } from 'rxjs';
 
 declare var bootstrap: any;
 
@@ -12,31 +15,21 @@ declare var bootstrap: any;
   templateUrl: './manage.component.html',
   styleUrl: './manage.component.css'
 })
-export class ManageComponent {
-  dataSource: MatTableDataSource<any> = new MatTableDataSource([
-    {
-      name: 'hol',
-      adminAreaName: 'jhg',
-      adminAreaDescription: 'nbhgvfcd',
-      instalationType: 'gfd',
-      address: 'kjnhbg',
-      monthlyConsumptionLimit: 89,
-      formula: 'consumo',
-      teamWork: ['Juan', 'Lucia']
-    }
-  ]);
+export class ManageComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription = new Subscription();
+
+  centerStringArray: string[] = [];
+  centerObjectArray: CenterDetails[] = [];
+
+  dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
     {
       title: 'Nombre',
       field: 'name'
     },
     {
-      title: 'Nombre Área Administrativa',
+      title: 'Área Administrativa',
       field: 'adminAreaName'
-    },
-    {
-      title: 'Descripción Área Administrativa',
-      field: 'adminAreaDescription'
     },
     {
       title: 'Tipo de instalación',
@@ -47,16 +40,8 @@ export class ManageComponent {
       field: 'address'
     },
     {
-      title: 'Límite',
-      field: 'monthlyConsumptionLimit'
-    },
-    {
-      title: 'Fórmula de Costo Total',
-      field: 'formula'
-    },
-    {
-      title: 'Equipo Responsable',
-      field: 'teamWork'
+      title: 'Límite Mensual',
+      field: 'monthlyLimit'
     }
   ];
 
@@ -66,8 +51,24 @@ export class ManageComponent {
     private snackbarService: SnackbarService
   ) {}
 
+  ngOnInit(): void {
+    this.getCenters();
+    const sub = this.dataService.dataUpdated$.subscribe(() => {
+      this.getCenters();
+    });
+    this.subscriptions.add(sub);
+  }
 
-  onClick(): void {
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  /**
+   * Handles the "Add" button click event.
+   * This function sets the current data to null, indicating a new entry, and sets a flag to true.
+   * It then opens the modal for adding a new work center.
+   */
+  onAddClick(): void {
     this.dataService.setData([null, true]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
@@ -81,9 +82,64 @@ export class ManageComponent {
     });
   }
 
+  /**
+   * Handles the "Edit" button click event.
+   * This function sets the current data to the selected item and sets a flag to false, indicating an edit operation.
+   * It then opens the modal for editing an existing work center.
+   * @param item The work center instance to be edited.
+   */
   edit(item: any): void {
     this.dataService.setData([item, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
+  }
+
+  /**
+   * Retrieves the list of work centers from the server and updates the component's state.
+   * This function sends a request to the server to fetch the list of work centers.
+   * Upon receiving the response, it updates the component's state by setting the centerObjectArray
+   * and centerStringArray properties.
+   * It also calls the reloadTableData function to update the table with the new data.
+   */
+  getCenters(): void {
+    this.global.httpCenter.getCenterDetailsList().subscribe(centers => {
+      this.centerObjectArray = centers;
+      this.centerStringArray = centers.map(center => center.name);
+      this.reloadTableData(centers);
+    });
+  }
+
+  /**
+   * Finds the ID of a work center based on its name.
+   * This function iterates over the provided array of CenterDetails objects and returns the
+   * ID of the first item that matches the given option name.
+   * If no match is found, it returns undefined.
+   * @param array The array of CenterDetails objects to search in.
+   * @param option The name of the work center to find the ID for.
+   * @returns The ID of the work center if found, otherwise undefined.
+   */
+  findId(array: CenterDetails[], option: string): number {
+    return array.find(item => item.name === option)?.id!;
+  }
+
+  /**
+   * Reloads the table data with the provided list of work centers.
+   * This function updates the data source of the table with the new list of work centers,
+   * transforming each center item into a format suitable for display in the table.
+   * @param centers The list of work centers to be used to reload the table data.
+   */
+  reloadTableData(centers: CenterDetails[]): void {
+    this.dataSource.data = centers.map(item => ({
+      id: item.id,
+      location: item.location,
+      adminArea: item.administrativeArea,
+      instalType: item.installationType,
+      team: item.managementTeam,
+      name: item.name,
+      address: item.location.addressDetails,
+      adminAreaName: item.administrativeArea.name,
+      instalationType: item.installationType.name,
+      monthlyLimit: '-'
+    }));
   }
 }

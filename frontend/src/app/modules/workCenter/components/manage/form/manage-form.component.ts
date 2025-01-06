@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, Renderer2, signal } from '@angular/core';
 import * as L from 'leaflet';
 import { Modal } from 'bootstrap';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -7,6 +7,7 @@ import { DataService } from '../../../../../services/data/data.service';
 import { chipElement } from '../../../../../shared/components/chips/chips.component';
 import { AdminArea, CenterPropertyInfo, InstallationType } from '../../../../../models/workCenter.interface';
 import { Subscription } from 'rxjs';
+import { map_URL } from '../../../../../config/api.config';
 
 @Component({
   selector: 'app-center-manage-form',
@@ -18,6 +19,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   enableAddType: boolean = false;
   enableAddArea: boolean = false;
   postMethod: boolean = true;
+  locationConfirm: boolean = true;
 
   private map!: L.Map;
   private marker!: L.Marker;
@@ -62,7 +64,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
-    private dataService: DataService
+    private dataService: DataService,
+    private renderer: Renderer2
   )
   {
     this.form = this.fb.group({
@@ -72,7 +75,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       policy: '',
       monthlyConsumptionLimit: [null, Validators.required],
       formula: ['', Validators.required],
-      teamWork: [[''], Validators.required],
+      teamWork: [],
       latitude: [null, Validators.required],
       longitude: [null, Validators.required],
       location: ['', Validators.required],
@@ -189,6 +192,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
+    console.log(this.form);
     if (this.form.invalid) {
       this.global.openDialog('Por favor, rellene todos los campos.');
       this.markAllAsTouched();
@@ -212,7 +216,9 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
     if (valid[0]) {
       const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
+      console.log('hola');
       if (confirmation) {
+        console.log('mundo');
         if (this.postMethod)
           this.createCenter();
         else {
@@ -245,11 +251,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         this.getTypes();
       },
       error: (error) => {
-        if (error.status === 0) {
-          this.global.openDialog("Error inesperado al conectar con el servidor.");
-        }
-        else
-          this.global.openDialog(error.error.errors[0].reason);
+        console.log(error);
       }
     });
   }
@@ -281,11 +283,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         this.getTypes();
       },
       error: (error) => {
-        if (error.status === 0) {
-          this.global.openDialog("Error inesperado al conectar con el servidor.");
-        }
-        else
-          this.global.openDialog(error.error.errors[0].reason);
+        console.log(error);
       }
     });
   }
@@ -304,11 +302,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         this.getTypes();
       },
       error: (error) => {
-        if (error.status === 0) {
-          this.global.openDialog("Error inesperado al conectar con el servidor.");
-        }
-        else
-          this.global.openDialog(error.error.errors[0].reason);
+        console.log(error);
       }
     });
   }
@@ -340,11 +334,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         this.getAreas();
       },
       error: (error) => {
-        if (error.status === 0) {
-          this.global.openDialog("Error inesperado al conectar con el servidor.");
-        }
-        else
-          this.global.openDialog(error.error.errors[0].reason);
+        console.log(error);
       }
     });
   }
@@ -379,6 +369,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   };
 
   openMapModal() {
+    this.locationConfirm = true;
     const mapModalElement = document.getElementById('mapModal');
     if (mapModalElement) {
       this.modal = new Modal(mapModalElement);
@@ -410,28 +401,22 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
   async confirmLocation() {
     if (this.marker) {
+      this.locationConfirm = false;
       const position = this.marker.getLatLng();
-      const location = await this.getAddressFromCoordinates(position.lat, position.lng);
-      this.form.patchValue({
-        latitude: position.lat.toFixed(6),
-        longitude: position.lng.toFixed(6),
-        location: location
-      });
+      this.getAddressFromCoordinates(position.lat, position.lng);
     }
-    this.modal.hide();
   }
 
-  async getAddressFromCoordinates(lat: number, lng: number) {
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
-      );
-      const data = await response.json();
-      return data.display_name;
-    } catch (error) {
-      console.error('Error al obtener la dirección:', error);
-      return '';
-    }
+  async getAddressFromCoordinates(lat: number, lng: number): Promise<void> {
+    const response: any = await fetch(`${map_URL}&lat=${lat}&lon=${lng}`);
+
+    const data: any = await response.json();
+    this.form.patchValue({
+      latitude: lat.toFixed(6),
+      longitude: lng.toFixed(6),
+      location: data.display_name
+    });
+    this.modal.hide();
   }
 
   addElementFormula(): void {
@@ -499,6 +484,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     //   equipmentTypeId: commonValues.typeID
     // };
     // this.createOrEditSpecification(false, specification, commonValues);
+    console.log(this.getControlValue('formula'));
   }
 
   /**
@@ -561,24 +547,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     closeButton.click();
   }
 
-  /**
-   * This function is used to handle errors.
-   * It checks the error status and displays a corresponding message to the user.
-   * If the error status is 'Unknown Error', it prompts the user to try again.
-   * If the error has a specific reason, it displays that reason.
-   * If the error is unexpected, it displays a generic error message.
-   * @param error The error object to be handled.
-   */
-  handleError(error: any) {
-    if (error.statusText === 'Unknown Error') {
-      this.global.openDialog("Falló la conexión. Intente de nuevo");
-    } else if (error.error) {
-      this.global.openDialog(error.error.errors[0].reason);
-    } else {
-      this.global.openDialog('No se ha podido guardar correctamente. Error inesperado');
-    }
-  }
-
   assignValues(): void {
     this.clearForm();
 
@@ -589,7 +557,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       if (this.formulaSymbols.every(symbol => symbol.id != option.id && symbol.name != option.name)
         && option.name != 'consumo' && !usedOptions.includes(option.name)) {
 
-        this.form.addControl(option.name, this.fb.control('', Validators.required));
+        const control = this.fb.control('', [Validators.required, Validators.pattern(/^[0-9]+$/)]);
+        this.form.addControl(option.name, control);
         const formContainer = document.getElementById('form-container');
         if (formContainer) {
           if (i % 3 == 0) {
@@ -605,13 +574,33 @@ export class ManageFormComponent implements OnInit, OnDestroy {
           label.htmlFor = option.name;
           label.innerText = option.name;
 
-          const input = document.createElement('input');
-          input.type = 'number';
-          input.className = 'form-control';
-          input.id = option.name;
+          const input = this.renderer.createElement('input');
+          this.renderer.setAttribute(input, 'type', 'number');
+          this.renderer.setAttribute(input, 'class', 'form-control');
+          this.renderer.setAttribute(input, 'id', option.name);
+          this.renderer.listen(input, 'input', (event) => {
+            control.setValue(event.target.value);
+          });
+
+          const errorDiv = this.renderer.createElement('div');
+          const errorRequired = this.renderer.createElement('div');
+          const errorPattern = this.renderer.createElement('div');
+
+          this.renderer.setAttribute(errorRequired, 'class', 'error-required');
+          this.renderer.setAttribute(errorPattern, 'class', 'error-pattern');
+          this.renderer.setStyle(errorDiv, 'color', 'red');
+
+          this.renderer.appendChild(errorDiv, errorRequired);
+          this.renderer.appendChild(errorDiv, errorPattern);
+
+          this.renderer.listen(input, 'blur', () => {
+            errorPattern.innerText = control.hasError('pattern') ? 'Debe ser un número válido.' : '';
+            errorRequired.innerText = control.hasError('required') ? 'El campo es requerido.' : '';
+          });
 
           column.appendChild(label);
           column.appendChild(input);
+          column.appendChild(errorDiv);
           if (row) {
             row.appendChild(column);
           }

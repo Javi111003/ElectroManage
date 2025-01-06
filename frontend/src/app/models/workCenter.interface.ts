@@ -31,3 +31,30 @@ export interface Location {
     longitude: number;
   }
 }
+
+export interface CenterDetails {
+  id: number;
+  name: string;
+  installationType: CenterPropertyInfo;
+  administrativeArea: CenterPropertyInfo;
+  location: {
+    id: number;
+    addressDetails: string;
+    coordenateDTO: {
+      latitude: number;
+      longitude: number;
+    }
+  },
+  status: string;
+  managementTeam: {
+    id: number;
+    teamName: string;
+    companyId: number;
+    members: [
+      {
+        userId: number;
+        userName: string;
+      }
+    ]
+  }
+}

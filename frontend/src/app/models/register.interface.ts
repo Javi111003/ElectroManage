@@ -14,8 +14,8 @@ export interface RegisterDailyConsumption {
 
 export interface RegisterYearlyConsumption {
   year: number;
-  meanMonthlyCost: number;
-  meanMonthlyConsumption: number
+  meanCost: number;
+  meanConsumption: number
 }
 
 export interface AvgRegisterConsumption {

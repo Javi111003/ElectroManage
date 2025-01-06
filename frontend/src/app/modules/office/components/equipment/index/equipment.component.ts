@@ -214,7 +214,7 @@ export class EquipmentComponent implements OnInit, OnDestroy {
             this.dataService.notifyDataUpdated();
           },
           error: (error) => {
-            this.global.openDialog(error.error.errors[0].reason);
+            console.log(error);
           }
         });
         this.global.httpOffice.deleteEquipmentSpecification(item.specifId).subscribe({
@@ -237,7 +237,10 @@ export class EquipmentComponent implements OnInit, OnDestroy {
    * @param item The equipment instance to be edited.
    */
   edit(item: any): void {
-    this.dataService.setData([item, this.getControlValue('workCenter'), this.getControlValue('office'), false]);
+    this.dataService.setData([
+      item, this.getControlValue('workCenter'),
+      this.getControlValue('office'), false
+    ]);
     const modalElement = document.getElementById('exampleModal') as HTMLElement;
     const modal = new bootstrap.Modal(modalElement);
     modal.show();

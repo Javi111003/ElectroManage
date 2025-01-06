@@ -150,12 +150,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         this.dataService.notifyDataUpdated();
       },
       error: (error) => {
-        if (error.statusText === 'Unknown Error')
-          this.global.openDialog("Falló la conexión. Intente de nuevo");
-        else if (error.error)
-          this.global.openDialog(error.error.errors[0].reason);
-        else
-          this.global.openDialog('No se ha podido guardar correctamente. Error inesperado');
+        console.log(error);
       }
     });
   }

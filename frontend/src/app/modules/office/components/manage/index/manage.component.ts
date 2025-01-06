@@ -135,7 +135,7 @@ export class ManageComponent implements OnInit, OnDestroy {
             this.dataService.notifyDataUpdated();
           },
           error: (error) => {
-            this.global.openDialog(error.error.errors[0].reason);
+            console.log(error);
           }
         });
       }

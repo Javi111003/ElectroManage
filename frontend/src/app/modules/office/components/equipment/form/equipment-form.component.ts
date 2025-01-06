@@ -273,7 +273,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         this.getTypes();
       },
       error: (error) => {
-        this.global.openDialog(error.error.errors[0].reason);
+        console.log(error);
       }
     });
   }
@@ -293,7 +293,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         this.getTypes();
       },
       error: (error) => {
-        this.global.openDialog(error.error.errors[0].reason);
+        console.log(error);
       }
     });
   }
@@ -313,7 +313,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         this.getBrands();
       },
       error: (error) => {
-        this.global.openDialog(error.error.errors[0].reason);
+        console.log(error);
       }
     });
   }
@@ -336,8 +336,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         this.getBrands();
       },
       error: (error) => {
-        this.global.openDialog(error.error.errors[0].reason);
-        console.log(eqBrand);
+        console.log(error);
       }
     });
   }
@@ -471,7 +470,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         this.createOrEditInstance(isEdit, equipment);
       },
       error: (error) => {
-        this.handleError(error);
+        console.log(error);
       }
     });
   }
@@ -494,7 +493,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         this.activateCloseButton();
       },
       error: (error) => {
-        this.handleError(error);
+        console.log(error);
       }
     });
   }
@@ -507,23 +506,5 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
   activateCloseButton(): void {
     const closeButton = document.getElementById('close-button') as HTMLButtonElement;
     closeButton.click();
-  }
-
-  /**
-   * This function is used to handle errors.
-   * It checks the error status and displays a corresponding message to the user.
-   * If the error status is 'Unknown Error', it prompts the user to try again.
-   * If the error has a specific reason, it displays that reason.
-   * If the error is unexpected, it displays a generic error message.
-   * @param error The error object to be handled.
-   */
-  handleError(error: any) {
-    if (error.statusText === 'Unknown Error') {
-      this.global.openDialog("Falló la conexión. Intente de nuevo");
-    } else if (error.error) {
-      this.global.openDialog(error.error.errors[0].reason);
-    } else {
-      this.global.openDialog('No se ha podido guardar correctamente. Error inesperado');
-    }
   }
 }
