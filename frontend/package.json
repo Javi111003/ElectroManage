@@ -10,7 +10,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^18.2.0",
+    "@angular/animations": "^18.2.13",
     "@angular/cdk": "~18.2.12",
     "@angular/common": "^18.2.0",
     "@angular/compiler": "^18.2.0",
@@ -22,6 +22,7 @@
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
     "@nuxtjs/critters": "^0.8.0",
+    "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.6",
     "glob": "^11.0.0",

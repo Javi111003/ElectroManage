@@ -2,11 +2,43 @@ import { Component, OnInit } from '@angular/core';
 import { MenuService } from '../../../../services/menu/menu.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../services/auth/auth.service';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
-  styleUrl: './menu.component.css'
+  styleUrl: './menu.component.css',
+  animations: [
+    trigger('submenuToggle',
+      [
+        state('collapsed',
+          style({
+            height: '0',
+            overflow: 'hidden',
+            opacity: 0
+          })),
+          state(
+            'expanded',
+            style(
+              {
+                height: '*',
+                opacity: 1
+              }
+            )
+          ),
+          transition(
+            'collapsed <=> expanded', [
+              animate('300ms ease-in-out')
+            ]
+          ),
+          // transition(
+          //   'expanded => collapsed', [
+          //     animate('300ms ease-in')
+          //   ]
+          // )
+        ]
+      )
+    ]
 })
 export class MenuComponent implements OnInit {
 
@@ -36,6 +68,7 @@ export class MenuComponent implements OnInit {
   toggleSidebar() {
     this.isSidebarActive = !this.isSidebarActive;
   }
+
 
   hideSidebar(): void {
     this.isSidebarActive = false;
@@ -72,6 +105,10 @@ export class MenuComponent implements OnInit {
       menuItem.isOpen = !menuItem.isOpen;
   }
 
+  /**
+   * This function is used to logout the user.
+   * It calls the logout method from the auth service and navigates the user to the login page.
+   */
   logout(): void {
     this.auth.logout();
     this.router.navigate(['/login']);

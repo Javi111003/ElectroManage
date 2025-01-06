@@ -1,7 +1,7 @@
-import { AdminArea, CenterPropertyInfo, InstallationType, Location, ManagementTeam } from './../../models/workCenter.interface';
+import { AdminArea, CenterDetails, CenterPropertyInfo, InstallationType, Location, ManagementTeam } from './../../models/workCenter.interface';
 import { Injectable } from '@angular/core';
 import { API_URL } from '../../config/api.config';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { WorkCenter } from '../../models/workCenter.interface';
 import { AvgRegisterConsumption, RegisterTotalConsumption } from '../../models/register.interface';
@@ -15,7 +15,7 @@ export class WorkCenterService {
 
   constructor(private http: HttpClient) { }
 
-  private workCenterListUrl = API_URL + '/v1/company';
+  private workCenterListUrl = API_URL + '/v1/company/list/select';
   private registerUrl = API_URL + '/v1/register';
 
 
@@ -26,6 +26,10 @@ export class WorkCenterService {
    */
   getWorkCenterList(): Observable<WorkCenter[]> {
     return this.http.get<WorkCenter[]>(this.workCenterListUrl);
+  }
+
+  getCenterDetailsList(): Observable<CenterDetails[]> {
+    return this.http.get<CenterDetails[]>(`${API_URL}/v1/company`);
   }
 
   /**
@@ -45,7 +49,7 @@ export class WorkCenterService {
    * @returns An Observable that resolves to an Alert object.
    */
   getAlerts(centerID: number): Observable<Alert> {
-    return this.http.get<Alert>(`${this.workCenterListUrl}/${centerID}/list_warnings`);
+    return this.http.get<Alert>(`${API_URL}/v1/company/${centerID}/list_warnings`);
   }
 
   /**
@@ -58,11 +62,11 @@ export class WorkCenterService {
   getAvgRegisters(centerIDs: number[]): Observable<AvgRegisterConsumption[]> {
     let params = new HttpParams();
     centerIDs.forEach(id => {
-      params = params.append('ids', id.toString());
+      params = params.append('companyIds', id.toString());
     });
 
     return this.http.get<AvgRegisterConsumption[]>(
-      `${this.workCenterListUrl}/last_three_years`, { params }
+      `${API_URL}/v1/company/mean_cost_last_three_years`, { params }
     );
   }
 

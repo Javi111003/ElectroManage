@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { AutocompleteComponent } from '../../../../../shared/components/autocomplete/autocomplete.component';
-import { PolicyInfo } from '../../../../../models/policy.interface';
+import { PolicyByCompany } from '../../../../../models/policy.interface';
 import { PolicyService } from '../../../../../services/policy/policy.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
@@ -33,7 +33,7 @@ export class ComparisonComponent implements OnInit {
   policySelectedId: number = 0;
 
   optionsPolicy: string[] = [];
-  objectsPolicy: PolicyInfo[] = [];
+  objectsPolicy: PolicyByCompany[] = [];
 
   showTable: boolean = false;
   dataSourceBefore: MatTableDataSource<any> = [][0];

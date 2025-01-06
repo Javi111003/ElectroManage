@@ -133,9 +133,6 @@
                   [label]="'Trabajadores'"
                   [control]="getControl('teamWork')"
                 ></app-checkbox>
-                <div *ngIf="form.get('teamWork')?.invalid && form.get('teamWork')?.touched" class="invalid-feedback">
-                  Este campo es obligatorio
-                </div>
               </div>
             </div>
           </div>
@@ -190,8 +187,8 @@
         <div id="map" style="height: calc(100vh - 140px);"></div>
       </div>
       <div class="modal-footer">
-        <app-button [label]="'Cerrar'" [function]="onCloseModal.bind(this)" data-bs-dismiss="modal"></app-button>
-        <app-button [label]="'Confirmar'" [function]="confirmLocation.bind(this)"></app-button>
+        <app-button [label]="'Cerrar'" [function]="onCloseModal.bind(this)" data-bs-dismiss="modal" [isDisabled]="!locationConfirm"></app-button>
+        <app-button [label]="'Confirmar'" [function]="confirmLocation.bind(this)" [isDisabled]="!locationConfirm"></app-button>
       </div>
     </div>
   </div>

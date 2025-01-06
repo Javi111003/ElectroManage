@@ -15,6 +15,7 @@ import { LoginComponent } from './components/login/login.component';
 //global services
 import { WorkCenterService } from '../../services/workCenter/work-center.service';
 import { OfficeService } from '../../services/office/office.service';
+import { TranslationService } from '../../services/translation/translation.service';
 
 //global directives
 import { PasswordValidatorDirective } from '../../directives/password/password.directive';
@@ -80,7 +81,8 @@ export class GlobalModule {
   constructor(
     public httpCenter: WorkCenterService,
     public httpOffice: OfficeService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private httpTranslate: TranslationService
   ) {}
 
   userInfo: UserLogged = [][0];

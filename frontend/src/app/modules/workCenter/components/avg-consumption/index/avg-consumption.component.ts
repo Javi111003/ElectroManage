@@ -18,7 +18,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
     ]),
   ]
 })
-export class AvgConsumptionComponent implements OnInit{
+export class AvgConsumptionComponent implements OnInit {
 
   constructor (
     public global: GlobalModule,
@@ -41,11 +41,11 @@ export class AvgConsumptionComponent implements OnInit{
     },
     {
       title: 'Costo ($)',
-      field: 'meanMonthlyCost'
+      field: 'meanCost'
     },
     {
       title: 'Consumo Promedio (Kw/h)',
-      field: 'meanMonthlyConsumption'
+      field: 'meanConsumption'
     }
   ];
 
@@ -63,10 +63,20 @@ export class AvgConsumptionComponent implements OnInit{
     });
   }
 
+  /**
+   * This function is used to get the form control by its name.
+   * @param control The name of the form control.
+   * @returns The form control with the specified name.
+   */
   getControl(control: string): FormControl {
     return this.form.get(control) as FormControl;
   }
 
+  /**
+   * This function is used to get the value of a form control by its name.
+   * @param control The name of the form control.
+   * @returns The value of the form control with the specified name.
+   */
   getControlValue(control: string): any {
     return this.form.get(control)?.value;
   }

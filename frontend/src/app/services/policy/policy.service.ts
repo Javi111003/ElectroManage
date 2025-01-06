@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { API_URL } from '../../config/api.config';
-import { Policy, PolicyInfo } from '../../models/policy.interface';
+import { Policy, PolicyByCompany, PolicyInfo } from '../../models/policy.interface';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -20,8 +20,12 @@ export class PolicyService {
    * @param centerID The ID of the work center for which to fetch policies.
    * @returns An Observable that resolves to an array of Policy objects.
    */
-  getPoliciesByCenter(centerID: number): Observable<PolicyInfo[]> {
-    return this.http.get<PolicyInfo[]>(`${this.workCenterListUrl}/${centerID}/policy`);
+  getPoliciesByCenter(centerID: number): Observable<PolicyByCompany[]> {
+    return this.http.get<PolicyByCompany[]>(`${this.workCenterListUrl}/${centerID}/policy`);
+  }
+
+  getPolicies(): Observable<PolicyInfo[]> {
+    return this.http.get<PolicyInfo[]>(`${API_URL}/v1/policy/list`);
   }
 
   /**
@@ -31,7 +35,7 @@ export class PolicyService {
    * @returns An Observable that resolves to the response from the API.
    */
   deletePolicy(policyID: number): Observable<any> {
-    return this.http.delete<any>(`${API_URL}/v1/policies/${policyID}`);
+    return this.http.delete<any>(`${API_URL}/v1/efficiency_policy/${policyID}`);
   }
 
   /**
@@ -42,5 +46,9 @@ export class PolicyService {
    */
   postPolicy(policy: Policy): Observable<any> {
     return this.http.post<any>(`${API_URL}/v1/policies`, policy);
+  }
+
+  editPolicy(policy: Policy, policyID: number): Observable<any> {
+    return this.http.put<any>(`${API_URL}/v1/policy/${policyID}`, policy);
   }
 }
