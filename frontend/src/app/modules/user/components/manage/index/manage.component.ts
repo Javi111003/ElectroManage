@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
-import { UserInfo } from '../../../../../models/credential.interface';
+import { UserById, UserInfo } from '../../../../../models/credential.interface';
 
 declare var bootstrap: any;
 
@@ -24,19 +24,24 @@ export class ManageComponent {
   dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
   displayedColumns: ConfigColumn[] = [
     {
-      title: 'ID',
-      field: 'id'
+      title: 'Usuario',
+      field: 'userName'
     },
     {
-      title: 'Usuario',
+      title: 'Correo',
       field: 'email'
     },
     {
       title: 'Centro de Trabajo',
-      field: 'center'
+      field: 'workCenter'
     }
   ];
   selectedItem: any = null;
+  roles: Map<string, string> = new Map<string, string>([
+    ['Admin', 'Administrador'],
+    ['Manager', 'Gerente'],
+    ['Analist', 'Analista']
+  ]);
 
   ngOnInit() {
     this.getUserList();
@@ -60,11 +65,14 @@ export class ManageComponent {
 
   edit(item: any): void {
     this.selectedItem = item;
-    this.dataService.setData(item);
-    const modal = new bootstrap.Modal(
-      document.getElementById('exampleModal') as HTMLElement
-    );
-    modal.show();
+    this.user.getById(item.id).subscribe(user => {
+      item.role = user.roles.map(item => this.roles.get(item));
+      this.dataService.setData(item);
+      const modal = new bootstrap.Modal(
+        document.getElementById('exampleModal') as HTMLElement
+      );
+      modal.show();
+    });
   }
 
   getUserList(): void {
@@ -77,8 +85,10 @@ export class ManageComponent {
   reloadTableData(offices: any[]) {
     this.dataSource.data = offices.map(item => ({
       id: item.id,
+      userName: item.username,
       email: item.email,
-      center: item.company.name
+      password: item.password,
+      workCenter: item.company.name
     }));
   }
 }

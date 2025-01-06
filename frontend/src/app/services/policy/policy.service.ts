@@ -21,7 +21,7 @@ export class PolicyService {
    * @returns An Observable that resolves to an array of Policy objects.
    */
   getPoliciesByCenter(centerID: number): Observable<PolicyByCompany[]> {
-    return this.http.get<PolicyByCompany[]>(`${this.workCenterListUrl}/${centerID}/policy`);
+    return this.http.get<PolicyByCompany[]>(`${this.workCenterListUrl}/${centerID}/list_policies`);
   }
 
   getPolicies(): Observable<PolicyInfo[]> {

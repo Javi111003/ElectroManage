@@ -11,16 +11,27 @@ export class DashboardService {
 
   constructor(private http: HttpClient) { }
 
-  getCentersCreated(year:number):Observable<CentersCreatedPerYear>{
-    return this.http.get<CentersCreatedPerYear>(`${API_URL}/v1/dashboard/count_created_deleted?year=${year}`)
+  getCentersCreated(year:number):Observable<CentersCreatedPerYear> {
+    return this.http.get<CentersCreatedPerYear>(
+      `${API_URL}/v1/dashboard/count_created_deleted?year=${year}`
+    );
   }
-  getTopFiveConsumingCenters():Observable<MostConsumingCenters[]>{
-    return this.http.get<MostConsumingCenters[]>(`${API_URL}/v1/dashboard/top_five/company_consumption`)
+
+  getTopFiveConsumingCenters():Observable<MostConsumingCenters[]> {
+    return this.http.get<MostConsumingCenters[]>(
+      `${API_URL}/v1/dashboard/top_five/company_consumption`
+    );
   }
-  getTopFiveBiggestCenters():Observable<BiggestCenters[]>{
-    return this.http.get<BiggestCenters[]>(`${API_URL}/v1/dashboard/top_five/company_count_offices`)
+
+  getTopFiveBiggestCenters():Observable<BiggestCenters[]> {
+    return this.http.get<BiggestCenters[]>(
+      `${API_URL}/v1/dashboard/top_five/company_count_offices`
+    );
   }
-  getTopFiveWarnedCenters():Observable<MostWarnedCenters[]>{
-    return this.http.get<MostWarnedCenters[]>(`${API_URL}/v1/dashboard/top_five/company_count_warnings`)
+
+  getTopFiveWarnedCenters():Observable<MostWarnedCenters[]> {
+    return this.http.get<MostWarnedCenters[]>(
+      `${API_URL}/v1/dashboard/top_five/company_count_warnings`
+    );
   }
 }

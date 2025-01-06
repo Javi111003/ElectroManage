@@ -9,10 +9,10 @@
           <div class="mb-3">
             <div class="row">
               <div class="col-8 col-sm-6">
-                <label for="name" class="form-label">Usuario</label>
-                <input type="text" class="form-control" id="name" formControlName="name"
-                  [ngClass]="{'is-invalid': form.get('name')?.invalid && form.get('name')?.touched}">
-                <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="invalid-feedback">
+                <label for="userName" class="form-label">Usuario</label>
+                <input type="text" class="form-control" id="userName" formControlName="userName"
+                  [ngClass]="{'is-invalid': form.get('userName')?.invalid && form.get('userName')?.touched}">
+                <div *ngIf="form.get('userName')?.invalid && form.get('userName')?.touched" class="invalid-feedback">
                   Este campo es obligatorio
                 </div>
               </div>
@@ -29,9 +29,20 @@
           </div>
 
           <div class="mb-3">
+            <div class="col-sm-6">
+              <label for="email">Correo</label>
+              <input type="email" class="form-control" id="email" formControlName="email" appEmailValidation
+                [ngClass]="{'is-invalid': form.get('email')?.invalid && form.get('email')?.touched}">
+              <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="invalid-feedback">
+                Requerido un correo electrónico válido
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
             <div class="row">
               <div class="col-8 col-sm-6">
-                <label for="role" class="form-label">Rol</label>
+                <label for="role" class="form-label">Roles</label>
                 <app-checkbox class="form-control" id="role"
                   [options]="TextRoles"
                   [label]="'Roles'"
@@ -42,7 +53,7 @@
                 </div>
               </div>
               <div class="col-4 col-sm-6">
-                <label for="workCenter" class="form-label">Centros de Trabajo</label>
+                <label for="workCenter" class="form-label">Centro de Trabajo</label>
                 <app-autocomplete class="form-control" id="workCenter"
                   [options]="this.global.centerStringArray"
                   [label]="'Centros de trabajo'"

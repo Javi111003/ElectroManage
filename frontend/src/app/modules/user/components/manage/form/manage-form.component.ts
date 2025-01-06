@@ -22,7 +22,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   )
   {
     this.form = this.fb.group({
-      name: ['', Validators.required],
+      userName: ['', Validators.required],
+      email: ['', Validators.required],
       password: ['', Validators.required],
       role: [[], Validators.required],
       workCenter: ['', Validators.required]
@@ -45,6 +46,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const sub = this.dataService.currentData.subscribe(newData => {
       this.data = newData;
+      console.log(this.data);
       this.form.patchValue(this.data);
     });
 
@@ -138,7 +140,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     }
 
     const registerData: RegisterUser = {
-      email: this.getControlValue('name'),
+      email: this.getControlValue('email'),
+      username: this.getControlValue('name'),
       password: this.getControlValue('password'),
       roles: rolesToPost,
       companyId: this.global.centerSelectedId

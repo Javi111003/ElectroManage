@@ -23,7 +23,15 @@ export interface UserInfo {
 
 export interface RegisterUser {
   email: string;
+  username: string;
   password: string;
   roles: string[];
   companyId: number;
+}
+
+export interface UserById {
+  email: string;
+  username: string;
+  company: WorkCenter;
+  roles: string[];
 }

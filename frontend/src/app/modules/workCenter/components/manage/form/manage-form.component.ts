@@ -223,7 +223,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
           this.createCenter();
         else {
           this.editCenter();
-          this.postMethod = true;
         }
       }
     } else {
@@ -441,7 +440,11 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
   validateOption(option: string): boolean {
     const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-    const symbols = ['`', '~', '%', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '+', '=', '{', '}', '[', ']', '|', '\\', ':', ';', '"', '\'', '<', '>', ',', '.', '?', '/'];
+    const symbols = [
+      '`', '~', '%', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
+      '-', '_', '+', '=', '{', '}', '[', ']', '|', '\\', ':', ';',
+      '"', '\'', '<', '>', ',', '.', '?', '/'
+    ];
 
     if (numbers.includes(option[0]) || symbols.find(symbol => option.includes(symbol)) != undefined) {
       return false;

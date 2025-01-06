@@ -212,7 +212,6 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
           this.createEquipment();
         else {
           this.editEquipment();
-          this.postMethod = true;
         }
       }
     } else {
