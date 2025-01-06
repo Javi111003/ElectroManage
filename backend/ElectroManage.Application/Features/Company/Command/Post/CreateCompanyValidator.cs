@@ -26,6 +26,6 @@ public class CreateCompanyValidator : Validator<CreateCompanyCommand>
             .NotEmpty()
             .WithMessage("Each Company must be vinculated to an Installation Type")
             .GreaterThan(0)
-            .WithMessage("The Installa Id, must be greater than 0");
+            .WithMessage("The Installation Type Id, must be greater than 0");
     }
 }

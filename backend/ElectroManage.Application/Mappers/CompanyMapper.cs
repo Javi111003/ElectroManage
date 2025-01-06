@@ -10,6 +10,7 @@ public static class CompanyMapper
         {
             Id = company.Id,
             Name = company.Name,
+            ConsumptionLimit = company.ConsumptionLimit,
             InstallationType = new InstallationTypeDTO
             {
                 Name = company.InstalationType.Name,

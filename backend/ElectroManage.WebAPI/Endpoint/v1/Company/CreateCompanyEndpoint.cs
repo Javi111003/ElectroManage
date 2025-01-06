@@ -1,8 +1,9 @@
-﻿using ElectroManage.Application.Features.Company.Command.Post;
+﻿using ElectroManage.Application.DTO_s;
+using ElectroManage.Application.Features.Company.Command.Post;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.Company;
 
-public class CreateCompanyEndpoint : Endpoint<CreateCompanyCommand, CreateCompanyResponse>
+public class CreateCompanyEndpoint : Endpoint<CreateCompanyCommand, CompanyResponse>
 {
     public override void Configure()
     {

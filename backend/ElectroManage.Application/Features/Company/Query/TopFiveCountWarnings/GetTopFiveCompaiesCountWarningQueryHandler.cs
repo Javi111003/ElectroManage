@@ -23,7 +23,7 @@ public class GetTopFiveCompaiesCountWarningQueryHandler : CoreCommandHandler<Get
         {
             x => x.Warnings
         };
-        var topFiveCompaniesCountWarnings = await companyRepository.GetAll(useInactive: true, includes: include)
+        var topFiveCompaniesCountWarnings = await companyRepository.GetAll(useInactive: false, includes: include)
             .Select(x => new TopFiveCompaniesCountWarningDTO
             {
                 Company = new CompanyDTO

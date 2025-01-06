@@ -21,7 +21,7 @@ public class GetTopFiveCompaniesCountOfficeQueryHandler : CoreCommandHandler<Get
         {
             x => x.Offices
         };
-        var companies = await companyRepository.GetAll(useInactive: true, includes: include)
+        var companies = await companyRepository.GetAll(useInactive: false, includes: include)
                 .Select(x => new TopFiveCompanyCountOfficeDTO
                 {
                     CompanyId = x.Id,

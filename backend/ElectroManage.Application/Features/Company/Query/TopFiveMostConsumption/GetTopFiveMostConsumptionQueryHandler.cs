@@ -23,7 +23,7 @@ public class GetTopFiveMostConsumptionQueryHandler : CoreCommandHandler<GetTopFi
         {
             c => c.Registers
         };
-        var companies = await companyRepository.GetAll(useInactive: true, includes: include)
+        var companies = await companyRepository.GetAll(useInactive: false, includes: include)
             .Select(x => new ConsumptionDTO
             {
                 CompanyId = x.Id,
