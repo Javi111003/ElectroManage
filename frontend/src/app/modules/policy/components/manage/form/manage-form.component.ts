@@ -93,7 +93,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         this.createPolicy();
       else {
         this.editPolicy();
-        this.postMethod = true;
       }
     }
   }

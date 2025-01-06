@@ -11,8 +11,8 @@ export interface Policy {
 }
 
 export interface PolicyInfo {
-  id: number;
-  name: string;
+  policyId: number;
+  policyName: string;
   description: string;
   applyingDate: string;
 }
