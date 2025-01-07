@@ -2,7 +2,7 @@
 
 namespace ElectroManage.Application.Features.Efficiency_Policy.Query.Get;
 
-public class EfficiencyPolicyGetByIdValidator : Validator<EfficiencyPolicyGetByIdCommand>
+public class EfficiencyPolicyGetByIdValidator : Validator<EfficiencyPolicyGetByIdQuery>
 {
     public EfficiencyPolicyGetByIdValidator()
     {

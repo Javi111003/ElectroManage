@@ -1,8 +1,9 @@
-﻿using ElectroManage.Application.Features.Company.Command.Put;
+﻿using ElectroManage.Application.DTO_s;
+using ElectroManage.Application.Features.Company.Command.Put;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.Company;
 
-public class EditGeneralDataCompanyEndpoint : Endpoint<EditGeneralDataCompanyCommand, EditGeneralDataCompanyResponse>
+public class EditGeneralDataCompanyEndpoint : Endpoint<EditGeneralDataCompanyCommand, CompanyResponse>
 {
     public override void Configure()
     {

@@ -1,10 +1,13 @@
-﻿using ElectroManage.Domain.DataAccess.Abstractions;
+﻿using ElectroManage.Application.DTO_s;
+using ElectroManage.Application.Mappers;
+using ElectroManage.Domain.DataAccess.Abstractions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
 namespace ElectroManage.Application.Features.Company.Command.Put;
 
-public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataCompanyCommand, EditGeneralDataCompanyResponse>
+public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataCompanyCommand, CompanyResponse>
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<EditGeneralDataCompanyHandler> _logger;
@@ -15,17 +18,18 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
         _logger = logger;
     }
 
-    public override async Task<EditGeneralDataCompanyResponse> ExecuteAsync(EditGeneralDataCompanyCommand command, CancellationToken ct = default)
+    public override async Task<CompanyResponse> ExecuteAsync(EditGeneralDataCompanyCommand command, CancellationToken ct = default)
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
         var companyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Company>();
-        var include = new List<Expression<Func<Domain.Entites.Sucursal.Company, object>>>
-        {
-            x => x.AministrativeArea,
-            x => x.InstalationType,
-            x => x.Location,
-        };
-        var company = await companyRepository.FirstAsync(useInactive: true, includes: include, filters: x => x.Id == command.Id);
+        
+        var company = await companyRepository.GetAll(useInactive: true, filters: x => x.Id == command.Id)
+            .Include(x => x.AministrativeArea)
+            .Include(x => x.InstalationType)
+            .Include(x => x.Location)
+            .Include(x => x.EfficiencyPoliciesApplyed)
+            .ThenInclude(x => x.EfficiencyPolicy)
+        .FirstAsync();
         if (company is null)
         {
             _logger.LogError($"Company with id: {command.Id} not found");
@@ -45,8 +49,8 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
             _logger.LogError($"Location with id: {command.LocationId} not found");
             ThrowError($"Location with id: {command.LocationId} not found", 404);
         }
-        var installationTypeReporitory = _unitOfWork.DbRepository<Domain.Entites.Sucursal.InstalationType>();
-        var installationType = await installationTypeReporitory.FirstAsync(true, filters: x => x.Id == command.InstallationTypeId);
+        var installationTypeRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.InstalationType>();
+        var installationType = await installationTypeRepository.FirstAsync(true, filters: x => x.Id == command.InstallationTypeId);
         if (installationType is null)
         {
             _logger.LogError($"Installation type with id: {command.InstallationTypeId} not found");
@@ -63,26 +67,45 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
         {
             company.ManagementTeam = managementTeam;
         }
-
-        company.Name = command.Name;
-        company.ConsumptionLimit = command.ConsumptionLimit;
-        company.AministrativeAreaId = command.AreaId;
-        company.AministrativeArea = area;
-        company.InstalationTypeId = command.InstallationTypeId;
-        company.InstalationType = installationType;
-        company.LocationId = command.LocationId;
-        company.Location = location;
-
-        await companyRepository.UpdateAsync(company);
-        _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Completed");
-        return new EditGeneralDataCompanyResponse
+        var efficiencyPolicyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.EfficiencyPolicy>();
+        var efficiencyPolicy = await efficiencyPolicyRepository.FirstAsync(true, filters: x => x.Id == command.EfficiencyPolicyId);
+        if (efficiencyPolicy is null)
         {
-            Name = company.Name,
-            ConsumptionLimit = company.ConsumptionLimit,
-            Area = company.AministrativeArea.Name,
-            Installation = company.InstalationType.Name,
-            LocationDetails = company.Location.AddressDetails??"",
-            ManagementTeam = managementTeam is null ? null : Mappers.ManagementTeamMapper.MapToManagementTeamDto(managementTeam)
-        };
+            _logger.LogError($"Efficiency policy with id: {command.EfficiencyPolicyId} not found");
+            ThrowError($"Efficiency policy with id: {command.EfficiencyPolicyId} not found", 404);
+        }
+
+        using (var scopeDoWork = ScopeBeginTransactionAsync())
+        {
+            company.Name = command.Name;
+            company.ConsumptionLimit = command.ConsumptionLimit;
+            company.AministrativeAreaId = command.AreaId;
+            company.AministrativeArea = area;
+            company.InstalationTypeId = command.InstallationTypeId;
+            company.InstalationType = installationType;
+            company.LocationId = command.LocationId;
+            company.Location = location;
+    
+            var lastPolicy = company.EfficiencyPoliciesApplyed.Last(); 
+            if(lastPolicy.EfficiencyPolicyId != command.EfficiencyPolicyId)
+            {
+                var currentTime = DateTime.UtcNow;
+                lastPolicy.To = currentTime;
+                var newPolicy = new Domain.Entites.Sucursal.EfficiencyPolicyCompany
+                {
+                    CompanyId = company.Id,
+                    EfficiencyPolicyId = command.EfficiencyPolicyId,
+                    ApplyingDate = currentTime,
+                };
+                company.EfficiencyPoliciesApplyed.Add(newPolicy);
+                efficiencyPolicy.EfficiencyPolicyCompanies.Add(newPolicy);
+            }
+            await efficiencyPolicyRepository.UpdateAsync(efficiencyPolicy, false);
+            await companyRepository.UpdateAsync(company, false);
+            CommitTransaction(scopeDoWork);
+        }
+        await _unitOfWork.SaveChangesAsync();
+        _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Completed");
+        return CompanyMapper.ToResponse(company);
     }
 }

@@ -27,5 +27,11 @@ public class CreateCompanyValidator : Validator<CreateCompanyCommand>
             .WithMessage("Each Company must be vinculated to an Installation Type")
             .GreaterThan(0)
             .WithMessage("The Installation Type Id, must be greater than 0");
+
+        RuleFor(x => x.EfficiencyPolicyId)
+            .NotEmpty()
+            .WithMessage("Each Company must have an Efficiency Policy assigned")
+            .GreaterThan(0)
+            .WithMessage("The Efficiency Policy Id, must be greater than 0");
     }
 }
