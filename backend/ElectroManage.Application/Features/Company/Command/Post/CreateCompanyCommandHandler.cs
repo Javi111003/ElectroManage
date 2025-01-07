@@ -52,6 +52,14 @@ public class CreateCompanyCommandHandler : CoreCommandHandler<CreateCompanyComma
             _logger.LogError($"Management Team with id: {command.ManagementTeamId} not found");
             ThrowError($"Management Team with id: {command.ManagementTeamId} not found", 404);
         }
+
+        var efficiencyPolicyRepository =  _unitOfWork.DbRepository<Domain.Entites.Sucursal.EfficiencyPolicy>();
+        var efficiencyPolicy = await efficiencyPolicyRepository.FirstAsync(useInactive: true, filters: x => x.Id == command.EfficiencyPolicyId);
+        if (efficiencyPolicy is null)
+        {
+            _logger.LogError($"Efficiency Policy with id: {command.EfficiencyPolicyId} not found");
+            ThrowError($"Efficiency Policy with id: {command.EfficiencyPolicyId} not found", 404);
+        }
         var company = new Domain.Entites.Sucursal.Company
         {
             Name = command.Name,
@@ -61,7 +69,18 @@ public class CreateCompanyCommandHandler : CoreCommandHandler<CreateCompanyComma
             ManagementTeam = managementTeam,
             ConsumptionLimit = command.ConsumptionLimit
         };
+        var efficiencyPolicyCompany = new Domain.Entites.Sucursal.EfficiencyPolicyCompany
+        {
+            EfficiencyPolicyId = command.EfficiencyPolicyId,
+            CompanyId = company.Id,
+            ApplyingDate = DateTime.UtcNow
+        };
+        company.EfficiencyPoliciesApplyed.Add(efficiencyPolicyCompany);
+        efficiencyPolicy.EfficiencyPolicyCompanies.Add(efficiencyPolicyCompany);
+
         await companyRepository.SaveAsync(company);
+        await efficiencyPolicyRepository.UpdateAsync(efficiencyPolicy);
+        
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Completed");
         return CompanyMapper.ToResponse(company);
     }

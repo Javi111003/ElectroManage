@@ -7,6 +7,7 @@ public record CompanyResponse
     public InstallationTypeDTO InstallationType { get; set; } = null!;
     public AdministrativeAreaDTO AdministrativeArea { get; set; } = null!;
     public LocationDTO Location { get; set; } = null!;
+    public AppliedEfficiencyPolicyDTO CurrentEfficiencyPolicy { get; set; } = null!;
     public string Status { get; set; } = string.Empty;
     public ManagementTeamDto? ManagementTeam { get; set; }
 }

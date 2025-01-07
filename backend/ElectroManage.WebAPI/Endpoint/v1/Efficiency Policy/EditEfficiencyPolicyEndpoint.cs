@@ -1,8 +1,9 @@
-﻿using ElectroManage.Application.Features.Efficiency_Policy.Command.Put;
+﻿using ElectroManage.Application.DTO_s;
+using ElectroManage.Application.Features.Efficiency_Policy.Command.Put;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.Efficiency_Policy;
 
-public class EditEfficiencyPolicyEndpoint : Endpoint<EditEfficiencyPolicyCommand, EditEfficiencyPolicyResponse>
+public class EditEfficiencyPolicyEndpoint : Endpoint<EditEfficiencyPolicyCommand, EfficiencyPolicyDTO>
 {
     public override void Configure()
     {

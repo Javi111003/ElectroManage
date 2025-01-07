@@ -4,6 +4,14 @@ using ElectroManage.Application.Features.Company.Query.Get;
 namespace ElectroManage.Application.Mappers;
 public static class CompanyMapper
 {
+    public static CompanyDTO MapToCompanyDTO(Domain.Entites.Sucursal.Company company)
+    {
+        return new CompanyDTO
+        {
+            Id = company.Id,
+            Name = company.Name
+        };
+    }
     public static CompanyResponse ToResponse(Domain.Entites.Sucursal.Company company)
     {
         return new CompanyResponse
@@ -31,6 +39,7 @@ public static class CompanyMapper
                     Latitude = company.Location.Latitude
                 }
             },
+            CurrentEfficiencyPolicy = EfficiencyPolicyMapper.MapToAppliedEfficiencyPolicyDTO(company.EfficiencyPoliciesApplyed.Last()),
             Status = company.StatusBaseEntity.ToString(),
             ManagementTeam = company.ManagementTeam is null ? null : ManagementTeamMapper.MapToManagementTeamDto(company.ManagementTeam)
         };
