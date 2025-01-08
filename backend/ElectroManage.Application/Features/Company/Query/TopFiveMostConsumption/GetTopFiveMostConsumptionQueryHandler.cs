@@ -27,6 +27,8 @@ public class GetTopFiveMostConsumptionQueryHandler : CoreCommandHandler<GetTopFi
             .Select(x => new ConsumptionDTO
             {
                 CompanyId = x.Id,
+                CompanyName = x.Name,
+                ConsumptionLimit = x.ConsumptionLimit,
                 TotalConsumption = x.Registers.Where(r => r.StatusBaseEntity != Domain.Enums.StatusEntityType.Delete).Sum(r => r.Consumption)
             }).Take(5).OrderBy(c => c.TotalConsumption)
             .ToListAsync(ct);
