@@ -11,6 +11,7 @@ export class ButtonComponent {
   @Input() showIcon: boolean = false;
   @Input() icon: string = '';
   @Input() isDisabled: boolean = false;
+  @Input() loading: boolean = false;
 
   exportPDF() {}
 }

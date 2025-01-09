@@ -1,2 +1,7 @@
 <button (click)="function()" [class.disabled-select]="isDisabled">
-  {{label}}<mat-icon [class.hidden]="!showIcon">{{icon}}</mat-icon></button>
+  <app-progress-spinner *ngIf="loading"
+    [loading]="loading"
+  ></app-progress-spinner>
+  <span *ngIf="!loading">{{label}}</span>
+  <mat-icon [class.hidden]="!showIcon">{{icon}}</mat-icon>
+</button>

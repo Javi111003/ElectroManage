@@ -9,7 +9,7 @@
         <form [formGroup]="form" (ngSubmit)="onSubmit.bind(this)">
           <div class="mb-3">
             <div class="row">
-              <div class="col-8 col-sm-6">
+              <div class="col-sm-6">
                 <label for="workCenter" class="form-label">Centro de Trabajo</label>
                 <app-autocomplete class="form-control" id="workCenter"
                   [options]="this.global.centerStringArray"
@@ -20,7 +20,7 @@
                   Este campo es obligatorio
                 </div>
               </div>
-              <div class="col-4 col-sm-6">
+              <div class="col-sm-6">
                 <label for="office" class="form-label">Oficina</label>
                 <app-autocomplete class="form-control" id="office"
                   [options]="this.global.officeStringArray"
@@ -199,8 +199,8 @@
         </form>
       </div>
       <div class="modal-footer">
-        <app-button [label]="'Cerrar'" id="close-button" [function]="onCloseModal.bind(this)" data-bs-dismiss="modal"></app-button>
-        <app-button [label]="'Guardar cambios'" [function]="onSubmit.bind(this)"></app-button>
+        <app-button [label]="'Cerrar'" id="close-button" [function]="onCloseModal.bind(this)" [isDisabled]="loading" data-bs-dismiss="modal"></app-button>
+        <app-button [label]="'Guardar cambios'" [function]="onSubmit.bind(this)" [isDisabled]="loading" [loading]="loading"></app-button>
       </div>
     </div>
   </div>

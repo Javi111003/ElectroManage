@@ -14,6 +14,7 @@ import { Item } from '../../../../../shared/shared.module';
 })
 export class ManageFormComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -48,9 +49,11 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const sub = this.dataService.currentData.subscribe(newData => {
-      this.data = newData;
-      console.log(this.data);
-      this.form.patchValue(this.data);
+      if (newData) {
+        this.data = newData[0];
+        this.form.patchValue(this.data);
+        this.loading = newData[1];
+      }
     });
 
     this.subscriptions.add(sub);
@@ -94,6 +97,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * If the form is valid, it confirms with the user before proceeding to save the changes.
    */
   onSubmit(): void {
+    this.loading = true;
     if (this.form.invalid) {
       this.global.openDialog('Por favor, rellene todos los campos.');
       this.markAllAsTouched();

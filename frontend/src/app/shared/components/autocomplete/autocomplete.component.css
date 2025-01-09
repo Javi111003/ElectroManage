@@ -1,7 +1,7 @@
 .example-full-width {
   width: auto;
 }
-.example-form mat-label {
+mat-label {
   color:#00203b;
   font-weight: 500;
 }

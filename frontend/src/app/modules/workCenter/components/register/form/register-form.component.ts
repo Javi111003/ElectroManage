@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 export class RegisterFormComponent implements OnInit, OnDestroy {
   @Input() data: any;
   private subscriptions: Subscription = new Subscription();
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -52,6 +53,8 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
         }
         if (newData[1])
           this.getControl('workCenter').setValue(newData[1]);
+
+        this.loading = newData[2];
       }
     });
 
@@ -79,6 +82,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
+    this.loading = true;
     if (this.form.invalid) {
       alert('Por favor, rellene todos los campos.');
       this.markAllAsTouched();

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { GlobalModule } from '../../../../global/global.module'
@@ -182,6 +182,7 @@ export class RegisterComponent implements OnInit {
   }
 
   add(): void {
+    this.dataService.setData([null, this.getControlValue('workCenter'), false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }
@@ -195,7 +196,8 @@ export class RegisterComponent implements OnInit {
   }
 
   edit(item: any): void {
-    this.dataService.setData([item, this.getControlValue('workCenter')]);
+    console.log(this.dataService);
+    this.dataService.setData([item, this.getControlValue('workCenter'), false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }
