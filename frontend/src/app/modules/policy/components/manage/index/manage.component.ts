@@ -6,6 +6,7 @@ import { DataService } from '../../../../../services/data/data.service';
 import { PolicyService } from '../../../../../services/policy/policy.service';
 import { PolicyInfo } from '../../../../../models/policy.interface';
 import { Subscription } from 'rxjs';
+import { Item } from '../../../../../shared/shared.module';
 
 declare var bootstrap: any;  // Declaración de bootstrap para evitar errores de compilación
 @Component({
@@ -23,6 +24,7 @@ export class ManageComponent implements OnInit {
   ) {}
 
   policyStringArray: string[] = [];
+  policyArray: Item[] = [];
   policyObjectArray: PolicyInfo[] = [];
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
@@ -70,7 +72,7 @@ export class ManageComponent implements OnInit {
   delete(item: any): void {
     this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
       result => { if (result) {
-        const policyID = this.findId(this.policyObjectArray, item.policyName);
+        const policyID = this.global.findID(this.policyArray, item.policyName);
         this.policyService.deletePolicy(policyID).subscribe({
           next: (response) => {
             console.log('Deleted successfully:', response);
@@ -106,22 +108,14 @@ export class ManageComponent implements OnInit {
     this.policyService.getPolicies().subscribe(policies => {
       this.policyObjectArray = policies;
       this.policyStringArray = policies.map(policy => policy.policyName);
+      this.policyArray = policies.map(policy => {
+        return {
+          id: policy.policyId,
+          name: policy.policyName
+        }
+      });
       this.reloadTableData(policies);
     });
-  }
-
-  /**
-   * This function is used to find the ID of a policy in the policyObjectArray.
-   * It takes an array of PolicyInfo and a string as parameters.
-   * It then searches the array for an item with a name that matches the provided string.
-   * If a match is found, it returns the ID of the matching item.
-   * If no match is found, it returns -1.
-   * @param array The array of PolicyInfo to search in.
-   * @param option The name of the policy to find the ID for.
-   * @returns The ID of the policy with the specified name, or -1 if no match is found.
-   */
-  findId(array: PolicyInfo[], option: string): number {
-    return array.find(item => item.policyName === option)?.policyId!;
   }
 
   /**

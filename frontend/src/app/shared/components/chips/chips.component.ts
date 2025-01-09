@@ -4,11 +4,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { computed, inject, model, signal } from '@angular/core';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-
-export interface chipElement {
-  id: number,
-  name: string
-}
+import { Item } from '../../shared.module';
 
 @Component({
   selector: 'app-chips',
@@ -23,7 +19,7 @@ export class ChipsComponent {
       name: ''
     }
   ]);
-  @Input() allOptions: chipElement[] = [];
+  @Input() allOptions: Item[] = [];
   @Input() variable: boolean = true;
   @Input() function: (...arg: any[]) => void = () => {};
   @Input() deleteOption: (...args: any[]) => any = ()=>{};
@@ -63,7 +59,7 @@ export class ChipsComponent {
     }
   }
 
-  remove(option: chipElement): void {
+  remove(option: Item): void {
     this.options.update(options => {
       const index = options.indexOf(option);
       if (index < 0) {
@@ -82,18 +78,18 @@ export class ChipsComponent {
     event.option.deselect();
   }
 
-  selected(event: chipElement): void {
+  selected(event: Item): void {
     const option = event;
     this.options.update(options => [...options, option]);
     this.currentOption.set('');
     this.function(this.options());
   }
 
-  action(option: chipElement): void {
+  action(option: Item): void {
     this.function(option);
   }
 
-  removeOption(option: chipElement): void {
+  removeOption(option: Item): void {
     this.allOptions = this.allOptions.filter(item => item !== option);
     this.options.update(options => options = this.options().filter(item => item.name !== option.name));
     this.filteredOptions = computed(() => {

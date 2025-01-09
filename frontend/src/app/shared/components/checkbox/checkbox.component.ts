@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Item } from '../../shared.module';
 
 @Component({
   selector: 'app-checkbox',
@@ -8,6 +9,6 @@ import { FormControl } from '@angular/forms';
 })
 export class CheckboxComponent {
   @Input() label: string = '';
-  @Input() options: string[] = [];
+  @Input() options: Item[] = [];
   @Input() control: FormControl = new FormControl();
 }

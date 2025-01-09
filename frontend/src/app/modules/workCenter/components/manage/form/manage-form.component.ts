@@ -4,10 +4,10 @@ import { Modal } from 'bootstrap';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
-import { chipElement } from '../../../../../shared/components/chips/chips.component';
 import { AdminArea, CenterPropertyInfo, InstallationType } from '../../../../../models/workCenter.interface';
 import { Subscription } from 'rxjs';
 import { map_URL } from '../../../../../config/api.config';
+import { Item } from '../../../../../shared/shared.module';
 
 @Component({
   selector: 'app-center-manage-form',
@@ -25,13 +25,13 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   private marker!: L.Marker;
   private modal!: Modal;
 
-  formulaVariables: chipElement[] = [
+  formulaVariables: Item[] = [
     { id: 0, name: 'consumo' },
     { id: 1, name: 'por_ciento_extra' },
     { id: 2, name: 'aumento' }
   ];
 
-  formulaSymbols: chipElement[] = [
+  formulaSymbols: Item[] = [
     { id: -1, name: 'C' }, { id: -2, name: '^' },
     { id: -3, name: '\u221A' }, { id: -4, name: '.' },
     { id: -5, name: '7' }, { id: -6, name: '8' },
@@ -108,17 +108,21 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
   data: any;
   form: FormGroup;
-  teamWork: string[] = [
-    'Juan', 'Pedro', 'Lucia', 'Martin'
+  teamWork: Item[] = [
+    { id: 1, name: 'Juan' }, { id: 1, name: 'Pedro' },
+    { id: 1, name: 'Lucia' }, { id: 1, name: 'Martin' }
   ];
 
   policies: string[] = [
     'jbhg', 'mnbgvc'
   ];
 
-  areaStringArray: string[] = [];
   typeStringArray: string[] = [];
+  typeArray: Item[] = [];
   typeObjectArray: CenterPropertyInfo[] = [];
+
+  areaStringArray: string[] = [];
+  areaArray: Item[] = [];
   areaObjectArray: CenterPropertyInfo[] = [];
 
   ngOnInit() {
@@ -264,6 +268,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.global.httpCenter.getInstallationType().subscribe(types => {
       this.typeObjectArray = types;
       this.typeStringArray = types.map(type => type.name);
+      this.typeArray = types.map(type => {
+        return {
+          id: type.id,
+          name: type.name
+        }
+      });
     });
   }
 
@@ -275,7 +285,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * @param type The name of the installation type to be deleted.
    */
   deleteType(type: string): void {
-    const typeID = this.findId(type, this.typeObjectArray);
+    const typeID = this.global.findID(this.typeArray, type);
     this.global.httpCenter.deleteInstallationType(typeID).subscribe({
       next: (response) => {
         console.log('Deleted successfully:', response);
@@ -315,6 +325,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.global.httpCenter.getAdminAreas().subscribe(areas => {
       this.areaObjectArray = areas;
       this.areaStringArray = areas.map(area => area.name);
+      this.areaArray = areas.map(area => {
+        return {
+          id: area.id,
+          name: area.name
+        }
+      });
     });
   }
 
@@ -326,7 +342,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * @param area The name of the area to be deleted.
    */
   deleteArea(area: string): void {
-    const areaID = this.findId(area, this.areaObjectArray);
+    const areaID = this.global.findID(this.areaArray, area);
     this.global.httpCenter.deleteAdminArea(areaID).subscribe({
       next: (response) => {
         console.log('Deleted successfully:', response);
@@ -336,18 +352,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         console.log(error);
       }
     });
-  }
-
-  /**
-   * This function finds the ID of a specific item based on its name within an array.
-   * It iterates through the array to find the item with a matching name and returns its ID.
-   * If no match is found, it returns -1.
-   * @param name The name of the item to find.
-   * @param array The array of items to search within.
-   * @returns The ID of the item if found, otherwise -1.
-   */
-  findId(name: string, array: any[]): number {
-    return array.find(item => item.name === name)?.id;
   }
 
   filterDate = (d: Date | null): boolean => {
@@ -427,7 +431,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.assignValues();
   }
 
-  addSymbolFormula(option: chipElement): void {
+  addSymbolFormula(option: Item): void {
     if (option.name === 'C') {
       this.options = signal([]);
       this.addElementFormula();

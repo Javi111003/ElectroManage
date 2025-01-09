@@ -2,7 +2,7 @@
   <div class="checkbox-container">
     <app-checkbox
       [label]="'Centros de Trabajo'"
-      [options]="global.centerStringArray"
+      [options]="global.workCenters"
       [control]="getControl('workCenters')"
       >
     </app-checkbox>
@@ -27,14 +27,14 @@
   @for (column of columnsToDisplay; track column) {
     <ng-container matColumnDef="{{column}}">
       <th mat-header-cell *matHeaderCellDef> Centro de Trabajo </th>
-      <td mat-cell *matCellDef="let element"> {{element}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
     </ng-container>
   }
   <ng-container matColumnDef="expand">
     <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
     <td mat-cell *matCellDef="let element">
-      <button mat-icon-button aria-label="expand row" (click)="toggleRow(element); $event.stopPropagation()">
-        @if (isRowExpanded(element)) {
+      <button mat-icon-button aria-label="expand row" (click)="toggleRow(element.name); $event.stopPropagation()">
+        @if (isRowExpanded(element.name)) {
           <mat-icon>keyboard_arrow_up</mat-icon>
         } @else {
           <mat-icon>keyboard_arrow_down</mat-icon>
@@ -47,10 +47,10 @@
   <ng-container matColumnDef="expandedDetail">
     <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
       <div class="example-element-detail"
-           [@detailExpand]="isRowExpanded(element) ? 'expanded' : 'collapsed'">
+           [@detailExpand]="isRowExpanded(element.name) ? 'expanded' : 'collapsed'">
         <div class="example-element-detail">
           <app-table
-            [dataSource]="dataSources[element]"
+            [dataSource]="dataSources[element.name]"
             [displayedColumns]="displayedColumns"
             >
           </app-table>
@@ -62,8 +62,8 @@
   <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
   <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;"
       class="example-element-row"
-      [class.example-expanded-row]="isRowExpanded(element)"
-      (click)="toggleRow(element)">
+      [class.example-expanded-row]="isRowExpanded(element.name)"
+      (click)="toggleRow(element.name)">
   </tr>
   <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
 </table>
