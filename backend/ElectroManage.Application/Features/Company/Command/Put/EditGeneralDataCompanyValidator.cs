@@ -27,8 +27,5 @@ public class EditGeneralDataCompanyValidator : Validator<EditGeneralDataCompanyC
         RuleFor(x => x.LocationId)
             .GreaterThan(0)
             .WithMessage("The Area id must be greater than 0");
-        RuleFor(x => x.EfficiencyPolicyId)
-            .GreaterThan(0)
-            .WithMessage("The Efficiency Policy id must be greater than 0");
     }
 }
