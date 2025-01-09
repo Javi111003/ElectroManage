@@ -57,7 +57,7 @@ export class ManageComponent implements OnInit {
    * and then opens the modal for adding a new policy.
    */
   onAddClick(): void {
-    this.dataService.setData([null, true]);
+    this.dataService.setData([null, true, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }
@@ -93,7 +93,7 @@ export class ManageComponent implements OnInit {
    * @param item The policy instance to be edited.
    */
   edit(item: any): void {
-    this.dataService.setData([item, false]);
+    this.dataService.setData([item, false, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }

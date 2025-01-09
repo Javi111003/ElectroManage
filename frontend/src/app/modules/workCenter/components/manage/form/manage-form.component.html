@@ -169,8 +169,8 @@
         </form>
       </div>
       <div class="modal-footer">
-        <app-button [label]="'Cerrar'" [function]="onCloseModal.bind(this)" data-bs-dismiss="modal"></app-button>
-        <app-button [label]="'Guardar cambios'" [function]="onSubmit.bind(this)"></app-button>
+        <app-button [label]="'Cerrar'" [function]="onCloseModal.bind(this)" data-bs-dismiss="modal" [isDisabled]="loading"></app-button>
+        <app-button [label]="'Guardar cambios'" [function]="onSubmit.bind(this)" [isDisabled]="loading" [loading]="loading"></app-button>
       </div>
     </div>
   </div>
@@ -181,14 +181,13 @@
     <div class="modal-content h-100">
       <div class="modal-header">
         <h5 class="modal-title">Seleccionar Ubicación</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-0">
         <div id="map" style="height: calc(100vh - 140px);"></div>
       </div>
       <div class="modal-footer">
         <app-button [label]="'Cerrar'" [function]="onCloseModal.bind(this)" data-bs-dismiss="modal" [isDisabled]="!locationConfirm"></app-button>
-        <app-button [label]="'Confirmar'" [function]="confirmLocation.bind(this)" [isDisabled]="!locationConfirm"></app-button>
+        <app-button [label]="'Confirmar'" [function]="confirmLocation.bind(this)" [isDisabled]="!locationConfirm" [loading]="!locationConfirm"></app-button>
       </div>
     </div>
   </div>

@@ -94,8 +94,7 @@ export class ManageComponent implements OnInit, OnDestroy {
    */
   onAddClick(): void {
     const center = this.getControlValue('workCenter');
-    this.dataService.setData([null, center, true]);
-    console.log(this.dataService.currentData);
+    this.dataService.setData([null, center, true, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }
@@ -151,7 +150,7 @@ export class ManageComponent implements OnInit, OnDestroy {
    */
   edit(item: any): void {
     this.global.findOfficeId(item.officeName);
-    this.dataService.setData([item, this.getControlValue('workCenter'), false]);
+    this.dataService.setData([item, this.getControlValue('workCenter'), false, false]);
     const modalElement = document.getElementById('exampleModal') as HTMLElement;
     const modal = new bootstrap.Modal(modalElement);
     modal.show();

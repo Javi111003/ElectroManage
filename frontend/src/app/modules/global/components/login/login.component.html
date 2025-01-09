@@ -8,20 +8,20 @@
 </div>
 
 <div class="login-container">
-    <form class="login-form" (ngSubmit)="login()" [formGroup]="form">
-      <label for="username">Email</label>
-      <input type="text" id="username" name="username" placeholder="Ingresa tu correo" required
-      [formControl]="getControl('username')">
+  <form class="login-form" (ngSubmit)="login()" [formGroup]="form">
+    <label for="username">Email</label>
+    <input type="text" id="username" name="username" placeholder="Ingresa tu correo" required
+    [formControl]="getControl('username')">
 
-      <label for="password">Contraseña</label>
-      <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required
-      [formControl]="getControl('password')">
+    <label for="password">Contraseña</label>
+    <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required
+    [formControl]="getControl('password')">
 
-      <button type="submit" class="submit-button"  [disabled]="loading">
-        <app-progress-spinner
-          [loading]="loading"
-        ></app-progress-spinner>
-        <span *ngIf="!loading">Iniciar Sesión</span>
-      </button>
-    </form>
+    <button type="submit" class="submit-button" [disabled]="loading">
+      <app-progress-spinner
+        [loading]="loading"
+      ></app-progress-spinner>
+      <span *ngIf="!loading">Iniciar Sesión</span>
+    </button>
+  </form>
 </div>

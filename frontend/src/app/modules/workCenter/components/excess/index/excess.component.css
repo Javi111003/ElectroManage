@@ -31,3 +31,7 @@
   margin-top: 5px;
   gap: 8px;
 }
+mat-label {
+  color: #00203b;
+  font-weight: 500;
+}
