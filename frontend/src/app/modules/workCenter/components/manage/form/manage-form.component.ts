@@ -20,6 +20,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   enableAddArea: boolean = false;
   postMethod: boolean = true;
   locationConfirm: boolean = true;
+  loading: boolean = false;
 
   private map!: L.Map;
   private marker!: L.Marker;
@@ -129,7 +130,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     const sub = this.dataService.currentData.subscribe(newData => {
       if (newData) {
         this.data = newData[0];
-        const post = newData[1];
         this.form.patchValue(this.data);
         if (this.data) {
           if (this.data.applyingDate) {
@@ -139,7 +139,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
             this.getControl('applyingDate').setValue(dateObject);
           }
         }
-        this.postMethod = post;
+        this.postMethod = newData[1];
+        this.loading = newData[2];
       }
     });
 
@@ -196,10 +197,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
+    this.loading = true;
     console.log(this.form);
     if (this.form.invalid) {
       this.global.openDialog('Por favor, rellene todos los campos.');
       this.markAllAsTouched();
+      this.loading = false;
       return;
     }
 
@@ -220,9 +223,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
     if (valid[0]) {
       const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
-      console.log('hola');
       if (confirmation) {
-        console.log('mundo');
         if (this.postMethod)
           this.createCenter();
         else {
@@ -230,8 +231,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         }
       }
     } else {
-        this.global.openDialog(`Por favor, selecciona un ${valid[1]} válido.`);
-      }
+      this.global.openDialog(`Por favor, selecciona un ${valid[1]} válido.`);
+    }
   }
 
   markAllAsTouched(): void {
@@ -373,6 +374,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
   openMapModal() {
     this.locationConfirm = true;
+    this.loading = false;
     const mapModalElement = document.getElementById('mapModal');
     if (mapModalElement) {
       this.modal = new Modal(mapModalElement);

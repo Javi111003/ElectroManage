@@ -19,6 +19,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
   enableAddType: boolean = false;
   enableAddBrand: boolean = false;
   postMethod: boolean = true;
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -173,6 +174,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
    * It resets the form to its initial state, including the installation date.
    */
   onCloseModal(): void {
+    this.loading = false;
     this.form.reset();
     this.enableAddBrand = this.enableAddType = false;
     const today = new Date();
@@ -186,6 +188,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
    * If the form is invalid or the user cancels the submission, it displays an error message.
    */
   onSubmit(): void {
+    this.loading = true;
     if (this.form.invalid) {
       this.global.openDialog('Por favor, rellene todos los campos.');
       this.markAllAsTouched();
@@ -218,8 +221,8 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         }
       }
     } else {
-        this.global.openDialog(`Por favor, selecciona un ${valid[1]} válido.`);
-      }
+      this.global.openDialog(`Por favor, selecciona un ${valid[1]} válido.`);
+    }
   }
 
   /**

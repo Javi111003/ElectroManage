@@ -69,7 +69,7 @@ export class ManageComponent implements OnInit, OnDestroy {
    * It then opens the modal for adding a new work center.
    */
   onAddClick(): void {
-    this.dataService.setData([null, true]);
+    this.dataService.setData([null, true, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }
@@ -99,7 +99,7 @@ export class ManageComponent implements OnInit, OnDestroy {
    * @param item The work center instance to be edited.
    */
   edit(item: any): void {
-    this.dataService.setData([item, false]);
+    this.dataService.setData([item, false, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }

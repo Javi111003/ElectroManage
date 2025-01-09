@@ -22,3 +22,7 @@ button:hover {
   opacity: 0.5;
   pointer-events: none;
 }
+.button app-progress-spinner {
+  position: relative;
+  left: 45%;
+}

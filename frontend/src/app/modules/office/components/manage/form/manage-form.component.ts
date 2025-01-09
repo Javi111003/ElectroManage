@@ -16,6 +16,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   data: any;
   form: FormGroup;
   postMethod: boolean = true;
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -37,15 +38,14 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       if (newData) {
         this.data = newData[0];
         const center = newData[1];
-        const post = newData[2];
+        this.postMethod = newData[2];
+        this.loading = newData[3];
 
         if (this.data)
           this.form.patchValue(this.data);
 
         if (center)
           this.getControl('workCenter').setValue(center);
-
-        this.postMethod = post;
       }
     });
 
@@ -93,6 +93,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * If the form is valid, it confirms with the user before proceeding to save the changes.
    */
   onSubmit(): void {
+    this.loading = true;
     if (this.form.invalid) {
       confirm('Por favor, rellene todos los campos.');
       this.markAllAsTouched();

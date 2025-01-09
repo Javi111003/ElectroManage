@@ -51,6 +51,7 @@ export class ManageComponent {
   }
 
   onAddClick(): void {
+    this.dataService.setData([null, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }
@@ -67,7 +68,7 @@ export class ManageComponent {
     this.selectedItem = item;
     this.user.getById(item.id).subscribe(user => {
       item.role = user.roles.map(item => this.roles.get(item));
-      this.dataService.setData(item);
+      this.dataService.setData([item, false]);
       const modal = new bootstrap.Modal(
         document.getElementById('exampleModal') as HTMLElement
       );
