@@ -1,15 +1,17 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-register-form',
   templateUrl: './register-form.component.html',
   styleUrl: './register-form.component.css'
 })
-export class RegisterFormComponent {
+export class RegisterFormComponent implements OnInit, OnDestroy {
   @Input() data: any;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private fb: FormBuilder,
@@ -36,19 +38,28 @@ export class RegisterFormComponent {
   ];
 
   ngOnInit() {
-    this.dataService.currentData.subscribe(newData => {
+    const sub = this.dataService.currentData.subscribe(newData => {
       if (newData) {
-        this.data = newData[0];
-        this.form.patchValue(this.data);
-        const dateString = this.data.registerDate;
-        const dateParts = dateString.split('-');
-        const year = parseInt(dateParts[0], 10);
-        const month = parseInt(dateParts[1], 10) - 1;
-        const day = parseInt(dateParts[2], 10);
-        this.getControl('date').setValue(new Date(year, month, day));
-        this.getControl('workCenter').setValue(newData[1]);
+        if (newData[0]) {
+          this.data = newData[0];
+          this.form.patchValue(this.data);
+          const dateString = this.data.registerDate;
+          const dateParts = dateString.split('-');
+          const year = parseInt(dateParts[0], 10);
+          const month = parseInt(dateParts[1], 10) - 1;
+          const day = parseInt(dateParts[2], 10);
+          this.getControl('date').setValue(new Date(year, month, day));
+        }
+        if (newData[1])
+          this.getControl('workCenter').setValue(newData[1]);
       }
     });
+
+    this.subscriptions.add(sub);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   getControl(control: string): FormControl {

@@ -5,6 +5,7 @@ import { DataService } from '../../../../../services/data/data.service';
 import { RegisterUser } from '../../../../../models/credential.interface';
 import { UserService } from '../../../../../services/user/user.service';
 import { Subscription } from 'rxjs';
+import { Item } from '../../../../../shared/shared.module';
 
 @Component({
   selector: 'app-user-manage-form',
@@ -34,8 +35,10 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
   data: any;
   form: FormGroup;
-  TextRoles: string[] = [
-    'Administrador', 'Gerente', 'Analista'
+  TextRoles: Item[] = [
+    { id: 1, name: 'Administrador' },
+    { id: 2, name: 'Gerente' },
+    { id: 3, name: 'Analista' }
   ];
   roles: Map<string, string> = new Map<string, string>([
     ['Administrador', 'Admin'],
@@ -127,7 +130,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * If the operation fails, it displays an error message to the user.
    */
   register(): void {
-    const rolesSelected: string[] = this.getControlValue('role');
+    const rolesSelected: Item[] = this.getControlValue('role');
     console.log(rolesSelected);
     const centerSelected: string = this.getControlValue('workCenter');
     console.log(centerSelected);
@@ -136,12 +139,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     let rolesToPost: string[] = [];
 
     for (let i = 0; i < rolesSelected.length; i++) {
-      rolesToPost.push(this.roles.get(rolesSelected[i])!);
+      rolesToPost.push(this.roles.get(rolesSelected[i].name)!);
     }
 
     const registerData: RegisterUser = {
       email: this.getControlValue('email'),
-      username: this.getControlValue('name'),
+      username: this.getControlValue('userName'),
       password: this.getControlValue('password'),
       roles: rolesToPost,
       companyId: this.global.centerSelectedId
