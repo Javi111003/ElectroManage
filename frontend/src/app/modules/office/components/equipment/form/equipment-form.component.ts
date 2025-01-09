@@ -6,6 +6,7 @@ import { DataService } from '../../../../../services/data/data.service';
 import { OfficeService } from '../../../../../services/office/office.service';
 import { EquipmentBrand, EquipmentSpecification, EquipmentType, EquipPropertyInfo } from '../../../../../models/equipment.interface';
 import { Subscription } from 'rxjs';
+import { Item } from '../../../../../shared/shared.module';
 
 @Component({
   selector: 'app-equipment-form',
@@ -95,9 +96,11 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
   ])
 
   typeStringArray: string[] = [];
+  typeArray: Item[] = [];
   typeObjectArray: EquipPropertyInfo[] = [];
 
   brandStringArray: string[] = [];
+  brandArray: Item[] = [];
   brandObjectArray: EquipPropertyInfo[] = [];
 
   ngOnInit() {
@@ -136,8 +139,8 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         this.getControlValue('workCenter')
         )
       ) {
-        this.global.findCenterId(this.getControlValue('workCenter'));
-        this.global.getOfficesByCenter(this.global.centerSelectedId);
+        this.global.findID(this.global.workCenters, this.getControlValue('workCenter'));
+        this.global.getOfficesByCenter();
       }
     });
   }
@@ -285,7 +288,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
    * @param typeName The name of the equipment type to be deleted.
    */
   deleteType(typeName: string): void {
-    const typeID = this.findId(typeName, this.typeObjectArray);
+    const typeID = this.global.findID(this.typeArray, typeName);
     this.officeService.deleteEquipmentType(typeID).subscribe({
       next: (response) => {
         console.log('Deleted successfully:', response);
@@ -305,7 +308,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
    * @param brandName The name of the equipment brand to be deleted.
    */
   deleteBrand(brandName: string): void {
-    const brandID = this.findId(brandName, this.brandObjectArray);
+    const brandID = this.global.findID(this.brandArray, brandName);
     this.officeService.deleteEquipmentBrand(brandID).subscribe({
       next: (response) => {
         console.log('Deleted successfully:', response);
@@ -349,7 +352,13 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     this.officeService.getEquipmentTypeList().subscribe(types => {
       this.typeObjectArray = types;
       this.typeStringArray = types.map(type => type.name);
-    })
+      this.typeArray = types.map(type => {
+        return {
+          id: type.id,
+          name: type.name
+        }
+      });
+    });
   }
 
   /**
@@ -358,22 +367,16 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
    * It populates the `brandObjectArray` with the fetched brands and `brandStringArray` with their names.
    */
   getBrands(): void {
-    this.officeService.getEquipmentBrandList().subscribe(types => {
-      this.brandObjectArray = types;
-      this.brandStringArray = types.map(type => type.name);
+    this.officeService.getEquipmentBrandList().subscribe(brands => {
+      this.brandObjectArray = brands;
+      this.brandStringArray = brands.map(brand => brand.name);
+      this.brandArray = brands.map(brand => {
+        return {
+          id: brand.id,
+          name: brand.name
+        }
+      })
     })
-  }
-
-  /**
-   * This function finds the ID of a specific item based on its name within an array.
-   * It iterates through the array to find the item with a matching name and returns its ID.
-   * If no match is found, it returns -1.
-   * @param name The name of the item to find.
-   * @param array The array of items to search within.
-   * @returns The ID of the item if found, otherwise -1.
-   */
-  findId(name: string, array: any[]): number {
-    return array.find(item => item.name === name)?.id;
   }
 
   /**
@@ -423,8 +426,8 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
    * @returns An object containing the common values from the form controls.
    */
   getCommonValues() {
-    const typeID = this.findId(this.getControlValue('type'), this.typeObjectArray);
-    const brandID = this.findId(this.getControlValue('brand'), this.brandObjectArray);
+    const typeID = this.global.findID(this.typeArray, this.getControlValue('type'));
+    const brandID = this.global.findID(this.brandArray, this.getControlValue('brand'));
     const useFrequency = this.useFrequencyMatch.get(this.getControlValue('useFrequency'))!;
     const maintenanceStatus = this.maintenanceStatusMatch.get(this.getControlValue('maintenanceStatus'))!;
     const model = this.getControlValue('model');

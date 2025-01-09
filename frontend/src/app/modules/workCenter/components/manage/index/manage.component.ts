@@ -74,10 +74,20 @@ export class ManageComponent implements OnInit, OnDestroy {
     modal.show();
   }
 
-  delete(): void {
+  delete(item: any): void {
     this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
       result => { if (result) {
-        this.snackbarService.openSnackBar('Eliminado exitosamente...');
+        this.global.httpCenter.deleteCenter(item.id).subscribe({
+          next: (response) => {
+            console.log('Deleted successfully:', response);
+            this.dataService.notifyDataUpdated();
+            this.snackbarService.openSnackBar('Eliminado exitosamente...');
+          },
+          error: (error) => {
+            console.log(error);
+            this.snackbarService.openSnackBar('Error al eliminar, intente de nuevo...');
+          }
+        });
       }
     });
   }
@@ -110,19 +120,6 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Finds the ID of a work center based on its name.
-   * This function iterates over the provided array of CenterDetails objects and returns the
-   * ID of the first item that matches the given option name.
-   * If no match is found, it returns undefined.
-   * @param array The array of CenterDetails objects to search in.
-   * @param option The name of the work center to find the ID for.
-   * @returns The ID of the work center if found, otherwise undefined.
-   */
-  findId(array: CenterDetails[], option: string): number {
-    return array.find(item => item.name === option)?.id!;
-  }
-
-  /**
    * Reloads the table data with the provided list of work centers.
    * This function updates the data source of the table with the new list of work centers,
    * transforming each center item into a format suitable for display in the table.
@@ -139,7 +136,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       address: item.location.addressDetails,
       adminAreaName: item.administrativeArea.name,
       instalationType: item.installationType.name,
-      monthlyLimit: '-'
+      monthlyLimit: item.consumptionLimit
     }));
   }
 }

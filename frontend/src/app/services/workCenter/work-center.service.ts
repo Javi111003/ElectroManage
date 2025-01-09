@@ -32,6 +32,10 @@ export class WorkCenterService {
     return this.http.get<CenterDetails[]>(`${API_URL}/v1/company`);
   }
 
+  deleteCenter(id: number): Observable<any> {
+    return this.http.delete(`${API_URL}/v1/company/${id}`);
+  }
+
   /**
    * Fetches the register data from the API.
    * This method sends an HTTP GET request to the API to retrieve the register data.

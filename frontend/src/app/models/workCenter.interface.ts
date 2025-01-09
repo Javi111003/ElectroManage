@@ -35,6 +35,7 @@ export interface Location {
 export interface CenterDetails {
   id: number;
   name: string;
+  consumptionLimit: number;
   installationType: CenterPropertyInfo;
   administrativeArea: CenterPropertyInfo;
   location: {

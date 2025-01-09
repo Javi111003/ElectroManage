@@ -81,10 +81,7 @@ export class LoginComponent {
         }
       },
       error: (error) => {
-        if (error.statusText === 'Unknown Error')
-          this.global.openDialog("Falló la conexión. Intente de nuevo");
-        else
-          this.global.openDialog("Credenciales Inválidas");
+        console.log(error);
         this.loading = false;
       }
     });
