@@ -90,10 +90,7 @@ export class AvgConsumptionComponent implements OnInit {
    * stored in the selectedOptionsIds array.
    */
   findCenterIds() {
-    this.selectedOptionsIds = this.getControlValue('workCenters').map((item: string) => {
-      const id = this.global.workCenters.find(center => center.name === item)?.id
-      return id;
-    });
+    this.selectedOptionsIds = this.getControlValue('workCenters').map((item: Item) => item.id);
   }
 
   /**
