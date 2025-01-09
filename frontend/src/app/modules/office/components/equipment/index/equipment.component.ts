@@ -107,7 +107,7 @@ export class EquipmentComponent implements OnInit, OnDestroy {
       this.getControl('office').reset();
       if (this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter'))) {
         this.global.findCenterId(this.getControlValue('workCenter'));
-        this.global.getOfficesByCenter(this.global.centerSelectedId);
+        this.global.getOfficesByCenter();
       }
     });
     this.form.get('office')?.valueChanges.subscribe(() => {

@@ -23,7 +23,7 @@ import { EmailValidationDirective } from '../../directives/emailValidation/email
 
 //add the route of each module you need yo import here down.
 import { MatIconModule } from '@angular/material/icon';
-import { SharedModule } from '../../shared/shared.module';
+import { Item, SharedModule } from '../../shared/shared.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -89,9 +89,11 @@ export class GlobalModule {
   userInfo: UserLogged = [][0];
 
   centerStringArray: string[] = [];
+  workCenters: Item[] = [];
   centerObjectArray: WorkCenter[] = [];
 
   officeStringArray: string[] = [];
+  offices: Item[] = [];
   officeObjectArray: OfficeInfo[] = [];
 
   centerSelectedId: number | any = 0;
@@ -105,6 +107,12 @@ export class GlobalModule {
     this.httpCenter.getWorkCenterList().subscribe(workcenters => {
       this.centerObjectArray = workcenters;
       this.centerStringArray = workcenters.map(item => item.name);
+      this.workCenters = this.centerObjectArray.map(item => {
+        return {
+          id: item.id,
+          name: item.name
+        }
+      })
     });
   }
 
@@ -112,11 +120,17 @@ export class GlobalModule {
    * This function gets the offices by center ID.
    * It updates the officeOptions based on the selected center.
    */
-  getOfficesByCenter(centerID: number): Observable<any> {
-    const observable = this.httpOffice.getOfficeList(centerID);
+  getOfficesByCenter(): Observable<any> {
+    const observable = this.httpOffice.getOfficeList(this.centerSelectedId);
     observable.subscribe(offices => {
       this.officeObjectArray = offices;
       this.officeStringArray = offices.map(item => item.name);
+      this.offices = offices.map(office => {
+        return {
+          id: office.id,
+          name: office.name
+        }
+      });
     });
 
     return observable;
@@ -161,9 +175,7 @@ export class GlobalModule {
    * @param centerSelected The name of the selected center.
    */
   findCenterId(centerSelected: string): void {
-    this.centerSelectedId = this.centerObjectArray.find(
-      item => item.name === centerSelected
-    )?.id;
+    this.centerSelectedId = this.findID(this.workCenters, centerSelected);
   }
 
   /**
@@ -171,9 +183,7 @@ export class GlobalModule {
    * @param officeSelected The name of the selected office.
    */
   findOfficeId(officeSelected: string): void {
-    this.officeSelectedId = this.officeObjectArray.find(
-      item => item.name === officeSelected
-    )?.id;
+    this.officeSelectedId = this.findID(this.offices, officeSelected);
   }
 
   /**
@@ -206,6 +216,16 @@ export class GlobalModule {
     const milliseconds = ('00' + date.getMilliseconds()).slice(-3);
 
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+  }
+
+  findID(array: Item[], option: string): number {
+    const matches = array.filter(item => item.name === option);
+
+    if (matches.length == 1) {
+      return matches[0].id;
+    }
+
+    return 0;
   }
 
   /**

@@ -44,7 +44,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       const center = this.getControlValue('workCenter');
       if (this.global.isOptionValid(this.global.centerStringArray, center)) {
         this.global.findCenterId(center);
-        this.global.getOfficesByCenter(this.global.centerSelectedId);
+        this.global.getOfficesByCenter();
       }
     });
   }
@@ -56,7 +56,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     const sub = this.dataService.dataUpdated$.subscribe(() => {
       const center = this.getControlValue('workCenter');
       if (this.global.isOptionValid(this.global.centerStringArray, center)) {
-        this.global.getOfficesByCenter(this.global.centerSelectedId).subscribe(offices => {
+        this.global.getOfficesByCenter().subscribe(offices => {
           this.reloadTableData(offices);
         });
       }

@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { GlobalModule } from '../../../../global/global.module';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Item } from '../../../../../shared/shared.module';
 
 
 @Component({
@@ -90,7 +91,7 @@ export class AvgConsumptionComponent implements OnInit {
    */
   findCenterIds() {
     this.selectedOptionsIds = this.getControlValue('workCenters').map((item: string) => {
-      const id = this.global.centerObjectArray.find(center => center.name === item)?.id
+      const id = this.global.workCenters.find(center => center.name === item)?.id
       return id;
     });
   }
