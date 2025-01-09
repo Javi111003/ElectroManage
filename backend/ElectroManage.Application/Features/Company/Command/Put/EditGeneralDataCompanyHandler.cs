@@ -69,11 +69,12 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
         }
         var efficiencyPolicyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.EfficiencyPolicy>();
         var efficiencyPolicy = await efficiencyPolicyRepository.FirstAsync(true, filters: x => x.Id == command.EfficiencyPolicyId);
-        if (efficiencyPolicy is null)
+        if (efficiencyPolicy is null && command.EfficiencyPolicyId > 0)
         {
             _logger.LogError($"Efficiency policy with id: {command.EfficiencyPolicyId} not found");
             ThrowError($"Efficiency policy with id: {command.EfficiencyPolicyId} not found", 404);
         }
+        var efficiencyPolicyCompanyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.EfficiencyPolicyCompany>();
 
         using (var scopeDoWork = ScopeBeginTransactionAsync())
         {
@@ -87,7 +88,7 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
             company.Location = location;
     
             var lastPolicy = company.EfficiencyPoliciesApplyed.Last(); 
-            if(lastPolicy.EfficiencyPolicyId != command.EfficiencyPolicyId)
+            if(efficiencyPolicy is not null && lastPolicy.EfficiencyPolicyId != efficiencyPolicy.Id)
             {
                 var currentTime = DateTime.UtcNow;
                 lastPolicy.To = currentTime;
@@ -102,6 +103,7 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
             }
             await efficiencyPolicyRepository.UpdateAsync(efficiencyPolicy, false);
             await companyRepository.UpdateAsync(company, false);
+            await efficiencyPolicyCompanyRepository.UpdateAsync(lastPolicy,false);
             CommitTransaction(scopeDoWork);
         }
         await _unitOfWork.SaveChangesAsync();
