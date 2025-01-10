@@ -52,6 +52,17 @@ public class CreateCompanyCommandHandler : CoreCommandHandler<CreateCompanyComma
             _logger.LogError($"Management Team with id: {command.ManagementTeamId} not found");
             ThrowError($"Management Team with id: {command.ManagementTeamId} not found", 404);
         }
+
+        var efficiencyPolicyRepository =  _unitOfWork.DbRepository<Domain.Entites.Sucursal.EfficiencyPolicy>();
+        var efficiencyPolicy = await efficiencyPolicyRepository.FirstAsync(useInactive: true, filters: x => x.Id == command.EfficiencyPolicyId);
+        if (efficiencyPolicy is null && command.EfficiencyPolicyId > 0)
+        {
+            _logger.LogError($"Efficiency Policy with id: {command.EfficiencyPolicyId} not found");
+            ThrowError($"Efficiency Policy with id: {command.EfficiencyPolicyId} not found", 404);
+        }
+        var efficiencyPolicyCompanyRepository =  _unitOfWork.DbRepository<Domain.Entites.Sucursal.EfficiencyPolicyCompany>();
+
+        
         var company = new Domain.Entites.Sucursal.Company
         {
             Name = command.Name,
@@ -61,7 +72,28 @@ public class CreateCompanyCommandHandler : CoreCommandHandler<CreateCompanyComma
             ManagementTeam = managementTeam,
             ConsumptionLimit = command.ConsumptionLimit
         };
-        await companyRepository.SaveAsync(company);
+        
+        using (var scopeDoWork = ScopeBeginTransactionAsync())
+        {
+            await companyRepository.SaveAsync(company, false);
+
+            if(efficiencyPolicy is not null)
+            {
+                var efficiencyPolicyCompany = new Domain.Entites.Sucursal.EfficiencyPolicyCompany
+                {
+                    EfficiencyPolicyId = efficiencyPolicy.Id,
+                    CompanyId = company.Id,
+                    ApplyingDate = DateTime.UtcNow
+                };
+                await efficiencyPolicyCompanyRepository.SaveAsync(efficiencyPolicyCompany, false);
+
+                company.EfficiencyPoliciesApplyed.Add(efficiencyPolicyCompany);
+                efficiencyPolicy.EfficiencyPolicyCompanies.Add(efficiencyPolicyCompany);
+
+                await efficiencyPolicyRepository.UpdateAsync(efficiencyPolicy, false);
+                CommitTransaction(scopeDoWork);
+            }
+        }
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Completed");
         return CompanyMapper.ToResponse(company);
     }

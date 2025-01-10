@@ -1,22 +1,24 @@
 ﻿
+using ElectroManage.Application.DTO_s;
+using ElectroManage.Application.Mappers;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
 namespace ElectroManage.Application.Features.Efficiency_Policy.Query.Get;
 
-public class EfficiencyPolicyGetByIdCommandHandler : CoreCommandHandler<EfficiencyPolicyGetByIdCommand, EfficiencyPolicyGetByIdResponse>
+public class EfficiencyPolicyGetByIdQueryHandler : CoreQueryHandler<EfficiencyPolicyGetByIdQuery, EfficiencyPolicyDTO>
 {
     readonly IUnitOfWork _unitOfWork;
-    readonly ILogger<EfficiencyPolicyGetByIdCommandHandler> _logger;
+    readonly ILogger<EfficiencyPolicyGetByIdQueryHandler> _logger;
 
-    public EfficiencyPolicyGetByIdCommandHandler(IUnitOfWork unitOfWork, ILogger<EfficiencyPolicyGetByIdCommandHandler> logger) : base(unitOfWork)
+    public EfficiencyPolicyGetByIdQueryHandler(IUnitOfWork unitOfWork, ILogger<EfficiencyPolicyGetByIdQueryHandler> logger) : base(unitOfWork)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
-    public override async Task<EfficiencyPolicyGetByIdResponse> ExecuteAsync(EfficiencyPolicyGetByIdCommand command, CancellationToken ct = default)
+    public override async Task<EfficiencyPolicyDTO> ExecuteAsync(EfficiencyPolicyGetByIdQuery command, CancellationToken ct = default)
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
 
@@ -34,12 +36,6 @@ public class EfficiencyPolicyGetByIdCommandHandler : CoreCommandHandler<Efficien
         }
 
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
-        return new EfficiencyPolicyGetByIdResponse
-        {
-            Id = efficiencyPolicy.Id,
-            Name = efficiencyPolicy.Name,
-            Description = efficiencyPolicy.Description??"",
-            Created = efficiencyPolicy.Created
-        };
+        return EfficiencyPolicyMapper.MapToEfficiencyPolicyDTO(efficiencyPolicy);
     }
 }

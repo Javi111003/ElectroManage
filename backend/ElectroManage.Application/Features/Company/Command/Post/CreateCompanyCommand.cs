@@ -9,5 +9,6 @@ public record CreateCompanyCommand : ICommand<CompanyResponse>
     public long InstallationTypeId { get; set; }
     public long LocationId { get; set; }
     public long ManagementTeamId { get; set; }
+    public long EfficiencyPolicyId { get; set; }
     public decimal ConsumptionLimit { get; set; }
 }

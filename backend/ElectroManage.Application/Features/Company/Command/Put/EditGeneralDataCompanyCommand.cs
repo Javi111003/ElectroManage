@@ -1,6 +1,8 @@
-﻿namespace ElectroManage.Application.Features.Company.Command.Put;
+﻿using ElectroManage.Application.DTO_s;
 
-public record EditGeneralDataCompanyCommand : ICommand<EditGeneralDataCompanyResponse>
+namespace ElectroManage.Application.Features.Company.Command.Put;
+
+public record EditGeneralDataCompanyCommand : ICommand<CompanyResponse>
 {
     public long Id {  get; set; }
     public string Name { get; set; } = string.Empty;
@@ -8,5 +10,6 @@ public record EditGeneralDataCompanyCommand : ICommand<EditGeneralDataCompanyRes
     public long InstallationTypeId { get; set; }
     public long LocationId { get; set; }
     public long ManagementTeamId { get; set; }
+    public long EfficiencyPolicyId { get; set; }
     public decimal ConsumptionLimit { get; set; }
 }

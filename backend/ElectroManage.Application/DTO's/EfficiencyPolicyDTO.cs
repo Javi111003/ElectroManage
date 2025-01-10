@@ -4,5 +4,4 @@ public record EfficiencyPolicyDTO
     public long PolicyId { get; set; }
     public string PolicyName { get; set; } = string.Empty;
     public string? Description { get; set; }
-    public DateTime ApplyingDate { get; set; }
 }

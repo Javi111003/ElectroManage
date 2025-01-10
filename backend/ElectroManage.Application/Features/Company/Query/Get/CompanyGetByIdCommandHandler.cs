@@ -26,7 +26,8 @@ public class CompanyGetByIdCommandHandler : CoreCommandHandler<CompanyGetByIdCom
             x => x.AministrativeArea,
             x => x.Location,
             x => x.InstalationType,
-            x => x.ManagementTeam
+            x => x.ManagementTeam,
+            x => x.EfficiencyPoliciesApplyed
         };
         var company = await companyRepository.FirstAsync(useInactive: false, includes: include, filters: x => x.Id == command.Id);
         if (company is null)

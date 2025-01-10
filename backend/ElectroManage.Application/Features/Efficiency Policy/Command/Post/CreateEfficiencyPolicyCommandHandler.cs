@@ -1,12 +1,13 @@
 ﻿
 using ElectroManage.Application.Abstractions;
+using ElectroManage.Application.DTO_s;
+using ElectroManage.Application.Mappers;
 using ElectroManage.Domain.DataAccess.Abstractions;
-using ElectroManage.Domain.Entites.Sucursal;
 using Microsoft.Extensions.Logging;
 
 namespace ElectroManage.Application.Features.Efficiency_Policy.Command.Post;
 
-public class CreateEfficiencyPolicyCommandHandler : CoreCommandHandler<CreateEfficienciPolicyCommand, CreateEfficiencyPolicyResponse>
+public class CreateEfficiencyPolicyCommandHandler : CoreCommandHandler<CreateEfficienciPolicyCommand, EfficiencyPolicyDTO>
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<CreateEfficiencyPolicyCommandHandler> _logger;
@@ -19,13 +20,12 @@ public class CreateEfficiencyPolicyCommandHandler : CoreCommandHandler<CreateEff
         _checkUniqueService = checkUniqueService;
     }
 
-    public async override Task<CreateEfficiencyPolicyResponse> ExecuteAsync(CreateEfficienciPolicyCommand command, CancellationToken ct = default)
+    public async override Task<EfficiencyPolicyDTO> ExecuteAsync(CreateEfficienciPolicyCommand command, CancellationToken ct = default)
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
 
-        var efficiencyPoliciesReporitory = _unitOfWork.DbRepository<Domain.Entites.Sucursal.EfficiencyPolicy>();
-
-        var efficiencyPolicy = new EfficiencyPolicy
+        var efficiencyPoliciesRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.EfficiencyPolicy>();
+        var efficiencyPolicy = new Domain.Entites.Sucursal.EfficiencyPolicy
         {
             Name = command.Name,
             Description = command.Description,
@@ -38,15 +38,9 @@ public class CreateEfficiencyPolicyCommandHandler : CoreCommandHandler<CreateEff
             ThrowError("This efficiency policies name already exists", 404);
         }
 
-        await efficiencyPoliciesReporitory.SaveAsync(efficiencyPolicy, false);
+        await efficiencyPoliciesRepository.SaveAsync(efficiencyPolicy, false);
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
-        await UnitOfWork!.SaveChangesAsync();
-        return new CreateEfficiencyPolicyResponse
-        {
-            Id = efficiencyPolicy.Id,
-            Name = efficiencyPolicy.Name,
-            Description = efficiencyPolicy.Description,
-            Created = DateTime.UtcNow
-        };
+        await _unitOfWork.SaveChangesAsync();
+        return EfficiencyPolicyMapper.MapToEfficiencyPolicyDTO(efficiencyPolicy);
     }
 }

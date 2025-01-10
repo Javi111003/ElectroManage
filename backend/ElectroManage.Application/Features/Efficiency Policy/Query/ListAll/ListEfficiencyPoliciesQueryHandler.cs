@@ -16,7 +16,6 @@ public class ListEfficiencyPoliciesQueryHandler : CoreQueryHandler<ListEfficienc
         _unitOfWork = unitOfWork;
         _logger = logger;
     }
-
     public override async Task<IEnumerable<EfficiencyPolicyDTO>> ExecuteAsync(ListEfficiencyPoliciesQuery command, CancellationToken ct = default)
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Started");

@@ -1,6 +1,8 @@
-﻿namespace ElectroManage.Application.Features.Efficiency_Policy.Command.Put;
+﻿using ElectroManage.Application.DTO_s;
 
-public record EditEfficiencyPolicyCommand : ICommand<EditEfficiencyPolicyResponse>
+namespace ElectroManage.Application.Features.Efficiency_Policy.Command.Put;
+
+public record EditEfficiencyPolicyCommand : ICommand<EfficiencyPolicyDTO>
 {
     public long Id { get; set; }
     public required string Name { get; set; } 

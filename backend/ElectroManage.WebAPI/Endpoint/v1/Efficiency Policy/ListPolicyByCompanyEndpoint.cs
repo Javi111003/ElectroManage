@@ -1,7 +1,7 @@
 using ElectroManage.Application.DTO_s;
 using ElectroManage.Application.Features.Efficiency_Policy.Query.ListEfficiencyPoliciesByCompany;
 namespace ElectroManage.WebAPI.Endpoint.v1.Policy;
-public class ListPoliciesByCompanyEndpoint : Endpoint<ListEfficiencyPoliciesByCompanyQuery,IEnumerable<EfficiencyPolicyDTO>>
+public class ListPoliciesByCompanyEndpoint : Endpoint<ListEfficiencyPoliciesByCompanyQuery,IEnumerable<AppliedEfficiencyPolicyDTO>>
 {
     public override void Configure()
     {

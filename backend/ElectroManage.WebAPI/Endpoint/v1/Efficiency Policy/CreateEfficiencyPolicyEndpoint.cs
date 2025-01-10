@@ -1,8 +1,9 @@
-﻿using ElectroManage.Application.Features.Efficiency_Policy.Command.Post;
+﻿using ElectroManage.Application.DTO_s;
+using ElectroManage.Application.Features.Efficiency_Policy.Command.Post;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.Efficiency_Policy;
 
-public class CreateEfficiencyPolicyEndpoint : Endpoint<CreateEfficienciPolicyCommand, CreateEfficiencyPolicyResponse>
+public class CreateEfficiencyPolicyEndpoint : Endpoint<CreateEfficienciPolicyCommand, EfficiencyPolicyDTO>
 {
     public override void Configure()
     {
