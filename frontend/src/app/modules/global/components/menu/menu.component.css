@@ -209,9 +209,6 @@
   font-size:20px;
   margin-top:3px;
 }
-.nav li .submenu.hidden {
-  display: none;
-}
 .nav li .submenu li:hover {
   color: white;
   border-radius: 5px;
@@ -238,5 +235,3 @@
 .nav li .dropdown-label.active a {
   color: white;
 }
-
-
