@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { DashboardService } from '../../../../services/dashboard/dashboard.service';
 import { MatNativeDateModule } from '@angular/material/core';
+import { GlobalModule } from '../../global.module';
+import { WorkCenterService } from '../../../../services/workCenter/work-center.service';
+import { UserLogged } from '../../../../models/credential.interface';
 
 Chart.register(...registerables);
 
@@ -11,7 +14,14 @@ Chart.register(...registerables);
   styleUrls: ['./index.component.css']
 })
 export class IndexComponent implements OnInit {
-  constructor(private http: DashboardService){}
+  
+  constructor(
+    private globalModule: GlobalModule,
+    private http: DashboardService,
+    public httpCenter: WorkCenterService,
+  ){
+    this.userInfo=this.globalModule.userInfo
+  }
 
   years = ['2023', '2024', '2025'];
   chart: any;
@@ -19,6 +29,7 @@ export class IndexComponent implements OnInit {
   barChart: any;
   selectedYear: number = 2023;
 
+  userInfo: UserLogged;
   // Nuevas propiedades para almacenar datos del servicio
   centersCreatedData: any[] = [];
   topConsumingCenters: any[] = [];
@@ -26,6 +37,7 @@ export class IndexComponent implements OnInit {
   topWarnedCenters: any[] = [];
 
   ngOnInit(): void {
+    console.log(this.globalModule.userInfo);
     this.loadAllData();
   }
 

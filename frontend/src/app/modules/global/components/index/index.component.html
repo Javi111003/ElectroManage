@@ -1,59 +1,15 @@
-<div class="dashboard">
-    <section class="work-centers">
-        <div class="total-centers">
-            <!-- Left column with information -->
-            <div class="info">
-                <div class="total">
-                    <h2><strong>Total Centros:</strong></h2>
-                    <p>50</p>
-                </div>
-                <div class="total">
-                    <h2><strong>Nuevos este mes:</strong></h2>
-                    <p>10</p>
-                </div>
-                <div class="total">
-                    <h2><strong>Cerrados este mes:</strong></h2>
-                    <p>2</p>
-                </div>
-            </div>
-            <!-- Right column with the graph -->
-            <div class="graph">
-                <canvas id="centersChart"></canvas>
-            </div>
-            <div>
-                <label for="yearSelect"><strong>Año:</strong></label>
-                <select id="yearSelect" (change)="onYearChange($event)">
-                    <!-- Dropdown for selecting the year -->
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
-                </select>
-            </div>
-        </div>
-        <!-- Pie chart section -->
-        <div class="pie-chart-container">
-            <!-- Text header for the pie chart -->
-            <div class="text">
-                <p><strong>Cantidad de Oficinas</strong></p>
-            </div>
-            <div>
-                <canvas id="officesChart"></canvas>
-            </div>
-        </div>
-    </section>
-
+<!-- Dashboard 1: Visible para roles "admin" o "analista" -->
+<div class="dashboard" *ngIf="(userInfo.roles.includes('Admin') || userInfo.roles.includes('Analist')) && !userInfo.roles.includes('Manager')">
     <section class="consumption">
         <!-- List of centers with excessive consumption -->
         <div class="workcenter-limit-list">
-            <h6>Centros con Exceso de Consumo</h6>
+            <h6>Datos de Consumo</h6>
             <ul id="limitList">
-                <!-- Legend item displaying the headers -->
                 <li class="legend">
                     <span class="center-name"><strong>Nombre</strong></span>
                     <span class="excess"><strong>Consumo</strong></span>
                     <span class="limit"><strong>Límite</strong></span>
                 </li>
-                <!-- Dynamically generated list items for work centers -->
                 <li class="workcenter-item" *ngFor="let center of topConsumingCenters">
                     <span>{{ center.companyId }}</span>
                     <span style="color: red;">{{ center.totalConsumption }}</span>
@@ -69,17 +25,94 @@
     </section>
     <section class="alerts">
         <div class="workcenter-alerts-list">
-            <h6>Centros con mayor cantidad de Alertas</h6>
+            <h6>Alertas</h6>
             <ul id="alertList">
-                <!-- Legend item displaying the headers -->
                 <li class="legend">
                     <span class="center-name"><strong>Nombre</strong></span>
                     <span class="alerts-legend"><strong>Alertas</strong></span>
                 </li>
-                <!-- Dynamically generated list items for work centers -->
                 <li class="workcenter-item" *ngFor="let alert of topWarnedCenters">
                     <span class="name">{{ alert.company.name }}</span>
-                    <span style="color: red;">{{ alert.countWarning}}</span>
+                    <span style="color: red;">{{ alert.countWarning }}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="alert-graph">
+            <canvas id="alertTrendChart"></canvas>
+        </div>
+    </section>
+</div>
+
+<!-- Dashboard 2: Visible para rol "manager" -->
+<div class="dashboard" *ngIf="userInfo.roles.includes('Manager')">
+    <section class="work-centers">
+        <div class="total-centers">
+            <div class="info">
+                <div class="total">
+                    <h2><strong>Total Centros:</strong></h2>
+                    <p>50</p>
+                </div>
+                <div class="total">
+                    <h2><strong>Nuevos este mes:</strong></h2>
+                    <p>10</p>
+                </div>
+                <div class="total">
+                    <h2><strong>Cerrados este mes:</strong></h2>
+                    <p>2</p>
+                </div>
+            </div>
+            <div class="graph">
+                <canvas id="centersChart"></canvas>
+            </div>
+            <div>
+                <label for="yearSelect"><strong>Año:</strong></label>
+                <select id="yearSelect" (change)="onYearChange($event)">
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                </select>
+            </div>
+        </div>
+        <div class="pie-chart-container">
+            <div class="text">
+                <p><strong>Cantidad de Oficinas</strong></p>
+            </div>
+            <div>
+                <canvas id="officesChart"></canvas>
+            </div>
+        </div>
+    </section>
+    <section class="consumption">
+        <div class="workcenter-limit-list">
+            <h6>Centros con Exceso de Consumo</h6>
+            <ul id="limitList">
+                <li class="legend">
+                    <span class="center-name"><strong>Nombre</strong></span>
+                    <span class="excess"><strong>Consumo</strong></span>
+                    <span class="limit"><strong>Límite</strong></span>
+                </li>
+                <li class="workcenter-item" *ngFor="let center of topConsumingCenters">
+                    <span>{{ center.companyId }}</span>
+                    <span style="color: red;">{{ center.totalConsumption }}</span>
+                    <span style="color: gray;">{{ center.limit }}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="workcenter-graph">
+            <canvas id="excessChart"></canvas>
+        </div>
+    </section>
+    <section class="alerts">
+        <div class="workcenter-alerts-list">
+            <h6>Centros con mayor cantidad de Alertas</h6>
+            <ul id="alertList">
+                <li class="legend">
+                    <span class="center-name"><strong>Nombre</strong></span>
+                    <span class="alerts-legend"><strong>Alertas</strong></span>
+                </li>
+                <li class="workcenter-item" *ngFor="let alert of topWarnedCenters">
+                    <span class="name">{{ alert.company.name }}</span>
+                    <span style="color: red;">{{ alert.countWarning }}</span>
                 </li>
             </ul>
         </div>
