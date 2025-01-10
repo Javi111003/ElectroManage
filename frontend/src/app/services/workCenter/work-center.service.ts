@@ -151,4 +151,8 @@ export class WorkCenterService {
   editLocation(location: Location, locationID: number): Observable<any> {
     return this.http.put<any>(`${API_URL}/v1/location/${locationID}`, location);
   }
+
+  deletelocation(id: number): Observable<any> {
+    return this.http.delete<any>(`${API_URL}/v1/location/${id}`);
+  }
 }
