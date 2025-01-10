@@ -30,12 +30,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
             'collapsed <=> expanded', [
               animate('300ms ease-in-out')
             ]
-          ),
-          // transition(
-          //   'expanded => collapsed', [
-          //     animate('300ms ease-in')
-          //   ]
-          // )
+          )
         ]
       )
     ]
