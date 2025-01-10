@@ -82,12 +82,37 @@ export class ManageComponent implements OnInit, OnDestroy {
             console.log('Deleted successfully:', response);
             this.dataService.notifyDataUpdated();
             this.snackbarService.openSnackBar('Eliminado exitosamente...');
+            this.deleteLocation(item);
           },
           error: (error) => {
             console.log(error);
             this.snackbarService.openSnackBar('Error al eliminar, intente de nuevo...');
           }
         });
+      }
+    });
+  }
+
+  deleteLocation(item: any): void {
+    this.global.httpCenter.deletelocation(item.location.id).subscribe({
+      next: (response) => {
+        console.log('Location Deleted successfully:', response);
+        if (item.managementTeam)
+          this.deleteTeam(item.managementTeam.companyId, item.managementTeam.id)
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+  }
+
+  deleteTeam(teamID: number, centerID: number): void {
+    this.global.httpCenter.deleteManagementTeam(centerID, teamID).subscribe({
+      next: (response) => {
+        console.log('Team Deleted successfully:', response);
+      },
+      error: (error) => {
+        console.log(error);
       }
     });
   }
