@@ -32,6 +32,11 @@ export class AuthService {
     return sessionStorage.getItem('isAuthenticated') === 'true';
   }
 
+  getUserRoles(): string[] {
+    const user: UserLogged = JSON.parse(sessionStorage.getItem('userLogged') || '{}');
+    return user.roles
+  }
+
   /**
    * Logs the user out.
    */
