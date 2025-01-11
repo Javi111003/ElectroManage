@@ -65,7 +65,6 @@ export class ManageComponent {
   }
 
   edit(item: any): void {
-    this.selectedItem = item;
     this.user.getById(item.id).subscribe(user => {
       item.role = user.roles.map(item => this.roles.get(item));
       this.dataService.setData([item, false]);

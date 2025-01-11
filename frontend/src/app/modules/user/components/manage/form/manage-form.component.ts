@@ -51,7 +51,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     const sub = this.dataService.currentData.subscribe(newData => {
       if (newData) {
         this.data = newData[0];
+        console.log(this.data);
+        this.data.role = this.data.role.map((role: string) => {
+          return this.TextRoles.find(item => item.name === role)
+        })
         this.form.patchValue(this.data);
+        console.log(this.form);
         this.loading = newData[1];
       }
     });

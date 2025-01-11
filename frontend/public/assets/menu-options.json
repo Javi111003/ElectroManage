@@ -4,49 +4,57 @@
       "id": "home",
       "label": "Inicio",
       "icon": "home",
-      "link": "/"
+      "link": "/",
+      "allowedRoles": "['Manager', 'Admin', 'Analist']"
     },
     {
       "id": "workCenter",
       "label": "Centro de trabajo",
       "icon": "business",
       "isOpen": false,
+      "allowedRoles": "['Manager', 'Admin', 'Analist']",
       "subItems": [
         {
           "id": "location",
           "label": "Ubicación",
           "icon": "location_on",
-          "link": "workCenter/location/index"
+          "link": "workCenter/location/index",
+          "allowedRoles": "['Manager', 'Admin', 'Analist']"
         },
         {
           "id": "register",
           "label": "Registros de consumo",
           "icon": "dynamic_form",
-          "link": "workCenter/register/index"
+          "link": "workCenter/register/index",
+          "allowedRoles": "['Manager', 'Admin', 'Analist']"
         },
         {
           "id": "avg-consumption",
           "label": "Consumo promedio",
           "icon": "monitor_heart",
-          "link": "workCenter/avg-consumption/index"
+          "link": "workCenter/avg-consumption/index",
+          "allowedRoles": "['Manager', 'Admin', 'Analist']"
         },
         {
           "id": "excess",
           "label": "Exceso de consumo",
           "icon": "query_stats",
-          "link": "workCenter/excess/index"
+          "link": "workCenter/excess/index",
+          "allowedRoles": "['Manager', 'Admin', 'Analist']"
         },
         {
           "id": "alert",
           "label": "Alertas emitidas",
           "icon": "warning",
-          "link": "workCenter/alert/index"
+          "link": "workCenter/alert/index",
+          "allowedRoles": "['Manager', 'Admin', 'Analist']"
         },
         {
           "id": "center-manage",
           "label": "Gestión",
           "icon": "folder_supervised",
-          "link": "workCenter/manage/index"
+          "link": "workCenter/manage/index",
+          "allowedRoles": "['Manager', 'Admin']"
         }
       ]
     },
@@ -55,18 +63,21 @@
       "label": "Oficina",
       "icon": "inventory",
       "isOpen": false,
+      "allowedRoles": "['Manager', 'Admin', 'Analist']",
       "subItems": [
         {
           "id": "equipment",
           "label": "Equipos",
           "icon": "computer",
-          "link": "office/equipment/index"
+          "link": "office/equipment/index",
+          "allowedRoles": "['Manager', 'Admin', 'Analist']"
         },
         {
           "id": "office-manage",
           "label": "Gestión",
           "icon": "folder_supervised",
-          "link": "office/manage/index"
+          "link": "office/manage/index",
+          "allowedRoles": "['Manager', 'Admin']"
         }
       ]
     },
@@ -75,18 +86,21 @@
       "label": "Políticas",
       "icon": "task",
       "isOpen": false,
+      "allowedRoles": "['Manager', 'Admin', 'Analist']",
       "subItems": [
         {
           "id": "comparison",
           "label": "Comparar eficiencia",
           "icon": "compare",
-          "link": "policy/comparison/index"
+          "link": "policy/comparison/index",
+          "allowedRoles": "['Manager', 'Admin', 'Analist']"
         },
         {
           "id": "policy-manage",
           "label": "Gestión",
           "icon": "folder_supervised",
-          "link": "policy/manage/index"
+          "link": "policy/manage/index",
+          "allowedRoles": "['Manager', 'Admin']"
         }
       ]
     },
@@ -95,12 +109,14 @@
       "label": "Usuarios",
       "icon": "manage_accounts",
       "isOpen": false,
+      "allowedRoles": "['Admin', 'Manager']",
       "subItems": [
         {
           "id": "user-manage",
           "label": "Gestión",
           "icon": "folder_supervised",
-          "link": "user/manage/index"
+          "link": "user/manage/index",
+          "allowedRoles": "['Admin', 'Manager']"
         }
       ]
     },
@@ -108,7 +124,8 @@
       "id": "aboutUs",
       "label": "Sobre Nosotros",
       "icon": "info",
-      "link": "aboutUs"
+      "link": "aboutUs",
+      "allowedRoles": "['Manager', 'Admin', 'Analist']"
     }
   ]
 }
