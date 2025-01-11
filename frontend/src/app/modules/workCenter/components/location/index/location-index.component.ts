@@ -22,8 +22,6 @@ export class LocationComponent {
     private http: WorkCenterService
   ) {
     this.form = this.fb.group({
-      startDate: [null],
-      endDate: [null],
       workCenter: ''
     });
   }
@@ -99,7 +97,7 @@ export class LocationComponent {
   seleccionarEmpresa(nombre: string): void {
     const empresa = this.centerLocationData.find(e => e.name === nombre);
     if (empresa) {
-      this.map.setView([empresa.location.coordenateDTO.latitude, empresa.location.coordenateDTO.longitude], 15); // Centra el mapa en la ubicación de la empresa
+      this.map.setView([empresa.location.coordenateDTO.latitude, empresa.location.coordenateDTO.longitude], 16); // Centra el mapa en la ubicación de la empresa
       L.popup()
         .setLatLng([empresa.location.coordenateDTO.latitude, empresa.location.coordenateDTO.longitude])
         .setContent(`
