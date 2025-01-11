@@ -1,3 +1,4 @@
+import { UserInfo } from './../../models/credential.interface';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -84,9 +85,8 @@ export class GlobalModule {
     public httpCenter: WorkCenterService,
     public httpOffice: OfficeService,
     public dialog: MatDialog
-  ) {}
+  ) { }
 
-  userInfo: UserLogged = [][0];
 
   centerStringArray: string[] = [];
   workCenters: Item[] = [];
@@ -98,6 +98,11 @@ export class GlobalModule {
 
   centerSelectedId: number | any = 0;
   officeSelectedId: number | any = 0;
+
+
+  getUserInfo(): UserLogged {
+    return JSON.parse(sessionStorage.getItem('userLogged') || '{}');
+  }
 
   /**
    * This function retrieves the list of work centers.
@@ -240,6 +245,5 @@ export class GlobalModule {
     this.officeObjectArray = [];
     this.centerSelectedId = -1;
     this.officeSelectedId = -1;
-    this.userInfo = [][0];
   }
 }
