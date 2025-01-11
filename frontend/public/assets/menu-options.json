@@ -40,7 +40,7 @@
           "label": "Exceso de consumo",
           "icon": "query_stats",
           "link": "workCenter/excess/index",
-          "allowedRoles": "['Manager', 'Admin', 'Analist']"
+          "allowedRoles": "['Manager', 'Admin']"
         },
         {
           "id": "alert",

@@ -21,3 +21,9 @@ mat-label {
 ::ng-deep .mat-pseudo-checkbox-full.mat-pseudo-checkbox-checked {
   background-color: #00203b !important;
 }
+.disabled-select {
+  opacity: 0.5;
+}
+.disabled-select mat-select {
+  pointer-events: none;
+}

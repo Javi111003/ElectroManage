@@ -24,6 +24,13 @@ export class ComparisonComponent implements OnInit {
       policy: ''
     });
 
+    if (!this.global.getUserInfo().roles.includes('Admin')) {
+      const workcenter = this.global.getUserInfo().info.company.name;
+      const id = this.global.getUserInfo().info.company.id;
+      this.getControl('workCenter').setValue(workcenter);
+      this.getPolicies(id);
+    }
+
     this.form.valueChanges.subscribe(() => { this.showTable = false });
   }
 

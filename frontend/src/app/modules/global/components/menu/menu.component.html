@@ -22,23 +22,27 @@
         <!-- Using a for loop to add each item from extern .json -->
         <li *ngFor="let item of menuItems">
           <div *ngIf="!item.subItems" class="dropdown-label" [class.active]="activeOption === item.id">
-            <a id="item.id" (click)="setActiveOption(item.id)" [routerLink]="item.link">
+            <a *appShowForRoles="item.allowedRoles" id="item.id" (click)="setActiveOption(item.id)" [routerLink]="item.link">
               <mat-icon>{{item.icon}}</mat-icon>
               {{item.label}}
             </a>
           </div>
-          <div *ngIf="item.subItems" class="dropdown-label" id="item.id" (click)="toggleOption(item.id)">
+          <div *ngIf="item.subItems">
+            <div *appShowForRoles="item.allowedRoles" class="dropdown-label" id="item.id" (click)="toggleOption(item.id)">
             <mat-icon>{{item.icon}}</mat-icon>
             <label>{{item.label}}</label>
             <mat-icon class="arrow" [class.rotate]="isOpen(item.id)">keyboard_arrow_down</mat-icon>
+            </div>
           </div>
           <ul *ngIf="item.subItems" class="submenu" [@submenuToggle]="isOpen(item.id) ? 'expanded' : 'collapsed'">
-            <li *ngFor="let subitem of item.subItems" [class.active]="activeOption === subitem.id">
-              <a id="subitem.id" (click)="setActiveOption(subitem.id)" [routerLink]="subitem.link">
-                <mat-icon>{{subitem.icon}}</mat-icon>
-                {{subitem.label}}
-              </a>
-            </li>
+            <div *ngFor="let subitem of item.subItems">
+              <li *appShowForRoles="subitem.allowedRoles" [class.active]="activeOption === subitem.id">
+                <a id="subitem.id" (click)="setActiveOption(subitem.id)" [routerLink]="subitem.link">
+                  <mat-icon>{{subitem.icon}}</mat-icon>
+                  {{subitem.label}}
+                </a>
+              </li>
+            </div>
           </ul>
         </li>
       </ul>

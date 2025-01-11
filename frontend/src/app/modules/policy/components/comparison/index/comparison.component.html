@@ -5,6 +5,7 @@
         [label]="'Centro de Trabajo'"
         [options]="global.centerStringArray"
         [control]="getControl('workCenter')"
+        [isDisabled]="!global.getUserInfo().roles.includes('Admin')"
       >
       </app-autocomplete>
 

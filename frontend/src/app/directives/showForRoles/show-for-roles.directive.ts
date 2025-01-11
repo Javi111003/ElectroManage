@@ -14,8 +14,7 @@ export class ShowForRolesDirective implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    console.log("onInit");
-    const permission = !this.global.userInfo.roles.every(role => !this.allowedRoles?.includes(role));
+    const permission = !this.global.getUserInfo().roles.every(role => !this.allowedRoles?.includes(role));
 
     if (permission) {
       this.viewContainerRef.createEmbeddedView(this.templateRef);

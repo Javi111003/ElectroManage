@@ -19,6 +19,11 @@ export class AlertComponent implements OnInit {
       workCenter: ''
     });
 
+    if (!this.global.getUserInfo().roles.includes('Admin')) {
+      const workcenter = this.global.getUserInfo().info.company.name;
+      this.getControl('workCenter').setValue(workcenter);
+    }
+
     this.form.valueChanges.subscribe(() => { this.showTable = false });
   }
 

@@ -30,10 +30,23 @@ export class AvgConsumptionComponent implements OnInit {
     });
 
     this.form.valueChanges.subscribe(() => { this.showTable = false; })
+
+    if (!this.global.getUserInfo().roles.includes('Admin')) {
+      const id = this.global.getUserInfo().info.company.id;
+      const name = this.global.getUserInfo().info.company.name;
+      const workCenter: Item = {
+        id: id,
+        name: name
+      };
+      this.options = [workCenter]
+      this.getControl('workCenters').setValue(this.options);
+      this.findCenterIds();
+    }
   }
 
   form: FormGroup;
   selectedOptionsIds: number[] | any [] = [];
+  options: Item[] = [];
   dataSources: { [key: string]: MatTableDataSource<any> } = {};
   displayedColumns: ConfigColumn[] = [
     {
@@ -58,10 +71,13 @@ export class AvgConsumptionComponent implements OnInit {
   ngOnInit() {
     this.global.Reset();
     this.global.getWorkCenters();
-    this.getControl('workCenters').valueChanges.subscribe(() => {
-      this.findCenterIds();
-      this.expandedElements = [];
-    });
+    if (this.global.getUserInfo().roles.includes('Admin')) {
+      this.getControl('workCenters').valueChanges.subscribe(() => {
+        this.findCenterIds();
+        this.expandedElements = [];
+      });
+      this.options = this.global.workCenters;
+    }
   }
 
   /**
@@ -107,6 +123,7 @@ export class AvgConsumptionComponent implements OnInit {
         const centerName = this.global.centerObjectArray.find(
           item => item.id === registers[index].companyID
         )?.name;
+        console.log(centerName);
 
         if (centerName) {
           this.dataSources[centerName] = new MatTableDataSource();
@@ -122,6 +139,7 @@ export class AvgConsumptionComponent implements OnInit {
    */
   onConsultClick() {
     if (!this.showTable) {
+      console.log(this.getControlValue('workCenters').length);
       if (this.getControlValue('workCenters').length > 0)
       {
         this.showTable = true;

@@ -103,6 +103,14 @@ export class EquipmentComponent implements OnInit, OnDestroy {
 
     this.form.valueChanges.subscribe(() => { this.showTable = false });
 
+    if (!this.global.getUserInfo().roles.includes('Admin')) {
+      const workcenter = this.global.getUserInfo().info.company.name;
+      this.getControl('workCenter').setValue(workcenter);
+      console.log(this.getControlValue('workCenter'));
+      this.global.centerSelectedId = this.global.getUserInfo().info.company.id;
+      this.global.getOfficesByCenter();
+    }
+
     this.form.get('workCenter')?.valueChanges.subscribe(() => {
       this.getControl('office').reset();
       if (this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter'))) {
