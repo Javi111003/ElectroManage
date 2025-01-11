@@ -10,5 +10,6 @@ import { Item } from '../../shared.module';
 export class CheckboxComponent {
   @Input() label: string = '';
   @Input() options: Item[] = [];
+  @Input() isDisabled: boolean = false;
   @Input() control: FormControl = new FormControl();
 }

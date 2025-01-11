@@ -1,4 +1,4 @@
-<mat-form-field appearance="outline">
+<mat-form-field appearance="outline" [class.disabled-select]="isDisabled">
   <mat-label>{{label}}</mat-label>
   <mat-select [formControl]="control" multiple>
     @for (option of options; track option) {

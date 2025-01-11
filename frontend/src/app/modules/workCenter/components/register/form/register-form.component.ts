@@ -30,6 +30,10 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     });
 
     this.dataService.setData(null);
+    if (!this.global.getUserInfo().roles.includes('Admin')) {
+      const workcenter = this.global.getUserInfo().info.company.name;
+      this.getControl('workCenter').setValue(workcenter);
+    }
   }
 
   form: FormGroup;
@@ -79,6 +83,10 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
     this.getControl('date').setValue(yesterday);
+    if (!this.global.getUserInfo().roles.includes('Admin')) {
+      const workcenter = this.global.getUserInfo().info.company.name;
+      this.getControl('workCenter').setValue(workcenter);
+    }
   }
 
   onSubmit(): void {

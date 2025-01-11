@@ -21,6 +21,7 @@ import { OfficeService } from '../../services/office/office.service';
 import { PasswordValidatorDirective } from '../../directives/password/password.directive';
 import { NumberValidationDirective } from '../../directives/numberValidation/number.validation.directive';
 import { EmailValidationDirective } from '../../directives/emailValidation/email-validation.directive';
+import { ShowForRolesDirective } from '../../directives/showForRoles/show-for-roles.directive';
 
 //add the route of each module you need yo import here down.
 import { MatIconModule } from '@angular/material/icon';
@@ -44,7 +45,8 @@ import { UserLogged } from '../../models/credential.interface';
     LoginComponent,
     PasswordValidatorDirective,
     NumberValidationDirective,
-    EmailValidationDirective
+    EmailValidationDirective,
+    ShowForRolesDirective
   ],
   imports: [
     CommonModule,
@@ -76,7 +78,8 @@ import { UserLogged } from '../../models/credential.interface';
     MatTableModule,
     PasswordValidatorDirective,
     NumberValidationDirective,
-    EmailValidationDirective
+    EmailValidationDirective,
+    ShowForRolesDirective
   ]
 })
 export class GlobalModule {

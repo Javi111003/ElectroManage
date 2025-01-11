@@ -5,6 +5,7 @@
         [label]="'Centro de Trabajo'"
         [options]="global.centerStringArray"
         [control]="getControl('workCenter')"
+        [isDisabled]="!global.getUserInfo().roles.includes('Admin')"
       >
       </app-autocomplete>
 
@@ -22,7 +23,7 @@
     </div>
 
     <div class="form-buttons">
-      <app-button
+      <app-button *appShowForRoles="['Admin', 'Manager']"
         [label]="'Añadir'"
         [function]="add.bind(this)"
         [showIcon]="true"
