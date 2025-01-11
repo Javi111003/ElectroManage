@@ -40,6 +40,13 @@ export class ManageComponent implements OnInit, OnDestroy {
 
     this.form.valueChanges.subscribe(() => { this.showTable = false });
 
+    if (!this.global.getUserInfo().roles.includes('Admin')) {
+      const workcenter = this.global.getUserInfo().info.company.name;
+      this.getControl('workCenter').setValue(workcenter);
+      this.global.centerSelectedId = this.global.getUserInfo().info.company.id;
+      this.global.getOfficesByCenter();
+    }
+
     this.getControl('workCenter').valueChanges.subscribe(() => {
       const center = this.getControlValue('workCenter');
       if (this.global.isOptionValid(this.global.centerStringArray, center)) {

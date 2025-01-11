@@ -103,7 +103,7 @@ export class LocationComponent {
         .setContent(`
           <h3>${empresa.name}</h3>
           <p><b>Dirección:</b> ${empresa.location.addressDetails}</p>
-          <p><b>Descripción</b>:Esta empresa pertenece al area administrativa <b>${empresa.administrativeArea.name}</b> y su tipo de instalacion es <b>${empresa.installationType.name}</b></p>
+          <p><b>Descripción</b>:Esta empresa pertenece al área administrativa <b>${empresa.administrativeArea.name}</b> y su tipo de instalación es <b>${empresa.installationType.name}</b></p>
         `)
         .openOn(this.map);
     }

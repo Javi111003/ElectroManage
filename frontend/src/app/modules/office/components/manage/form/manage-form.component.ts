@@ -24,13 +24,17 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     private dataService: DataService,
     private officeService: OfficeService
   ) {
-
     this.form = this.fb.group({
       officeName: ['', Validators.required],
       description: '',
       workCenter: ['', Validators.required]
     });
     this.dataService.setData(null);
+
+    if (!this.global.getUserInfo().roles.includes('Admin')) {
+      const workcenter = this.global.getUserInfo().info.company.name;
+      this.getControl('workCenter').setValue(workcenter);
+    }
   }
 
   ngOnInit() {

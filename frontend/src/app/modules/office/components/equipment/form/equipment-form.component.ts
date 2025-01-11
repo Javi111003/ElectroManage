@@ -122,7 +122,6 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
           }
         }
         this.postMethod = post;
-        console.log(this.data);
       }
     });
 
@@ -140,7 +139,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         this.getControlValue('workCenter')
         )
       ) {
-        this.global.findID(this.global.workCenters, this.getControlValue('workCenter'));
+        this.global.findCenterId(this.getControlValue('workCenter'));
         this.global.getOfficesByCenter();
       }
     });
