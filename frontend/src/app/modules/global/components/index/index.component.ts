@@ -14,14 +14,12 @@ Chart.register(...registerables);
   styleUrls: ['./index.component.css']
 })
 export class IndexComponent implements OnInit {
-  
+
   constructor(
-    private globalModule: GlobalModule,
+    private global: GlobalModule,
     private http: DashboardService,
     public httpCenter: WorkCenterService,
-  ){
-    this.userInfo=this.globalModule.userInfo
-  }
+  ){ }
 
   years = ['2023', '2024', '2025'];
   chart: any;
@@ -29,7 +27,7 @@ export class IndexComponent implements OnInit {
   barChart: any;
   selectedYear: number = 2023;
 
-  userInfo: UserLogged;
+  userInfo: UserLogged = [][0];
   // Nuevas propiedades para almacenar datos del servicio
   centersCreatedData: any[] = [];
   topConsumingCenters: any[] = [];
@@ -37,7 +35,8 @@ export class IndexComponent implements OnInit {
   topWarnedCenters: any[] = [];
 
   ngOnInit(): void {
-    console.log(this.globalModule.userInfo);
+    this.userInfo = this.global.getUserInfo();
+    console.log(this.userInfo);
     this.loadAllData();
   }
 

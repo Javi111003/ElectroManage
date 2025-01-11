@@ -37,5 +37,9 @@ export class AuthService {
    */
   logout(): void {
     sessionStorage.removeItem('isAuthenticated');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('expiration');
+    sessionStorage.removeItem('isAuthenticated');
+    sessionStorage.removeItem('userLogged');
   }
 }
