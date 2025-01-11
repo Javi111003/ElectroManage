@@ -15,7 +15,8 @@
                   [options]="this.global.centerStringArray"
                   [label]="'Centros de Trabajo'"
                   [control]="getControl('workCenter')"
-                ></app-autocomplete>
+                  [isDisabled]="!global.getUserInfo().roles.includes('Admin')"
+                  ></app-autocomplete>
                 <div *ngIf="form.get('workCenter')?.invalid && form.get('workCenter')?.touched" class="invalid-feedback">
                   Este campo es obligatorio
                 </div>

@@ -40,7 +40,7 @@
           "label": "Exceso de consumo",
           "icon": "query_stats",
           "link": "workCenter/excess/index",
-          "allowedRoles": "['Manager', 'Admin']"
+          "allowedRoles": "['Admin']"
         },
         {
           "id": "alert",
@@ -54,7 +54,7 @@
           "label": "Gestión",
           "icon": "folder_supervised",
           "link": "workCenter/manage/index",
-          "allowedRoles": "['Manager', 'Admin']"
+          "allowedRoles": "['Admin']"
         }
       ]
     },
@@ -100,7 +100,7 @@
           "label": "Gestión",
           "icon": "folder_supervised",
           "link": "policy/manage/index",
-          "allowedRoles": "['Manager', 'Admin']"
+          "allowedRoles": "['Admin']"
         }
       ]
     },
@@ -109,14 +109,14 @@
       "label": "Usuarios",
       "icon": "manage_accounts",
       "isOpen": false,
-      "allowedRoles": "['Admin', 'Manager']",
+      "allowedRoles": "['Admin']",
       "subItems": [
         {
           "id": "user-manage",
           "label": "Gestión",
           "icon": "folder_supervised",
           "link": "user/manage/index",
-          "allowedRoles": "['Admin', 'Manager']"
+          "allowedRoles": "['Admin']"
         }
       ]
     },
