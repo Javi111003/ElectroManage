@@ -63,6 +63,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     const sub = this.dataService.dataUpdated$.subscribe(() => {
       const center = this.getControlValue('workCenter');
       if (this.global.isOptionValid(this.global.centerStringArray, center)) {
+        this.global.findCenterId(center);
         this.global.getOfficesByCenter().subscribe(offices => {
           this.reloadTableData(offices);
         });

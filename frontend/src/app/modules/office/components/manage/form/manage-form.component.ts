@@ -34,10 +34,13 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     if (!this.global.getUserInfo().roles.includes('Admin')) {
       const workcenter = this.global.getUserInfo().info.company.name;
       this.getControl('workCenter').setValue(workcenter);
+      this.global.centerSelectedId = this.global.getUserInfo().info.company.id;
     }
   }
 
   ngOnInit() {
+    this.global.Reset();
+    this.global.getWorkCenters();
     const sub = this.dataService.currentData.subscribe(newData => {
       if (newData) {
         this.data = newData[0];
@@ -54,8 +57,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     });
 
     this.subscriptions.add(sub);
-    this.global.Reset();
-    this.global.getWorkCenters();
   }
 
   ngOnDestroy(): void {
@@ -126,7 +127,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * This method is used to ensure all form controls are marked as touched,
    * which can be useful for form validation and error handling.
    */
-
   markAllAsTouched(): void {
     Object.keys(this.form.controls).forEach(field => {
       const control = this.form.get(field);
@@ -153,12 +153,15 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   getOfficeObject(): Office {
     const name = this.getControlValue('officeName');
     const description = this.getControlValue('description');
-
-    return {
+    this.global.findCenterId(this.getControlValue('workCenter'));
+    const office = {
       companyId: this.global.centerSelectedId,
       name: name,
       description: description
     };
+
+    console.log(office);
+    return office;
   }
 
   /**
