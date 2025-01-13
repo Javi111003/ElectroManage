@@ -1,7 +1,9 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { Item } from '../../shared.module';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-autocomplete',
@@ -9,14 +11,14 @@ import { map, startWith } from 'rxjs/operators';
   styleUrl: './autocomplete.component.css'
 })
 export class AutocompleteComponent implements OnInit {
-  @Input() options: string[] = [];
+  @Input() options: Item[] = [];
   @Input() label: string = '';
   @Input() isDisabled: boolean = false;
   @Input() control: FormControl = new FormControl();
   @Input() showIcon: boolean = false;
   @Input() deleteOption: (...args: any[]) => any = ()=>{};
 
-  filteredOptions: Observable<string[]> = [][0];
+  filteredOptions: Observable<Item[]> = [][0];
 
   ngOnInit() {
     this.filteredOptions = this.control.valueChanges.pipe(
@@ -40,7 +42,6 @@ export class AutocompleteComponent implements OnInit {
         map(value => this._filter(value || '')),
       );
     }
-
   }
 
   /**
@@ -48,14 +49,23 @@ export class AutocompleteComponent implements OnInit {
    * @param value The input value to filter options against.
    * @returns An array of options that match the input value.
    */
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.options.filter(option => option.toLowerCase().startsWith(filterValue));
+  private _filter(value: string): Item[] {
+    let filterValue = value;
+    if (typeof value === 'string') {
+      filterValue = value.toLowerCase();
+      return this.options.filter(option => option.name.toLowerCase().startsWith(filterValue));
+    }
+
+    return [];
   }
 
-  removeOption(option: string): void {
-    this.options = this.options.filter(item => item !== option);
-    this.filteredOptions = this.control.valueChanges.pipe( startWith(''), map(value => this._filter(value)));
+  removeOption(option: Item): void {
+    this.options = this.options.filter(item => item.id !== option.id);
+    this.filteredOptions = this.control.valueChanges.pipe(startWith(''), map(value => this._filter(value)));
     this.deleteOption(option);
+  }
+
+  displayFn(option: Item): string {
+    return option && option.name ? option.name : '';
   }
 }

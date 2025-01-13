@@ -55,7 +55,7 @@
               <div class="col-4 col-sm-6">
                 <label for="workCenter" class="form-label">Centro de Trabajo</label>
                 <app-autocomplete class="form-control" id="workCenter"
-                  [options]="this.global.centerStringArray"
+                  [options]="global.workCenters"
                   [label]="'Centros de trabajo'"
                   [control]="getControl('workCenter')"
                 ></app-autocomplete>

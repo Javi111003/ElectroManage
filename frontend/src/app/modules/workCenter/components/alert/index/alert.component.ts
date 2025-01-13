@@ -3,6 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { GlobalModule } from '../../../../global/global.module';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Item } from '../../../../../shared/shared.module';
 
 @Component({
   selector: 'app-alert',
@@ -20,8 +21,13 @@ export class AlertComponent implements OnInit {
     });
 
     if (!this.global.getUserInfo().roles.includes('Admin')) {
-      const workcenter = this.global.getUserInfo().info.company.name;
-      this.getControl('workCenter').setValue(workcenter);
+      const name = this.global.getUserInfo().info.company.name;
+      const id = this.global.getUserInfo().info.company.id;
+      const workCenter: Item = {
+        id: id,
+        name: name
+      };
+      this.getControl('workCenter').setValue(workCenter);
     }
 
     this.form.valueChanges.subscribe(() => { this.showTable = false });
@@ -69,9 +75,9 @@ export class AlertComponent implements OnInit {
    */
   onClick() {
     if (!this.showTable) {
-      if (this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter'))) {
-        this.global.findCenterId(this.getControlValue('workCenter'));
-        this.getAlerts(this.global.centerSelectedId);
+      const id = this.getControlValue('workCenter').id;
+      if (id) {
+        this.getAlerts(id);
         this.showTable = true;
       }
       else {

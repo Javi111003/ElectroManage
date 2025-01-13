@@ -12,7 +12,7 @@
               <div class="col-sm-6">
                 <label for="workCenter" class="form-label">Centro de Trabajo</label>
                 <app-autocomplete class="form-control" id="workCenter"
-                  [options]="this.global.centerStringArray"
+                  [options]="global.workCenters"
                   [label]="'Centros de Trabajo'"
                   [control]="getControl('workCenter')"
                   [isDisabled]="!global.getUserInfo().roles.includes('Admin')"
@@ -24,10 +24,10 @@
               <div class="col-sm-6">
                 <label for="office" class="form-label">Oficina</label>
                 <app-autocomplete class="form-control" id="office"
-                  [options]="this.global.officeStringArray"
+                  [options]="this.global.offices"
                   [label]="'Oficinas'"
                   [control]="getControl('office')"
-                  [isDisabled]="!this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter'))"
+                  [isDisabled]="!checkDisabled(getControlValue('workCenter'))"
                 ></app-autocomplete>
                 <div *ngIf="form.get('office')?.invalid && form.get('office')?.touched" class="invalid-feedback">
                   Este campo es obligatorio
@@ -57,7 +57,7 @@
                 <div class="col-sm-4">
                   <label for="type" class="form-label">Tipo</label>
                   <app-autocomplete class="form-control" id="type"
-                    [options]="typeStringArray"
+                    [options]="typeArray"
                     [label]="'Tipos'"
                     [control]="getControl('type')"
                     [showIcon]="true"
@@ -82,7 +82,7 @@
                 <div class="col-sm-4">
                   <label for="brand" class="form-label">Marca</label>
                   <app-autocomplete class="form-control" id="brand"
-                    [options]="brandStringArray"
+                    [options]="brandArray"
                     [label]="'Marcas'"
                     [control]="getControl('brand')"
                     [showIcon]="true"

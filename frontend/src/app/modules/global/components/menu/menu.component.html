@@ -6,11 +6,10 @@
     <img src="logo.png" alt="Company Logo" routerLink="/"> <!-- Company logo -->
     <p>Electro Manage</p> <!-- Application title -->
     <div class="icons">
+      <label>{{this.global.getUserInfo().info.email}}</label>
       <mat-icon matBadge="15">notifications</mat-icon>
     <!-- Include text description of the icon's meaning for screen-readers -->
-    <span class="cdk-visually-hidden">
-      Example with a home icon with overlaid badge showing the number 15
-    </span>
+    <span class="cdk-visually-hidden"></span>
       <mat-icon (click)="logout()">person</mat-icon> <!-- User profile icon -->
     </div>
 
@@ -20,31 +19,31 @@
     <nav class="nav">
       <ul>
         <!-- Using a for loop to add each item from extern .json -->
-        <li *ngFor="let item of menuItems">
-          <div *ngIf="!item.subItems" class="dropdown-label" [class.active]="activeOption === item.id">
-            <a *appShowForRoles="item.allowedRoles" id="item.id" (click)="setActiveOption(item.id)" [routerLink]="item.link">
+        <div *ngFor="let item of menuItems">
+          <li *appShowForRoles="item.allowedRoles">
+            <div *ngIf="!item.subItems" class="dropdown-label" [class.active]="activeOption === item.id">
+              <a  id="item.id" (click)="setActiveOption(item.id)" [routerLink]="item.link">
+                <mat-icon>{{item.icon}}</mat-icon>
+                {{item.label}}
+              </a>
+            </div>
+            <div *ngIf="item.subItems" class="dropdown-label" id="item.id" (click)="toggleOption(item.id)">
               <mat-icon>{{item.icon}}</mat-icon>
-              {{item.label}}
-            </a>
-          </div>
-          <div *ngIf="item.subItems">
-            <div *appShowForRoles="item.allowedRoles" class="dropdown-label" id="item.id" (click)="toggleOption(item.id)">
-            <mat-icon>{{item.icon}}</mat-icon>
-            <label>{{item.label}}</label>
-            <mat-icon class="arrow" [class.rotate]="isOpen(item.id)">keyboard_arrow_down</mat-icon>
+              <label>{{item.label}}</label>
+              <mat-icon class="arrow" [class.rotate]="isOpen(item.id)">keyboard_arrow_down</mat-icon>
             </div>
-          </div>
-          <ul *ngIf="item.subItems" class="submenu" [@submenuToggle]="isOpen(item.id) ? 'expanded' : 'collapsed'">
-            <div *ngFor="let subitem of item.subItems">
-              <li *appShowForRoles="subitem.allowedRoles" [class.active]="activeOption === subitem.id">
-                <a id="subitem.id" (click)="setActiveOption(subitem.id)" [routerLink]="subitem.link">
-                  <mat-icon>{{subitem.icon}}</mat-icon>
-                  {{subitem.label}}
-                </a>
-              </li>
-            </div>
-          </ul>
-        </li>
+            <ul *ngIf="item.subItems" class="submenu" [@submenuToggle]="isOpen(item.id) ? 'expanded' : 'collapsed'">
+              <div *ngFor="let subitem of item.subItems">
+                <li *appShowForRoles="subitem.allowedRoles" [class.active]="activeOption === subitem.id">
+                  <a id="subitem.id" (click)="setActiveOption(subitem.id)" [routerLink]="subitem.link">
+                    <mat-icon>{{subitem.icon}}</mat-icon>
+                    {{subitem.label}}
+                  </a>
+                </li>
+              </div>
+            </ul>
+          </li>
+        </div>
       </ul>
     </nav>
   </aside>

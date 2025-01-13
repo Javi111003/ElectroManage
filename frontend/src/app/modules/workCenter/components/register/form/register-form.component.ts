@@ -38,10 +38,6 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
 
   form: FormGroup;
 
-  workCenters: string[] = [
-    'Centro A', 'Centro B'
-  ];
-
   ngOnInit() {
     const sub = this.dataService.currentData.subscribe(newData => {
       if (newData) {

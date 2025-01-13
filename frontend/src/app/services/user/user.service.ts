@@ -37,7 +37,6 @@ export class UserService {
    * @returns An Observable that resolves to the response from the API.
    */
   registerUser(registerData: RegisterUser): Observable<any> {
-    console.log(registerData);
     return this.http.post<any>(API_URL + '/v1/register/user', registerData);
   }
 }

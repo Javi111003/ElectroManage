@@ -46,45 +46,62 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     });
     this.dataService.setData(null);
 
-
     this.form.get('type')!.valueChanges.subscribe(() => {
       if (String(this.getControlValue('type')).trim() == '') {
         this.enableAddType = false;
         return;
       }
 
-      this.enableAddType = !this.global.isOptionValid(
-        this.typeStringArray,
-        this.getControlValue('type')
-      );
+      if (this.getControlValue('type'))
+        this.enableAddType = !this.getControlValue('type').id;
     });
 
     this.form.get('brand')!.valueChanges.subscribe(() => {
-      if (String(this.getControlValue('brand')).trim() == '') {
+      if (this.getControlValue('brand') && this.getControlValue('brand').id) {
         this.enableAddBrand = false;
         return;
       }
 
-      this.enableAddBrand = !this.global.isOptionValid(
-        this.brandStringArray,
-        this.getControlValue('brand')
-      );
+      if (this.getControlValue('brand'))
+        this.enableAddBrand = !this.getControlValue('brand').id;
     });
   }
 
   form: FormGroup;
 
-  useFrequencies: string[] = [
-    'Alta', 'Media', 'Baja'
+  useFrequencies: Item[] = [
+    {
+      id: 1,
+      name: 'Alta'
+    },
+    {
+      id: 2,
+      name: 'Media'
+    },
+    {
+      id: 3,
+      name: 'Baja'
+    }
   ];
   useFrequencyMatch: Map<string, string> = new Map<string, string>([
     ['Alta', 'High'],
     ['Media', 'Medium'],
     ['Baja', 'Low']
-  ])
+  ]);
 
-  maintenanceStatus: string[] = [
-    'Bueno', 'Regular', 'Malo'
+  maintenanceStatus: Item[] = [
+    {
+      id: 1,
+      name: 'Bueno'
+    },
+    {
+      id: 2,
+      name: 'Regular'
+    },
+    {
+      id: 3,
+      name: 'Malo'
+    }
   ];
   maintenanceStatusMatch: Map<string, string> = new Map<string, string>([
     ['Bueno', 'Good'],
@@ -113,6 +130,20 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         this.getControl('workCenter').setValue(newData[1]);
         this.getControl('office').setValue(newData[2]);
         if (this.data) {
+          const type: Item = {
+            id: this.data.typeId,
+            name: this.data.type
+          };
+          const brand: Item = {
+            id: this.data.brandId,
+            name: this.data.brand
+          };
+          const useFrequency = this.useFrequencies.find(item => item.name === this.data.useFrequency);
+          const maintenanceStatus = this.maintenanceStatus.find(item => item.name === this.data.maintenanceStatus);
+          this.getControl('type').setValue(type);
+          this.getControl('brand').setValue(brand);
+          this.getControl('useFrequency').setValue(useFrequency);
+          this.getControl('maintenanceStatus').setValue(maintenanceStatus);
           this.getControl('criticalEnergySystem').setValue(this.criticalMatch.get(this.data.criticalEnergySystem));
           if (this.data.instalationDate) {
             const dateString = this.data.instalationDate;
@@ -134,19 +165,25 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
 
     this.form.get('workCenter')?.valueChanges.subscribe(() => {
       this.getControl('office').reset();
-      if (this.global.isOptionValid(
-        this.global.centerStringArray,
-        this.getControlValue('workCenter')
-        )
-      ) {
-        this.global.findCenterId(this.getControlValue('workCenter'));
-        this.global.getOfficesByCenter();
+      if (this.getControlValue('workCenter')) {
+        const id = this.getControlValue('workCenter').id;
+        if (id) {
+          this.global.getOfficesByCenter(id);
+        }
       }
     });
   }
 
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  checkDisabled(control: any): boolean {
+    if (control) {
+      return control.id;
+    }
+
+    return false
   }
 
   /**
@@ -191,24 +228,20 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     if (this.form.invalid) {
       this.global.openDialog('Por favor, rellene todos los campos.');
       this.markAllAsTouched();
+      this.loading = false;
       return;
     }
 
-    const searchFrom = [
-      this.global.centerStringArray, this.global.officeStringArray,
-      this.typeStringArray, this.brandStringArray, this.useFrequencies,
-      this.maintenanceStatus
-    ];
     const options = [
-      this.getControlValue('workCenter'), this.getControlValue('office'),
-      this.getControlValue('type'), this.getControlValue('brand'),
-      this.getControlValue('useFrequency'), this.getControlValue('maintenanceStatus')
+      this.getControlValue('workCenter').id, this.getControlValue('office').id,
+      this.getControlValue('type').id, this.getControlValue('brand').id,
+      this.getControlValue('useFrequency').id, this.getControlValue('maintenanceStatus').id
     ];
     const response = [
       'Centro de Trabajo', 'Nombre de Oficina', 'Tipo de Equipo',
       'Nombre de Marca', 'Tipo de Frecuencia de Uso', 'Estado de Mantenimiento'
     ];
-    const valid = this.global.AllValid(searchFrom, options, response);
+    const valid = this.global.allValid(options, response);
 
     if (valid[0]) {
       const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
@@ -218,9 +251,12 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         else {
           this.editEquipment();
         }
+      } else {
+        this.loading = false;
       }
     } else {
       this.global.openDialog(`Por favor, selecciona un ${valid[1]} válido.`);
+      this.loading = false;
     }
   }
 
@@ -289,9 +325,8 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
    * and if successful, retrieves the updated list of types.
    * @param typeName The name of the equipment type to be deleted.
    */
-  deleteType(typeName: string): void {
-    const typeID = this.global.findID(this.typeArray, typeName);
-    this.officeService.deleteEquipmentType(typeID).subscribe({
+  deleteType(type: Item): void {
+    this.officeService.deleteEquipmentType(type.id).subscribe({
       next: (response) => {
         console.log('Deleted successfully:', response);
         this.getTypes();
@@ -309,9 +344,8 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
    * and if successful, retrieves the updated list of brands.
    * @param brandName The name of the equipment brand to be deleted.
    */
-  deleteBrand(brandName: string): void {
-    const brandID = this.global.findID(this.brandArray, brandName);
-    this.officeService.deleteEquipmentBrand(brandID).subscribe({
+  deleteBrand(brand: Item): void {
+    this.officeService.deleteEquipmentBrand(brand.id).subscribe({
       next: (response) => {
         console.log('Deleted successfully:', response);
         this.getBrands();
@@ -428,10 +462,10 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
    * @returns An object containing the common values from the form controls.
    */
   getCommonValues() {
-    const typeID = this.global.findID(this.typeArray, this.getControlValue('type'));
-    const brandID = this.global.findID(this.brandArray, this.getControlValue('brand'));
-    const useFrequency = this.useFrequencyMatch.get(this.getControlValue('useFrequency'))!;
-    const maintenanceStatus = this.maintenanceStatusMatch.get(this.getControlValue('maintenanceStatus'))!;
+    const typeID = this.getControlValue('type').id;
+    const brandID = this.getControlValue('brand').id;
+    const useFrequency = this.useFrequencyMatch.get(this.getControlValue('useFrequency').name)!;
+    const maintenanceStatus = this.maintenanceStatusMatch.get(this.getControlValue('maintenanceStatus').name)!;
     const model = this.getControlValue('model');
     const capacity = this.getControlValue('capacity');
     const critical = this.getControlValue('criticalEnergySystem');
@@ -439,9 +473,6 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     const lifeSpanYears = this.getControlValue('lifeSpanYears');
     const efficiency = this.getControlValue('efficiency');
     const installDate = this.getControlValue('instalationDate');
-    const office = this.getControlValue('office');
-
-    this.global.findOfficeId(office);
 
     return {
       typeID, brandID, useFrequency, maintenanceStatus, model, capacity, critical,
@@ -469,7 +500,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
           maintenanceStatus: commonValues.maintenanceStatus,
           useFrequency: commonValues.useFrequency,
           equipmentSpecificationId: response.id,
-          officeId: this.global.officeSelectedId
+          officeId: this.getControlValue('office').id
         };
         this.createOrEditInstance(isEdit, equipment);
       },

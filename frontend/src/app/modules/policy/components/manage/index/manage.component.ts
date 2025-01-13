@@ -72,8 +72,7 @@ export class ManageComponent implements OnInit {
   delete(item: any): void {
     this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
       result => { if (result) {
-        const policyID = this.global.findID(this.policyArray, item.policyName);
-        this.policyService.deletePolicy(policyID).subscribe({
+        this.policyService.deletePolicy(item.id).subscribe({
           next: (response) => {
             console.log('Deleted successfully:', response);
             this.dataService.notifyDataUpdated();

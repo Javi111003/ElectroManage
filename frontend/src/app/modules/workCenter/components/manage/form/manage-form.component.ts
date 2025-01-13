@@ -90,9 +90,9 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.enableAddType = !this.global.isOptionValid(
-        this.typeStringArray, this.getControlValue('instalationType')
-      );
+      const type = this.getControlValue('instalationType');
+      if (type)
+        this.enableAddType = !type.id;
     });
 
     this.form.get('adminAreaName')!.valueChanges.subscribe(() => {
@@ -101,9 +101,9 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.enableAddArea = !this.global.isOptionValid(
-        this.areaStringArray, this.getControlValue('adminAreaName')
-      );
+      const area = this.getControlValue('adminAreaName');
+      if (area)
+        this.enableAddArea = !area.id;
     });
   }
 
@@ -114,9 +114,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     { id: 1, name: 'Lucia' }, { id: 1, name: 'Martin' }
   ];
 
-  policies: string[] = [
-    'jbhg', 'mnbgvc'
-  ];
+  policies: Item[] = [];
 
   typeStringArray: string[] = [];
   typeArray: Item[] = [];
@@ -130,7 +128,10 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     const sub = this.dataService.currentData.subscribe(newData => {
       if (newData) {
         this.data = newData[0];
+        console.log(this.data);
+
         this.form.patchValue(this.data);
+
         if (this.data) {
           if (this.data.applyingDate) {
             const dateString = this.data.applyingDate;
@@ -138,6 +139,18 @@ export class ManageFormComponent implements OnInit, OnDestroy {
             const dateObject = new Date(Date.UTC(+dateParts[0], +dateParts[1] - 1, +dateParts[2] + 1));
             this.getControl('applyingDate').setValue(dateObject);
           }
+          const areaId = this.data.adminArea.id;
+          const area: Item = {
+            id: areaId,
+            name: this.data.areaAdminName
+          }
+          const instalTypeId = this.data.instalType.id;
+          const instalType: Item = {
+            id: instalTypeId,
+            name: this.data.instalationType
+          }
+          this.getControl('adminAreaName').setValue(area);
+          this.getControl('instalationType').setValue(instalType);
         }
         this.postMethod = newData[1];
         this.loading = newData[2];
@@ -198,7 +211,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     this.loading = true;
-    console.log(this.form);
     if (this.form.invalid) {
       this.global.openDialog('Por favor, rellene todos los campos.');
       this.markAllAsTouched();
@@ -206,17 +218,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const searchFrom = [
-      this.areaStringArray, this.typeStringArray, this.policies
-    ];
     const options = [
-      this.getControlValue('adminAreaName'), this.getControlValue('instalationType'),
-      this.getControlValue('policy')
+      this.getControlValue('adminAreaName').id, this.getControlValue('instalationType').id,
+      this.getControlValue('policy').id
     ];
-    const response = [
-      'Nombre de Área', 'Tipo de Instalación', 'Nombre de Política'
-    ];
-    const valid = this.global.AllValid(searchFrom, options, response);
+    const response = ['Nombre de Área', 'Tipo de Instalación', 'Nombre de Política'];
+    const valid = this.global.allValid(options, response);
 
     if(valid[1] == 'Nombre de Política' && this.getControlValue('policy') === "")
       valid[0] = true;
@@ -285,9 +292,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * and if successful, retrieves the updated list of types.
    * @param type The name of the installation type to be deleted.
    */
-  deleteType(type: string): void {
-    const typeID = this.global.findID(this.typeArray, type);
-    this.global.httpCenter.deleteInstallationType(typeID).subscribe({
+  deleteType(type: Item): void {
+    this.global.httpCenter.deleteInstallationType(type.id).subscribe({
       next: (response) => {
         console.log('Deleted successfully:', response);
         this.getTypes();
@@ -309,7 +315,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.global.httpCenter.postAdminArea(area).subscribe({
       next: (response) => {
         console.log('Created successfully:', response);
-        this.getTypes();
+        this.getAreas();
       },
       error: (error) => {
         console.log(error);
@@ -342,9 +348,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * and if successful, retrieves the updated list of areas.
    * @param area The name of the area to be deleted.
    */
-  deleteArea(area: string): void {
-    const areaID = this.global.findID(this.areaArray, area);
-    this.global.httpCenter.deleteAdminArea(areaID).subscribe({
+  deleteArea(area: Item): void {
+    this.global.httpCenter.deleteAdminArea(area.id).subscribe({
       next: (response) => {
         console.log('Deleted successfully:', response);
         this.getAreas();
@@ -493,7 +498,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     //   equipmentTypeId: commonValues.typeID
     // };
     // this.createOrEditSpecification(false, specification, commonValues);
-    console.log(this.getControlValue('formula'));
   }
 
   /**

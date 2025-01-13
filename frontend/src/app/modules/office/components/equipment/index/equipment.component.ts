@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
 import { Subscription } from 'rxjs';
+import { Item } from '../../../../../shared/shared.module';
 
 declare var bootstrap: any;
 
@@ -43,7 +44,6 @@ export class EquipmentComponent implements OnInit, OnDestroy {
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
 
-  // Table Columns
   displayedColumns: ConfigColumn[] = [
     {
       title: 'Fecha de instalación',
@@ -104,25 +104,31 @@ export class EquipmentComponent implements OnInit, OnDestroy {
     this.form.valueChanges.subscribe(() => { this.showTable = false });
 
     if (!this.global.getUserInfo().roles.includes('Admin')) {
-      const workcenter = this.global.getUserInfo().info.company.name;
-      this.getControl('workCenter').setValue(workcenter);
-      console.log(this.getControlValue('workCenter'));
-      this.global.centerSelectedId = this.global.getUserInfo().info.company.id;
-      this.global.getOfficesByCenter();
+      const name = this.global.getUserInfo().info.company.name;
+      const id = this.global.getUserInfo().info.company.id;
+      const workCenter: Item = {
+        id: id,
+        name: name
+      };
+      this.getControl('workCenter').setValue(workCenter);
+      this.global.getOfficesByCenter(id);
     }
 
     this.form.get('workCenter')?.valueChanges.subscribe(() => {
       this.getControl('office').reset();
-      if (this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter'))) {
-        this.global.findCenterId(this.getControlValue('workCenter'));
-        this.global.getOfficesByCenter();
+      if (this.getControlValue('workCenter')) {
+        const id = this.getControlValue('workCenter').id;
+        if (id) {
+          this.global.getOfficesByCenter(id);
+        }
       }
     });
     this.form.get('office')?.valueChanges.subscribe(() => {
-      const office = this.getControlValue('office');
-      if (this.global.isOptionValid(this.global.officeStringArray, office)) {
-        this.global.findOfficeId(office);
-        this.getEquipmentsByOffice();
+      if (this.getControlValue('office')) {
+        const id = this.getControlValue('office').id;
+        if (id) {
+          this.getEquipmentsByOffice();
+        }
       }
     });
   }
@@ -132,9 +138,7 @@ export class EquipmentComponent implements OnInit, OnDestroy {
     this.global.getWorkCenters();
 
     const sub = this.dataService.dataUpdated$.subscribe(() => {
-      const office = this.getControlValue('office');
-      if (this.global.isOptionValid(this.global.officeStringArray, office)) {
-        this.global.findOfficeId(office);
+      if (this.getControlValue('office') && this.getControlValue('office').id) {
         this.getEquipmentsByOffice();
       }
     });
@@ -168,11 +172,13 @@ export class EquipmentComponent implements OnInit, OnDestroy {
    * It updates the dataSource for the MatTable with the list of equipment.
    */
   getEquipmentsByOffice(): void {
-    this.global.httpOffice.getEquipmentList(this.global.officeSelectedId)
-      .subscribe(equipments => {
-        this.equipmentObjects = equipments;
-        this.reloadTableData(equipments);
-      });
+    if (this.getControlValue('office') && this.getControlValue('office').id) {
+      this.global.httpOffice.getEquipmentList(this.getControlValue('office').id)
+        .subscribe(equipments => {
+          this.equipmentObjects = equipments;
+          this.reloadTableData(equipments);
+        });
+    }
   }
 
   /**
@@ -182,8 +188,8 @@ export class EquipmentComponent implements OnInit, OnDestroy {
    */
   onConsultClick(): void {
     if (!this.showTable) {
-      if (this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter')) &&
-          this.global.isOptionValid(this.global.officeStringArray, this.getControlValue('office'))) {
+      if (this.getControlValue('workCenter') && this.getControlValue('office') &&
+          this.getControlValue('workCenter').id && this.getControlValue('office').id) {
         this.showTable = true;
       } else {
         this.showTable = false;
@@ -267,7 +273,9 @@ export class EquipmentComponent implements OnInit, OnDestroy {
       instalationDate: item.instalationDate.substring(0, 10),
       model: item.equipmentSpecification.model,
       type: item.equipmentSpecification.equipmentType.name,
+      typeId: item.equipmentSpecification.equipmentType.id,
       brand: item.equipmentSpecification.equipmentBrand.name,
+      brandId: item.equipmentSpecification.equipmentBrand.id,
       capacity: item.equipmentSpecification.capacity,
       averageConsumption: item.equipmentSpecification.averageConsumption,
       useFrequency: this.useFrequency.get(item.useFrequency),

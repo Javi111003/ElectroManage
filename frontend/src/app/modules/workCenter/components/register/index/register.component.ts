@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { GlobalModule } from '../../../../global/global.module'
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DataService } from '../../../../../services/data/data.service';
+import { Item } from '../../../../../shared/shared.module';
 
 declare var bootstrap: any;
 
@@ -26,8 +27,13 @@ export class RegisterComponent implements OnInit {
     });
 
     if (!this.global.getUserInfo().roles.includes('Admin')) {
-      const workcenter = this.global.getUserInfo().info.company.name;
-      this.getControl('workCenter').setValue(workcenter);
+      const name = this.global.getUserInfo().info.company.name;
+      const id = this.global.getUserInfo().info.company.id;
+      const workCenter: Item = {
+        id: id,
+        name: name
+      };
+      this.getControl('workCenter').setValue(workCenter);
     }
 
     this.form.valueChanges.subscribe(() => { this.showTable = false });
@@ -156,7 +162,7 @@ export class RegisterComponent implements OnInit {
    */
   onClick() {
     if (!this.showTable) {
-      if (this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter')) &&
+      if (this.getControlValue('workCenter').id &&
       this.getControlValue('startDate') && this.getControlValue('endDate')) {
         this.getRegistersByCenterId(0);
         this.showTable = true;
@@ -201,7 +207,6 @@ export class RegisterComponent implements OnInit {
   }
 
   edit(item: any): void {
-    console.log(this.dataService);
     this.dataService.setData([item, this.getControlValue('workCenter'), false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();

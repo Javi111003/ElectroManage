@@ -51,12 +51,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     const sub = this.dataService.currentData.subscribe(newData => {
       if (newData) {
         this.data = newData[0];
-        console.log(this.data);
-        this.data.role = this.data.role.map((role: string) => {
-          return this.TextRoles.find(item => item.name === role)
-        })
+        if (this.data)
+          this.data.role = this.data.role.map((role: string) => {
+            return this.TextRoles.find(item => item.name === role)
+          });
+
         this.form.patchValue(this.data);
-        console.log(this.form);
         this.loading = newData[1];
       }
     });
@@ -109,8 +109,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const center = this.getControlValue('workCenter');
-    if (this.global.isOptionValid(this.global.centerStringArray, center)) {
+    if (this.getControlValue('workCenter').id) {
       const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
       if (confirmation) {
         this.register();
@@ -140,10 +139,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   register(): void {
     const rolesSelected: Item[] = this.getControlValue('role');
-    console.log(rolesSelected);
-    const centerSelected: string = this.getControlValue('workCenter');
-    console.log(centerSelected);
-    this.global.findCenterId(centerSelected);
 
     let rolesToPost: string[] = [];
 
@@ -156,7 +151,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       username: this.getControlValue('userName'),
       password: this.getControlValue('password'),
       roles: rolesToPost,
-      companyId: this.global.centerSelectedId
+      companyId: this.getControlValue('workCenter').id
     };
 
     this.user.registerUser(registerData).subscribe({

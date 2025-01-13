@@ -38,7 +38,7 @@ export class AvgConsumptionComponent implements OnInit {
         id: id,
         name: name
       };
-      this.options = [workCenter]
+      this.options = [workCenter];
       this.getControl('workCenters').setValue(this.options);
       this.findCenterIds();
     }
@@ -76,7 +76,6 @@ export class AvgConsumptionComponent implements OnInit {
         this.findCenterIds();
         this.expandedElements = [];
       });
-      this.options = this.global.workCenters;
     }
   }
 
@@ -123,7 +122,6 @@ export class AvgConsumptionComponent implements OnInit {
         const centerName = this.global.centerObjectArray.find(
           item => item.id === registers[index].companyID
         )?.name;
-        console.log(centerName);
 
         if (centerName) {
           this.dataSources[centerName] = new MatTableDataSource();
@@ -139,8 +137,8 @@ export class AvgConsumptionComponent implements OnInit {
    */
   onConsultClick() {
     if (!this.showTable) {
-      console.log(this.getControlValue('workCenters').length);
-      if (this.getControlValue('workCenters').length > 0)
+      const workCenters = this.getControlValue('workCenters');
+      if (workCenters && workCenters.length > 0)
       {
         this.showTable = true;
         this.getAvgRegisters();
