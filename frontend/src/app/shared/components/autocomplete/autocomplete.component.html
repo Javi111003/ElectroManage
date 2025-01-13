@@ -16,12 +16,13 @@
 
   <mat-autocomplete
     autoActiveFirstOption #auto="matAutocomplete"
+    [displayWith]="displayFn"
   >
     @for (option of filteredOptions | async; track option) {
       <mat-option class="custom-option" [value]="option">
         <div class="option">
           <mat-icon [class.hidden]="!showIcon" (click)="removeOption(option); $event.stopPropagation();">do_not_disturb_on</mat-icon>
-          {{option}}
+          {{option.name}}
         </div>
       </mat-option>
     }

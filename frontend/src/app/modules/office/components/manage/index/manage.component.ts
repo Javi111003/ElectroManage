@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, IterableDiffers, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { DataService } from '../../../../../services/data/data.service';
 import { GlobalModule } from '../../../../global/global.module';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { Item } from '../../../../../shared/shared.module';
 
 declare var bootstrap: any;
 @Component({
@@ -41,17 +42,25 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.form.valueChanges.subscribe(() => { this.showTable = false });
 
     if (!this.global.getUserInfo().roles.includes('Admin')) {
-      const workcenter = this.global.getUserInfo().info.company.name;
-      this.getControl('workCenter').setValue(workcenter);
-      this.global.centerSelectedId = this.global.getUserInfo().info.company.id;
-      this.global.getOfficesByCenter();
+      const name = this.global.getUserInfo().info.company.name;
+      const id = this.global.getUserInfo().info.company.id;
+      const workCenter: Item = {
+        id: id,
+        name: name
+      }
+      this.getControl('workCenter').setValue(workCenter);
+      this.global.getOfficesByCenter(id).subscribe(offices => {
+        this.reloadTableData(offices);
+      });
     }
 
     this.getControl('workCenter').valueChanges.subscribe(() => {
-      const center = this.getControlValue('workCenter');
-      if (this.global.isOptionValid(this.global.centerStringArray, center)) {
-        this.global.findCenterId(center);
-        this.global.getOfficesByCenter();
+      const id = this.getControlValue('workCenter').id;
+      if (id) {
+        console.log(id);
+        this.global.getOfficesByCenter(id).subscribe(offices => {
+          this.reloadTableData(offices);
+        });
       }
     });
   }
@@ -61,10 +70,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.global.getWorkCenters();
 
     const sub = this.dataService.dataUpdated$.subscribe(() => {
-      const center = this.getControlValue('workCenter');
-      if (this.global.isOptionValid(this.global.centerStringArray, center)) {
-        this.global.findCenterId(center);
-        this.global.getOfficesByCenter().subscribe(offices => {
+      const id = this.getControlValue('workCenter').id;
+      if (id) {
+        this.global.getOfficesByCenter(id).subscribe(offices => {
           this.reloadTableData(offices);
         });
       }
@@ -114,9 +122,8 @@ export class ManageComponent implements OnInit, OnDestroy {
    */
    onConsultClick(condition: boolean = !this.showTable): void {
     if (condition) {
-      const center = this.getControlValue('workCenter');
-      if (this.global.isOptionValid(this.global.centerStringArray, center)) {
-        this.reloadTableData(this.global.officeObjectArray)
+      const id = this.getControlValue('workCenter').id;
+      if (id) {
         this.showTable = true;
       }
       else {
@@ -135,8 +142,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   delete(item: any): void {
     this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
       result => { if (result) {
-        this.global.findOfficeId(item.officeName);
-        this.global.httpOffice.deleteOffice(this.global.officeSelectedId).subscribe({
+        this.global.httpOffice.deleteOffice(item.id).subscribe({
           next: (response) => {
             console.log('Deleted successfully:', response);
             this.dataService.notifyDataUpdated();
@@ -157,7 +163,6 @@ export class ManageComponent implements OnInit, OnDestroy {
    * @param item The office instance to be edited.
    */
   edit(item: any): void {
-    this.global.findOfficeId(item.officeName);
     this.dataService.setData([item, this.getControlValue('workCenter'), false, false]);
     const modalElement = document.getElementById('exampleModal') as HTMLElement;
     const modal = new bootstrap.Modal(modalElement);
@@ -172,6 +177,7 @@ export class ManageComponent implements OnInit, OnDestroy {
    */
   reloadTableData(offices: any[]) {
     this.dataSource.data = offices.map(item => ({
+      id: item.id,
       officeName: item.name,
       description: item.description
     }));

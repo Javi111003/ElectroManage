@@ -36,7 +36,6 @@ export class IndexComponent implements OnInit {
 
   ngOnInit(): void {
     this.userInfo = this.global.getUserInfo();
-    console.log(this.userInfo);
     this.loadAllData();
   }
 
@@ -57,7 +56,6 @@ export class IndexComponent implements OnInit {
   getTopFiveConsumingCenters(): void {
     this.http.getTopFiveConsumingCenters().subscribe(centers => {
       this.topConsumingCenters = centers;
-      console.log(this.topConsumingCenters);
       this.createExcessBarChart();
     });
   }
@@ -65,7 +63,6 @@ export class IndexComponent implements OnInit {
   getTopFiveBiggestCenters(): void {
     this.http.getTopFiveBiggestCenters().subscribe(centers => {
       this.topBiggestCenters = centers;
-      console.log(this.topBiggestCenters);
       this.createPieChart();
     });
   }
@@ -73,7 +70,6 @@ export class IndexComponent implements OnInit {
   getTopFiveWarnedCenters(): void {
     this.http.getTopFiveWarnedCenters().subscribe(centers => {
       this.topWarnedCenters = centers;
-      console.log(this.topWarnedCenters);
       this.createAlertTrendChart();
     });
   }

@@ -6,6 +6,7 @@ import { AutocompleteComponent } from '../../../../../shared/components/autocomp
 import { PolicyByCompany } from '../../../../../models/policy.interface';
 import { PolicyService } from '../../../../../services/policy/policy.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Item } from '../../../../../shared/shared.module';
 
 @Component({
   selector: 'app-comparison',
@@ -25,9 +26,13 @@ export class ComparisonComponent implements OnInit {
     });
 
     if (!this.global.getUserInfo().roles.includes('Admin')) {
-      const workcenter = this.global.getUserInfo().info.company.name;
+      const name = this.global.getUserInfo().info.company.name;
       const id = this.global.getUserInfo().info.company.id;
-      this.getControl('workCenter').setValue(workcenter);
+      const workCenter: Item = {
+        id: id,
+        name: name
+      };
+      this.getControl('workCenter').setValue(workCenter);
       this.getPolicies(id);
     }
 
@@ -35,11 +40,9 @@ export class ComparisonComponent implements OnInit {
   }
 
   form: FormGroup;
-  centerSelectedId: number = 0;
-
-  policySelectedId: number = 0;
 
   optionsPolicy: string[] = [];
+  policies: Item[] = [];
   objectsPolicy: PolicyByCompany[] = [];
 
   showTable: boolean = false;
@@ -66,9 +69,9 @@ export class ComparisonComponent implements OnInit {
     this.global.getWorkCenters();
     this.form.get('workCenter')?.valueChanges.subscribe(() => {
       this.getControl('policy').reset();
-      if (this.global.isOptionValid(this.global.centerStringArray, this.form.get('workCenter')?.value)) {
-        this.global.findCenterId(this.getControlValue('workCenter'));
-        this.getPolicies(this.global.centerSelectedId);
+      const id = this.getControlValue('workCenter').id;
+      if (id) {
+        this.getPolicies(id);
       }
     });
   }
@@ -100,8 +103,7 @@ export class ComparisonComponent implements OnInit {
    */
   onClick() {
     if (!this.showTable) {
-      if (this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter')) &&
-        this.global.isOptionValid(this.optionsPolicy, this.getControlValue('policy'))) {
+      if (this.getControlValue('workCenter').id && this.getControlValue('policy').id){
         this.showTable = true;
       } else {
         this.showTable = false;
@@ -119,6 +121,12 @@ export class ComparisonComponent implements OnInit {
     this.httpPolicy.getPoliciesByCenter(centerSelectedId).subscribe(policies => {
       this.objectsPolicy = policies;
       this.optionsPolicy = policies.map(policy => policy.name);
+      this.policies = policies.map(policy => {
+        return {
+          id: policy.id,
+          name: policy.name
+        }
+      })
     });
   }
 }

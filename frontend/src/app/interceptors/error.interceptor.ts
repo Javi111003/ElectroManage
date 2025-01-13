@@ -13,8 +13,11 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = 'Ha ocurrido un error Inesperado!';
-        if (error.error && error.error.errors) {
-          errorMessage = `Error: ${error.error.errors[0].reason}`;
+        if (error.error) {
+          if (error.error.errors)
+            errorMessage = `Error: ${error.error.errors[0].reason}`;
+          else
+            errorMessage = 'Error al establecer la conexión con el servidor'
         } else {
           errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
         }

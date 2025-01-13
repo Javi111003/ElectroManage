@@ -99,10 +99,6 @@ export class GlobalModule {
   offices: Item[] = [];
   officeObjectArray: OfficeInfo[] = [];
 
-  centerSelectedId: number | any = 0;
-  officeSelectedId: number | any = 0;
-
-
   getUserInfo(): UserLogged {
     return JSON.parse(sessionStorage.getItem('userLogged') || '{}');
   }
@@ -128,8 +124,8 @@ export class GlobalModule {
    * This function gets the offices by center ID.
    * It updates the officeOptions based on the selected center.
    */
-  getOfficesByCenter(): Observable<any> {
-    const observable = this.httpOffice.getOfficeList(this.centerSelectedId);
+  getOfficesByCenter(centerID: number): Observable<any> {
+    const observable = this.httpOffice.getOfficeList(centerID);
     observable.subscribe(offices => {
       this.officeObjectArray = offices;
       this.officeStringArray = offices.map(item => item.name);
@@ -145,53 +141,20 @@ export class GlobalModule {
   }
 
   /**
-   * Checks if the given option exists in the provided array.
-   * This function iterates over the array to check if the specified
-   * option is present.
-   * @param array The array of strings to search within.
-   * @param option The option to search for in the array.
-   * @returns `true` if the option is found, `false` otherwise.
-   */
-  isOptionValid(array: string[], option: string): boolean {
-    for (let index = 0; index < array.length; index++) {
-      if (option === array[index])
-        return true;
-    }
-
-    return false;
-  }
-
-  /**
-   * Checks if all the provided options are valid for the corresponding data.
-   * This function iterates over the data and checks if the specified options are present.
-   * @param data The array of arrays of strings to search within.
-   * @param options The array of options to search for in the data.
+   * Checks if all the provided options are valid.
+   * This function iterates over the options and checks if the specified option is greather than zero
+   * which means that is valid.
+   * @param options The array of ids.
    * @param response The array to store the response for each option.
-   * @returns `[true, '']` if all the options are found, `[false, response[i]]` otherwise.
+   * @returns `[true, '']` if all the options are valid, `[false, response[i]]` otherwise.
    */
-  AllValid(data: string[][], options: string[], response: string[]): [boolean, string] {
-    for (let i = 0; i < data.length; i++) {
-      if (!data[i].includes(options[i]))
+  allValid(options: number[], response: string[]): [boolean, string] {
+    for (let i = 0; i < options.length; i++) {
+      if (!options[i])
         return [false, response[i]];
     }
 
     return [true, ''];
-  }
-
-  /**
-   * Finds the ID of the selected center based on its name.
-   * @param centerSelected The name of the selected center.
-   */
-  findCenterId(centerSelected: string): void {
-    this.centerSelectedId = this.findID(this.workCenters, centerSelected);
-  }
-
-  /**
-   * Finds the ID of the selected office based on its name.
-   * @param officeSelected The name of the selected office.
-   */
-  findOfficeId(officeSelected: string): void {
-    this.officeSelectedId = this.findID(this.offices, officeSelected);
   }
 
   /**
@@ -226,16 +189,6 @@ export class GlobalModule {
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
   }
 
-  findID(array: Item[], option: string): number {
-    const matches = array.filter(item => item.name === option);
-
-    if (matches.length == 1) {
-      return matches[0].id;
-    }
-
-    return 0;
-  }
-
   /**
    * This function resets all variables
    * to their initial default values. Use this function to
@@ -246,7 +199,5 @@ export class GlobalModule {
     this.centerObjectArray = [];
     this.officeStringArray = [];
     this.officeObjectArray = [];
-    this.centerSelectedId = -1;
-    this.officeSelectedId = -1;
   }
 }

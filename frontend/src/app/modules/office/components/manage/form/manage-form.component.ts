@@ -5,6 +5,7 @@ import { DataService } from '../../../../../services/data/data.service';
 import { Office } from '../../../../../models/office.interface';
 import { OfficeService } from '../../../../../services/office/office.service';
 import { Subscription } from 'rxjs';
+import { Item } from '../../../../../shared/shared.module';
 
 @Component({
   selector: 'app-office-manage-form',
@@ -32,9 +33,13 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.dataService.setData(null);
 
     if (!this.global.getUserInfo().roles.includes('Admin')) {
-      const workcenter = this.global.getUserInfo().info.company.name;
-      this.getControl('workCenter').setValue(workcenter);
-      this.global.centerSelectedId = this.global.getUserInfo().info.company.id;
+      const name = this.global.getUserInfo().info.company.name;
+      const id = this.global.getUserInfo().info.company.id;
+      const workCenter: Item = {
+        id: id,
+        name: name
+      };
+      this.getControl('workCenter').setValue(workCenter);
     }
   }
 
@@ -105,8 +110,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const center = this.getControlValue('workCenter');
-    if (this.global.isOptionValid(this.global.centerStringArray, center)) {
+    if (this.getControlValue('workCenter').id) {
       const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
       if (confirmation) {
 
@@ -151,16 +155,15 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * The office instance is then posted to the server for creation.
    */
   getOfficeObject(): Office {
+    const id = this.getControlValue('workCenter').id;
     const name = this.getControlValue('officeName');
     const description = this.getControlValue('description');
-    this.global.findCenterId(this.getControlValue('workCenter'));
     const office = {
-      companyId: this.global.centerSelectedId,
+      companyId: id,
       name: name,
       description: description
     };
 
-    console.log(office);
     return office;
   }
 
@@ -174,9 +177,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * @param action A string indicating whether to create or edit an office.
    */
   handleOffice(office: Office, action: 'create' | 'edit'): void {
+    let id = 0;
+    if (this.data)
+      id = this.data.id;
     const serviceCall = action === 'create'
       ? this.officeService.postOffice(office)
-      : this.officeService.editOffice(office, this.global.officeSelectedId);
+      : this.officeService.editOffice(office, id);
 
     serviceCall.subscribe({
       next: (response) => {

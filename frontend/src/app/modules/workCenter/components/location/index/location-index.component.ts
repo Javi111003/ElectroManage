@@ -27,7 +27,7 @@ export class LocationComponent {
   }
 
   /** Array to store the work centers location data */
-  centerLocationData:any[]=[];
+  centerLocationData: any[] = [];
 
   /** Form group for handling user inputs */
   form: FormGroup;
@@ -54,9 +54,7 @@ export class LocationComponent {
     this.http.getCenterDetailsList().subscribe(centers => {
       centers.map((center: any) => {
         this.centerLocationData.push(center);
-      })
-      console.log(centers);
-      console.log(this.centerLocationData);
+      });
     });
   }
 
@@ -94,8 +92,8 @@ export class LocationComponent {
    * @param nombre Name of the work center to display
    * Shows a popup with the work center's details
    */
-  seleccionarEmpresa(nombre: string): void {
-    const empresa = this.centerLocationData.find(e => e.name === nombre);
+  seleccionarEmpresa(id: number): void {
+    const empresa = this.centerLocationData.find(e => e.id === id);
     if (empresa) {
       this.map.setView([empresa.location.coordenateDTO.latitude, empresa.location.coordenateDTO.longitude], 16); // Centra el mapa en la ubicación de la empresa
       L.popup()
@@ -114,10 +112,10 @@ export class LocationComponent {
    * Validates the selection and displays the location on the map
    */
   onClick() {
-      if (this.global.isOptionValid(this.global.centerStringArray, this.getControlValue('workCenter'))) {
-        this.seleccionarEmpresa(this.getControlValue('workCenter'));
-      } else {
-        this.global.openDialog('Por favor, selecciona un Centro de Trabajo');
-      }
+    if (this.getControlValue('workCenter').name) {
+      this.seleccionarEmpresa(this.getControlValue('workCenter').id);
+    } else {
+      this.global.openDialog('Por favor, selecciona un Centro de Trabajo');
+    }
   }
 }

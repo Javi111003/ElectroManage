@@ -3,7 +3,7 @@
     <div class="form-inputs">
       <app-autocomplete class="autocomplete"
         [label]="'Centro de Trabajo'"
-        [options]="global.centerStringArray"
+        [options]="global.workCenters"
         [control]="getControl('workCenter')"
         [isDisabled]="!global.getUserInfo().roles.includes('Admin')"
       >

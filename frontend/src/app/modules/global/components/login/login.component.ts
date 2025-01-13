@@ -77,7 +77,6 @@ export class LoginComponent {
           sessionStorage.setItem('expiration', token.expiration);
           sessionStorage.setItem('isAuthenticated', 'true');
           sessionStorage.setItem('userLogged', JSON.stringify(user));
-          console.log(sessionStorage.getItem('userLogged'));
           this.router.navigate(['/']);
         }
       },

@@ -3,6 +3,7 @@ import { MenuService } from '../../../../services/menu/menu.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../services/auth/auth.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { GlobalModule } from '../../global.module';
 
 @Component({
   selector: 'app-menu',
@@ -42,6 +43,7 @@ export class MenuComponent implements OnInit {
   login: string = 'login'
 
   constructor(
+    public global: GlobalModule,
     private menuService: MenuService,
     private router: Router,
     private auth: AuthService

@@ -2,7 +2,7 @@
   <div class="checkbox-container">
     <app-checkbox
       [label]="'Centros de Trabajo'"
-      [options]="options"
+      [options]="global.getUserInfo().roles.includes('Admin') ? this.global.workCenters : options"
       [control]="getControl('workCenters')"
       [isDisabled]="!global.getUserInfo().roles.includes('Admin')"
       >

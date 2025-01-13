@@ -3,7 +3,7 @@
     <div class="form-autocomplete">
       <app-autocomplete
         [label]="'Centro de Trabajo'"
-        [options]="global.centerStringArray"
+        [options]="global.workCenters"
         [control]="getControl('workCenter')"
         [isDisabled]="!global.getUserInfo().roles.includes('Admin')"
       >
@@ -11,9 +11,9 @@
 
       <app-autocomplete #policyAutocomplete
         [label]="'Política'"
-        [options]="optionsPolicy"
+        [options]="policies"
         [control]="getControl('policy')"
-        [isDisabled]="!this.global.isOptionValid(global.centerStringArray, this.getControlValue('workCenter'))"
+        [isDisabled]="!getControlValue('workCenter').id"
       >
       </app-autocomplete>
     </div>
