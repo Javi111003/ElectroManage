@@ -43,7 +43,7 @@ app-autocomplete {
   height:0px !important;
   display: none !important;
 }
-::ng-deep main-content {
+ main-content {
   padding: 0 !important;
 }
 ::ng-deep .leaflet-control-zoom {

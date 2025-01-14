@@ -132,7 +132,7 @@
 }
 .main-content {
   grid-area: main;
-  padding: 1rem;
+  padding:0;
   overflow:auto;
   transition: margin-left 0.3s ease;
 }
