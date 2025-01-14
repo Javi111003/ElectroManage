@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../shared/components/dialog/dialog.component';
 
 @Injectable()
+// Interceptor to catch requests errors
 export class ErrorInterceptor implements HttpInterceptor {
   constructor(private dialog: MatDialog) {}
 

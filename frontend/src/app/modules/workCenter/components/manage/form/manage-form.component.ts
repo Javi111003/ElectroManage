@@ -6,7 +6,7 @@ import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
 import { AdminArea, CenterPropertyInfo, InstallationType } from '../../../../../models/workCenter.interface';
 import { Subscription } from 'rxjs';
-import { map_URL } from '../../../../../config/api.config';
+import { MAP_URL } from '../../../../../config/api.config';
 import { Item } from '../../../../../shared/shared.module';
 
 @Component({
@@ -149,8 +149,15 @@ export class ManageFormComponent implements OnInit, OnDestroy {
             id: instalTypeId,
             name: this.data.instalationType
           }
+          const location = this.data.location.addressDetails;
+          const latitude = this.data.location.coordenateDTO.latitude;
+          const longitude = this.data.location.coordenateDTO.longitude;
+
           this.getControl('adminAreaName').setValue(area);
           this.getControl('instalationType').setValue(instalType);
+          this.getControl('location').setValue(location);
+          this.getControl('latitude').setValue(latitude);
+          this.getControl('longitude').setValue(longitude);
         }
         this.postMethod = newData[1];
         this.loading = newData[2];
@@ -418,7 +425,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   }
 
   async getAddressFromCoordinates(lat: number, lng: number): Promise<void> {
-    const response: any = await fetch(`${map_URL}&lat=${lat}&lon=${lng}`);
+    const response: any = await fetch(`${MAP_URL}&lat=${lat}&lon=${lng}`);
 
     const data: any = await response.json();
     this.form.patchValue({

@@ -4,9 +4,8 @@ import { NgControl } from '@angular/forms';
 @Directive({
   selector: '[appNumberValidation]'
 })
-
+// Directive to validate inputs which need positive numbers
 export class NumberValidationDirective {
-
   constructor(private ngControl: NgControl) { }
 
   @HostListener('input', ['$event'])

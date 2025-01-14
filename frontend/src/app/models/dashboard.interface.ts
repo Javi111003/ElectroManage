@@ -1,20 +1,29 @@
 import { WorkCenter } from "./workCenter.interface";
 
-export interface CentersCreatedPerYear {
-  createdComapniesThisYear:number;
-  existingCompaniesThisYear:number;
-  deletedCompaniesThisYear:number;
+// Number of centers of a year, number of created and deleted
+export interface CentersPerYear {
+  createdComapniesThisYear: number;
+  existingCompaniesThisYear: number;
+  deletedCompaniesThisYear: number;
 }
-export interface MostConsumingCenters{
-  companyId:number;
-  totalConsumption:number ;
+
+// Center on the most consuming list
+export interface MostConsumingCenter {
+  companyId: number;
+  companyName: string;
+  consumptionLimit: 0;
+  totalConsumption: number ;
 }
-export interface BiggestCenters{
-  companyId:number,
-  companyName:string,
-  officeCount:number
+
+// Center on the most offices list
+export interface BiggestCenter {
+  companyId: number;
+  companyName: string;
+  officeCount: number;
 }
-export interface MostWarnedCenters{
+
+// Center on the most warned list
+export interface MostWarnedCenter {
   company: WorkCenter;
-  countWarning:number;
+  countWarning: number;
 }
