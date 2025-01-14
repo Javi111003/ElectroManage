@@ -30,8 +30,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
-import { WorkCenter } from '../../models/workCenter.interface';
-import { OfficeInfo } from '../../models/office.interface';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
@@ -90,14 +88,8 @@ export class GlobalModule {
     public dialog: MatDialog
   ) { }
 
-
-  centerStringArray: string[] = [];
   workCenters: Item[] = [];
-  centerObjectArray: WorkCenter[] = [];
-
-  officeStringArray: string[] = [];
   offices: Item[] = [];
-  officeObjectArray: OfficeInfo[] = [];
 
   getUserInfo(): UserLogged {
     return JSON.parse(sessionStorage.getItem('userLogged') || '{}');
@@ -108,10 +100,8 @@ export class GlobalModule {
    * It updates the options array with the list of available work centers.
    */
   getWorkCenters(): void {
-    this.httpCenter.getWorkCenterList().subscribe(workcenters => {
-      this.centerObjectArray = workcenters;
-      this.centerStringArray = workcenters.map(item => item.name);
-      this.workCenters = this.centerObjectArray.map(item => {
+    this.httpCenter.getWorkCenterList().subscribe(workCenters => {
+      this.workCenters = workCenters.map(item => {
         return {
           id: item.id,
           name: item.name
@@ -127,8 +117,6 @@ export class GlobalModule {
   getOfficesByCenter(centerID: number): Observable<any> {
     const observable = this.httpOffice.getOfficeList(centerID);
     observable.subscribe(offices => {
-      this.officeObjectArray = offices;
-      this.officeStringArray = offices.map(item => item.name);
       this.offices = offices.map(office => {
         return {
           id: office.id,
@@ -195,9 +183,7 @@ export class GlobalModule {
    * clear any temporary states and start fresh.
   */
   Reset() {
-    this.centerStringArray = [];
-    this.centerObjectArray = [];
-    this.officeStringArray = [];
-    this.officeObjectArray = [];
+    this.workCenters = [];
+    this.offices = [];
   }
 }

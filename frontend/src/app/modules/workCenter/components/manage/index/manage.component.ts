@@ -18,7 +18,6 @@ declare var bootstrap: any;
 export class ManageComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
 
-  centerStringArray: string[] = [];
   centerObjectArray: CenterDetails[] = [];
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
@@ -132,14 +131,12 @@ export class ManageComponent implements OnInit, OnDestroy {
   /**
    * Retrieves the list of work centers from the server and updates the component's state.
    * This function sends a request to the server to fetch the list of work centers.
-   * Upon receiving the response, it updates the component's state by setting the centerObjectArray
-   * and centerStringArray properties.
+   * Upon receiving the response, it updates the component's state by setting the centerObjectArray.
    * It also calls the reloadTableData function to update the table with the new data.
    */
   getCenters(): void {
     this.global.httpCenter.getCenterDetailsList().subscribe(centers => {
       this.centerObjectArray = centers;
-      this.centerStringArray = centers.map(center => center.name);
       this.reloadTableData(centers);
     });
   }

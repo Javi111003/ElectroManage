@@ -30,7 +30,10 @@ export class AlertComponent implements OnInit {
       this.getControl('workCenter').setValue(workCenter);
     }
 
-    this.form.valueChanges.subscribe(() => { this.showTable = false });
+    this.form.valueChanges.subscribe(() => {
+      this.showTable = false;
+      this.dataSource.data = [];
+    });
   }
 
   form: FormGroup;

@@ -29,7 +29,10 @@ export class AvgConsumptionComponent implements OnInit {
       workCenters: []
     });
 
-    this.form.valueChanges.subscribe(() => { this.showTable = false; })
+    this.form.valueChanges.subscribe(() => {
+      this.showTable = false;
+      this.dataSources = {};
+    })
 
     if (!this.global.getUserInfo().roles.includes('Admin')) {
       const id = this.global.getUserInfo().info.company.id;
@@ -98,11 +101,7 @@ export class AvgConsumptionComponent implements OnInit {
   }
 
   /**
-   * Finds the IDs of the selected work centers based on their names.
-   * This method iterates over the selectedOptions array and finds the
-   * corresponding ID for each option
-   * by searching through the global.centerObjectArray. The IDs are
-   * stored in the selectedOptionsIds array.
+   * Finds the IDs of the selected work centers
    */
   findCenterIds() {
     this.selectedOptionsIds = this.getControlValue('workCenters').map((item: Item) => item.id);
@@ -119,7 +118,7 @@ export class AvgConsumptionComponent implements OnInit {
   getAvgRegisters() {
     this.global.httpCenter.getAvgRegisters(this.selectedOptionsIds).subscribe(registers => {
       for (let index = 0; index < registers.length; index++) {
-        const centerName = this.global.centerObjectArray.find(
+        const centerName = this.global.workCenters.find(
           item => item.id === registers[index].companyID
         )?.name;
 
