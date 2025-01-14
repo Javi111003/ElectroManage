@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { DashboardService } from '../../../../services/dashboard/dashboard.service';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -13,7 +13,7 @@ Chart.register(...registerables);
   templateUrl: './index.component.html',
   styleUrls: ['./index.component.css']
 })
-export class IndexComponent implements OnInit {
+export class IndexComponent implements OnInit, OnDestroy {
 
   constructor(
     private global: GlobalModule,
@@ -29,7 +29,7 @@ export class IndexComponent implements OnInit {
 
   userInfo: UserLogged = [][0];
   // Nuevas propiedades para almacenar datos del servicio
-  centersCreatedData: any[] = [];
+  centersCreatedData: any;
   topConsumingCenters: any[] = [];
   topBiggestCenters: any[] = [];
   topWarnedCenters: any[] = [];
@@ -39,16 +39,27 @@ export class IndexComponent implements OnInit {
     this.loadAllData();
   }
 
+  ngOnDestroy() {
+    // Destruir los gráficos existentes
+    if (this.chart) this.chart.destroy();
+    if (this.pieChart) this.pieChart.destroy();
+    if (this.barChart) this.barChart.destroy();
+  }
+
   loadAllData(): void {
-    // Cargar todos los datos necesarios
-    this.getCentersCreated(this.selectedYear);
-    this.getTopFiveConsumingCenters();
-    this.getTopFiveBiggestCenters();
-    this.getTopFiveWarnedCenters();
+    // Esperar a que el DOM esté listo
+    setTimeout(() => {
+      this.getCentersCreated(this.selectedYear);
+      this.getTopFiveConsumingCenters();
+      this.getTopFiveBiggestCenters();
+      this.getTopFiveWarnedCenters();
+    }, 0);
   }
 
   getCentersCreated(year: number): void {
     this.http.getCentersCreated(year).subscribe(centers => {
+      this.centersCreatedData= centers.createdComapniesThisYear;
+      console.log(this.centersCreatedData);
       this.createLineChart();
     });
   }
@@ -75,8 +86,13 @@ export class IndexComponent implements OnInit {
   }
 
   createLineChart(): void {
-    const ctx = document.getElementById('centersChart') as HTMLCanvasElement;
-    this.chart = new Chart(ctx, {
+    const canvas = document.getElementById('centersChart') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    // Destruir gráfico existente si hay uno
+    if (this.chart) this.chart.destroy();
+
+    this.chart = new Chart(canvas, {
       type: 'line',
       data: {
         labels: [
@@ -107,8 +123,13 @@ export class IndexComponent implements OnInit {
   }
 
   createPieChart(): void {
-    const ctx = document.getElementById('officesChart') as HTMLCanvasElement;
-    this.pieChart = new Chart(ctx, {
+    const canvas = document.getElementById('officesChart') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    // Destruir gráfico existente si hay uno
+    if (this.pieChart) this.pieChart.destroy();
+
+    this.pieChart = new Chart(canvas, {
       type: 'doughnut',
       data: {
         labels: this.topBiggestCenters.map(center => center.companyName),
@@ -130,8 +151,13 @@ export class IndexComponent implements OnInit {
   }
 
   createExcessBarChart(): void {
-    const ctx = document.getElementById('excessChart') as HTMLCanvasElement;
-    this.barChart = new Chart(ctx, {
+    const canvas = document.getElementById('excessChart') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    // Destruir gráfico existente si hay uno
+    if (this.barChart) this.barChart.destroy();
+
+    this.barChart = new Chart(canvas, {
       type: 'bar',
       data: {
         labels: this.topConsumingCenters.map(center => center.companyId),
@@ -166,8 +192,13 @@ export class IndexComponent implements OnInit {
   }
 
   createAlertTrendChart(): void {
-    const ctx = document.getElementById('alertTrendChart') as HTMLCanvasElement;
-    this.chart = new Chart(ctx, {
+    const canvas = document.getElementById('alertTrendChart') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    // Destruir gráfico existente si hay uno
+    if (this.chart) this.chart.destroy();
+
+    this.chart = new Chart(canvas, {
       type: 'line',
       data: {
         labels: [
