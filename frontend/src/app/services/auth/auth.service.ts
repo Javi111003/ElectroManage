@@ -32,6 +32,11 @@ export class AuthService {
     return sessionStorage.getItem('isAuthenticated') === 'true';
   }
 
+  /**
+   * Retrieves the roles of the currently logged in user.
+   *
+   * @returns An array of strings representing the roles of the user.
+   */
   getUserRoles(): string[] {
     const user: UserLogged = JSON.parse(sessionStorage.getItem('userLogged') || '{}');
     return user.roles

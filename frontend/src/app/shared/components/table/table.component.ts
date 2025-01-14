@@ -23,8 +23,8 @@ export class TableComponent implements OnInit, AfterViewInit {
   @Input() showActions: boolean = false;
   @Input() footer: any[] = [];
   @Input() showFooter: boolean = false;
-  @Input() deleteFunction: (...args: any[])=>any = this.cancelOrDelete;
-  @Input() editFunction: (item: any)=>any = this.edit;
+  @Input() deleteFunction: (...args: any[]) => any = () => {};
+  @Input() editFunction: (item: any) => any = (item) => {};
 
   @ViewChild(MatPaginator) paginator: MatPaginator = [][0];
 
@@ -43,8 +43,4 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.headings.push('deleteColumn');
     }
   }
-
-  cancelOrDelete() {}
-
-  edit(item: any) {}
 }

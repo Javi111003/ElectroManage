@@ -12,12 +12,7 @@ import { Alert } from '../../models/alert.interface';
   providedIn: 'root'
 })
 export class WorkCenterService {
-
   constructor(private http: HttpClient) { }
-
-  private workCenterListUrl = API_URL + '/v1/company/list/select';
-  private registerUrl = API_URL + '/v1/register';
-
 
   /**
    * Fetches the list of work centers from the API.
@@ -25,13 +20,24 @@ export class WorkCenterService {
    * @returns An Observable that resolves to an array of WorkCenter objects.
    */
   getWorkCenterList(): Observable<WorkCenter[]> {
-    return this.http.get<WorkCenter[]>(this.workCenterListUrl);
+    return this.http.get<WorkCenter[]>(`${API_URL}/v1/company/list/select`);
   }
 
+  /**
+   * Fetches the list of center details from the API.
+   * This method sends an HTTP GET request to the API to retrieve a list of center details.
+   * @returns An Observable that resolves to an array of CenterDetails objects.
+   */
   getCenterDetailsList(): Observable<CenterDetails[]> {
     return this.http.get<CenterDetails[]>(`${API_URL}/v1/company`);
   }
 
+  /**
+   * Deletes a work center from the API.
+   * This method sends an HTTP DELETE request to the API to remove a work center.
+   * @param id The ID of the work center to be deleted.
+   * @returns An Observable that resolves to the response from the API.
+   */
   deleteCenter(id: number): Observable<any> {
     return this.http.delete(`${API_URL}/v1/company/${id}`);
   }
@@ -42,7 +48,7 @@ export class WorkCenterService {
    * @returns An Observable that resolves to a RegisterTotalConsumption object.
    */
   getRegister(): Observable<TotalConsumptionData> {
-    return this.http.get<TotalConsumptionData>(this.registerUrl);
+    return this.http.get<TotalConsumptionData>(`${API_URL}/v1/register`);
   }
 
   /**
@@ -74,6 +80,11 @@ export class WorkCenterService {
     );
   }
 
+  /**
+   * Fetches the list of administrative areas from the API.
+   * This method sends an HTTP GET request to the API to retrieve a list of administrative areas.
+   * @returns An Observable that resolves to an array of CenterPropertyInfo objects.
+   */
   getAdminAreas(): Observable<CenterPropertyInfo[]> {
     return this.http.get<CenterPropertyInfo[]>(API_URL + '/v1/administrative_area');
   }
@@ -98,6 +109,11 @@ export class WorkCenterService {
     return this.http.delete<any>(`${API_URL}/v1/administrative_area/${id}`);
   }
 
+  /**
+   * Fetches the list of installation types from the API.
+   * This method sends an HTTP GET request to the API to retrieve a list of installation types.
+   * @returns An Observable that resolves to an array of CenterPropertyInfo objects.
+   */
   getInstallationType(): Observable<CenterPropertyInfo[]> {
     return this.http.get<CenterPropertyInfo[]>(API_URL + '/v1/installation_type');
   }
@@ -144,14 +160,33 @@ export class WorkCenterService {
     return this.http.delete<any>(`${API_URL}/v1/company/${CenterID}/team/${teamID}`);
   }
 
+  /**
+   * Posts a new location to the API.
+   * This method sends an HTTP POST request to the API to create a new location.
+   * @param location The Location object to be posted.
+   * @returns An Observable that resolves to the response from the API.
+   */
   postLocation(location: Location): Observable<any> {
     return this.http.post<any>(`${API_URL}/v1/location`, location);
   }
 
+  /**
+   * Edits an existing location.
+   * This method sends an HTTP PUT request to the API to update an existing location.
+   * @param location The Location object to be updated.
+   * @param locationID The ID of the location to be updated.
+   * @returns An Observable that resolves to the response from the API.
+   */
   editLocation(location: Location, locationID: number): Observable<any> {
     return this.http.put<any>(`${API_URL}/v1/location/${locationID}`, location);
   }
 
+  /**
+   * Deletes a location from the API.
+   * This method sends an HTTP DELETE request to the API to remove an existing location.
+   * @param id The ID of the location to be deleted.
+   * @returns An Observable that resolves to the response from the API.
+   */
   deletelocation(id: number): Observable<any> {
     return this.http.delete<any>(`${API_URL}/v1/location/${id}`);
   }

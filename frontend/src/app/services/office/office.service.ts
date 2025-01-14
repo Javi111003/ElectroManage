@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { API_URL } from '../../config/api.config';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Office, OfficeInfo } from '../../models/office.interface';
 import {
@@ -12,11 +12,7 @@ import {
   providedIn: 'root'
 })
 export class OfficeService {
-
   constructor(private http: HttpClient) { }
-
-  private officeListUrl = `${API_URL}/v1/company`;
-
 
   /**
    * Fetches the list of offices from the API.
@@ -25,7 +21,7 @@ export class OfficeService {
    * @returns An Observable that resolves to an array of Office objects.
    */
   getOfficeList(centerID: number): Observable<OfficeInfo[]> {
-    const url = `${this.officeListUrl}/${centerID}/office`;
+    const url = `${API_URL}/v1/company/${centerID}/office`;
     return this.http.get<OfficeInfo[]>(url);
   }
 
