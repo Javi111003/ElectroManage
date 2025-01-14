@@ -36,7 +36,25 @@ export class ComparisonComponent implements OnInit {
       this.getPolicies(id);
     }
 
-    this.form.valueChanges.subscribe(() => { this.showTable = false });
+    this.form.get('workCenter')?.valueChanges.subscribe(() => {
+      this.getControl('policy').reset();
+
+      if (this.getControlValue('workCenter').id) {
+        // aqui logica de coger las politicas por centro de trabajo
+      }
+    });
+
+    this.form.get('workCenter')?.valueChanges.subscribe(() => {
+      if (this.getControlValue('policy').id) {
+        // aqui logica de coger el antes y el despues de la politica
+      }
+    });
+
+    this.form.valueChanges.subscribe(() => {
+      this.showTable = false;
+      this.dataSourceBefore.data = [];
+      this.dataSourceAfter.data = [];
+    });
   }
 
   form: FormGroup;

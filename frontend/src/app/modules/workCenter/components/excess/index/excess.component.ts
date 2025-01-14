@@ -43,14 +43,15 @@ export class ExcessComponent {
       year: 0
     });
 
-    this.form.valueChanges.subscribe(() => { this.showTable = false; });
+    this.form.valueChanges.subscribe(() => {
+      this.showTable = false;
+      this.dataSource.data = [];
+    });
   }
 
   form: FormGroup;
   dateInitialize: Moment = [][0];
   readonly date = new FormControl(this.dateInitialize);
-  // yearSelected: number = 0;
-  // monthSelected: number = 0;
   showTable: boolean = false;
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [

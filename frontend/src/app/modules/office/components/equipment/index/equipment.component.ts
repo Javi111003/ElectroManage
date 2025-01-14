@@ -101,7 +101,10 @@ export class EquipmentComponent implements OnInit, OnDestroy {
       office: ''
     });
 
-    this.form.valueChanges.subscribe(() => { this.showTable = false });
+    this.form.valueChanges.subscribe(() => {
+      this.showTable = false;
+      this.dataSource.data = [];
+    });
 
     if (!this.global.getUserInfo().roles.includes('Admin')) {
       const name = this.global.getUserInfo().info.company.name;
@@ -116,6 +119,7 @@ export class EquipmentComponent implements OnInit, OnDestroy {
 
     this.form.get('workCenter')?.valueChanges.subscribe(() => {
       this.getControl('office').reset();
+      this.global.offices = [];
       if (this.getControlValue('workCenter')) {
         const id = this.getControlValue('workCenter').id;
         if (id) {
@@ -123,6 +127,7 @@ export class EquipmentComponent implements OnInit, OnDestroy {
         }
       }
     });
+
     this.form.get('office')?.valueChanges.subscribe(() => {
       if (this.getControlValue('office')) {
         const id = this.getControlValue('office').id;
