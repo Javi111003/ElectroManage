@@ -11,7 +11,7 @@ import { NG_VALIDATORS, Validator, AbstractControl, ValidationErrors } from '@an
     }
   ]
 })
-
+// Directive to validate passwords
 export class PasswordValidatorDirective implements Validator {
   validate(control: AbstractControl): ValidationErrors | null {
     const password = control.value;

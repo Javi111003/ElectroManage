@@ -1,10 +1,12 @@
-export interface RegisterTotalConsumption {
+// Total consumption data of a center in a period
+export interface TotalConsumptionData {
   totalConsumption: number;
   totalCost: number;
-  registers: RegisterDailyConsumption[];
+  registers: RegisterByDay[];
 }
 
-export interface RegisterDailyConsumption {
+// Consumption register of an specific day
+export interface RegisterByDay {
   registerId: number;
   workCenterId: number;
   consumption: number;
@@ -12,13 +14,15 @@ export interface RegisterDailyConsumption {
   registerDate: string;
 }
 
-export interface RegisterYearlyConsumption {
+// Mean data of a center in an specific year
+export interface MeanDataByYear {
   year: number;
   meanCost: number;
   meanConsumption: number
 }
 
-export interface AvgRegisterConsumption {
+// Mean data of a center in the last three years
+export interface MeanRegisterData {
   companyID: number;
-  yearCostDto: RegisterYearlyConsumption[]
+  yearCostDto: MeanDataByYear[]
 }

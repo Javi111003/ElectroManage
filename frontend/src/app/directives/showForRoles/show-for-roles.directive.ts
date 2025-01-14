@@ -4,6 +4,7 @@ import { GlobalModule } from './../../modules/global/global.module';
 @Directive({
   selector: '[appShowForRoles]'
 })
+//Directive to hide or show components based on user roles
 export class ShowForRolesDirective implements OnInit, OnDestroy {
   @Input('appShowForRoles') allowedRoles?: string[];
 
@@ -14,7 +15,9 @@ export class ShowForRolesDirective implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    const permission = !this.global.getUserInfo().roles.every(role => !this.allowedRoles?.includes(role));
+    const permission = !this.global.getUserInfo().roles.every(
+      role => !this.allowedRoles?.includes(role)
+    );
 
     if (permission) {
       this.viewContainerRef.createEmbeddedView(this.templateRef);

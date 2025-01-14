@@ -3,6 +3,7 @@ import * as L from 'leaflet';
 import { GlobalModule } from '../../../../global/global.module';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { WorkCenterService } from '../../../../../services/workCenter/work-center.service';
+import { LOCATION_URL } from '../../../../../config/api.config';
 
 @Component({
   selector: 'app-location-index',
@@ -81,8 +82,8 @@ export class LocationComponent {
    * Centers the map view on Cuba
    */
   inicializarMapa(): void {
-    this.map = L.map('map').setView([22, -80], 7); // Vista inicial del mapa
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    this.map = L.map('map').setView([22, -80], 7);
+    L.tileLayer(LOCATION_URL, {
       maxZoom: 19
     }).addTo(this.map);
   }
