@@ -1,16 +1,15 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Item } from '../../shared.module';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-autocomplete',
   templateUrl: './autocomplete.component.html',
   styleUrl: './autocomplete.component.css'
 })
-export class AutocompleteComponent implements OnInit {
+export class AutocompleteComponent implements OnInit, OnChanges {
   @Input() options: Item[] = [];
   @Input() label: string = '';
   @Input() isDisabled: boolean = false;
@@ -59,12 +58,21 @@ export class AutocompleteComponent implements OnInit {
     return [];
   }
 
+  /**
+   * Removes an option from the list of options.
+   * @param option The option to be removed.
+   */
   removeOption(option: Item): void {
     this.options = this.options.filter(item => item.id !== option.id);
     this.filteredOptions = this.control.valueChanges.pipe(startWith(''), map(value => this._filter(value)));
     this.deleteOption(option);
   }
 
+  /**
+   * Returns the display value for an option.
+   * @param option The option to display.
+   * @returns The display value of the option.
+   */
   displayFn(option: Item): string {
     return option && option.name ? option.name : '';
   }

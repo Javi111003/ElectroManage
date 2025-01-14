@@ -8,10 +8,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PolicyService {
-
   constructor(private http: HttpClient) { }
-
-  private workCenterListUrl = API_URL + '/v1/company';
 
   /**
    * Fetches the policies for a given work center from the API.
@@ -21,9 +18,14 @@ export class PolicyService {
    * @returns An Observable that resolves to an array of Policy objects.
    */
   getPoliciesByCenter(centerID: number): Observable<PolicyByCompany[]> {
-    return this.http.get<PolicyByCompany[]>(`${this.workCenterListUrl}/${centerID}/list_policies`);
+    return this.http.get<PolicyByCompany[]>(`${API_URL}/v1/company/${centerID}/list_policies`);
   }
 
+  /**
+   * Fetches the policies from the API.
+   * This method sends an HTTP GET request to the API to retrieve the policies.
+   * @returns An Observable that resolves to an array of PolicyInfo objects.
+   */
   getPolicies(): Observable<PolicyInfo[]> {
     return this.http.get<PolicyInfo[]>(`${API_URL}/v1/policy/list`);
   }
@@ -48,6 +50,13 @@ export class PolicyService {
     return this.http.post<any>(`${API_URL}/v1/policies`, policy);
   }
 
+  /**
+   * Edits an existing policy.
+   * This method sends an HTTP PUT request to the API to update an existing policy.
+   * @param policy The Policy object to be updated.
+   * @param policyID The ID of the policy to be updated.
+   * @returns An Observable that resolves to the response from the API.
+   */
   editPolicy(policy: Policy, policyID: number): Observable<any> {
     return this.http.put<any>(`${API_URL}/v1/policy/${policyID}`, policy);
   }

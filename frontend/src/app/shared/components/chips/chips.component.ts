@@ -22,8 +22,8 @@ export class ChipsComponent {
   @Input() allOptions: Item[] = [];
   @Input() variable: boolean = true;
   @Input() function: (...arg: any[]) => void = () => {};
-  @Input() deleteOption: (...args: any[]) => any = ()=>{};
-  @Input() validateOption: (...args: any[]) => boolean = ()=>{ return true; };
+  @Input() deleteOption: (...args: any[]) => any = () => {};
+  @Input() validateOption: (...args: any[]) => boolean = () => true;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   readonly currentOption = model('');
@@ -36,6 +36,13 @@ export class ChipsComponent {
 
   readonly announcer = inject(LiveAnnouncer);
 
+  /**
+   * This function is used to add a new option to the chip list.
+   * It first checks if the option already exists in the list, and if not, it adds the new option.
+   * If the new option is valid, it updates the options and calls the function with the new options.
+   * If the new option is not valid, it displays an alert.
+   * @param event - The event that triggered the function.
+   */
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
     const id = this.allOptions.length;
@@ -59,6 +66,12 @@ export class ChipsComponent {
     }
   }
 
+  /**
+   * This function is used to remove an option from the chip list.
+   * It updates the options array by removing the specified option and announces the removal.
+   * It also calls the function with the updated options.
+   * @param option - The option to be removed.
+   */
   remove(option: Item): void {
     this.options.update(options => {
       const index = options.indexOf(option);
@@ -74,10 +87,21 @@ export class ChipsComponent {
     this.function(this.options());
   }
 
-  selectedOption(event: MatAutocompleteSelectedEvent) {
+  /**
+   * This function is used to handle the selection of an option from the autocomplete list.
+   * It deselects the option that was selected.
+   * @param event - The event that triggered the function.
+   */
+  selectedOption(event: MatAutocompleteSelectedEvent): void {
     event.option.deselect();
   }
 
+  /**
+   * This function is used to handle the selection of an option from the chip list.
+   * It adds the selected option to the options array and clears the current option input.
+   * It also calls the function with the updated options.
+   * @param event - The event that triggered the function.
+   */
   selected(event: Item): void {
     const option = event;
     this.options.update(options => [...options, option]);
@@ -85,10 +109,21 @@ export class ChipsComponent {
     this.function(this.options());
   }
 
+  /**
+   * This function is used to handle the action of an option from the chip list.
+   * It calls the function with the specified option.
+   * @param option - The option for which the action is to be performed.
+   */
   action(option: Item): void {
     this.function(option);
   }
 
+  /**
+   * This function is used to remove an option from the chip list.
+   * It removes the specified option from the options array and updates the filtered options.
+   * It also calls the function with the updated options.
+   * @param option - The option to be removed.
+   */
   removeOption(option: Item): void {
     this.allOptions = this.allOptions.filter(item => item !== option);
     this.options.update(options => options = this.options().filter(item => item.name !== option.name));

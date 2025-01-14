@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, LOCALE_ID, ViewEncapsulation } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, LOCALE_ID, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { DateFilterFn } from '@angular/material/datepicker';

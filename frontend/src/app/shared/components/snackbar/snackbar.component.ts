@@ -16,6 +16,11 @@ export class SnackbarComponent implements OnInit {
     this.startProgress();
   }
 
+  /**
+   * This method starts the progress bar animation.
+   * It calculates the interval based on the duration and updates the progressValue every interval.
+   * When the progressValue reaches 100, it clears the interval to stop the animation.
+   */
   startProgress() {
     const duration = 3000;
     const interval = duration / 100;

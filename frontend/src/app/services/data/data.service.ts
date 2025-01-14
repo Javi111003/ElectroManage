@@ -26,6 +26,10 @@ export class DataService {
     this.dataSource.next(newData);
   }
 
+  /**
+   * This function is used to notify the subscribers that the data has been updated.
+   * It triggers the dataUpdated$ observable.
+   */
   notifyDataUpdated() {
     this.dataUpdated.next();
   }

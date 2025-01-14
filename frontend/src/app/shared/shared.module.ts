@@ -27,11 +27,6 @@ import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
-export interface Item {
-  id: number,
-  name: string
-}
-
 @NgModule({
   declarations: [
     TableComponent,
@@ -106,3 +101,9 @@ export interface Item {
   ]
 })
 export class SharedModule { }
+
+// Autocomplete input
+export interface Item {
+  id: number;
+  name: string;
+}
