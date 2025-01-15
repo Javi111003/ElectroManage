@@ -1,5 +1,4 @@
-import { AdminArea } from './../../../../../models/workCenter.interface';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { GlobalModule } from '../../../../global/global.module';
@@ -16,10 +15,14 @@ declare var bootstrap: any;
   styleUrl: './manage.component.css'
 })
 export class ManageComponent implements OnInit, OnDestroy {
+  constructor (
+    public global: GlobalModule,
+    private dataService: DataService,
+    private snackbarService: SnackbarService
+  ) {}
+
   private subscriptions: Subscription = new Subscription();
-
   centerObjectArray: CenterDetails[] = [];
-
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
     {
@@ -44,12 +47,6 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
   ];
 
-  constructor (
-    public global: GlobalModule,
-    private dataService: DataService,
-    private snackbarService: SnackbarService
-  ) {}
-
   ngOnInit(): void {
     this.getCenters();
     const sub = this.dataService.dataUpdated$.subscribe(() => {
@@ -73,6 +70,17 @@ export class ManageComponent implements OnInit, OnDestroy {
     modal.show();
   }
 
+  /**
+   * Deletes a work center and its associated data.
+   *
+   * This function prompts the user for confirmation before proceeding to delete
+   * the specified work center. Upon confirmation, it attempts to delete the center
+   * and, if successful, notifies the data service and displays a success message.
+   * If the deletion fails, an error message is displayed. After deleting the center,
+   * it proceeds to delete the associated location.
+   *
+   * @param item The work center object to be deleted.
+   */
   delete(item: any): void {
     this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
       result => { if (result) {
@@ -92,6 +100,14 @@ export class ManageComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Deletes the location associated with a work center.
+   *
+   * This function attempts to delete the location of the specified work center.
+   * If successful, it checks for an associated management team and proceeds to delete it.
+   *
+   * @param item The work center object whose location is to be deleted.
+   */
   deleteLocation(item: any): void {
     this.global.httpCenter.deletelocation(item.location.id).subscribe({
       next: (response) => {
@@ -105,6 +121,15 @@ export class ManageComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Deletes a management team associated with a work center.
+   *
+   * This function attempts to delete the management team identified by the given
+   * team ID and center ID. It logs the result of the operation.
+   *
+   * @param teamID The ID of the management team to be deleted.
+   * @param centerID The ID of the work center associated with the management team.
+   */
   deleteTeam(teamID: number, centerID: number): void {
     this.global.httpCenter.deleteManagementTeam(centerID, teamID).subscribe({
       next: (response) => {

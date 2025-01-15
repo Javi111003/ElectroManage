@@ -15,53 +15,6 @@ import { Item } from '../../../../../shared/shared.module';
   styleUrl: './manage-form.component.css'
 })
 export class ManageFormComponent implements OnInit, OnDestroy {
-  private subscriptions: Subscription = new Subscription();
-  enableAddType: boolean = false;
-  enableAddArea: boolean = false;
-  postMethod: boolean = true;
-  locationConfirm: boolean = true;
-  loading: boolean = false;
-
-  private map!: L.Map;
-  private marker!: L.Marker;
-  private modal!: Modal;
-
-  formulaVariables: Item[] = [
-    { id: 0, name: 'consumo' },
-    { id: 1, name: 'por_ciento_extra' },
-    { id: 2, name: 'aumento' }
-  ];
-
-  formulaSymbols: Item[] = [
-    { id: -1, name: 'C' }, { id: -2, name: '^' },
-    { id: -3, name: '\u221A' }, { id: -4, name: '.' },
-    { id: -5, name: '7' }, { id: -6, name: '8' },
-    { id: -7, name: '9' }, { id: -8, name: '+' },
-    { id: -9, name: '4' }, { id: -10, name: '5' },
-    { id: -11, name: '6' }, { id: -12, name: '-' },
-    { id: -13, name: '1' }, { id: -14, name: '2' },
-    { id: -15, name: '3' }, { id: -16, name: '*' },
-    { id: -17, name: '(' }, { id: -18, name: '0' },
-    { id: -19, name: ')' }, { id: -20, name: '/' }
-  ];
-
-  options = signal([
-    { id: 0, name: 'consumo' },
-    { id: -16, name: '*' },
-    { id: -17, name: '(' },
-    { id: -13, name: '1' },
-    { id: -8, name: '+' },
-    { id: 1, name: 'por_ciento_extra' },
-    { id: -19, name: ')' },
-    { id: -8, name: '+' },
-    { id: 2, name: 'aumento' }
-  ]);
-
-  myControls: string[] = [
-    'name', 'adminAreaName', 'instalationType', 'policy', 'monthlyConsumptionLimit',
-    'formula', 'teamWork', 'latitude', 'longitude', 'location', 'applyingDate'
-  ];
-
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
@@ -83,7 +36,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       applyingDate: null
     });
     this.dataService.setData(null);
-
     this.form.get('instalationType')!.valueChanges.subscribe(() => {
       if (String(this.getControlValue('instalationType')).trim() == '') {
         this.enableAddType = false;
@@ -107,19 +59,57 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  private subscriptions: Subscription = new Subscription();
+  enableAddType: boolean = false;
+  enableAddArea: boolean = false;
+  postMethod: boolean = true;
+  locationConfirm: boolean = true;
+  loading: boolean = false;
+  private map!: L.Map;
+  private marker!: L.Marker;
+  private modal!: Modal;
+  formulaVariables: Item[] = [
+    { id: 0, name: 'consumo' },
+    { id: 1, name: 'por_ciento_extra' },
+    { id: 2, name: 'aumento' }
+  ];
+  formulaSymbols: Item[] = [
+    { id: -1, name: 'C' }, { id: -2, name: '^' },
+    { id: -3, name: '\u221A' }, { id: -4, name: '.' },
+    { id: -5, name: '7' }, { id: -6, name: '8' },
+    { id: -7, name: '9' }, { id: -8, name: '+' },
+    { id: -9, name: '4' }, { id: -10, name: '5' },
+    { id: -11, name: '6' }, { id: -12, name: '-' },
+    { id: -13, name: '1' }, { id: -14, name: '2' },
+    { id: -15, name: '3' }, { id: -16, name: '*' },
+    { id: -17, name: '(' }, { id: -18, name: '0' },
+    { id: -19, name: ')' }, { id: -20, name: '/' }
+  ];
+  options = signal([
+    { id: 0, name: 'consumo' },
+    { id: -16, name: '*' },
+    { id: -17, name: '(' },
+    { id: -13, name: '1' },
+    { id: -8, name: '+' },
+    { id: 1, name: 'por_ciento_extra' },
+    { id: -19, name: ')' },
+    { id: -8, name: '+' },
+    { id: 2, name: 'aumento' }
+  ]);
+  myControls: string[] = [
+    'name', 'adminAreaName', 'instalationType', 'policy', 'monthlyConsumptionLimit',
+    'formula', 'teamWork', 'latitude', 'longitude', 'location', 'applyingDate'
+  ];
   data: any;
   form: FormGroup;
   teamWork: Item[] = [
     { id: 1, name: 'Juan' }, { id: 1, name: 'Pedro' },
     { id: 1, name: 'Lucia' }, { id: 1, name: 'Martin' }
   ];
-
   policies: Item[] = [];
-
   typeStringArray: string[] = [];
   typeArray: Item[] = [];
   typeObjectArray: CenterPropertyInfo[] = [];
-
   areaStringArray: string[] = [];
   areaArray: Item[] = [];
   areaObjectArray: CenterPropertyInfo[] = [];
@@ -128,8 +118,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     const sub = this.dataService.currentData.subscribe(newData => {
       if (newData) {
         this.data = newData[0];
-        console.log(this.data);
-
         this.form.patchValue(this.data);
 
         if (this.data) {
@@ -143,12 +131,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
           const area: Item = {
             id: areaId,
             name: this.data.areaAdminName
-          }
+          };
           const instalTypeId = this.data.instalType.id;
           const instalType: Item = {
             id: instalTypeId,
             name: this.data.instalationType
-          }
+          };
           const location = this.data.location.addressDetails;
           const latitude = this.data.location.coordenateDTO.latitude;
           const longitude = this.data.location.coordenateDTO.longitude;
@@ -159,13 +147,13 @@ export class ManageFormComponent implements OnInit, OnDestroy {
           this.getControl('latitude').setValue(latitude);
           this.getControl('longitude').setValue(longitude);
         }
+
         this.postMethod = newData[1];
         this.loading = newData[2];
       }
     });
 
     this.subscriptions.add(sub);
-
     this.addElementFormula();
     this.getAreas();
     this.getTypes();
@@ -175,14 +163,27 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+  /**
+   * Retrieves a FormControl instance by its name from the form.
+   * @param control The name of the control to retrieve.
+   * @returns The FormControl instance if found, otherwise undefined.
+   */
   getControl(control: string): FormControl {
     return this.form.get(control) as FormControl;
   }
 
+  /**
+   * Retrieves the value of a FormControl by its name from the form.
+   * @param control The name of the control to get value from.
+   * @returns The value of the specified control if found, otherwise undefined.
+   */
   getControlValue(control: string): any {
     return this.form.get(control)?.value;
   }
 
+  /**
+   * Resets the form and clears all form fields when the modal is closed.
+   */
   onCloseModal(): void {
     this.form.reset();
     this.clearForm();
@@ -212,10 +213,13 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       { id: 2, name: 'aumento' }
     ]);
 
-
     this.addElementFormula();
   }
 
+  /**
+   * Handles the form submission process.
+   * This method checks the form validity, prompts the user for confirmation, and initiates the creation or editing process.
+   */
   onSubmit(): void {
     this.loading = true;
     if (this.form.invalid) {
@@ -249,6 +253,9 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Marks all form controls as touched to trigger validation.
+   */
   markAllAsTouched(): void {
     Object.keys(this.form.controls).forEach(field => {
       const control = this.getControl(field);
@@ -256,6 +263,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Adds a new installation type.
+   * This function is used to create a new installation type and post it to the server.
+   * It disables the add type button, creates a new InstallationType object, and posts it to the server.
+   * If successful, it retrieves the updated list of types.
+   */
   addType(): void {
     this.enableAddType = false;
     const instType: InstallationType = {
@@ -311,9 +324,15 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     });
   }
 
+
+  /**
+   * Adds a new administrative area.
+   * This function is used to create a new administrative area in the system.
+   * It disables the 'Add Area' button, constructs an `AdminArea` object with the name from the form control 'adminAreaName',
+   * and posts the creation request to the server. If successful, it retrieves the updated list of areas.
+   */
   addArea(): void {
     this.enableAddArea = false;
-
     const area: AdminArea = {
       name: this.getControlValue('adminAreaName'),
       description: null
@@ -367,6 +386,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Filters dates to determine if they are in the past.
+   *
+   * @param d - The date to be checked.
+   * @returns True if the date is before today, otherwise false.
+   */
   filterDate = (d: Date | null): boolean => {
     const today = new Date();
     const Tday = today.getDate();
@@ -381,9 +406,14 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       (year < Tyear || (year === Tyear && (month < Tmonth) || (month === Tmonth && day < Tday))))
       return true;
 
-    return false
+    return false;
   };
 
+  /**
+   * Opens a modal to display a map for selecting a location.
+   * Initializes the map if it hasn't been created yet and sets up a click event
+   * to place a marker on the map at the clicked location.
+   */
   openMapModal() {
     this.locationConfirm = true;
     this.loading = false;
@@ -395,7 +425,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
     setTimeout(() => {
       if (!this.map) {
-        this.map =L.map('map').setView([22, -80], 7);
+        this.map = L.map('map').setView([22, -80], 7);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
 
         this.map.on('click', (e: L.LeafletMouseEvent) => {
@@ -416,6 +446,11 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     }, 500);
   }
 
+  /**
+   * Confirms the selected location by retrieving the marker's position.
+   * If a marker is present, it updates the location confirmation status
+   * and fetches the address from the coordinates.
+   */
   async confirmLocation() {
     if (this.marker) {
       this.locationConfirm = false;
@@ -424,9 +459,14 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Fetches the address from the given latitude and longitude coordinates.
+   * Updates the form with the latitude, longitude, and location name.
+   * @param lat - The latitude of the location.
+   * @param lng - The longitude of the location.
+   */
   async getAddressFromCoordinates(lat: number, lng: number): Promise<void> {
     const response: any = await fetch(`${MAP_URL}&lat=${lat}&lon=${lng}`);
-
     const data: any = await response.json();
     this.form.patchValue({
       latitude: lat.toFixed(6),
@@ -436,15 +476,23 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.modal.hide();
   }
 
+  /**
+   * Adds elements to the formula by joining the names of the options.
+   * Updates the form with the constructed formula and assigns values.
+   */
   addElementFormula(): void {
     const names = this.options().map(option => option.name);
     this.form.patchValue({
       formula: names.join(' ')
     });
-
     this.assignValues();
   }
 
+  /**
+   * Adds a symbol to the formula. If the symbol is 'C', it clears the current options.
+   * Otherwise, it appends the symbol to the existing options and updates the formula.
+   * @param option - The symbol to be added to the formula.
+   */
   addSymbolFormula(option: Item): void {
     if (option.name === 'C') {
       this.options = signal([]);
@@ -456,6 +504,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.addElementFormula();
   }
 
+  /**
+   * Validates if the given option is a valid formula element.
+   * An option is considered invalid if it starts with a number or contains any special symbols.
+   * @param option - The option string to be validated.
+   * @returns A boolean indicating whether the option is valid.
+   */
   validateOption(option: string): boolean {
     const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     const symbols = [
@@ -471,6 +525,10 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     return true;
   }
 
+  /**
+   * Clears the form by removing controls that are not part of `myControls`.
+   * Also removes all elements with the class 'row mb-3' from the DOM.
+   */
   clearForm(): void {
     Object.keys(this.form.controls).forEach(controlName => {
       if (!this.myControls.includes(controlName)) {
@@ -488,91 +546,42 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
   /**
    * Creates a new work center.
-   * This function gathers the necessary information from the form controls and
-   * creates a new work center.
-   * The work center is then posted to the server for creation.
+   * This function is responsible for sending the necessary data to the server to create a new work center.
    */
   createCenter(): void {
-    // const commonValues = this.getCommonValues();
-    // const specification: EquipmentSpecification = {
-    //   model: commonValues.model,
-    //   capacity: commonValues.capacity,
-    //   criticalEnergySystem: commonValues.critical,
-    //   averageConsumption: commonValues.avgConsumption,
-    //   lifeSpanYears: commonValues.lifeSpanYears,
-    //   efficiency: commonValues.efficiency,
-    //   equipmentBrandId: commonValues.brandID,
-    //   equipmentTypeId: commonValues.typeID
-    // };
-    // this.createOrEditSpecification(false, specification, commonValues);
+    // Implementation for creating a work center
   }
 
   /**
-   * Edits a work center.
-   * This function gathers the necessary information from the form controls
-   * and edits a work center.
-   * The work center is then put to the server for edition.
+   * Edits an existing work center.
+   * This function is responsible for sending the necessary data to the server to edit an existing work center.
    */
   editCenter(): void {
-    // const commonValues = this.getCommonValues();
-    // const specification: EquipmentSpecificationEdited = {
-    //   id: this.data.specifId,
-    //   model: commonValues.model,
-    //   capacity: commonValues.capacity,
-    //   criticalEnergySystem: commonValues.critical,
-    //   averageConsumption: commonValues.avgConsumption,
-    //   lifeSpanYears: commonValues.lifeSpanYears,
-    //   efficiency: commonValues.efficiency,
-    //   equipmentBrandId: commonValues.brandID,
-    //   equipmentTypeId: commonValues.typeID
-    // };
-    // this.createOrEditSpecification(true, specification, commonValues);
+    // Implementation for editing a work center
   }
 
   /**
-   * This function is used to get the common values from the form controls.
-   * It retrieves the necessary information from the form controls and returns them as an object.
-   * @returns An object containing the common values from the form controls.
-   */
-  getCommonValues() {
-    // const typeID = this.findId(this.getControlValue('type'), this.typeObjectArray);
-    // const brandID = this.findId(this.getControlValue('brand'), this.brandObjectArray);
-    // const useFrequency = this.useFrequencyMatch.get(this.getControlValue('useFrequency'))!;
-    // const maintenanceStatus = this.maintenanceStatusMatch.get(this.getControlValue('maintenanceStatus'))!;
-    // const model = this.getControlValue('model');
-    // const capacity = this.getControlValue('capacity');
-    // const critical = this.getControlValue('criticalEnergySystem');
-    // const avgConsumption = this.getControlValue('averageConsumption');
-    // const lifeSpanYears = this.getControlValue('lifeSpanYears');
-    // const efficiency = this.getControlValue('efficiency');
-    // const installDate = this.getControlValue('instalationDate');
-    // const office = this.getControlValue('office');
-
-    // this.global.findOfficeId(office);
-
-    // return {
-    //   typeID, brandID, useFrequency, maintenanceStatus, model, capacity, critical,
-    //   avgConsumption, lifeSpanYears, efficiency, installDate
-    // };
-  }
-
-
-  /**
-   * This function is used to activate the close button of the modal.
-   * It retrieves the close button element and simulates a click event on it,
-   * effectively closing the modal.
+   * Activates the close button by simulating a click event.
+   * This function finds the button with the ID 'close-button' and triggers a click event on it.
    */
   activateCloseButton(): void {
     const closeButton = document.getElementById('close-button') as HTMLButtonElement;
     closeButton.click();
   }
 
+  /**
+   * Assigns values to the form by creating controls for each valid option.
+   * Clears the form, iterates over the options, and dynamically creates form controls
+   * for each option that is not a formula symbol, not named 'consumo', and not already used.
+   * The controls are added to the form and corresponding input elements are created in the DOM.
+   */
   assignValues(): void {
     this.clearForm();
 
     let i = 0;
     let row: HTMLDivElement | null = null;
     let usedOptions: string[] = [];
+
     for (const option of this.options()) {
       if (this.formulaSymbols.every(symbol => symbol.id != option.id && symbol.name != option.name)
         && option.name != 'consumo' && !usedOptions.includes(option.name)) {
@@ -580,6 +589,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         const control = this.fb.control('', [Validators.required, Validators.pattern(/^[0-9]+$/)]);
         this.form.addControl(option.name, control);
         const formContainer = document.getElementById('form-container');
+
         if (formContainer) {
           if (i % 3 == 0) {
             row = document.createElement('div');
@@ -589,12 +599,11 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
           const column = document.createElement('div');
           column.className = 'col-sm-4';
-
           const label = document.createElement('label');
           label.htmlFor = option.name;
           label.innerText = option.name;
-
           const input = this.renderer.createElement('input');
+
           this.renderer.setAttribute(input, 'type', 'number');
           this.renderer.setAttribute(input, 'class', 'form-control');
           this.renderer.setAttribute(input, 'id', option.name);
@@ -621,6 +630,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
           column.appendChild(label);
           column.appendChild(input);
           column.appendChild(errorDiv);
+
           if (row) {
             row.appendChild(column);
           }

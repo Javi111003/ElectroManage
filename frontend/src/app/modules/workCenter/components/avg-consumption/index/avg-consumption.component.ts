@@ -20,7 +20,6 @@ import { Item } from '../../../../../shared/shared.module';
   ]
 })
 export class AvgConsumptionComponent implements OnInit {
-
   constructor (
     public global: GlobalModule,
     private fb: FormBuilder
@@ -48,7 +47,7 @@ export class AvgConsumptionComponent implements OnInit {
   }
 
   form: FormGroup;
-  selectedOptionsIds: number[] | any [] = [];
+  selectedOptionsIds: (number | any) [] = [];
   options: Item[] = [];
   dataSources: { [key: string]: MatTableDataSource<any> } = {};
   displayedColumns: ConfigColumn[] = [
@@ -65,7 +64,6 @@ export class AvgConsumptionComponent implements OnInit {
       field: 'meanConsumption'
     }
   ];
-
   columnsToDisplay = ['Centro de Trabajo'];
   columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
   expandedElements: string[] = [];

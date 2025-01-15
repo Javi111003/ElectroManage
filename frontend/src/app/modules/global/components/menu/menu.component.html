@@ -1,24 +1,19 @@
-<!-- Main container layout using Grid -->
 <div class="grid-container">
-  <!-- Header Section -->
   <header class="header">
-    <div class="menu-btn" (click)="toggleSidebar()">☰</div> <!-- Mobile menu button (toggles sidebar visibility) -->
-    <img src="logo.png" alt="Company Logo" routerLink="/"> <!-- Company logo -->
-    <p>Electro Manage</p> <!-- Application title -->
+    <div class="menu-btn" (click)="toggleSidebar()">☰</div>
+    <img src="logo.png" alt="Company Logo" routerLink="/">
+    <p>Electro Manage</p>
     <div class="icons">
       <label>{{this.global.getUserInfo().info.email}}</label>
       <mat-icon matBadge="15">notifications</mat-icon>
-    <!-- Include text description of the icon's meaning for screen-readers -->
     <span class="cdk-visually-hidden"></span>
-      <mat-icon (click)="logout()">person</mat-icon> <!-- User profile icon -->
+      <mat-icon (click)="logout()">person</mat-icon>
     </div>
 
   </header>
-  <!-- Sidebar Section -->
   <aside class="sidebar" [class.active]="isSidebarActive">
     <nav class="nav">
       <ul>
-        <!-- Using a for loop to add each item from extern .json -->
         <div *ngFor="let item of menuItems">
           <li *appShowForRoles="item.allowedRoles">
             <div *ngIf="!item.subItems" class="dropdown-label" [class.active]="activeOption === item.id">
@@ -47,11 +42,9 @@
       </ul>
     </nav>
   </aside>
-
-  <!-- Main Content Section -->
   <main class="main-content" (click)="hideSidebar()">
     <div class="content">
-      <router-outlet></router-outlet> <!-- Placeholder for dynamic routing -->
+      <router-outlet></router-outlet>
     </div>
   </main>
 </div>

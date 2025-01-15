@@ -13,12 +13,6 @@ import { Item } from '../../../../../shared/shared.module';
   styleUrls: ['./manage-form.component.css']
 })
 export class ManageFormComponent implements OnInit, OnDestroy {
-  private subscriptions: Subscription = new Subscription();
-  data: any;
-  form: FormGroup;
-  postMethod: boolean = true;
-  loading: boolean = false;
-
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
@@ -42,6 +36,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       this.getControl('workCenter').setValue(workCenter);
     }
   }
+
+  private subscriptions: Subscription = new Subscription();
+  data: any;
+  form: FormGroup;
+  postMethod: boolean = true;
+  loading: boolean = false;
 
   ngOnInit() {
     this.global.Reset();
@@ -104,6 +104,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   onSubmit(): void {
     this.loading = true;
+
     if (this.form.invalid) {
       confirm('Por favor, rellene todos los campos.');
       this.markAllAsTouched();
@@ -113,7 +114,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     if (this.getControlValue('workCenter').id) {
       const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
       if (confirmation) {
-
         if (this.postMethod)
           this.createOffice();
         else {

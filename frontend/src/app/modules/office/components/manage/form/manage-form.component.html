@@ -1,50 +1,48 @@
-<!-- Modal de Bootstrap -->
 <div class="modal fade" id="exampleModal" tabindex="-1" data-bs-focus="false" (hidden.bs.modal)="onCloseModal()" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Formulario de Oficina</h5>
-        </div>
-        <div class="modal-body">
-          <form [formGroup]="form" (ngSubmit)="onSubmit.bind(this)">
-            <div class="mb-3">
-              <div class="row">
-                <div class="col-8 col-sm-6">
-                  <label for="officeName" class="form-label">Nombre</label>
-                  <input type="text" class="form-control" id="officeName" formControlName="officeName"
-                    [ngClass]="{'is-invalid': form.get('officeName')?.invalid && form.get('officeName')?.touched}">
-                  <div *ngIf="form.get('officeName')?.invalid && form.get('officeName')?.touched" class="invalid-feedback">
-                    Este campo es obligatorio
-                  </div>
-                </div>
-                <div class="col-4 col-sm-6">
-                  <label for="description" class="form-label">Descripción</label>
-                  <input type="text" class="form-control" id="description" formControlName="description"
-                    [ngClass]="{'is-invalid': form.get('description')?.invalid && form.get('description')?.touched}">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Formulario de Oficina</h5>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="form" (ngSubmit)="onSubmit.bind(this)">
+          <div class="mb-3">
+            <div class="row">
+              <div class="col-8 col-sm-6">
+                <label for="officeName" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="officeName" formControlName="officeName"
+                  [ngClass]="{'is-invalid': form.get('officeName')?.invalid && form.get('officeName')?.touched}">
+                <div *ngIf="form.get('officeName')?.invalid && form.get('officeName')?.touched" class="invalid-feedback">
+                  Este campo es obligatorio
                 </div>
               </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="workCenter" class="form-label">Centro de Trabajo</label>
-              <app-autocomplete class="form-control" id="workCenter"
-                [options]="global.workCenters"
-                [label]="'Centros de trabajo'"
-                [control]="getControl('workCenter')"
-                [isDisabled]="!global.getUserInfo().roles.includes('Admin')"
-              ></app-autocomplete>
-              <div *ngIf="form.get('workCenter')?.invalid && form.get('workCenter')?.touched" class="invalid-feedback">
-                Este campo es obligatorio
+              <div class="col-4 col-sm-6">
+                <label for="description" class="form-label">Descripción</label>
+                <input type="text" class="form-control" id="description" formControlName="description"
+                  [ngClass]="{'is-invalid': form.get('description')?.invalid && form.get('description')?.touched}">
               </div>
             </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <app-button [label]="'Cerrar'" [function]="onCloseModal.bind(this)" [isDisabled]="loading" data-bs-dismiss="modal"></app-button>
-          <app-button [label]="'Guardar cambios'" [function]="onSubmit.bind(this)" [isDisabled]="loading" [loading]="loading" data-bs-dismiss="modal"></app-button>
-        </div>
+          </div>
+          <div class="mb-3">
+            <label for="workCenter" class="form-label">Centro de Trabajo</label>
+            <app-autocomplete class="form-control" id="workCenter"
+              [options]="global.workCenters"
+              [label]="'Centros de trabajo'"
+              [control]="getControl('workCenter')"
+              [isDisabled]="!global.getUserInfo().roles.includes('Admin')"
+            ></app-autocomplete>
+            <div *ngIf="form.get('workCenter')?.invalid && form.get('workCenter')?.touched" class="invalid-feedback">
+              Este campo es obligatorio
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <app-button [label]="'Cerrar'" [function]="onCloseModal.bind(this)" [isDisabled]="loading" data-bs-dismiss="modal"></app-button>
+        <app-button [label]="'Guardar cambios'" [function]="onSubmit.bind(this)" [isDisabled]="loading" [loading]="loading" data-bs-dismiss="modal"></app-button>
       </div>
     </div>
   </div>
+</div>
 
 

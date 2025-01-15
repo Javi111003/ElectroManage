@@ -11,12 +11,6 @@ import { LOCATION_URL } from '../../../../../config/api.config';
   styleUrl: './location-index.component.css'
 })
 export class LocationComponent {
-  /**
-   * Constructor that initializes the required services and form
-   * @param global Global module service for shared functionalities
-   * @param fb Form builder service for creating reactive forms
-   * @param http Work center service for API communications
-   */
   constructor (
     public global: GlobalModule,
     private fb: FormBuilder,
@@ -27,21 +21,12 @@ export class LocationComponent {
     });
   }
 
-  /** Array to store the work centers location data */
   centerLocationData: any[] = [];
-
-  /** Form group for handling user inputs */
   form: FormGroup;
-
-  /** Leaflet map instance */
   map!: L.Map;
 
-  /**
-   * Lifecycle hook that initializes the component
-   * Sets up the map and loads necessary data
-   */
   ngOnInit(): void {
-    this.inicializarMapa();
+    this.MapInit();
     this.global.Reset();
     this.global.getWorkCenters();
     this.getCenterDetailsList();
@@ -81,30 +66,27 @@ export class LocationComponent {
    * Initializes the Leaflet map with default settings
    * Centers the map view on Cuba
    */
-  inicializarMapa(): void {
+  MapInit(): void {
     this.map = L.map('map').setView([22, -80], 7);
     L.tileLayer(LOCATION_URL, {
       maxZoom: 19
     }).addTo(this.map);
   }
 
-  /**
-   * Selects and displays a work center on the map
-   * @param nombre Name of the work center to display
-   * Shows a popup with the work center's details
-   */
-  seleccionarEmpresa(id: number): void {
-    const empresa = this.centerLocationData.find(e => e.id === id);
-    if (empresa) {
-      this.map.setView([empresa.location.coordenateDTO.latitude, empresa.location.coordenateDTO.longitude], 16); // Centra el mapa en la ubicación de la empresa
+
+  showCenterLocation(id: number): void {
+    const center = this.centerLocationData.find(center => center.id === id);
+    if (center) {
+      this.map.setView([center.location.coordenateDTO.latitude, center.location.coordenateDTO.longitude], 16);
       L.popup()
-        .setLatLng([empresa.location.coordenateDTO.latitude, empresa.location.coordenateDTO.longitude])
+        .setLatLng([center.location.coordenateDTO.latitude, center.location.coordenateDTO.longitude])
         .setContent(`
-          <h3>${empresa.name}</h3>
-          <p><b>Dirección:</b> ${empresa.location.addressDetails}</p>
-          <p><b>Descripción</b>:Esta empresa pertenece al área administrativa <b>${empresa.administrativeArea.name}</b> y su tipo de instalación es <b>${empresa.installationType.name}</b></p>
-        `)
-        .openOn(this.map);
+          <h3>${center.name}</h3>
+          <p><b>Dirección:</b> ${center.location.addressDetails}</p>
+          <p><b>Descripción</b>:Esta empresa pertenece al área administrativa
+          <b>${center.administrativeArea.name}</b> y su tipo de instalación es
+          <b>${center.installationType.name}</b></p>
+        `).openOn(this.map);
     }
   }
 
@@ -112,9 +94,9 @@ export class LocationComponent {
    * Handles the click event for selecting a work center
    * Validates the selection and displays the location on the map
    */
-  onClick() {
+  onLocateClick() {
     if (this.getControlValue('workCenter').name) {
-      this.seleccionarEmpresa(this.getControlValue('workCenter').id);
+      this.showCenterLocation(this.getControlValue('workCenter').id);
     } else {
       this.global.openDialog('Por favor, selecciona un Centro de Trabajo');
     }

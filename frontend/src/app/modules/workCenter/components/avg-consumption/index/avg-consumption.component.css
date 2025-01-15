@@ -7,7 +7,7 @@
   justify-content: space-between;
 }
 .checkbox-container {
-  flex: 1; /* Ocupa espacio proporcional al ancho disponible */
+  flex: 1;
 }
 .buttons-container {
   width: 30%;

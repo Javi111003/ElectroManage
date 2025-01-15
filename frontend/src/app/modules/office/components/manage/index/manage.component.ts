@@ -14,22 +14,6 @@ declare var bootstrap: any;
   styleUrls: ['./manage.component.css']
 })
 export class ManageComponent implements OnInit, OnDestroy {
-  private subscriptions: Subscription = new Subscription();
-  form: FormGroup;
-  showTable: boolean = false;
-
-  dataSource: MatTableDataSource<any> = new MatTableDataSource();
-  displayedColumns: ConfigColumn[] = [
-    {
-      title: 'Nombre',
-      field: 'officeName'
-    },
-    {
-      title: 'Descripción',
-      field: 'description'
-    }
-  ];
-
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
@@ -50,7 +34,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       const workCenter: Item = {
         id: id,
         name: name
-      }
+      };
       this.getControl('workCenter').setValue(workCenter);
       this.global.getOfficesByCenter(id).subscribe(offices => {
         this.reloadTableData(offices);
@@ -67,6 +51,21 @@ export class ManageComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  private subscriptions: Subscription = new Subscription();
+  form: FormGroup;
+  showTable: boolean = false;
+  dataSource: MatTableDataSource<any> = new MatTableDataSource();
+  displayedColumns: ConfigColumn[] = [
+    {
+      title: 'Nombre',
+      field: 'officeName'
+    },
+    {
+      title: 'Descripción',
+      field: 'description'
+    }
+  ];
 
   ngOnInit() {
     this.global.Reset();

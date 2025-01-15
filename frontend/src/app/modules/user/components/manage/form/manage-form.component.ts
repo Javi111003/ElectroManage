@@ -13,9 +13,6 @@ import { Item } from '../../../../../shared/shared.module';
   styleUrl: './manage-form.component.css'
 })
 export class ManageFormComponent implements OnInit, OnDestroy {
-  private subscriptions: Subscription = new Subscription();
-  loading: boolean = false;
-
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
@@ -34,6 +31,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.dataService.setData(null);
   }
 
+  private subscriptions: Subscription = new Subscription();
+  loading: boolean = false;
   data: any;
   form: FormGroup;
   TextRoles: Item[] = [
@@ -139,7 +138,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   register(): void {
     const rolesSelected: Item[] = this.getControlValue('role');
-
     let rolesToPost: string[] = [];
 
     for (let i = 0; i < rolesSelected.length; i++) {

@@ -12,13 +12,6 @@ import { Subscription } from 'rxjs';
   styleUrl: './manage-form.component.css'
 })
 export class ManageFormComponent implements OnInit, OnDestroy {
-  private subscriptions: Subscription = new Subscription();
-  @Input() selectedItem: any = null;
-  form: FormGroup;
-  data: any;
-  postMethod: boolean = true;
-  loading: boolean = false;
-
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
@@ -31,6 +24,13 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     });
     this.dataService.setData(null);
   }
+
+  @Input() selectedItem: any = null;
+  private subscriptions: Subscription = new Subscription();
+  form: FormGroup;
+  data: any;
+  postMethod: boolean = true;
+  loading: boolean = false;
 
   ngOnInit(): void {
     const sub = this.dataService.currentData.subscribe(newData => {

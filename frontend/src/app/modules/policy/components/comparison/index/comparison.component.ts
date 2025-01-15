@@ -14,7 +14,6 @@ import { Item } from '../../../../../shared/shared.module';
   styleUrl: './comparison.component.css'
 })
 export class ComparisonComponent implements OnInit {
-
   constructor(
     public global: GlobalModule,
     private httpPolicy: PolicyService,
@@ -38,15 +37,28 @@ export class ComparisonComponent implements OnInit {
 
     this.form.get('workCenter')?.valueChanges.subscribe(() => {
       this.getControl('policy').reset();
-
-      if (this.getControlValue('workCenter').id) {
-        // aqui logica de coger las politicas por centro de trabajo
+      this.policies = [];
+      if (this.getControlValue('workCenter')) {
+        const id = this.getControlValue('workCenter').id;
+        if (id) {
+          this.httpPolicy.getPoliciesByCenter(id).subscribe(policies => {
+            this.objectsPolicy = policies;
+            this.policies = policies.map(policy => ({
+              id: policy.id,
+              name: policy.name
+            }));
+          });
+        }
       }
     });
 
     this.form.get('workCenter')?.valueChanges.subscribe(() => {
-      if (this.getControlValue('policy').id) {
-        // aqui logica de coger el antes y el despues de la politica
+      const policy = this.getControlValue('policy');
+      if (policy) {
+        if (policy.id) {
+          const centerID = this.objectsPolicy.find(item => item.id === policy.id)!.companyId;
+          this.getBeforeAfterInfo(policy.id, centerID);
+        }
       }
     });
 
@@ -62,7 +74,6 @@ export class ComparisonComponent implements OnInit {
   optionsPolicy: string[] = [];
   policies: Item[] = [];
   objectsPolicy: PolicyByCompany[] = [];
-
   showTable: boolean = false;
   dataSourceBefore: MatTableDataSource<any> = [][0];
   dataSourceAfter: MatTableDataSource<any> = [][0];
@@ -121,7 +132,7 @@ export class ComparisonComponent implements OnInit {
    */
   onClick() {
     if (!this.showTable) {
-      if (this.getControlValue('workCenter').id && this.getControlValue('policy').id){
+      if (this.getControlValue('workCenter').id && this.getControlValue('policy').id) {
         this.showTable = true;
       } else {
         this.showTable = false;
@@ -146,5 +157,16 @@ export class ComparisonComponent implements OnInit {
         }
       })
     });
+  }
+
+  /**
+   * Retrieves the records of a company before and after applying an efficiency policy.
+   * This function is not yet implemented.
+   * @param policyID The ID of the policy to apply.
+   * @param centerID The ID of the center to which the policy is applied.
+   */
+  getBeforeAfterInfo(policyID: number, centerID: number): void {
+    // not implemented
+    console.log("No implementado");
   }
 }

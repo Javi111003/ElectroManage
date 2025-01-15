@@ -17,80 +17,6 @@ declare var bootstrap: any;
 })
 
 export class EquipmentComponent implements OnInit, OnDestroy {
-  private subscriptions: Subscription = new Subscription();
-  data: any;
-  form: FormGroup;
-  showTable = false;
-
-  equipmentObjects: Equipment[] = [];
-  equipments: string[] = [];
-
-  useFrequency: Map<string, string> = new Map<string, string>([
-    ['High', 'Alta'],
-    ['Medium', 'Media'],
-    ['Low', 'Baja']
-  ]);
-
-  maintenanceStatus: Map<string, string> = new Map<string, string>([
-    ['Good', 'Bueno'],
-    ['Regular', 'Regular'],
-    ['Bad', 'Malo']
-  ]);
-
-  criticalEnergySystem: Map<boolean, string> = new Map<boolean, string>([
-    [true, 'Sí'],
-    [false, 'No']
-  ]);
-
-  dataSource: MatTableDataSource<any> = new MatTableDataSource();
-
-  displayedColumns: ConfigColumn[] = [
-    {
-      title: 'Fecha de instalación',
-      field: 'instalationDate'
-    },
-    {
-      title: 'Modelo',
-      field: 'model'
-    },
-    {
-      title: 'Tipo',
-      field: 'type'
-    },
-    {
-      title: 'Marca',
-      field: 'brand'
-    },
-    {
-      title: 'Capacidad(Kw)',
-      field: 'capacity'
-    },
-    {
-      title: 'Consumo Promedio(Kw/h)',
-      field: 'averageConsumption'
-    },
-    {
-      title: 'Frecuencia de uso',
-      field: 'useFrequency'
-    },
-    {
-      title: 'Estado de mantenimiento',
-      field: 'maintenanceStatus'
-    },
-    {
-      title: 'Años de vida',
-      field: 'lifeSpanYears'
-    },
-    {
-      title: 'Eficiencia',
-      field: 'efficiency'
-    },
-    {
-      title: 'Sistema de Energía Crítica',
-      field: 'criticalEnergySystem'
-    }
-  ];
-
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
@@ -138,12 +64,81 @@ export class EquipmentComponent implements OnInit, OnDestroy {
     });
   }
 
+  private subscriptions: Subscription = new Subscription();
+  data: any;
+  form: FormGroup;
+  showTable = false;
+  equipmentObjects: Equipment[] = [];
+  equipments: string[] = [];
+  useFrequency: Map<string, string> = new Map<string, string>([
+    ['High', 'Alta'],
+    ['Medium', 'Media'],
+    ['Low', 'Baja']
+  ]);
+  maintenanceStatus: Map<string, string> = new Map<string, string>([
+    ['Good', 'Bueno'],
+    ['Regular', 'Regular'],
+    ['Bad', 'Malo']
+  ]);
+  criticalEnergySystem: Map<boolean, string> = new Map<boolean, string>([
+    [true, 'Sí'],
+    [false, 'No']
+  ]);
+  dataSource: MatTableDataSource<any> = new MatTableDataSource();
+  displayedColumns: ConfigColumn[] = [
+    {
+      title: 'Fecha de instalación',
+      field: 'instalationDate'
+    },
+    {
+      title: 'Modelo',
+      field: 'model'
+    },
+    {
+      title: 'Tipo',
+      field: 'type'
+    },
+    {
+      title: 'Marca',
+      field: 'brand'
+    },
+    {
+      title: 'Capacidad(Kw)',
+      field: 'capacity'
+    },
+    {
+      title: 'Consumo Promedio(Kw/h)',
+      field: 'averageConsumption'
+    },
+    {
+      title: 'Frecuencia de uso',
+      field: 'useFrequency'
+    },
+    {
+      title: 'Estado de mantenimiento',
+      field: 'maintenanceStatus'
+    },
+    {
+      title: 'Años de vida',
+      field: 'lifeSpanYears'
+    },
+    {
+      title: 'Eficiencia',
+      field: 'efficiency'
+    },
+    {
+      title: 'Sistema de Energía Crítica',
+      field: 'criticalEnergySystem'
+    }
+  ];
+
   ngOnInit(): void {
     this.global.Reset();
     this.global.getWorkCenters();
 
     const sub = this.dataService.dataUpdated$.subscribe(() => {
-      if (this.getControlValue('office') && this.getControlValue('office').id) {
+      const office = this.getControlValue('office');
+      if (office && office.id) {
         this.getEquipmentsByOffice();
       }
     });
@@ -177,12 +172,12 @@ export class EquipmentComponent implements OnInit, OnDestroy {
    * It updates the dataSource for the MatTable with the list of equipment.
    */
   getEquipmentsByOffice(): void {
-    if (this.getControlValue('office') && this.getControlValue('office').id) {
-      this.global.httpOffice.getEquipmentList(this.getControlValue('office').id)
-        .subscribe(equipments => {
-          this.equipmentObjects = equipments;
-          this.reloadTableData(equipments);
-        });
+    const office = this.getControlValue('office');
+    if (office && office.id) {
+      this.global.httpOffice.getEquipmentList(office.id).subscribe(equipments => {
+        this.equipmentObjects = equipments;
+        this.reloadTableData(equipments);
+      });
     }
   }
 
@@ -193,8 +188,9 @@ export class EquipmentComponent implements OnInit, OnDestroy {
    */
   onConsultClick(): void {
     if (!this.showTable) {
-      if (this.getControlValue('workCenter') && this.getControlValue('office') &&
-          this.getControlValue('workCenter').id && this.getControlValue('office').id) {
+      const center = this.getControlValue('workCenter');
+      const office = this.getControlValue('office');
+      if (center && office && center.id && office.id) {
         this.showTable = true;
       } else {
         this.showTable = false;

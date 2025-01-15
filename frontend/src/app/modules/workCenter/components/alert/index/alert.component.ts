@@ -11,7 +11,6 @@ import { Item } from '../../../../../shared/shared.module';
   styleUrl: './alert.component.css'
 })
 export class AlertComponent implements OnInit {
-
   constructor(
     public global: GlobalModule,
     private fb: FormBuilder
@@ -58,16 +57,25 @@ export class AlertComponent implements OnInit {
     }
   ];
 
-
   ngOnInit(): void {
     this.global.Reset();
     this.global.getWorkCenters();
   }
 
+  /**
+   * Returns the form control with the specified name.
+   * @param control The name of the form control to retrieve.
+   * @returns The form control with the specified name.
+   */
   getControl(control: string): FormControl {
     return this.form.get(control) as FormControl;
   }
 
+  /**
+   * Returns the value of the form control with the specified name.
+   * @param control The name of the form control to retrieve the value from.
+   * @returns The value of the form control with the specified name.
+   */
   getControlValue(control: string): any {
     return this.form.get(control)?.value;
   }
@@ -76,7 +84,7 @@ export class AlertComponent implements OnInit {
    * Toggles the visibility of the table and fetches alerts for the selected center.
    * This method is triggered when the user clicks on the alert button.
    */
-  onClick() {
+  onConsultClick() {
     if (!this.showTable) {
       const id = this.getControlValue('workCenter').id;
       if (id) {

@@ -1,4 +1,4 @@
-import { UserInfo } from './../../models/credential.interface';
+import { UserLogged } from './../../models/credential.interface';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -33,7 +33,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { UserLogged } from '../../models/credential.interface';
 
 @NgModule({
   declarations: [
@@ -91,6 +90,10 @@ export class GlobalModule {
   workCenters: Item[] = [];
   offices: Item[] = [];
 
+  /**
+   * This function retrieves the user information from the session storage.
+   * @returns The user information as a UserLogged object.
+   */
   getUserInfo(): UserLogged {
     return JSON.parse(sessionStorage.getItem('userLogged') || '{}');
   }
