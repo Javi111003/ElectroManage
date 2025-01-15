@@ -113,15 +113,17 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.loading = true;
     if (this.form.invalid) {
-      alert('Por favor, rellene todos los campos.');
+      this.global.openDialog('Por favor, rellene todos los campos.');
       this.markAllAsTouched();
       return;
     }
 
-    const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
-    if (confirmation) {
-      window.location.reload();
-    }
+    this.global.openDialog('¿Está seguro de que desea guardar los cambios?').subscribe(
+    result => {
+      if (result) {
+        window.location.reload();
+      }
+    });
   }
 
   /**

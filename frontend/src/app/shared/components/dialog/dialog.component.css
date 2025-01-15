@@ -20,6 +20,12 @@ p {
   margin-right: 5px;
   padding-bottom: 5px;
 }
+.actions {
+  display: flex;
+  align-items: center;
+  align-content: end;
+  gap: 8px;
+}
 ::ng-deep .mat-mdc-dialog-title {
   color: #00203b !important;
   font-weight: 300 !important;

@@ -152,7 +152,8 @@
                   [label]="'Crear Fórmula'"
                   [allOptions]="formulaVariables"
                   [options]="options"
-                  [function]="addElementFormula.bind(this)"
+                  [function]="updateFormula.bind(this)"
+                  [deleteOption]="updateFormula.bind(this)"
                   [validateOption]="validateOption.bind(this)"
                 ></app-chips>
               </div>

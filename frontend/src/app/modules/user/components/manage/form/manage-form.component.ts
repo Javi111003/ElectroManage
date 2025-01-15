@@ -109,10 +109,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     }
 
     if (this.getControlValue('workCenter').id) {
-      const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
-      if (confirmation) {
-        this.register();
-      }
+      this.global.openDialog('¿Está seguro de que desea guardar los cambios?', true).subscribe(
+      result => {
+        if (result) {
+          this.register();
+        }
+      });
     } else {
       this.global.openDialog('Por favor, selecciona un Centro de Trabajo válido.');
     }

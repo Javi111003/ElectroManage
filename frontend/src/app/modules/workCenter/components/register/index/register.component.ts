@@ -222,7 +222,7 @@ export class RegisterComponent implements OnInit {
    * If the user confirms, it shows a dialog indicating that the item has been deleted.
    */
   delete(): void {
-    this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
+    this.global.openDialog('¿Estás seguro de que deseas continuar?', true).subscribe(
       result => { if (result) {
         this.global.openDialog('Eliminado');
       }
