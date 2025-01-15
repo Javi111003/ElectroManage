@@ -34,8 +34,8 @@ public class EditGeneralDataOfficeHandler : CoreCommandHandler<EditGeneralDataOf
         var company = await companyRepository.FirstAsync(useInactive: true, filters: x=> x.Id == command.CompanyId);
         if (company is null)
         {
-            _logger.LogError($"Company with id {command.Id} not found");
-            ThrowError($"Company with id {command.Id} not found", 404);
+            _logger.LogError($"Company with id {command.CompanyId} not found");
+            ThrowError($"Company with id {command.CompanyId} not found", 404);
         }
 
         office.Name = command.Name;
