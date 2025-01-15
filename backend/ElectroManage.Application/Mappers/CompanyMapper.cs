@@ -13,11 +13,13 @@ public static class CompanyMapper
             ConsumptionLimit = company.ConsumptionLimit,
             InstallationType = new InstallationTypeDTO
             {
+                Id = company.InstalationType.Id,
                 Name = company.InstalationType.Name,
                 Description = company.InstalationType.Description,
             },
             AdministrativeArea = new AdministrativeAreaDTO
             {
+                Id = company.AministrativeArea.Id,
                 Name = company.AministrativeArea.Name,
                 Description = company.AministrativeArea.Description,
             },
