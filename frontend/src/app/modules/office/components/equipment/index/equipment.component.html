@@ -37,7 +37,7 @@
     <app-table
       [dataSource]="dataSource"
       [displayedColumns]="displayedColumns"
-      [showActions]="true"
+      [showActions]="global.getUserInfo().roles.includes('Admin') || global.getUserInfo().roles.includes('Manager')"
       [editFunction]="edit.bind(this)"
       [deleteFunction]="delete.bind(this)"
       >
