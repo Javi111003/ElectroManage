@@ -85,19 +85,21 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.loading = true;
     if (this.form.invalid) {
-      this.global.openDialog('Por favor rellene todos los campos requeridos.')
+      this.global.openDialog('Por favor rellene todos los campos requeridos.');
       this.markAllAsTouched();
       return;
     }
 
-    const confirmation = confirm('Seguro que quieres guardar los cambios ?');
-    if (confirmation) {
-      if(this.postMethod)
-        this.createPolicy();
-      else {
-        this.editPolicy();
+    this.global.openDialog('Seguro que quieres guardar los cambios ?', true).subscribe(
+    result =>{
+      if (result) {
+        if(this.postMethod)
+          this.createPolicy();
+        else {
+          this.editPolicy();
+        }
       }
-    }
+    });
   }
 
   /**

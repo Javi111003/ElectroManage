@@ -106,21 +106,23 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.loading = true;
 
     if (this.form.invalid) {
-      confirm('Por favor, rellene todos los campos.');
+      this.global.openDialog('Por favor, rellene todos los campos.');
       this.markAllAsTouched();
       return;
     }
 
     if (this.getControlValue('workCenter').id) {
-      const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
-      if (confirmation) {
-        if (this.postMethod)
-          this.createOffice();
-        else {
-          this.editOffice();
-          this.postMethod = true;
+      this.global.openDialog('¿Está seguro de que desea guardar los cambios?', true).subscribe(
+      result => {
+        if (result) {
+          if (this.postMethod)
+            this.createOffice();
+          else {
+            this.editOffice();
+            this.postMethod = true;
+          }
         }
-      }
+      });
     } else {
       this.global.openDialog("Por favor, selecciona un Centro de Trabajo válido.");
     }

@@ -154,7 +154,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     });
 
     this.subscriptions.add(sub);
-    this.addElementFormula();
+    this.updateFormula();
     this.getAreas();
     this.getTypes();
   }
@@ -213,7 +213,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       { id: 2, name: 'aumento' }
     ]);
 
-    this.addElementFormula();
+    this.updateFormula();
   }
 
   /**
@@ -240,14 +240,16 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       valid[0] = true;
 
     if (valid[0]) {
-      const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
-      if (confirmation) {
-        if (this.postMethod)
-          this.createCenter();
-        else {
-          this.editCenter();
+      this.global.openDialog('¿Está seguro de que desea guardar los cambios?').subscribe(
+      result => {
+        if (result) {
+          if (this.postMethod)
+            this.createCenter();
+          else {
+            this.editCenter();
+          }
         }
-      }
+      });
     } else {
       this.global.openDialog(`Por favor, selecciona un ${valid[1]} válido.`);
     }
@@ -480,12 +482,16 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * Adds elements to the formula by joining the names of the options.
    * Updates the form with the constructed formula and assigns values.
    */
-  addElementFormula(): void {
-    const names = this.options().map(option => option.name);
-    this.form.patchValue({
-      formula: names.join(' ')
-    });
-    this.assignValues();
+  updateFormula(value: Item = [][0], validate: boolean = true): void {
+    if (validate) {
+      const names = this.options().map(option => option.name);
+      this.form.patchValue({
+        formula: names.join(' ')
+      });
+      this.assignValues();
+    } else {
+      this.global.openDialog("La variable no puede empezar con un número y solo puede contener letras, dígitos y '_'.");
+    }
   }
 
   /**
@@ -496,12 +502,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   addSymbolFormula(option: Item): void {
     if (option.name === 'C') {
       this.options = signal([]);
-      this.addElementFormula();
+      this.updateFormula();
       return;
     }
 
     this.options = signal([...this.options(), option]);
-    this.addElementFormula();
+    this.updateFormula();
   }
 
   /**
@@ -514,7 +520,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     const symbols = [
       '`', '~', '%', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
-      '-', '_', '+', '=', '{', '}', '[', ']', '|', '\\', ':', ';',
+      '-', '+', '=', '{', '}', '[', ']', '|', '\\', ':', ';',
       '"', '\'', '<', '>', ',', '.', '?', '/'
     ];
 

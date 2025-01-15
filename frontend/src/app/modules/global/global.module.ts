@@ -152,10 +152,15 @@ export class GlobalModule {
    * Opens a dialog with a specified message.
    * This function is used to display a message to the user in a dialog box.
    * @param message The message to be displayed in the dialog.
+   * @param showConfirmButton A boolean value indicating whether the "Confirm" button
+   * should be displayed in the dialog.
    */
-  openDialog(message: string): Observable<boolean> {
+  openDialog(message: string, showConfirmButton: boolean = false): Observable<boolean> {
     const dialogRef = this.dialog.open(DialogComponent, {
-      data: { message: message }
+      data: {
+        message: message,
+        showConfirmButton: showConfirmButton
+      }
     });
 
     return dialogRef.afterClosed();

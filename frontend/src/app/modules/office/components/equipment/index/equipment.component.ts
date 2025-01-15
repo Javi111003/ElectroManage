@@ -221,7 +221,7 @@ export class EquipmentComponent implements OnInit, OnDestroy {
    * @param item The equipment instance to be deleted.
    */
   delete(item: any): void {
-    this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
+    this.global.openDialog('¿Estás seguro de que deseas continuar?', true).subscribe(
       result => { if (result) {
         this.global.httpOffice.deleteEquipmentInstance(item.id).subscribe({
           next: (response) => {

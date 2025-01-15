@@ -28,13 +28,13 @@ export class ChipsComponent {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   readonly currentOption = model('');
   filteredOptions = computed(() => {
-    const currentOption = this.currentOption().toLowerCase();
+    let currentOption = null;
+    if (typeof this.currentOption() === "string")
+      currentOption = this.currentOption().toLowerCase();
     return currentOption
       ? this.allOptions.filter(option => option.name.toLowerCase().includes(currentOption))
       : this.allOptions.slice();
   });
-
-  readonly announcer = inject(LiveAnnouncer);
 
   /**
    * This function is used to add a new option to the chip list.
@@ -54,16 +54,14 @@ export class ChipsComponent {
     if (this.allOptions.find(option => option.name === value) != undefined)
       return;
 
-    if (value && this.validateOption(value)) {
+    const validate = this.validateOption(value);
+    if (value && validate) {
       this.options.update(options => [...options, obj]);
       this.allOptions.push(obj);
-      this.function(this.options());
     }
 
+    this.function(value, validate);
     this.currentOption.set('');
-    if (!this.validateOption(value)) {
-      alert('Opción inválida');
-    }
   }
 
   /**
@@ -80,11 +78,10 @@ export class ChipsComponent {
       }
 
       options.splice(index, 1);
-      this.announcer.announce(`Removed ${option}`);
       return [...options];
     });
 
-    this.function(this.options());
+    this.function(option);
   }
 
   /**
@@ -126,9 +123,11 @@ export class ChipsComponent {
    */
   removeOption(option: Item): void {
     this.allOptions = this.allOptions.filter(item => item !== option);
-    this.options.update(options => options = this.options().filter(item => item.name !== option.name));
+    this.options.update(options => options = this.options().filter(item => item.id !== option.id));
     this.filteredOptions = computed(() => {
-      const currentOption = this.currentOption().toLowerCase();
+      let currentOption = null;
+      if (typeof this.currentOption() === "string")
+        currentOption = this.currentOption().toLowerCase();
       return currentOption
         ? this.allOptions.filter(option => option.name.toLowerCase().includes(currentOption))
         : this.allOptions.slice();

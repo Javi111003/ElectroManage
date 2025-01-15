@@ -64,7 +64,7 @@ export class ManageComponent {
    * Opens a dialog to confirm the deletion, and if confirmed, opens another dialog to notify the user of the deletion.
    */
   delete(): void {
-    this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
+    this.global.openDialog('¿Estás seguro de que deseas continuar?', true).subscribe(
       result => { if (result) {
         this.global.openDialog('Eliminado');
       }

@@ -142,7 +142,7 @@ export class ManageComponent implements OnInit, OnDestroy {
    * @param item The office instance to be deleted.
    */
   delete(item: any): void {
-    this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
+    this.global.openDialog('¿Estás seguro de que deseas continuar?', true).subscribe(
       result => { if (result) {
         this.global.httpOffice.deleteOffice(item.id).subscribe({
           next: (response) => {

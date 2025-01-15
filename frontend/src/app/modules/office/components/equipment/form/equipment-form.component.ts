@@ -249,16 +249,18 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     const valid = this.global.allValid(options, response);
 
     if (valid[0]) {
-      const confirmation = confirm('¿Está seguro de que desea guardar los cambios?');
-      if (confirmation) {
-        if (this.postMethod)
-          this.createEquipment();
-        else {
-          this.editEquipment();
-        }
-      } else {
-        this.loading = false;
-      }
+      this.global.openDialog('¿Está seguro de que desea guardar los cambios?', true).subscribe(
+        result =>{
+          if (result) {
+            if (this.postMethod)
+              this.createEquipment();
+            else {
+              this.editEquipment();
+            }
+          } else {
+            this.loading = false;
+          }
+      });
     } else {
       this.global.openDialog(`Por favor, selecciona un ${valid[1]} válido.`);
       this.loading = false;

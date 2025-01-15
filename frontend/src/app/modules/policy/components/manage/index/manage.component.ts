@@ -68,7 +68,7 @@ export class ManageComponent implements OnInit {
    * @param item The policy instance to be deleted.
    */
   delete(item: any): void {
-    this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
+    this.global.openDialog('¿Estás seguro de que deseas continuar?', true).subscribe(
       result => { if (result) {
         this.policyService.deletePolicy(item.id).subscribe({
           next: (response) => {

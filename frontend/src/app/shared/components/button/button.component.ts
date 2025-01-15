@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
   styleUrl: './button.component.css'
 })
 export class ButtonComponent {
-  @Input() label: string = 'Descargar PDF';
+  @Input() label: string = 'Exportar';
   @Input() function: (...args: any[]) => any = this.exportPDF;
   @Input() showIcon: boolean = false;
   @Input() icon: string = '';

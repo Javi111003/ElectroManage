@@ -54,7 +54,7 @@ export class MenuComponent implements OnInit {
   }
 
   isSidebarActive = false;
-  activeOption = 'home';
+  activeOption = '';
 
   /**
    * Toggles the visibility of the sidebar.
