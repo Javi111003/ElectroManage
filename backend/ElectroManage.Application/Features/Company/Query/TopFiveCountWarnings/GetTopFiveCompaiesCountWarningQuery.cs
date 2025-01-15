@@ -3,4 +3,5 @@
 namespace ElectroManage.Application.Features.Company.Query.TopFiveCountWarnings;
 public record GetTopFiveCompaiesCountWarningQuery : ICommand<IEnumerable<TopFiveCompaniesCountWarningDTO>>
 {
+    public long Year { get; set; }
 }
