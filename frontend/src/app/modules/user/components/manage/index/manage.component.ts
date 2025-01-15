@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
-import { UserById, UserInfo } from '../../../../../models/credential.interface';
+import { UserInfo } from '../../../../../models/credential.interface';
 
 declare var bootstrap: any;
 
@@ -14,7 +14,6 @@ declare var bootstrap: any;
   styleUrl: './manage.component.css'
 })
 export class ManageComponent {
-
   constructor (
     public global: GlobalModule,
     private dataService: DataService,
@@ -50,12 +49,20 @@ export class ManageComponent {
     });
   }
 
+  /**
+   * Handles the click event for adding a new user.
+   * Sets the data service with null data and false loading state, then shows the modal.
+   */
   onAddClick(): void {
     this.dataService.setData([null, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }
 
+  /**
+   * Initiates the deletion process for a user.
+   * Opens a dialog to confirm the deletion, and if confirmed, opens another dialog to notify the user of the deletion.
+   */
   delete(): void {
     this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
       result => { if (result) {
@@ -64,6 +71,11 @@ export class ManageComponent {
     });
   }
 
+  /**
+   * Prepares the edit modal for a user.
+   * Fetches the user details by ID, maps the roles, sets the data service with the user data and false loading state, then shows the modal.
+   * @param item The user item to be edited.
+   */
   edit(item: any): void {
     this.user.getById(item.id).subscribe(user => {
       item.role = user.roles.map(item => this.roles.get(item));
@@ -75,6 +87,10 @@ export class ManageComponent {
     });
   }
 
+  /**
+   * Retrieves the list of users and reloads the table data.
+   * Subscribes to the user service to get the list of users, then maps the users to the required format and reloads the table data.
+   */
   getUserList(): void {
     this.user.getUsersList().subscribe(users => {
       const appUsers: UserInfo[] = users.appUsers;
@@ -82,6 +98,11 @@ export class ManageComponent {
     });
   }
 
+  /**
+   * Reloads the table data with the provided offices data.
+   * Maps the offices data to the required format and sets it as the data source for the table.
+   * @param offices The array of offices data to be loaded into the table.
+   */
   reloadTableData(offices: any[]) {
     this.dataSource.data = offices.map(item => ({
       id: item.id,

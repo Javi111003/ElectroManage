@@ -1,8 +1,6 @@
 <div style="padding: 1rem;">
-    <!-- Dashboard 1: Visible para roles "admin" o "analista" -->
     <div class="dashboard" *ngIf="!userInfo.roles.includes('Admin')">
         <section class="consumption">
-            <!-- List of centers with excessive consumption -->
             <div class="workcenter-limit-list">
                 <h6>Datos de Consumo</h6>
                 <ul id="limitList">
@@ -18,8 +16,6 @@
                     </li>
                 </ul>
             </div>
-
-            <!-- Excess consumption chart -->
             <div class="workcenter-graph">
                 <canvas id="excessChart"></canvas>
             </div>
@@ -43,8 +39,6 @@
             </div>
         </section>
     </div>
-
-    <!-- Dashboard 2: Visible para rol "manager" -->
     <div class="dashboard" *appShowForRoles="['Admin']">
         <section class="work-centers">
             <div class="total-centers">

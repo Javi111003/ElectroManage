@@ -1,55 +1,57 @@
-.grid-container{
-    display: grid; /* Enables CSS Grid layout */
-    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /* Font stack for wide compatibility */
-    grid-template-columns: repeat(3, 1fr); /* 3 columnas de igual tamaño */
-    grid-template-rows: auto; /* Ajusta la altura de las filas automáticamente */
-    gap: 16px; /* Espacio entre los elementos de la cuadrícula */
-    height: 100%; /* Full viewport height */
-    overflow:hidden; /* Prevents global scrolling */
-    padding: 16px; /* Espacio interno para el contenedor del grid */
+.grid-container {
+  display: grid;
+  font-family:system-ui, -apple-system, BlinkMacSystemFont,
+  'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+  'Helvetica Neue', sans-serif;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;
+  gap: 16px;
+  height: 100%;
+  overflow:hidden;
+  padding: 16px;
 }
-.grid-item{
-    border: 2px solid #ccc; /* Borde de 2px de grosor y color gris claro */
-    border-radius: 15px; /* Bordes circulares */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
-    padding: 16px; /* Espacio interno para los elementos de texto */
-    margin: 0; /* Elimina el margen para que los elementos estén alineados */
-    transition: transform 0.4s ease-in-out, background-color 0.4s ease-in-out, color 0.4s ease-in-out ;
-    margin-top: 1px;
+.grid-item {
+  border: 2px solid #ccc;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  margin: 0;
+  transition: transform 0.4s ease-in-out, background-color 0.4s ease-in-out, color 0.4s ease-in-out ;
+  margin-top: 1px;
 }
 .grid-item:hover {
-    transform: scale(1.010); /* Aumenta el tamaño del elemento al hacer hover */
-    background-color:#00203b;
-    color: white;
-    cursor: pointer;
+  transform: scale(1.010);
+  background-color:#00203b;
+  color: white;
+  cursor: pointer;
 }
 .grid-item-header {
-    text-align: center; /* Centra el texto del encabezado */
-    margin-top: 10px; /* Espacio superior para el encabezado */
+  text-align: center;
+  margin-top: 10px;
 }
 .grid-item p {
-    margin: 8px 0; /* Margen superior e inferior para los párrafos */
-    text-align: left; /* Alineación del texto a la izquierda */
-    padding: 8px; /* Espacio interno para los párrafos */
+  margin: 8px 0;
+  text-align: left;
+  padding: 8px;
 }
-@media (max-width: 768px) { /* Para dispositivos móviles */
-    .grid-container {
-        display: grid; /* Mantiene el uso de grid */
-        height: 100%;
-        grid-template-columns: 1fr; /* Una sola columna */
-        padding: 0; /* Elimina el padding para simetría */
-    }
+@media (max-width: 768px) {
+  .grid-container {
+    display: grid;
+    height: 100%;
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
 
-    .grid-item {
-        width: 100%; /* Ocupa el 100% del ancho */
-        margin: 10px 0; /* Margen vertical */
-        min-width: 0; /* Evita que los elementos se desborden */
-    }
-    .grid-item h2{
-        font-size: 1.5rem;
-    }
+  .grid-item {
+    width: 100%;
+    margin: 10px 0;
+    min-width: 0;
+  }
+  .grid-item h2{
+    font-size: 1.5rem;
+  }
 
-    .grid-item p {
-        font-size: 0.875rem; /* Tamaño de fuente más pequeño en móviles */
-    }
+  .grid-item p {
+    font-size: 0.875rem;
+  }
 }

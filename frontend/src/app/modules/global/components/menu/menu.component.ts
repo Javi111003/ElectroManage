@@ -37,11 +37,6 @@ import { GlobalModule } from '../../global.module';
     ]
 })
 export class MenuComponent implements OnInit {
-
-  //items from .json
-  menuItems: any[] = [];
-  login: string = 'login'
-
   constructor(
     public global: GlobalModule,
     private menuService: MenuService,
@@ -49,13 +44,15 @@ export class MenuComponent implements OnInit {
     private auth: AuthService
   ) { }
 
+  //items from .json
+  menuItems: any[] = [];
+
   ngOnInit(): void {
     this.menuService.getMenuOptions().subscribe(data => {
       this.menuItems = data.menuItems;
     });
   }
 
-  //properties to make the side bar interactive
   isSidebarActive = false;
   activeOption = '';
 
@@ -66,7 +63,9 @@ export class MenuComponent implements OnInit {
     this.isSidebarActive = !this.isSidebarActive;
   }
 
-
+  /**
+   * Hide the visibility of the sidebar.
+   */
   hideSidebar(): void {
     this.isSidebarActive = false;
   }

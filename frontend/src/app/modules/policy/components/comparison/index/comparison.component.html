@@ -8,7 +8,6 @@
         [isDisabled]="!global.getUserInfo().roles.includes('Admin')"
       >
       </app-autocomplete>
-
       <app-autocomplete #policyAutocomplete
         [label]="'Política'"
         [options]="policies"
@@ -17,7 +16,6 @@
       >
       </app-autocomplete>
     </div>
-
     <div class="form-buttons">
       <app-button
         [label]="'Consultar'"
@@ -28,7 +26,6 @@
       <app-button></app-button>
     </div>
   </div>
-
   <div class="table" [class.hidden]="!showTable">
     <div>
       <h6>Antes</h6>
@@ -37,7 +34,6 @@
         [displayedColumns]="displayedColumns"
       ></app-table>
     </div>
-
     <div>
       <h6>Después</h6>
       <app-table class="after"

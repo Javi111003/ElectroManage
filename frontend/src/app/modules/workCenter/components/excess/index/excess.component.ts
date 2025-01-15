@@ -7,20 +7,9 @@ import {default as _rollupMoment, Moment} from 'moment';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { GlobalModule } from '../../../../global/global.module';
+import { MY_FORMATS } from '../../../../../config/api.config';
 
 const moment = _rollupMoment || _moment;
-
-export const MY_FORMATS = {
-  parse: {
-    dateInput: 'MM/YYYY',
-  },
-  display: {
-    dateInput: 'MM/YYYY',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
 
 @Component({
   selector: 'app-excess',
@@ -33,7 +22,6 @@ export const MY_FORMATS = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExcessComponent {
-
   constructor(
     public global: GlobalModule,
     private fb: FormBuilder
@@ -73,10 +61,20 @@ export class ExcessComponent {
     }
   ];
 
+  /**
+   * Retrieves a FormControl from the form by its control name.
+   * @param control The name of the control to retrieve.
+   * @returns The FormControl associated with the given control name.
+   */
   getControl(control: string): FormControl {
     return this.form.get(control) as FormControl;
   }
 
+  /**
+   * Retrieves the value of a FormControl from the form by its control name.
+   * @param control The name of the control to retrieve the value from.
+   * @returns The value of the FormControl associated with the given control name.
+   */
   getControlValue(control: string): any {
     return this.form.get(control)?.value;
   }

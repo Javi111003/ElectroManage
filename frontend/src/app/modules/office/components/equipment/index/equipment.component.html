@@ -1,5 +1,4 @@
 <div class="form-container" [formGroup]='form'>
-  <!-- Contenedor de Autocompletes -->
   <div class="form-autocomplete">
     <div class="form-autocomplete-item">
       <app-autocomplete
@@ -20,7 +19,6 @@
       </app-autocomplete>
     </div>
   </div>
-
   <div class="form-buttons">
     <app-button *appShowForRoles="['Admin', 'Manager']"
       [label]="'Añadir'"
@@ -35,7 +33,6 @@
     </app-button>
     <app-button></app-button>
   </div>
-
   <div class="form-table" *ngIf="showTable">
     <app-table
       [dataSource]="dataSource"
@@ -47,5 +44,4 @@
     </app-table>
   </div>
 </div>
-
 <app-equipment-form></app-equipment-form>

@@ -10,10 +10,6 @@ import { Subscription } from 'rxjs';
   styleUrl: './register-form.component.css'
 })
 export class RegisterFormComponent implements OnInit, OnDestroy {
-  @Input() data: any;
-  private subscriptions: Subscription = new Subscription();
-  loading: boolean = false;
-
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
@@ -36,6 +32,9 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  @Input() data: any;
+  private subscriptions: Subscription = new Subscription();
+  loading: boolean = false;
   form: FormGroup;
 
   ngOnInit() {
@@ -65,14 +64,33 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+  /**
+   * Retrieves a form control by its name.
+   *
+   * @param control - The name of the control to retrieve.
+   * @returns The FormControl associated with the given name.
+   */
   getControl(control: string): FormControl {
     return this.form.get(control) as FormControl;
   }
 
+  /**
+   * Retrieves the value of a form control by its name.
+   *
+   * @param control - The name of the control whose value is to be retrieved.
+   * @returns The value of the specified form control.
+   */
   getControlValue(control: string): any {
     return this.form.get(control)?.value;
   }
 
+  /**
+   * Resets the form and sets default values for certain fields.
+   *
+   * This function resets the form to its initial state and sets the 'date' field
+   * to yesterday's date. If the user is not an admin, it also sets the 'workCenter'
+   * field to the user's company name.
+   */
   onCloseModal(): void {
     this.form.reset();
     const today = new Date();
@@ -85,6 +103,13 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Handles the form submission process.
+   *
+   * This function checks if the form is valid before proceeding. If the form is invalid,
+   * it alerts the user to fill in all fields and marks all controls as touched. If the form
+   * is valid, it asks for confirmation to save changes and reloads the page upon confirmation.
+   */
   onSubmit(): void {
     this.loading = true;
     if (this.form.invalid) {
@@ -99,6 +124,12 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Marks all form controls as touched.
+   *
+   * This function iterates over all form controls and marks each one as touched,
+   * which is useful for triggering validation messages.
+   */
   markAllAsTouched(): void {
     Object.keys(this.form.controls).forEach(field => {
       const control = this.getControl(field);
@@ -106,6 +137,12 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Filters dates to allow only past dates.
+   *
+   * @param d - The date to be checked.
+   * @returns True if the date is in the past, false otherwise.
+   */
   filterDate = (d: Date | null): boolean => {
     const today = new Date();
     const Tday = today.getDate();
@@ -120,6 +157,6 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
       (year < Tyear || (year === Tyear && (month < Tmonth) || (month === Tmonth && day < Tday))))
       return true;
 
-    return false
-  };
+    return false;
+  }
 }

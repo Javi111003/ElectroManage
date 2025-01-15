@@ -14,7 +14,6 @@ declare var bootstrap: any;
   styleUrl: './register.component.css'
 })
 export class RegisterComponent implements OnInit {
-
   constructor (
     public global: GlobalModule,
     private fb: FormBuilder,
@@ -71,10 +70,22 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  /**
+   * Retrieves a form control by its name.
+   *
+   * @param control - The name of the control to retrieve.
+   * @returns The FormControl associated with the given name.
+   */
   getControl(control: string): FormControl {
     return this.form.get(control) as FormControl;
   }
 
+  /**
+   * Retrieves the value of a form control by its name.
+   *
+   * @param control - The name of the control whose value is to be retrieved.
+   * @returns The value of the specified form control.
+   */
   getControlValue(control: string): any {
     return this.form.get(control)?.value;
   }
@@ -163,7 +174,7 @@ export class RegisterComponent implements OnInit {
    * Handles the click event on the table toggle button.
    * Toggles the visibility of the table based on the current state.
    */
-  onClick() {
+  onConsultClick() {
     if (!this.showTable) {
       if (this.getControlValue('workCenter').id &&
       this.getControlValue('startDate') && this.getControlValue('endDate')) {
@@ -195,12 +206,21 @@ export class RegisterComponent implements OnInit {
     return this.consumptions.reduce((acc, value) => acc + value, 0);
   }
 
+  /**
+   * Opens the modal to add a new register.
+   * Sets the data in the data service with a null item, the current work center, and a loading state of false.
+   * Then, it shows the modal with the ID 'exampleModal'.
+   */
   add(): void {
     this.dataService.setData([null, this.getControlValue('workCenter'), false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }
 
+  /**
+   * Opens a confirmation dialog to delete a register.
+   * If the user confirms, it shows a dialog indicating that the item has been deleted.
+   */
   delete(): void {
     this.global.openDialog('¿Estás seguro de que deseas continuar?').subscribe(
       result => { if (result) {
@@ -209,6 +229,13 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  /**
+   * Opens the modal to edit an existing register.
+   * Sets the data in the data service with the provided item, the current work center, and a loading state of false.
+   * Then, it shows the modal with the ID 'exampleModal'.
+   *
+   * @param item - The item to be edited.
+   */
   edit(item: any): void {
     this.dataService.setData([item, this.getControlValue('workCenter'), false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);

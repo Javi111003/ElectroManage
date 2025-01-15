@@ -8,20 +8,17 @@
         [isDisabled]="!global.getUserInfo().roles.includes('Admin')"
       >
       </app-autocomplete>
-
       <app-datepicker class="startDate"
         [filter]="filterStartDate"
         [label]="'Desde'"
         [control]="getControl('startDate')"
       ></app-datepicker>
-
       <app-datepicker class="endDate"
         [filter]="filterEndDate"
         [label]="'Hasta'"
         [control]="getControl('endDate')"
       ></app-datepicker>
     </div>
-
     <div class="form-buttons">
       <app-button *appShowForRoles="['Admin', 'Manager']"
         [label]="'Añadir'"
@@ -32,25 +29,22 @@
       </app-button>
       <app-button class="consult"
         [label]="'Consultar'"
-        [function]="onClick.bind(this)"
+        [function]="onConsultClick.bind(this)"
       >
       </app-button>
-
       <app-button class="exportPDF"></app-button>
     </div>
   </form>
-
   <div class="table" [class.hidden]="!showTable">
     <app-table
       [dataSource]="dataSource"
       [displayedColumns]="displayedColumns"
       [footer]="footerTable"
       [showFooter]="true"
-      [showActions]="true"
+      [showActions]="global.getUserInfo().roles.includes('Admin') || global.getUserInfo().roles.includes('Manager')"
       [editFunction]="edit.bind(this)"
       [deleteFunction]="delete.bind(this)"
     ></app-table>
   </div>
 </div>
-
 <app-register-form></app-register-form>

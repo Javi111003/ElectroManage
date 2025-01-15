@@ -1,40 +1,35 @@
-/* Estilos para el contenedor principal */
 .container-fluid {
   padding: 0;
 }
-
-/* Estilos para el contenedor del mapa */
 #map {
-  height: 100vh; /* Hace que el mapa ocupe toda la altura de la pantalla */
-  width: 100%;   /* Hace que el mapa ocupe todo el ancho */
+  height: 100vh;
+  width: 100%;
   z-index: 0;
 }
-
-/* Estilos para el componente autocomplete */
 app-autocomplete {
   margin-top: 10px;
   position: absolute;
-  z-index: 10;     /* Asegura que el autocomplete esté por encima del mapa */
-  background-color: white; /* Fondo blanco para que no sea transparente */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Opcional, para darle sombra al autocomplete */
+  z-index: 10;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 .location-btn {
   margin-top: 15px;
   margin-left: 270px;
   position: absolute;
-  z-index: 10;     /* Asegura que el autocomplete esté por encima del mapa */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Opcional, para darle sombra al autocomplete */
+  z-index: 10;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 45px;
   height: 45px;
-  border-radius: 50%; /* Hace el botón circular */
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color:#00203b; /* Color del botón (puedes cambiarlo) */
-  color:white; /* Color del ícono */
-  border: none; /* Eliminar borde */
+  background-color:#00203b;
+  color:white;
+  border: none;
   cursor: pointer;
-  transition: background-color 0.3s ease; /* Transición para el cambio de color */
+  transition: background-color 0.3s ease;
 }
 .location-btn:hover {
   transform:scale(1.1)

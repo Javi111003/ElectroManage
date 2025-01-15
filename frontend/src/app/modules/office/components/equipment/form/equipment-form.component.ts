@@ -14,13 +14,6 @@ import { Item } from '../../../../../shared/shared.module';
   styleUrl: './equipment-form.component.css'
 })
 export class EquipmentFormComponent implements OnInit, OnDestroy {
-  private subscriptions: Subscription = new Subscription();
-  @Input() data: any;
-  enableAddType: boolean = false;
-  enableAddBrand: boolean = false;
-  postMethod: boolean = true;
-  loading: boolean = false;
-
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
@@ -52,8 +45,9 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         return;
       }
 
-      if (this.getControlValue('type'))
+      if (this.getControlValue('type')) {
         this.enableAddType = !this.getControlValue('type').id;
+      }
     });
 
     this.form.get('brand')!.valueChanges.subscribe(() => {
@@ -62,13 +56,19 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         return;
       }
 
-      if (this.getControlValue('brand'))
+      if (this.getControlValue('brand')) {
         this.enableAddBrand = !this.getControlValue('brand').id;
+      }
     });
   }
 
+  @Input() data: any;
+  private subscriptions: Subscription = new Subscription();
+  enableAddType: boolean = false;
+  enableAddBrand: boolean = false;
+  postMethod: boolean = true;
+  loading: boolean = false;
   form: FormGroup;
-
   useFrequencies: Item[] = [
     {
       id: 1,
@@ -88,7 +88,6 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     ['Media', 'Medium'],
     ['Baja', 'Low']
   ]);
-
   maintenanceStatus: Item[] = [
     {
       id: 1,
@@ -112,11 +111,9 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     ['Sí', true],
     ['No', false]
   ])
-
   typeStringArray: string[] = [];
   typeArray: Item[] = [];
   typeObjectArray: EquipPropertyInfo[] = [];
-
   brandStringArray: string[] = [];
   brandArray: Item[] = [];
   brandObjectArray: EquipPropertyInfo[] = [];
@@ -126,9 +123,11 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
       if (newData) {
         this.data = newData[0];
         const post = newData[3];
+
         this.form.patchValue(this.data);
         this.getControl('workCenter').setValue(newData[1]);
         this.getControl('office').setValue(newData[2]);
+
         if (this.data) {
           const type: Item = {
             id: this.data.typeId,
@@ -140,11 +139,13 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
           };
           const useFrequency = this.useFrequencies.find(item => item.name === this.data.useFrequency);
           const maintenanceStatus = this.maintenanceStatus.find(item => item.name === this.data.maintenanceStatus);
+
           this.getControl('type').setValue(type);
           this.getControl('brand').setValue(brand);
           this.getControl('useFrequency').setValue(useFrequency);
           this.getControl('maintenanceStatus').setValue(maintenanceStatus);
           this.getControl('criticalEnergySystem').setValue(this.criticalMatch.get(this.data.criticalEnergySystem));
+
           if (this.data.instalationDate) {
             const dateString = this.data.instalationDate;
             const dateParts = dateString.split('-');
@@ -157,7 +158,6 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     });
 
     this.subscriptions.add(sub);
-
     this.global.Reset();
     this.global.getWorkCenters();
     this.getTypes();
@@ -178,12 +178,17 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+  /**
+   * Checks if a control is disabled based on its id.
+   * @param control The control to check.
+   * @returns True if the control is not null and has an id, otherwise false.
+   */
   checkDisabled(control: any): boolean {
     if (control) {
       return control.id;
     }
 
-    return false
+    return false;
   }
 
   /**
@@ -292,7 +297,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
       (year < Tyear || (year === Tyear && (month < Tmonth) || (month === Tmonth && day <= Tday))))
       return true;
 
-    return false
+    return false;
   };
 
   /**
@@ -306,7 +311,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     const eqType: EquipmentType = {
       name: this.getControlValue('type'),
       description: null
-    }
+    };
     this.officeService.postEquipmentType(eqType).subscribe({
       next: (response) => {
         console.log('Created successfully:', response);
@@ -367,7 +372,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     const eqBrand: EquipmentBrand = {
       name: this.getControlValue('brand'),
       description: null
-    }
+    };
     this.officeService.postEquipmentBrand(eqBrand).subscribe({
       next: (response) => {
         console.log('Created successfully:', response);

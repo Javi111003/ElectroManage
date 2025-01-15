@@ -8,25 +8,23 @@ import { PolicyInfo } from '../../../../../models/policy.interface';
 import { Subscription } from 'rxjs';
 import { Item } from '../../../../../shared/shared.module';
 
-declare var bootstrap: any;  // Declaración de bootstrap para evitar errores de compilación
+declare var bootstrap: any;
 @Component({
   selector: 'app-policy-manage',
   templateUrl: './manage.component.html',
   styleUrl: './manage.component.css'
 })
 export class ManageComponent implements OnInit {
-  private subscriptions: Subscription = new Subscription();
-
   constructor (
     public global: GlobalModule,
     private policyService: PolicyService,
     private dataService: DataService
   ) {}
 
+  private subscriptions: Subscription = new Subscription();
   policyStringArray: string[] = [];
   policyArray: Item[] = [];
   policyObjectArray: PolicyInfo[] = [];
-
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
     {
