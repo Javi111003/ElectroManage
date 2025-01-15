@@ -23,18 +23,31 @@ public class GetTopFiveCompaiesCountWarningQueryHandler : CoreCommandHandler<Get
         {
             x => x.Warnings
         };
-        var topFiveCompaniesCountWarnings = await companyRepository.GetAll(useInactive: false, includes: include)
-            .Select(x => new TopFiveCompaniesCountWarningDTO
+        var companies = await companyRepository.GetAll(includes: include).ToListAsync();
+        var topFive = new List<TopFiveCompaniesCountWarningDTO>();
+        foreach (var company in companies)
+        {
+            var warnings = new CountWarningByMonthDTO[12];
+            for (int month = 0; month < 12; month++)
+            {
+                warnings[month] = new CountWarningByMonthDTO
+                {
+                    Month = month + 1,
+                    CountWarnings = company.Warnings.Count(w => w.Created.Year == command.Year && w.Created.Month == month + 1)
+                };
+            }
+            topFive.Add(new TopFiveCompaniesCountWarningDTO
             {
                 Company = new CompanyDTO
                 {
-                    Id = x.Id,
-                    Name = x.Name,
+                    Id = company.Id,
+                    Name = company.Name,
                 },
-                CountWarning = x.Warnings.Where(w => w.StatusBaseEntity != Domain.Enums.StatusEntityType.Delete).Count(),
-            }).Take(5).OrderBy(x => x.CountWarning)
-            .ToListAsync(ct);
+                CountWarning = company.Warnings.Count(),
+                CountWarningByMonth = warnings
+            });
+        }
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
-        return topFiveCompaniesCountWarnings;
+        return topFive.OrderByDescending(tp => tp.CountWarning).Take(5);
     }
 }
