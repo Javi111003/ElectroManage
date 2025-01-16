@@ -38,4 +38,14 @@ export class UserService {
   registerUser(registerData: RegisterUser): Observable<any> {
     return this.http.post<any>(API_URL + '/v1/register/user', registerData);
   }
+
+  /**
+   * Deletes a user by their ID from the API.
+   * This method sends an HTTP DELETE request to the API to delete a specific user by their ID.
+   * @param id The ID of the user to delete.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  deleteUser(id: number): Observable<any> {
+    return this.http.delete<any>(`${API_URL}/v1/user/${id}`);
+  }
 }

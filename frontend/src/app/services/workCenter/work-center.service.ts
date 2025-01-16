@@ -14,6 +14,10 @@ import { Alert } from '../../models/alert.interface';
 export class WorkCenterService {
   constructor(private http: HttpClient) { }
 
+  getCenterById(id: number): Observable<CenterDetails> {
+    return this.http.get<CenterDetails>(`${API_URL}/v1/company/${id}`);
+  }
+
   /**
    * Fetches the list of work centers from the API.
    * This method sends an HTTP GET request to the API to retrieve a list of work centers.

@@ -6,6 +6,7 @@ import { DataService } from '../../../../../services/data/data.service';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
 import { CenterDetails } from '../../../../../models/workCenter.interface';
 import { Subscription } from 'rxjs';
+import { UserLogged } from '../../../../../models/credential.interface';
 
 declare var bootstrap: any;
 
@@ -48,9 +49,20 @@ export class ManageComponent implements OnInit, OnDestroy {
   ];
 
   ngOnInit(): void {
-    this.getCenters();
-    const sub = this.dataService.dataUpdated$.subscribe(() => {
+    const user: UserLogged = this.global.getUserInfo();
+
+    if (user.roles.includes('Admin'))
       this.getCenters();
+    else
+      this.getManagerCenter(user.info.company.id);
+
+    const sub = this.dataService.dataUpdated$.subscribe(() => {
+      const user: UserLogged = this.global.getUserInfo();
+
+      if (user.roles.includes('Admin'))
+        this.getCenters();
+      else
+        this.getManagerCenter(user.info.company.id);
     });
     this.subscriptions.add(sub);
   }
@@ -163,6 +175,20 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.global.httpCenter.getCenterDetailsList().subscribe(centers => {
       this.centerObjectArray = centers;
       this.reloadTableData(centers);
+    });
+  }
+
+  /**
+   * Retrieves the details of a specific work center by its ID.
+   * This function sends a request to the server to fetch the details of the work center
+   * identified by the given center ID. Upon receiving the response, it updates the component's
+   * state by setting the centerObjectArray with the retrieved center details and reloads the table data.
+   * @param centerID The ID of the work center to be retrieved.
+   */
+  getManagerCenter(centerID: number): void {
+    this.global.httpCenter.getCenterById(centerID).subscribe(center => {
+      this.centerObjectArray = [center];
+      this.reloadTableData([center]);
     });
   }
 

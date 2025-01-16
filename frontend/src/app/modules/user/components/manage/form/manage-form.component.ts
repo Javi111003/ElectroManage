@@ -111,8 +111,10 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     if (this.getControlValue('workCenter').id) {
       this.global.openDialog('¿Está seguro de que desea guardar los cambios?', true).subscribe(
       result => {
+        console.log(result);
         if (result) {
           this.register();
+          console.log('confirm');
         }
       });
     } else {
@@ -158,10 +160,21 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       next: (response) => {
         console.log('User registered successfully:', response);
         this.dataService.notifyDataUpdated();
+        this.activateCloseButton();
       },
       error: (error) => {
         console.log(error);
       }
     });
+  }
+
+  /**
+   * This function is used to activate the close button of the modal.
+   * It retrieves the close button element and simulates a click event on it,
+   * effectively closing the modal.
+   */
+  activateCloseButton(): void {
+    const closeButton = document.getElementById('close-button') as HTMLButtonElement;
+    closeButton.click();
   }
 }
