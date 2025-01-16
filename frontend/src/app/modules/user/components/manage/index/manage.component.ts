@@ -17,7 +17,7 @@ export class ManageComponent {
   constructor (
     public global: GlobalModule,
     private dataService: DataService,
-    private user: UserService
+    private httpUser: UserService
   ) {}
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
@@ -63,10 +63,18 @@ export class ManageComponent {
    * Initiates the deletion process for a user.
    * Opens a dialog to confirm the deletion, and if confirmed, opens another dialog to notify the user of the deletion.
    */
-  delete(): void {
+  delete(item: any): void {
     this.global.openDialog('¿Estás seguro de que deseas continuar?', true).subscribe(
       result => { if (result) {
-        this.global.openDialog('Eliminado');
+        this.httpUser.deleteUser(item.id).subscribe({
+          next: (response) => {
+            console.log('Deleted successfully:', response);
+            this.dataService.notifyDataUpdated();
+          },
+          error: (error) => {
+            console.log(error);
+          }
+        });
       }
     });
   }
@@ -77,7 +85,7 @@ export class ManageComponent {
    * @param item The user item to be edited.
    */
   edit(item: any): void {
-    this.user.getById(item.id).subscribe(user => {
+    this.httpUser.getById(item.id).subscribe(user => {
       item.role = user.roles.map(item => this.roles.get(item));
       this.dataService.setData([item, false]);
       const modal = new bootstrap.Modal(
@@ -92,7 +100,7 @@ export class ManageComponent {
    * Subscribes to the user service to get the list of users, then maps the users to the required format and reloads the table data.
    */
   getUserList(): void {
-    this.user.getUsersList().subscribe(users => {
+    this.httpUser.getUsersList().subscribe(users => {
       const appUsers: UserInfo[] = users.appUsers;
       this.reloadTableData(appUsers);
     });
