@@ -2,12 +2,19 @@
   <div class="row gap-2">
     <div class="col-12 text-start ms-2">
       <div class="form-buttons">
-        <app-button
+        <app-button *appShowForRoles="['Admin']"
           [label]="'Añadir'"
           [function]="onAddClick.bind(this)"
           [showIcon]="true"
           [icon]="'add'"
         >
+      </app-button>
+      <app-button *ngIf="!global.getUserInfo().roles.includes('Admin')"
+        [label]="'Editar'"
+        [function]="edit.bind(this)"
+        [showIcon]="true"
+        [icon]="'edit'"
+      >
       </app-button>
       </div>
     </div>
@@ -16,7 +23,7 @@
         <app-table
           [dataSource]="dataSource"
           [displayedColumns]="displayedColumns"
-          [showActions]="true"
+          [showActions]="global.getUserInfo().roles.includes('Admin')"
           [editFunction]="edit.bind(this)"
           [deleteFunction]="delete.bind(this)"
         ></app-table>
