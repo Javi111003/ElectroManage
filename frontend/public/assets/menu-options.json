@@ -54,7 +54,7 @@
           "label": "Gestión",
           "icon": "folder_supervised",
           "link": "workCenter/manage/index",
-          "allowedRoles": "['Admin']"
+          "allowedRoles": "['Admin', 'Manager']"
         }
       ]
     },

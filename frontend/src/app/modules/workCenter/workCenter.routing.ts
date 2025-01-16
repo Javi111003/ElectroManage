@@ -69,7 +69,7 @@ export const workCenterRoutes: Routes = [
     component: ManageComponent,
     canActivate: [rolesGuard],
     data: {
-      roles: ['Admin']
+      roles: ['Admin', 'Manager']
     },
     loadChildren: () => import('./workCenter.module').then(m => m.WorkCenterModule)
   },
@@ -78,7 +78,7 @@ export const workCenterRoutes: Routes = [
     component: ManageFormComponent,
     canActivate: [rolesGuard],
     data: {
-      roles: ['Admin']
+      roles: ['Admin', 'Manager']
     },
     loadChildren: () => import('./workCenter.module').then(m => m.WorkCenterModule)
   }
