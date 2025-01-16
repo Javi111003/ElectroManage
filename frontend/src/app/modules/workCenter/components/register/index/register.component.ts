@@ -5,6 +5,7 @@ import { GlobalModule } from '../../../../global/global.module'
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DataService } from '../../../../../services/data/data.service';
 import { Item } from '../../../../../shared/shared.module';
+import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
 
 declare var bootstrap: any;
 
@@ -17,7 +18,8 @@ export class RegisterComponent implements OnInit {
   constructor (
     public global: GlobalModule,
     private fb: FormBuilder,
-    private dataService: DataService
+    private dataService: DataService,
+    private snackbar: SnackbarService
   ) {
     this.form = this.fb.group({
       startDate: [null],
@@ -224,7 +226,7 @@ export class RegisterComponent implements OnInit {
   delete(): void {
     this.global.openDialog('¿Estás seguro de que deseas continuar?', true).subscribe(
       result => { if (result) {
-        this.global.openDialog('Eliminado');
+        this.snackbar.openSnackBar('Eliminado exitosamente...');
       }
     });
   }

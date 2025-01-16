@@ -6,6 +6,7 @@ import { GlobalModule } from '../../../../global/global.module';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Item } from '../../../../../shared/shared.module';
+import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
 
 declare var bootstrap: any;
 @Component({
@@ -17,7 +18,8 @@ export class ManageComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
-    private dataService: DataService
+    private dataService: DataService,
+    private snackbar: SnackbarService
   ) {
     this.form = this.fb.group({
       workCenter: ''
@@ -147,10 +149,12 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.global.httpOffice.deleteOffice(item.id).subscribe({
           next: (response) => {
             console.log('Deleted successfully:', response);
+            this.snackbar.openSnackBar('Eliminado exitosamente...');
             this.dataService.notifyDataUpdated();
           },
           error: (error) => {
             console.log(error);
+            this.snackbar.openSnackBar('Error al eliminar, intente de nuevo...');
           }
         });
       }

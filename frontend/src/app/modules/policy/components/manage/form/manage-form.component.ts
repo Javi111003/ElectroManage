@@ -5,6 +5,7 @@ import { DataService } from '../../../../../services/data/data.service';
 import { PolicyService } from '../../../../../services/policy/policy.service';
 import { Policy } from '../../../../../models/policy.interface';
 import { Subscription } from 'rxjs';
+import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-policy-manage-form',
@@ -16,7 +17,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     public global: GlobalModule,
     private dataService: DataService,
-    private policyService: PolicyService
+    private policyService: PolicyService,
+    private snackbar: SnackbarService
   ) {
     this.form = this.fb.group({
       policyName: ['', Validators.required],
@@ -25,7 +27,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.dataService.setData(null);
   }
 
-  @Input() selectedItem: any = null;
   private subscriptions: Subscription = new Subscription();
   form: FormGroup;
   data: any;
@@ -136,11 +137,15 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     request$.subscribe({
       next: (response) => {
         console.log('Operación exitosa:', response);
+        const mssg = isEdit ? 'Editado exitosamente...' : 'Añadido exitosamente...';
+        this.snackbar.openSnackBar(mssg);
         this.dataService.notifyDataUpdated();
         this.activateCloseButton();
       },
       error: (error) => {
         console.log(error);
+        const mssg = isEdit ? 'editar' : 'añadir';
+        this.snackbar.openSnackBar(`Error al ${mssg}, intente de nuevo...`);
       }
     });
   }

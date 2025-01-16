@@ -100,8 +100,8 @@ export class ManageComponent implements OnInit, OnDestroy {
           next: (response) => {
             console.log('Deleted successfully:', response);
             this.dataService.notifyDataUpdated();
-            this.snackbarService.openSnackBar('Eliminado exitosamente...');
             this.deleteLocation(item);
+            this.snackbarService.openSnackBar('Eliminado exitosamente...');
           },
           error: (error) => {
             console.log(error);

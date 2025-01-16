@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
 import { Subscription } from 'rxjs';
+import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-register-form',
@@ -13,7 +14,8 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
-    private dataService: DataService
+    private dataService: DataService,
+    private snackbar: SnackbarService
   )
   {
     const today = new Date();

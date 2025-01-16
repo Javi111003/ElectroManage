@@ -51,10 +51,15 @@ export class MenuComponent implements OnInit {
     this.menuService.getMenuOptions().subscribe(data => {
       this.menuItems = data.menuItems;
     });
+
+    this.currentURL = window.location.href.substring(22, window.location.href.length);
+    if (this.currentURL === '')
+      this.currentURL = '/'
+    console.log(this.currentURL);
   }
 
   isSidebarActive = false;
-  activeOption = '';
+  currentURL = '/';
 
   /**
    * Toggles the visibility of the sidebar.
@@ -75,7 +80,7 @@ export class MenuComponent implements OnInit {
    * @param option The ID of the option to set as active.
    */
   setActiveOption(option: string) {
-    this.activeOption = option;
+    this.currentURL = option;
   }
 
   /**

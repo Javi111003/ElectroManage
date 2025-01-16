@@ -7,6 +7,7 @@ import { PolicyService } from '../../../../../services/policy/policy.service';
 import { PolicyInfo } from '../../../../../models/policy.interface';
 import { Subscription } from 'rxjs';
 import { Item } from '../../../../../shared/shared.module';
+import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
 
 declare var bootstrap: any;
 @Component({
@@ -18,7 +19,8 @@ export class ManageComponent implements OnInit {
   constructor (
     public global: GlobalModule,
     private policyService: PolicyService,
-    private dataService: DataService
+    private dataService: DataService,
+    private snackbar: SnackbarService
   ) {}
 
   private subscriptions: Subscription = new Subscription();
@@ -73,10 +75,12 @@ export class ManageComponent implements OnInit {
         this.policyService.deletePolicy(item.id).subscribe({
           next: (response) => {
             console.log('Deleted successfully:', response);
+            this.snackbar.openSnackBar('Eliminado exitosamente...');
             this.dataService.notifyDataUpdated();
           },
           error: (error) => {
             console.log(error);
+            this.snackbar.openSnackBar('Error al eliminar, intente de nuevo...');
           }
         });
       }

@@ -5,6 +5,7 @@ import { ConfigColumn } from '../../../../../shared/components/table/table.compo
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
 import { UserInfo } from '../../../../../models/credential.interface';
+import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
 
 declare var bootstrap: any;
 
@@ -17,7 +18,8 @@ export class ManageComponent {
   constructor (
     public global: GlobalModule,
     private dataService: DataService,
-    private httpUser: UserService
+    private httpUser: UserService,
+    private snackbar: SnackbarService
   ) {}
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
@@ -69,10 +71,12 @@ export class ManageComponent {
         this.httpUser.deleteUser(item.id).subscribe({
           next: (response) => {
             console.log('Deleted successfully:', response);
+            this.snackbar.openSnackBar('Eliminado exitosamente...');
             this.dataService.notifyDataUpdated();
           },
           error: (error) => {
             console.log(error);
+            this.snackbar.openSnackBar('Error al eliminar, intente de nuevo...');
           }
         });
       }

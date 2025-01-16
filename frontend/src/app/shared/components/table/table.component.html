@@ -4,7 +4,11 @@
 
       <ng-container *ngFor="let item of displayedColumns" matColumnDef="{{item.field}}">
         <th mat-header-cell *matHeaderCellDef> {{item.title}} </th>
-        <td mat-cell *matCellDef="let element"> {{element[item.field]}} </td>
+        <td mat-cell *matCellDef="let element">
+          <span [matTooltip]="printTooltip(element[item.field])" matTooltipPosition="above">
+            {{printCell(element[item.field])}}
+          </span>
+        </td>
         <td mat-footer-cell *matFooterCellDef> {{footer[displayedColumns.indexOf(item)]}} </td>
       </ng-container>
 

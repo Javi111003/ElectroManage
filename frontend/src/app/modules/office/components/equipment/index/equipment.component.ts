@@ -7,6 +7,7 @@ import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
 import { Subscription } from 'rxjs';
 import { Item } from '../../../../../shared/shared.module';
+import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
 
 declare var bootstrap: any;
 
@@ -20,7 +21,8 @@ export class EquipmentComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
-    private dataService: DataService
+    private dataService: DataService,
+    private snackbar: SnackbarService
   ) {
     this.form = this.fb.group({
       workCenter: '',
@@ -226,10 +228,12 @@ export class EquipmentComponent implements OnInit, OnDestroy {
         this.global.httpOffice.deleteEquipmentInstance(item.id).subscribe({
           next: (response) => {
             console.log('Deleted successfully:', response);
+            this.snackbar.openSnackBar('Eliminado exitosamente...');
             this.dataService.notifyDataUpdated();
           },
           error: (error) => {
             console.log(error);
+            this.snackbar.openSnackBar('Error al eliminar, intente de nuevo...');
           }
         });
         this.global.httpOffice.deleteEquipmentSpecification(item.specifId).subscribe({
