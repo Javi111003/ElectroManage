@@ -91,6 +91,7 @@ public class CreateCompanyCommandHandler : CoreCommandHandler<CreateCompanyComma
                 efficiencyPolicy.EfficiencyPolicyCompanies.Add(efficiencyPolicyCompany);
 
                 await efficiencyPolicyRepository.UpdateAsync(efficiencyPolicy, false);
+                await companyRepository.UpdateAsync(company,false);
                 CommitTransaction(scopeDoWork);
             }
         }
