@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RankingComponent } from './excess.component';
+import { ExcessComponent } from './excess.component';
 
-describe('RankingComponent', () => {
-  let component: RankingComponent;
-  let fixture: ComponentFixture<RankingComponent>;
+describe('ExcessComponent', () => {
+  let component: ExcessComponent;
+  let fixture: ComponentFixture<ExcessComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [RankingComponent]
+      declarations: [ExcessComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RankingComponent);
+    fixture = TestBed.createComponent(ExcessComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

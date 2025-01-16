@@ -38,8 +38,11 @@ export class AuthService {
    * @returns An array of strings representing the roles of the user.
    */
   getUserRoles(): string[] {
-    const user: UserLogged = JSON.parse(sessionStorage.getItem('userLogged') || '{}');
-    return user.roles
+    const userLogged = sessionStorage.getItem('userLogged');
+    if (userLogged) {
+      return JSON.parse(userLogged).roles;
+    }
+    return [];
   }
 
   /**
