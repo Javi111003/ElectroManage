@@ -6,6 +6,7 @@ import { RegisterUser } from '../../../../../models/credential.interface';
 import { UserService } from '../../../../../services/user/user.service';
 import { Subscription } from 'rxjs';
 import { Item } from '../../../../../shared/shared.module';
+import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-user-manage-form',
@@ -17,7 +18,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     public global: GlobalModule,
     private dataService: DataService,
-    private user: UserService
+    private user: UserService,
+    private snackbar: SnackbarService
   )
   {
     this.form = this.fb.group({
@@ -159,11 +161,13 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.user.registerUser(registerData).subscribe({
       next: (response) => {
         console.log('User registered successfully:', response);
+        this.snackbar.openSnackBar('Añadido exitosamente...');
         this.dataService.notifyDataUpdated();
         this.activateCloseButton();
       },
       error: (error) => {
         console.log(error);
+        this.snackbar.openSnackBar('Error al añadir, intente de nuevo...')
       }
     });
   }

@@ -43,4 +43,23 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.headings.push('deleteColumn');
     }
   }
+
+  printCell(element: any): any {
+    if (typeof element === "string"){
+      const char = 150 / this.displayedColumns.length;
+      const result = element.substring(0, char);
+      return element.length <= char ? result : result + '...';
+    }
+
+    return element;
+  }
+
+  printTooltip(element: any): string {
+    if (typeof element === "string") {
+      const char = 150 / this.displayedColumns.length;
+      return element.length > char ? element : ""
+    }
+
+    return "";
+  }
 }

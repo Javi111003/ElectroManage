@@ -26,6 +26,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     CdkDrag,
     CdkDropList,
     MatChipsModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatTooltipModule
   ],
   exports: [
     TableComponent,
@@ -97,7 +99,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     CdkDrag,
     CdkDropList,
     MatChipsModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatTooltipModule
   ]
 })
 export class SharedModule { }

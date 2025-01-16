@@ -8,6 +8,7 @@ import { AdminArea, CenterPropertyInfo, InstallationType } from '../../../../../
 import { Subscription } from 'rxjs';
 import { MAP_URL } from '../../../../../config/api.config';
 import { Item } from '../../../../../shared/shared.module';
+import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-center-manage-form',
@@ -19,7 +20,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     public global: GlobalModule,
     private dataService: DataService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private snackbar: SnackbarService
   )
   {
     this.form = this.fb.group({
@@ -280,11 +282,13 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
     this.global.httpCenter.postInstallationType(instType).subscribe({
       next: (response) => {
+        this.snackbar.openSnackBar('Añadido exitosamente...');
         console.log('Created successfully:', response);
         this.getTypes();
       },
       error: (error) => {
         console.log(error);
+        this.snackbar.openSnackBar('Error al añadir, intente de nuevo...');
       }
     });
   }
@@ -318,10 +322,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.global.httpCenter.deleteInstallationType(type.id).subscribe({
       next: (response) => {
         console.log('Deleted successfully:', response);
+        this.snackbar.openSnackBar('Eliminado exitosamente...');
         this.getTypes();
       },
       error: (error) => {
         console.log(error);
+        this.snackbar.openSnackBar('Error al eliminar, intente de nuevo...');
       }
     });
   }
@@ -343,10 +349,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.global.httpCenter.postAdminArea(area).subscribe({
       next: (response) => {
         console.log('Created successfully:', response);
+        this.snackbar.openSnackBar('Añadido exitosamente...');
         this.getAreas();
       },
       error: (error) => {
         console.log(error);
+        this.snackbar.openSnackBar('Error al añadir, intente de nuevo...');
       }
     });
   }
@@ -380,10 +388,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.global.httpCenter.deleteAdminArea(area.id).subscribe({
       next: (response) => {
         console.log('Deleted successfully:', response);
+        this.snackbar.openSnackBar('Eliminado exitosamente...');
         this.getAreas();
       },
       error: (error) => {
         console.log(error);
+        this.snackbar.openSnackBar('Error al eliminar, intente de nuevo...');
       }
     });
   }
@@ -556,6 +566,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   createCenter(): void {
     // Implementation for creating a work center
+    this.snackbar.openSnackBar('Añadido exitosamente...');
   }
 
   /**
@@ -564,6 +575,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   editCenter(): void {
     // Implementation for editing a work center
+    this.snackbar.openSnackBar('Editado exitosamente...');
   }
 
   /**

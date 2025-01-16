@@ -15,8 +15,8 @@
       <ul>
         <div *ngFor="let item of menuItems">
           <li *appShowForRoles="item.allowedRoles">
-            <div *ngIf="!item.subItems" class="dropdown-label" [class.active]="activeOption === item.id">
-              <a  id="item.id" (click)="setActiveOption(item.id)" [routerLink]="item.link">
+            <div *ngIf="!item.subItems" class="dropdown-label" [class.active]="currentURL === item.link">
+              <a  id="item.id" (click)="setActiveOption(item.link)" [routerLink]="item.link">
                 <mat-icon>{{item.icon}}</mat-icon>
                 {{item.label}}
               </a>
@@ -28,8 +28,8 @@
             </div>
             <ul *ngIf="item.subItems" class="submenu" [@submenuToggle]="isOpen(item.id) ? 'expanded' : 'collapsed'">
               <div *ngFor="let subitem of item.subItems">
-                <li *appShowForRoles="subitem.allowedRoles" [class.active]="activeOption === subitem.id">
-                  <a id="subitem.id" (click)="setActiveOption(subitem.id)" [routerLink]="subitem.link">
+                <li *appShowForRoles="subitem.allowedRoles" [class.active]="currentURL === subitem.link">
+                  <a id="subitem.id" (click)="setActiveOption(subitem.link)" [routerLink]="subitem.link">
                     <mat-icon>{{subitem.icon}}</mat-icon>
                     {{subitem.label}}
                   </a>

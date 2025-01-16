@@ -7,6 +7,7 @@ import { OfficeService } from '../../../../../services/office/office.service';
 import { EquipmentBrand, EquipmentSpecification, EquipmentType, EquipPropertyInfo } from '../../../../../models/equipment.interface';
 import { Subscription } from 'rxjs';
 import { Item } from '../../../../../shared/shared.module';
+import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-equipment-form',
@@ -18,7 +19,8 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     public global: GlobalModule,
     private dataService: DataService,
-    private officeService: OfficeService
+    private officeService: OfficeService,
+    private snackbar: SnackbarService
   )
   {
     const today = new Date();
@@ -317,10 +319,12 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     this.officeService.postEquipmentType(eqType).subscribe({
       next: (response) => {
         console.log('Created successfully:', response);
+        this.snackbar.openSnackBar('Añadido exitosamente...');
         this.getTypes();
       },
       error: (error) => {
         console.log(error);
+        this.snackbar.openSnackBar('Error al añadir, intente de nuevo...');
       }
     });
   }
@@ -336,10 +340,12 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     this.officeService.deleteEquipmentType(type.id).subscribe({
       next: (response) => {
         console.log('Deleted successfully:', response);
+        this.snackbar.openSnackBar('Eliminado exitosamente...');
         this.getTypes();
       },
       error: (error) => {
         console.log(error);
+        this.snackbar.openSnackBar('Error al eliminar, intente de nuevo...');
       }
     });
   }
@@ -355,10 +361,12 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     this.officeService.deleteEquipmentBrand(brand.id).subscribe({
       next: (response) => {
         console.log('Deleted successfully:', response);
+        this.snackbar.openSnackBar('Eliminado exitosamente...');
         this.getBrands();
       },
       error: (error) => {
         console.log(error);
+        this.snackbar.openSnackBar('Error al eliminar, intente de nuevo...');
       }
     });
   }
@@ -378,10 +386,12 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     this.officeService.postEquipmentBrand(eqBrand).subscribe({
       next: (response) => {
         console.log('Created successfully:', response);
+        this.snackbar.openSnackBar('Añadido exitosamente...');
         this.getBrands();
       },
       error: (error) => {
         console.log(error);
+        this.snackbar.openSnackBar('Error al eliminar, intente de nuevo...');
       }
     });
   }
@@ -531,11 +541,15 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     serviceMethod.call(this.officeService, equipment, this.data?.id).subscribe({
       next: (response) => {
         console.log(isEdit ? 'Edited successfully:' : 'Created successfully:', response);
+        const mssg = isEdit ? 'Editado exitosamente...' : 'Añadido exitosamente';
+        this.snackbar.openSnackBar(mssg);
         this.dataService.notifyDataUpdated();
         this.activateCloseButton();
       },
       error: (error) => {
         console.log(error);
+        const mssg = isEdit ? 'editar' : 'añadir';
+        this.snackbar.openSnackBar(`Error al ${mssg}, intente de nuevo...`);
       }
     });
   }

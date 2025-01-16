@@ -6,6 +6,7 @@ import { Office } from '../../../../../models/office.interface';
 import { OfficeService } from '../../../../../services/office/office.service';
 import { Subscription } from 'rxjs';
 import { Item } from '../../../../../shared/shared.module';
+import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-office-manage-form',
@@ -17,7 +18,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     public global: GlobalModule,
     private dataService: DataService,
-    private officeService: OfficeService
+    private officeService: OfficeService,
+    private snackbar: SnackbarService
   ) {
     this.form = this.fb.group({
       officeName: ['', Validators.required],
@@ -189,10 +191,14 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     serviceCall.subscribe({
       next: (response) => {
         console.log(`${action.charAt(0).toUpperCase() + action.slice(1)}d successfully:`, response);
+        const mssg = action === 'create' ? 'Añadido exitosamente...' : 'Editado exitosamente...';
+        this.snackbar.openSnackBar(mssg);
         this.dataService.notifyDataUpdated();
       },
       error: (error) => {
         console.log(error);
+        const mssg = action === 'create' ? 'añadir' : 'editar';
+        this.snackbar.openSnackBar(`Error al ${mssg}, intente de nuevo...`);
       }
     });
   }
