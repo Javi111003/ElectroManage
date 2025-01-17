@@ -4,23 +4,26 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../shared/components/dialog/dialog.component';
+import { TranslationService } from '../services/translation/translation.service';
 
 @Injectable()
 // Interceptor to catch requests errors
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog, private translationService: TranslationService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = 'Ha ocurrido un error Inesperado!';
         if (error.error) {
-          if (error.error.errors)
-            errorMessage = `Error: ${error.error.errors[0].reason}`;
-          else
-            errorMessage = 'Error al establecer la conexión con el servidor'
+          if (error.error.errors) {
+            const originalMessage = error.error.errors[0].reason;
+            errorMessage = `Ha ocurrido un error: ${this.translationService.translate(originalMessage)}`;
+          } else {
+            errorMessage = 'Error al establecer la conexión con el servidor';
+          }
         } else {
-          errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+          errorMessage = `Código de error: ${error.status}\nMessage: ${this.translationService.translate(error.message)}`;
         }
 
         this.dialog.open(DialogComponent, {

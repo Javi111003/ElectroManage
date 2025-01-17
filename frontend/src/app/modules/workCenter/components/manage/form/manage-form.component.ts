@@ -285,6 +285,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         this.snackbar.openSnackBar('Añadido exitosamente...');
         console.log('Created successfully:', response);
         this.getTypes();
+        this.getControl('instalationType').setValue(
+          {
+            id: response.id,
+            name: response.name
+          }
+        );
       },
       error: (error) => {
         console.log(error);
@@ -351,6 +357,12 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         console.log('Created successfully:', response);
         this.snackbar.openSnackBar('Añadido exitosamente...');
         this.getAreas();
+        this.getControl('adminAreaName').setValue(
+          {
+            id: response.id,
+            name: response.name
+          }
+        );
       },
       error: (error) => {
         console.log(error);
