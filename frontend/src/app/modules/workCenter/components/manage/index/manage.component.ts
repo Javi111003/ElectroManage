@@ -24,6 +24,7 @@ export class ManageComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription = new Subscription();
   centerObjectArray: CenterDetails[] = [];
+  noResults: boolean = false;
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
     {
@@ -211,5 +212,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       instalationType: item.installationType.name,
       monthlyLimit: item.consumptionLimit
     }));
+
+    this.noResults = this.dataSource.data.length == 0;
   }
 }

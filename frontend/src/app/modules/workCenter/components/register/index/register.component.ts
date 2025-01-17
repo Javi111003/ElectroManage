@@ -45,6 +45,7 @@ export class RegisterComponent implements OnInit {
 
   form: FormGroup;
   showTable: boolean = false;
+  noResults: boolean = false;
   dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
   consumptions: number[] = [];
   costs: number[] = [];
@@ -114,6 +115,8 @@ export class RegisterComponent implements OnInit {
         this.getTotalConsumption().toFixed(2).toString(),
         this.getTotalCost().toFixed(2).toString()
       ];
+
+      this.noResults = this.dataSource.data.length == 0;
     })
   }
 

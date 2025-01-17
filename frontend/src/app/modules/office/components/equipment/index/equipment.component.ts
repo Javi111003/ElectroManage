@@ -69,7 +69,8 @@ export class EquipmentComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
   data: any;
   form: FormGroup;
-  showTable = false;
+  showTable: boolean = false;
+  noResults: boolean = false;
   equipmentObjects: Equipment[] = [];
   equipments: string[] = [];
   useFrequency: Map<string, string> = new Map<string, string>([
@@ -179,6 +180,7 @@ export class EquipmentComponent implements OnInit, OnDestroy {
       this.global.httpOffice.getEquipmentList(office.id).subscribe(equipments => {
         this.equipmentObjects = equipments;
         this.reloadTableData(equipments);
+        this.noResults = this.dataSource.data.length == 0;
       });
     }
   }
@@ -190,6 +192,7 @@ export class EquipmentComponent implements OnInit, OnDestroy {
    */
   onConsultClick(): void {
     if (!this.showTable) {
+      this.noResults = false;
       const center = this.getControlValue('workCenter');
       const office = this.getControlValue('office');
       if (center && office && center.id && office.id) {

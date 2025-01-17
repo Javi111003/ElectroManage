@@ -35,7 +35,7 @@
       <app-button class="exportPDF"></app-button>
     </div>
   </form>
-  <div class="table" [class.hidden]="!showTable">
+  <div class="table" [class.hidden]="!showTable" *ngIf="dataSource.data.length > 0">
     <app-table
       [dataSource]="dataSource"
       [displayedColumns]="displayedColumns"
@@ -45,6 +45,9 @@
       [editFunction]="edit.bind(this)"
       [deleteFunction]="delete.bind(this)"
     ></app-table>
+  </div>
+  <div *ngIf="noResults" [class.hidden]="!showTable">
+    <app-no-results></app-no-results>
   </div>
 </div>
 <app-register-form></app-register-form>

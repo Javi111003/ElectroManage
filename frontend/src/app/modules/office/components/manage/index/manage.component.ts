@@ -57,6 +57,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
   form: FormGroup;
   showTable: boolean = false;
+  noResults: boolean = false;
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
     {
@@ -78,6 +79,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       if (id) {
         this.global.getOfficesByCenter(id).subscribe(offices => {
           this.reloadTableData(offices);
+          this.noResults = this.dataSource.data.length == 0;
         });
       }
     });
@@ -126,6 +128,7 @@ export class ManageComponent implements OnInit, OnDestroy {
    */
    onConsultClick(condition: boolean = !this.showTable): void {
     if (condition) {
+      this.noResults = false;
       const id = this.getControlValue('workCenter').id;
       if (id) {
         this.showTable = true;

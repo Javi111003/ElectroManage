@@ -29,6 +29,9 @@
         ></app-table>
       </div>
     </div>
+    <div *ngIf="noResults">
+      <app-no-results></app-no-results>
+    </div>
   </div>
 </div>
 <app-center-manage-form></app-center-manage-form>
