@@ -22,6 +22,7 @@ export class ManageComponent {
     private snackbar: SnackbarService
   ) {}
 
+  noResults: boolean = false;
   dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
   displayedColumns: ConfigColumn[] = [
     {
@@ -123,5 +124,7 @@ export class ManageComponent {
       password: item.password,
       workCenter: item.company.name
     }));
+
+    this.noResults = this.dataSource.data.length == 0;
   }
 }

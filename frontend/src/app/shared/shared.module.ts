@@ -9,6 +9,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
 import { ProgressSpinnerComponent } from './components/progress-spinner/progress-spinner.component';
 import { ChipsComponent } from './components/chips/chips.component';
 import { SnackbarComponent } from './components/snackbar/snackbar.component';
+import { NoResultsComponent } from './components/no-results/no-results.component';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -38,7 +39,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     DialogComponent,
     ProgressSpinnerComponent,
     ChipsComponent,
-    SnackbarComponent
+    SnackbarComponent,
+    NoResultsComponent
   ],
   imports: [
     CommonModule,
@@ -76,6 +78,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ProgressSpinnerComponent,
     ChipsComponent,
     SnackbarComponent,
+    NoResultsComponent,
 
     MatTableModule,
     MatIconModule,

@@ -1,0 +1,16 @@
+.no-results {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  border: 2px dashed #00203b;
+}
+.no-results img {
+  width: 173px;
+}
+.no-results p {
+  font-family: fantasy;
+  padding: 10px;
+  color: #00203b;
+}

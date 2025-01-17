@@ -33,7 +33,7 @@
     </app-button>
     <app-button></app-button>
   </div>
-  <div class="form-table" *ngIf="showTable">
+  <div class="form-table" *ngIf="showTable && dataSource.data.length > 0">
     <app-table
       [dataSource]="dataSource"
       [displayedColumns]="displayedColumns"
@@ -42,6 +42,9 @@
       [deleteFunction]="delete.bind(this)"
       >
     </app-table>
+    <div *ngIf="noResults" [class.hidden]="!showTable">
+      <app-no-results></app-no-results>
+    </div>
   </div>
 </div>
 <app-equipment-form></app-equipment-form>

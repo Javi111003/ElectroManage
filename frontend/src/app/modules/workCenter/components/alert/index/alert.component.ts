@@ -37,6 +37,7 @@ export class AlertComponent implements OnInit {
 
   form: FormGroup;
   showTable: boolean = false;
+  noResults: boolean = false;
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
     {
@@ -86,6 +87,7 @@ export class AlertComponent implements OnInit {
    */
   onConsultClick() {
     if (!this.showTable) {
+      this.noResults = false;
       const id = this.getControlValue('workCenter').id;
       if (id) {
         this.getAlerts(id);
@@ -109,6 +111,8 @@ export class AlertComponent implements OnInit {
         monthlyLimit: item.establishedLimit.toFixed(2),
         excess: (item.consumption - item.establishedLimit).toFixed(2)
       }));
+
+      this.noResults = this.dataSource.data.length == 0;
     });
   }
 }

@@ -19,10 +19,13 @@
       <app-button></app-button>
     </div>
   </div>
-  <div class="table" [class.hidden]="!showTable">
+  <div class="table" [class.hidden]="!showTable" *ngIf="dataSource.data.length > 0">
     <app-table
       [dataSource]="dataSource"
       [displayedColumns]="displayedColumns"
     ></app-table>
+  </div>
+  <div *ngIf="noResults" [class.hidden]="!showTable">
+    <app-no-results></app-no-results>
   </div>
 </div>
