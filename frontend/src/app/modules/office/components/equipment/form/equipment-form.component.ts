@@ -321,6 +321,12 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         console.log('Created successfully:', response);
         this.snackbar.openSnackBar('Añadido exitosamente...');
         this.getTypes();
+        this.getControl('type').setValue(
+          {
+            id: response.id,
+            name: response.name
+          }
+        );
       },
       error: (error) => {
         console.log(error);
@@ -388,6 +394,12 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         console.log('Created successfully:', response);
         this.snackbar.openSnackBar('Añadido exitosamente...');
         this.getBrands();
+        this.getControl('brand').setValue(
+          {
+            id: response.id,
+            name: response.name
+          }
+        );
       },
       error: (error) => {
         console.log(error);

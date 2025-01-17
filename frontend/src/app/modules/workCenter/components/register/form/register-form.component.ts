@@ -163,4 +163,14 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
 
     return false;
   }
+
+  /**
+   * This function is used to activate the close button of the modal.
+   * It retrieves the close button element and simulates a click event on it,
+   * effectively closing the modal.
+   */
+  activateCloseButton(): void {
+    const closeButton = document.getElementById('close-button') as HTMLButtonElement;
+    closeButton.click();
+  }
 }

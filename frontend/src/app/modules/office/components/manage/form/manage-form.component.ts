@@ -194,6 +194,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         const mssg = action === 'create' ? 'Añadido exitosamente...' : 'Editado exitosamente...';
         this.snackbar.openSnackBar(mssg);
         this.dataService.notifyDataUpdated();
+        this.activateCloseButton();
       },
       error: (error) => {
         console.log(error);
@@ -211,6 +212,16 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   editOffice(): void {
     const office = this.getOfficeObject();
     this.handleOffice(office, 'edit');
+  }
+
+  /**
+   * This function is used to activate the close button of the modal.
+   * It retrieves the close button element and simulates a click event on it,
+   * effectively closing the modal.
+   */
+  activateCloseButton(): void {
+    const closeButton = document.getElementById('close-button') as HTMLButtonElement;
+    closeButton.click();
   }
 }
 

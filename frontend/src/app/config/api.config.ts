@@ -3,6 +3,7 @@ export const API_URL =
 export const MAP_URL = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2';
 export const LOCATION_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 export const MENU_OPTIONS_URL = 'assets/menu-options.json';
+export const MSSG_ES_URL = 'assets/messages.es.json';
 export const MY_FORMATS = {
   parse: {
     dateInput: 'MM/YYYY',
