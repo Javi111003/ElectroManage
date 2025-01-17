@@ -5,10 +5,34 @@
     <p>Electro Manage</p>
     <div class="icons">
       <mat-icon matBadge="15">notifications</mat-icon>
-    <span class="cdk-visually-hidden"></span>
-      <mat-icon (click)="logout()">person</mat-icon>
+      <span class="cdk-visually-hidden"></span>
+      <div class="user-menu-container">
+        <mat-icon (click)="toggleUserMenu($event)">person</mat-icon>
+        <div class="user-menu" *ngIf="isUserMenuOpen">
+          <div class="info-section">
+            <div class="info-container">
+              <span class="label">Usuario:</span>
+              <span class="info-value">{{userName}}</span>
+            </div>
+          </div>
+          <div class="info-section">
+            <div class="info-container">
+              <span class="label">Roles:</span>
+              <span class="info-value">{{userRoles.join(', ')}}</span>
+            </div>
+          </div>
+          <div class="info-section">
+            <div class="info-container">
+              <span class="label">Sesión:</span>
+              <span class="info-value">{{loginTime}}</span>
+            </div>
+          </div>
+          <div class="action-section">
+            <button mat-button (click)="logout()">Desconectarse</button>
+          </div>
+        </div>
+      </div>
     </div>
-
   </header>
   <aside class="sidebar" [class.active]="isSidebarActive">
     <nav class="nav">

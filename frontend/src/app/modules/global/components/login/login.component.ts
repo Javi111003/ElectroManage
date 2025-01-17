@@ -72,7 +72,9 @@ export class LoginComponent {
             info: info,
             roles: response.roles
           }
-
+          // Guardar el tiempo de inicio de sesión
+          const loginTime = new Date().getTime();
+          sessionStorage.setItem('loginTime', loginTime.toString());
           sessionStorage.setItem('token', token.token);
           sessionStorage.setItem('expiration', token.expiration);
           sessionStorage.setItem('isAuthenticated', 'true');
