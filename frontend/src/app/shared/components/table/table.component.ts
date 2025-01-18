@@ -44,6 +44,14 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
   }
 
+
+  /**
+   * Truncates a string to fit within the width of the table cell, appending ellipsis if necessary.
+   *
+   * @param element - The content of the cell, which can be of any type.
+   * @returns The truncated string with ellipsis if the original string exceeds the allowed length,
+   *          or the original element if it is not a string.
+   */
   printCell(element: any): any {
     if (typeof element === "string"){
       const char = 150 / this.displayedColumns.length;
@@ -54,6 +62,13 @@ export class TableComponent implements OnInit, AfterViewInit {
     return element;
   }
 
+
+  /**
+   * Generates a tooltip string for a given element based on its length and the number of displayed columns.
+   *
+   * @param element - The element for which the tooltip is to be generated. It can be of any type, but the function primarily handles strings.
+   * @returns A tooltip string if the element is a string and its length exceeds a calculated threshold; otherwise, an empty string.
+   */
   printTooltip(element: any): string {
     if (typeof element === "string") {
       const char = 150 / this.displayedColumns.length;
