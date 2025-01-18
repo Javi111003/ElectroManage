@@ -17,7 +17,7 @@ public class CreateCostFormulaValidator : CoreValidator<CreateCostFormulaCommand
             .NotEmpty()
             .WithMessage("Expression must not be empty");
         RuleForEach(p => p.Variables)
-            .Must(p => p.Value != null || p.Expression != null)
+            .Must(p => p.Value != null || p.Expression != null || p.VariableName.Equals("consumo", StringComparison.InvariantCultureIgnoreCase))
             .WithMessage("Variable must have a value or an expression as definition");
     }
 }
