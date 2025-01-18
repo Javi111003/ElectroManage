@@ -22,6 +22,7 @@ import { PasswordValidatorDirective } from '../../directives/password/password.d
 import { NumberValidationDirective } from '../../directives/numberValidation/number.validation.directive';
 import { EmailValidationDirective } from '../../directives/emailValidation/email-validation.directive';
 import { ShowForRolesDirective } from '../../directives/showForRoles/show-for-roles.directive';
+import { MathValidatorDirective } from '../../directives/MathValidator/math-validator.directive';
 
 //add the route of each module you need yo import here down.
 import { MatIconModule } from '@angular/material/icon';
@@ -33,7 +34,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -44,7 +44,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     PasswordValidatorDirective,
     NumberValidationDirective,
     EmailValidationDirective,
-    ShowForRolesDirective
+    ShowForRolesDirective,
+    MathValidatorDirective
   ],
   imports: [
     CommonModule,
@@ -62,7 +63,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     MatButtonModule,
     MatTableModule,
     MatBadgeModule,
-    MatSlideToggleModule
+    ReactiveFormsModule
   ],
   exports: [
     HttpClientModule,
@@ -75,11 +76,12 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     ReactiveFormsModule,
     MatButtonModule,
     MatTableModule,
-    MatSlideToggleModule,
+    ReactiveFormsModule,
     PasswordValidatorDirective,
     NumberValidationDirective,
     EmailValidationDirective,
-    ShowForRolesDirective
+    ShowForRolesDirective,
+    MathValidatorDirective
   ]
 })
 export class GlobalModule {

@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit, Renderer2, signal } from '@angular/core';
+import { Component, HostBinding, Injector, OnDestroy, OnInit, Renderer2, signal } from '@angular/core';
 import * as L from 'leaflet';
 import { Modal } from 'bootstrap';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, NgControl, Validators } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
 import { AdminArea, CenterPropertyInfo, InstallationType } from '../../../../../models/workCenter.interface';
@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { MAP_URL } from '../../../../../config/api.config';
 import { Item } from '../../../../../shared/shared.module';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
+import { MathValidatorDirective } from '../../../../../directives/MathValidator/math-validator.directive';
 
 @Component({
   selector: 'app-center-manage-form',
@@ -21,7 +22,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     public global: GlobalModule,
     private dataService: DataService,
     private renderer: Renderer2,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+    private injector: Injector
   )
   {
     this.form = this.fb.group({
@@ -616,7 +618,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       if (this.formulaSymbols.every(symbol => symbol.id != option.id && symbol.name != option.name)
         && option.name != 'consumo' && !usedOptions.includes(option.name)) {
 
-        const control = this.fb.control('', [Validators.required, Validators.pattern(/^[0-9]+$/)]);
+        const control = this.fb.control('', Validators.required);
         this.form.addControl(option.name, control);
         const formContainer = document.getElementById('form-container');
 
@@ -634,28 +636,32 @@ export class ManageFormComponent implements OnInit, OnDestroy {
           label.innerText = option.name;
           const input = this.renderer.createElement('input');
 
-          this.renderer.setAttribute(input, 'type', 'number');
+          this.renderer.setAttribute(input, 'type', 'text');
           this.renderer.setAttribute(input, 'class', 'form-control');
           this.renderer.setAttribute(input, 'id', option.name);
-          this.renderer.listen(input, 'input', (event) => {
+
+          const mathValidator = new MathValidatorDirective(this.renderer, input);
+          this.renderer.listen(input, 'input', mathValidator.onInputChange.bind(mathValidator));
+          this.renderer.listen(input, 'keypress', mathValidator.onKeyPress.bind(mathValidator));
+          this.renderer.listen(input, 'blur', (event) => {
             control.setValue(event.target.value);
+            this.updateInputClass(input, control);
           });
 
           const errorDiv = this.renderer.createElement('div');
-          const errorRequired = this.renderer.createElement('div');
-          const errorPattern = this.renderer.createElement('div');
-
-          this.renderer.setAttribute(errorRequired, 'class', 'error-required');
-          this.renderer.setAttribute(errorPattern, 'class', 'error-pattern');
-          this.renderer.setStyle(errorDiv, 'color', 'red');
-
-          this.renderer.appendChild(errorDiv, errorRequired);
-          this.renderer.appendChild(errorDiv, errorPattern);
-
+          errorDiv.className = "invalid-feedback"
           this.renderer.listen(input, 'blur', () => {
-            errorPattern.innerText = control.hasError('pattern') ? 'Debe ser un número válido.' : '';
-            errorRequired.innerText = control.hasError('required') ? 'El campo es requerido.' : '';
+            const control = this.form.get(option.name);
+            if (control) {
+              errorDiv.innerHTML = '';
+              if (control.invalid) {
+                errorDiv.innerHTML = 'Este campo es obligatorio';
+                errorDiv.style.display = 'block';
+              }
+            }
           });
+
+          this.renderer.setAttribute(input, 'appMathValidator', '');
 
           column.appendChild(label);
           column.appendChild(input);
@@ -669,6 +675,22 @@ export class ManageFormComponent implements OnInit, OnDestroy {
           usedOptions.push(option.name);
         }
       }
+    }
+  }
+
+  /**
+   * Updates the CSS class of the input element based on the validity of the form control.
+   * If the control is invalid, it adds the 'is-invalid' class to the input element.
+   * Otherwise, it removes the 'is-invalid' class from the input element.
+   *
+   * @param input - The input element to update.
+   * @param control - The form control to check for validity.
+   */
+  updateInputClass(input: any, control: FormControl): void {
+    if (control.invalid) {
+      this.renderer.addClass(input, 'is-invalid');
+    } else {
+      this.renderer.removeClass(input, 'is-invalid');
     }
   }
 }
