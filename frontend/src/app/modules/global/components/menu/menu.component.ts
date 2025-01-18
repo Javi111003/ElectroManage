@@ -76,12 +76,15 @@ export class MenuComponent implements OnInit {
   ngOnInit(): void {
     this.menuService.getMenuOptions().subscribe(data => {
       this.menuItems = data.menuItems;
-    });
+      this.currentURL = window.location.href.substring(22, window.location.href.length);
+      if (this.currentURL === '')
+        this.currentURL = '/'
 
-    this.currentURL = window.location.href.substring(22, window.location.href.length);
-    if (this.currentURL === '')
-      this.currentURL = '/'
-    console.log(this.currentURL);
+      let id = this.currentURL.split("/")[0];
+      let menuItem = this.menuItems.find(item => item.id === id);
+      if (menuItem)
+        menuItem.isOpen = true;
+    });
 
     setInterval(() => this.updateLoginTime(), 1000);
   }
