@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../../services/auth/auth.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { GlobalModule } from '../../global.module';
+import { UserById } from '../../../../models/credential.interface';
+import { UserService } from '../../../../services/user/user.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-menu',
@@ -37,32 +40,38 @@ import { GlobalModule } from '../../global.module';
     ]
 })
 export class MenuComponent implements OnInit {
+  menuItems: any[] = [];
   isUserMenuOpen = false;
   loginTime: string = '0h 0m 0s';
   private loginStartTime: number;
   userEmail: string = '';
   userName: string = '';
   userRoles: string[] = [];
+  roles: Map<string, string> = new Map<string, string>([
+    ['Admin', 'Administrador'],
+    ['Manager', 'Gerente'],
+    ['Analist', 'Analista']
+  ]);
 
   constructor(
     public global: GlobalModule,
     private menuService: MenuService,
     private router: Router,
-    private auth: AuthService
+    private auth: AuthService,
+    private httpUser: UserService
   ) {
     const storedLoginTime = sessionStorage.getItem('loginTime');
     this.loginStartTime = storedLoginTime ? parseInt(storedLoginTime) : new Date().getTime();
     const userLogged = sessionStorage.getItem('userLogged');
     if (userLogged) {
       const user = JSON.parse(userLogged);
-      this.userEmail = user.info.email;
-      this.userName = this.userEmail.split('@')[0]; // Extraer nombre de usuario
-      this.userRoles = user.roles;
+      this.getUserName(user.info.id).subscribe(userById => {
+        this.userEmail = userById.email;
+        this.userName = userById.username;
+        this.userRoles = user.roles.map((item: string) => this.roles.get(item));
+      });
     }
   }
-
-  //items from .json
-  menuItems: any[] = [];
 
   ngOnInit(): void {
     this.menuService.getMenuOptions().subscribe(data => {
@@ -126,6 +135,15 @@ export class MenuComponent implements OnInit {
   }
 
   /**
+   * Fetches the username of a user by their ID.
+   * @param id The ID of the user.
+   * @returns An observable containing the username of the user.
+   */
+  getUserName(id: number): Observable<UserById> {
+    return this.httpUser.getById(id);
+  }
+
+  /**
    * This function is used to logout the user.
    * It calls the logout method from the auth service and navigates the user to the login page.
    */
@@ -135,11 +153,23 @@ export class MenuComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  /**
+    * Toggles the visibility of the user menu.
+    * Prevents the event from propagating to avoid closing the menu immediately.
+    * @param event The event that triggered the toggle action.
+    */
   toggleUserMenu(event: Event): void {
     event.stopPropagation();
     this.isUserMenuOpen = !this.isUserMenuOpen;
   }
 
+
+  /**
+    * Handles the document click event to determine if the user menu should be closed.
+    * This method checks if the click occurred outside the user menu container.
+    * If the click is outside, it sets `isUserMenuOpen` to `false`, closing the user menu.
+    * @param event - The mouse event triggered by the document click.
+    */
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const userMenuContainer = document.querySelector('.user-menu-container');
@@ -148,6 +178,12 @@ export class MenuComponent implements OnInit {
     }
   }
 
+
+  /**
+   * Updates the login time by calculating the difference between the current time
+   * and the login start time. The result is formatted as a string in the format
+   * "Xh Ym Zs" where X is hours, Y is minutes, and Z is seconds.
+   */
   private updateLoginTime(): void {
     const now = new Date().getTime();
     const diff = now - this.loginStartTime;

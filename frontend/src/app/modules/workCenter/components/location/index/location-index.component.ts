@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 import { GlobalModule } from '../../../../global/global.module';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -10,7 +10,7 @@ import { LOCATION_URL } from '../../../../../config/api.config';
   templateUrl: './location-index.component.html',
   styleUrl: './location-index.component.css'
 })
-export class LocationComponent {
+export class LocationComponent implements OnInit, AfterViewInit {
   constructor (
     public global: GlobalModule,
     private fb: FormBuilder,
@@ -26,10 +26,15 @@ export class LocationComponent {
   map!: L.Map;
 
   ngOnInit(): void {
-    this.MapInit();
     this.global.Reset();
     this.global.getWorkCenters();
     this.getCenterDetailsList();
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.mapInit();
+    }, 100);
   }
 
   /**
@@ -66,11 +71,12 @@ export class LocationComponent {
    * Initializes the Leaflet map with default settings
    * Centers the map view on Cuba
    */
-  MapInit(): void {
+  mapInit(): void {
     this.map = L.map('map').setView([22, -80], 7);
     L.tileLayer(LOCATION_URL, {
       maxZoom: 19
     }).addTo(this.map);
+    this.map.invalidateSize();
   }
 
 
