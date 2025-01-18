@@ -194,4 +194,14 @@ export class WorkCenterService {
   deletelocation(id: number): Observable<any> {
     return this.http.delete<any>(`${API_URL}/v1/location/${id}`);
   }
+
+  /**
+   * Deletes a cost formula from the API.
+   * This method sends an HTTP DELETE request to the API to remove an existing cost formula.
+   * @param id The ID of the cost formula to be deleted.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  deleteFormula(id: number): Observable<any> {
+    return this.http.delete<any>(`${API_URL}/v1/cost_formula/${id}`);
+  }
 }
