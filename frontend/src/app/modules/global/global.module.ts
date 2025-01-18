@@ -33,6 +33,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { Observable } from 'rxjs';
     MatSelectModule,
     MatButtonModule,
     MatTableModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatSlideToggleModule
   ],
   exports: [
     HttpClientModule,
@@ -73,6 +75,7 @@ import { Observable } from 'rxjs';
     ReactiveFormsModule,
     MatButtonModule,
     MatTableModule,
+    MatSlideToggleModule,
     PasswordValidatorDirective,
     NumberValidationDirective,
     EmailValidationDirective,
