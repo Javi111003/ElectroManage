@@ -41,7 +41,7 @@ public class CreateRegisterCommandHandler : CoreCommandHandler<CreateRegisterCom
         {
             CompanyId = command.CompanyId,
             Company = company,
-            Cost = cost,
+            //Cost = cost,
             Consumption = command.Consumption,
             Date = DateTime.UtcNow,
         };
