@@ -35,7 +35,7 @@ public class CreateCostFormulaCommandHandler : CoreCommandHandler<CreateCostForm
         using (var scopeDoWork = ScopeBeginTransactionAsync())
         {
             var checkUniqueFormula = await _checkUniqueService.CheckUniqueNameAsync(costFormula);
-            if (checkUniqueFormula)
+            if (!checkUniqueFormula)
             {
                 _logger.LogError($"{nameof(ExecuteAsync)} | One formula with name {command.Name} already exists");
                 ThrowError("This formula already exists", 400);
