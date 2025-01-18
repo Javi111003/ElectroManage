@@ -16,7 +16,7 @@
                   Este campo es obligatorio
                 </div>
               </div>
-              <div class="col-4 col-sm-6">
+              <div class="col-4 col-sm-6" *ngIf="!data">
                 <label for="password" class="form-label">Contraseña</label>
                 <input type="password" class="form-control" id="password" formControlName="password" appPassword
                   [ngClass]="{'is-invalid': form.get('password')?.invalid && form.get('password')?.touched}">
