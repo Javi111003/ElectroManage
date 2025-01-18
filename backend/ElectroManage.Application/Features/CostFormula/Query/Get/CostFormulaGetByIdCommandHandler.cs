@@ -17,30 +17,32 @@ public class CostFormulaGetByIdCommandHandler : CoreQueryHandler<CostFormulaGetB
 
     public async override Task<CostFormulaGetByIdResponse> ExecuteAsync(CostFormulaGetByIdCommand command, CancellationToken ct = default)
     {
-        _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
+        /* _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
 
-        var costFormulaRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.CostFormula>();
-        var filters = new Expression<Func<Domain.Entites.Sucursal.CostFormula, bool>>[]
-        {
-            x => x.Id == command.Id,
-        };
+         var costFormulaRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.CostFormula>();
+         var filters = new Expression<Func<Domain.Entites.Sucursal.CostFormula, bool>>[]
+         {
+             x => x.Id == command.Id,
+         };
 
-        var costFormula = await costFormulaRepository.FirstAsync(useInactive: true, filters:  filters);
-        if (costFormula is null)
-        {
-            _logger.LogError($"The cost formula with id {command.Id} doesn't exist");
-            ThrowError($"The cost formula with id {command.Id} doesn't exist", 404);
-        }
+         var costFormula = await costFormulaRepository.FirstAsync(useInactive: true, filters:  filters);
+         if (costFormula is null)
+         {
+             _logger.LogError($"The cost formula with id {command.Id} doesn't exist");
+             ThrowError($"The cost formula with id {command.Id} doesn't exist", 404);
+         }
 
-        _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
+         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
 
-        return new CostFormulaGetByIdResponse
-        {
-            Id = costFormula.Id,
-            ExtraPerCent = costFormula.ExtraPerCent,
-            Increase = costFormula.Increase,
-            Created = costFormula.Created,
-            Status = costFormula.StatusBaseEntity.ToString(),
-        };
+         return new CostFormulaGetByIdResponse
+         {
+             Id = costFormula.Id,
+             ExtraPerCent = costFormula.ExtraPerCent,
+             Increase = costFormula.Increase,
+             Created = costFormula.Created,
+             Status = costFormula.StatusBaseEntity.ToString(),
+         };
+     }*/
+        throw new NotImplementedException();
     }
 }

@@ -13,5 +13,10 @@ public class CostFormulaConfiguration : IEntityTypeConfiguration<CostFormula>
             .WithMany(c => c.CostFormulas)
             .HasForeignKey(c => c.CompanyId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasMany(c => c.VariableDefinitions)
+            .WithOne(c => c.Formula)
+            .HasForeignKey(c => c.FormulaId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
