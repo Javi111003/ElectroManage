@@ -68,7 +68,7 @@ internal class EditAppUserCommandHandler : CoreCommandHandler<EditAppUserCommand
         return new EditAppUserResponse
         {
             Id = user.Id,
-            UserName = user.UserName,
+            Username = user.UserName,
             Company = new DTO_s.CompanyDTO
             {
                 Id = company.Id,
