@@ -1,9 +1,9 @@
+using ElectroManage.Application.DTO_s;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
 namespace ElectroManage.Application.Features.CostFormula.Query.Get;
-
 public class CostFormulaGetByIdCommandHandler : CoreQueryHandler<CostFormulaGetByIdCommand, CostFormulaGetByIdResponse>
 {
     readonly IUnitOfWork _unitOfWork;
@@ -17,7 +17,7 @@ public class CostFormulaGetByIdCommandHandler : CoreQueryHandler<CostFormulaGetB
 
     public async override Task<CostFormulaGetByIdResponse> ExecuteAsync(CostFormulaGetByIdCommand command, CancellationToken ct = default)
     {
-        /* _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
+        _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
 
          var costFormulaRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.CostFormula>();
          var filters = new Expression<Func<Domain.Entites.Sucursal.CostFormula, bool>>[]
@@ -37,12 +37,13 @@ public class CostFormulaGetByIdCommandHandler : CoreQueryHandler<CostFormulaGetB
          return new CostFormulaGetByIdResponse
          {
              Id = costFormula.Id,
-             ExtraPerCent = costFormula.ExtraPerCent,
-             Increase = costFormula.Increase,
-             Created = costFormula.Created,
-             Status = costFormula.StatusBaseEntity.ToString(),
+             Name = costFormula.Name,
+             Expression = costFormula.Expression,
+             Variables = costFormula.VariableDefinitions.Select(v => new VariableDefinitionDto
+             {
+                 VariableName = v.Name,
+                 Expression = v.Expression
+             }).ToList(),
          };
-     }*/
-        throw new NotImplementedException();
-    }
+     }
 }

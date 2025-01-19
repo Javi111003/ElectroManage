@@ -2,7 +2,7 @@
 
 public record RegisterGetByIdResponse
 {
-    public decimal Cost { get; set; }
-    public decimal Consumption { get; set; }
+    public double Cost { get; set; }
+    public double Consumption { get; set; }
     public DateTime Date { get; set; }
 }

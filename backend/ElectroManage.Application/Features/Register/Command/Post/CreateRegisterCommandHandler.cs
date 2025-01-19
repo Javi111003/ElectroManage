@@ -48,8 +48,8 @@ public class CreateRegisterCommandHandler : CoreCommandHandler<CreateRegisterCom
         {
             CompanyId = command.CompanyId,
             Company = company,
-            //Cost = cost,
-            //Consumption = command.Consumption,
+            Cost = cost,
+            Consumption = command.Consumption,
             Date = DateTime.UtcNow,
         };
         await registerRepository.SaveAsync(register);
