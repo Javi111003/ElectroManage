@@ -37,7 +37,7 @@ public class CreateCostFormulaCommandHandler : CoreCommandHandler<CreateCostForm
             var checkUniqueFormula = await _checkUniqueService.CheckUniqueNameAsync(costFormula);
             if (!checkUniqueFormula)
             {
-                _logger.LogError($"{nameof(ExecuteAsync)} | One formula with name {command.Name} already exists");
+                _logger.LogError($"{nameof(ExecuteAsync)} | Already exists a formula with name: {command.Name} ");
                 ThrowError("This formula already exists", 400);
             }
             await costFormulaRepository.SaveAsync(costFormula);
@@ -45,7 +45,6 @@ public class CreateCostFormulaCommandHandler : CoreCommandHandler<CreateCostForm
             {
                 Name = v.VariableName,
                 Expression = v.Expression,
-                StaticValue = v.Value,
                 Formula = costFormula
             }).ToList();
             costFormula.VariableDefinitions = variables;
@@ -59,7 +58,8 @@ public class CreateCostFormulaCommandHandler : CoreCommandHandler<CreateCostForm
             Id = costFormula.Id,
             Name = costFormula.Name,
             Expression = costFormula.Expression,
-            Created = costFormula.Created
+            Created = costFormula.Created,
+            Variables = command.Variables
         };
     }
 }

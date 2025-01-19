@@ -1,5 +1,6 @@
 ﻿using ElectroManage.Application.Abstractions;
 using ElectroManage.Domain.DataAccess.Abstractions;
+using ElectroManage.Domain.Entites.Sucursal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
@@ -36,13 +37,19 @@ public class CreateRegisterCommandHandler : CoreCommandHandler<CreateRegisterCom
             _logger.LogError($"The company with id: {command.CompanyId} does not have a cost formula");
             ThrowError($"The company with id: {command.CompanyId} does not have a cost formula", 404);
         }
-        var cost = _costCalculator.EvaluateFormula(formula.Expression, []);//Pasar diccionario VariableName , Valor o Expresión
+        var variables = formula.VariableDefinitions.ToList();
+        variables.Add(new VariableDefinition
+        {
+            Name = "consumo",
+            StaticValue = command.Consumption
+        });
+        var cost = _costCalculator.EvaluateFormula(formula.Expression, [.. variables]);
         var register = new Domain.Entites.Sucursal.Register
         {
             CompanyId = command.CompanyId,
             Company = company,
             //Cost = cost,
-            Consumption = command.Consumption,
+            //Consumption = command.Consumption,
             Date = DateTime.UtcNow,
         };
         await registerRepository.SaveAsync(register);
