@@ -180,7 +180,6 @@ export class EquipmentComponent implements OnInit, OnDestroy {
       this.global.httpOffice.getEquipmentList(office.id).subscribe(equipments => {
         this.equipmentObjects = equipments;
         this.reloadTableData(equipments);
-        this.noResults = this.dataSource.data.length == 0;
       });
     }
   }
@@ -294,6 +293,7 @@ export class EquipmentComponent implements OnInit, OnDestroy {
         item.equipmentSpecification.criticalEnergySystem
       )
     }));
+    this.noResults = this.dataSource.data.length == 0;
   }
 }
 

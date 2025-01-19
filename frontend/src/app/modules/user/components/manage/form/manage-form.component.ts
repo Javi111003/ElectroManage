@@ -166,6 +166,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         this.activateCloseButton();
       },
       error: (error) => {
+        this.loading = false;
         console.log(error);
         this.snackbar.openSnackBar('Error al añadir, intente de nuevo...')
       }

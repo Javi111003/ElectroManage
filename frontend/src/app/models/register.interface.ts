@@ -26,3 +26,10 @@ export interface MeanRegisterData {
   companyID: number;
   yearCostDto: MeanDataByYear[]
 }
+
+// Register to POST
+export interface Register {
+  companyId: number;
+  consumption: number;
+  date: string;
+}
