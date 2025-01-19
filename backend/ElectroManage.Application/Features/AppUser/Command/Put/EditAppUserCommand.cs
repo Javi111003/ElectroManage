@@ -3,7 +3,7 @@
 public record EditAppUserCommand : ICommand<EditAppUserResponse>
 {
     public long Id { get; set; }
-    public string NickName { get; set; } = null!;
+    public string Username { get; set; } = null!;
     public string Role {  get; set; } = null!;
     public long CompanyId { get; set; }
 }
