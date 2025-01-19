@@ -24,6 +24,7 @@ export class ManageComponent implements OnInit {
   ) {}
 
   private subscriptions: Subscription = new Subscription();
+  noResults: boolean = false;
   policyStringArray: string[] = [];
   policyArray: Item[] = [];
   policyObjectArray: PolicyInfo[] = [];
@@ -131,5 +132,7 @@ export class ManageComponent implements OnInit {
       policyName: item.policyName,
       description: item.description
     }));
+
+    this.noResults = this.dataSource.data.length == 0;
   }
 }

@@ -19,7 +19,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   constructor (
     public global: GlobalModule,
     private dataService: DataService,
-    private snackbarService: SnackbarService
+    private snackbar: SnackbarService
   ) {}
 
   private subscriptions: Subscription = new Subscription();
@@ -102,11 +102,11 @@ export class ManageComponent implements OnInit, OnDestroy {
             console.log('Deleted successfully:', response);
             this.dataService.notifyDataUpdated();
             this.deleteLocation(item);
-            this.snackbarService.openSnackBar('Eliminado exitosamente...');
+            this.snackbar.openSnackBar('Eliminado exitosamente...');
           },
           error: (error) => {
             console.log(error);
-            this.snackbarService.openSnackBar('Error al eliminar, intente de nuevo...');
+            this.snackbar.openSnackBar('Error al eliminar, intente de nuevo...');
           }
         });
       }

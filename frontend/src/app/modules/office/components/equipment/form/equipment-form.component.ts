@@ -559,6 +559,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         this.activateCloseButton();
       },
       error: (error) => {
+        this.loading = false;
         console.log(error);
         const mssg = isEdit ? 'editar' : 'añadir';
         this.snackbar.openSnackBar(`Error al ${mssg}, intente de nuevo...`);

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { GlobalModule } from '../../../../global/global.module'
@@ -6,6 +6,9 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DataService } from '../../../../../services/data/data.service';
 import { Item } from '../../../../../shared/shared.module';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
+import { Register, TotalConsumptionData } from '../../../../../models/register.interface';
+import { Subscription } from 'rxjs';
+import { RegisterService } from '../../../../../services/register/register.service';
 
 declare var bootstrap: any;
 
@@ -14,12 +17,13 @@ declare var bootstrap: any;
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   constructor (
     public global: GlobalModule,
     private fb: FormBuilder,
     private dataService: DataService,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+    private httpRegister: RegisterService
   ) {
     this.form = this.fb.group({
       startDate: [null],
@@ -43,12 +47,11 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  private subscriptions: Subscription = new Subscription();
   form: FormGroup;
   showTable: boolean = false;
   noResults: boolean = false;
   dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
-  consumptions: number[] = [];
-  costs: number[] = [];
   footerTable: any[] = [];
   displayedColumns: ConfigColumn[] = [
     {
@@ -71,6 +74,20 @@ export class RegisterComponent implements OnInit {
     this.form.get('startDate')?.valueChanges.subscribe(() => {
       this.getControl('endDate').reset();
     });
+
+    const sub = this.dataService.dataUpdated$.subscribe(() => {
+      const id = this.getControlValue('workCenter').id;
+      const initDate = this.getControlValue('startDate');
+      const endDate = this.getControlValue('endDate');
+      if (id && initDate && endDate) {
+        this.getRegistersByCenterId(0);
+      }
+    });
+    this.subscriptions.add(sub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   /**
@@ -101,22 +118,7 @@ export class RegisterComponent implements OnInit {
    */
   getRegistersByCenterId(centerID: number): void {
     this.global.httpCenter.getRegister().subscribe(register => {
-      const registers = register.registers
-
-      for (let index = 0; index < register.registers.length; index++) {
-        registers[index].registerDate = registers[index].registerDate.substring(0, 10);
-      }
-
-      this.dataSource.data = register.registers;
-      this.consumptions = this.dataSource.data.map(item => item.consumption);
-      this.costs = this.dataSource.data.map(item => item.cost);
-      this.footerTable = [
-        'Total',
-        this.getTotalConsumption().toFixed(2).toString(),
-        this.getTotalCost().toFixed(2).toString()
-      ];
-
-      this.noResults = this.dataSource.data.length == 0;
+      this.reloadTableData(register);
     })
   }
 
@@ -197,8 +199,8 @@ export class RegisterComponent implements OnInit {
   * in the `costs` array and returns the total.
   * @returns The total cost.
   */
-  getTotalCost(): number {
-    return this.costs.reduce((acc, value) => acc + value, 0);
+  getTotalCost(costs: number[]): number {
+    return costs.reduce((acc, value) => acc + value, 0);
   }
 
   /**
@@ -207,8 +209,8 @@ export class RegisterComponent implements OnInit {
   * in the `consumptions` array and returns the total.
   * @returns The total consumption.
   */
-  getTotalConsumption(): number {
-    return this.consumptions.reduce((acc, value) => acc + value, 0);
+  getTotalConsumption(consumptions: number[]): number {
+    return consumptions.reduce((acc, value) => acc + value, 0);
   }
 
   /**
@@ -217,7 +219,7 @@ export class RegisterComponent implements OnInit {
    * Then, it shows the modal with the ID 'exampleModal'.
    */
   add(): void {
-    this.dataService.setData([null, this.getControlValue('workCenter'), false]);
+    this.dataService.setData([null, this.getControlValue('workCenter'), true, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }
@@ -226,10 +228,20 @@ export class RegisterComponent implements OnInit {
    * Opens a confirmation dialog to delete a register.
    * If the user confirms, it shows a dialog indicating that the item has been deleted.
    */
-  delete(): void {
+  delete(item: any): void {
     this.global.openDialog('¿Estás seguro de que deseas continuar?', true).subscribe(
       result => { if (result) {
-        this.snackbar.openSnackBar('Eliminado exitosamente...');
+        this.httpRegister.deleteRegister(item.id).subscribe({
+          next: (response) => {
+            console.log('Deleted successfully:', response);
+            this.dataService.notifyDataUpdated();
+            this.snackbar.openSnackBar('Eliminado exitosamente...');
+          },
+          error: (error) => {
+            console.log(error);
+            this.snackbar.openSnackBar('Error al eliminar, intente de nuevo...');
+          }
+        });
       }
     });
   }
@@ -242,8 +254,33 @@ export class RegisterComponent implements OnInit {
    * @param item - The item to be edited.
    */
   edit(item: any): void {
-    this.dataService.setData([item, this.getControlValue('workCenter'), false]);
+    this.dataService.setData([item, this.getControlValue('workCenter'), false, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
+  }
+
+  /**
+   * Reloads the table data with the provided list of registers.
+   * This function updates the data source of the table with the new list of registers.
+   * @param register The list of registers to be used to reload the table data.
+   */
+  reloadTableData(register: TotalConsumptionData): void {
+    this.dataSource.data = register.registers.map(register => ({
+      id: register.registerId,
+      date: register.registerDate,
+      registerDate: register.registerDate.substring(0, 10),
+      consumption: register.consumption.toFixed(2),
+      cost: register.cost.toFixed(2)
+    }));
+
+    const consumptions = register.registers.map(item => item.consumption);
+    const costs = register.registers.map(item => item.cost);
+    this.footerTable = [
+      'Total',
+      this.getTotalConsumption(consumptions).toFixed(2),
+      this.getTotalCost(costs).toFixed(2)
+    ];
+
+    this.noResults = this.dataSource.data.length == 0;
   }
 }

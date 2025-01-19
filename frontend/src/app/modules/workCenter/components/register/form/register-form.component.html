@@ -37,7 +37,7 @@
               </div>
               <div class="col-4 col-sm-6">
                 <label for="consumption" class="form-label">Consumo</label>
-                <input type="number" class="form-control" id="consumption" formControlName="consumption"
+                <input type="number" class="form-control" id="consumption" formControlName="consumption" appNumberValidation
                   [ngClass]="{'is-invalid': form.get('consumption')?.invalid && form.get('consumption')?.touched}">
                 <div *ngIf="form.get('consumption')?.invalid && form.get('consumption')?.touched" class="invalid-feedback">
                   Este campo es obligatorio

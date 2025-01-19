@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { WorkCenterService } from './work-center.service';
 import { API_URL } from '../../config/api.config';
-import { WorkCenter, CenterDetails, AdminArea, InstallationType, Location, ManagementTeam, CenterPropertyInfo } from '../../models/workCenter.interface';
-import { RegisterTotalConsumption, AvgRegisterConsumption } from '../../models/register.interface';
+import { WorkCenter, CenterDetails, AdminArea, InstallationType, Location, ManagementTeam } from '../../models/workCenter.interface';
+import { TotalConsumptionData, MeanRegisterData } from '../../models/register.interface';
 import { Alert } from '../../models/alert.interface';
 
 describe('WorkCenterService', () => {
@@ -83,7 +83,7 @@ describe('WorkCenterService', () => {
   });
 
   describe('Register and Alerts Operations', () => {
-    const mockRegister: RegisterTotalConsumption = {
+    const mockRegister: TotalConsumptionData = {
       totalConsumption: 1000,
       totalCost: 500,
       registers: [{
@@ -97,6 +97,7 @@ describe('WorkCenterService', () => {
 
     const mockAlert: Alert = {
       companyID: 1,
+      companyName: 'Test center',
       warnings: [{
         month: 1,
         year: 2023,
@@ -126,7 +127,7 @@ describe('WorkCenterService', () => {
     });
 
     it('should get average registers', () => {
-      const mockAvgRegisters: AvgRegisterConsumption[] = [{
+      const mockAvgRegisters: MeanRegisterData[] = [{
         companyID: 1,
         yearCostDto: [{
           year: 2023,

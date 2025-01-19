@@ -4,6 +4,8 @@ import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
 import { Subscription } from 'rxjs';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
+import { Register } from '../../../../../models/register.interface';
+import { RegisterService } from '../../../../../services/register/register.service';
 
 @Component({
   selector: 'app-register-form',
@@ -15,7 +17,8 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     public global: GlobalModule,
     private dataService: DataService,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+    private httpRegister: RegisterService
   )
   {
     const today = new Date();
@@ -37,6 +40,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
   @Input() data: any;
   private subscriptions: Subscription = new Subscription();
   loading: boolean = false;
+  postMethod: boolean = true;
   form: FormGroup;
 
   ngOnInit() {
@@ -55,7 +59,8 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
         if (newData[1])
           this.getControl('workCenter').setValue(newData[1]);
 
-        this.loading = newData[2];
+        this.postMethod = newData[2];
+        this.loading = newData[3];
       }
     });
 
@@ -120,10 +125,14 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.global.openDialog('¿Está seguro de que desea guardar los cambios?').subscribe(
+    this.global.openDialog('¿Está seguro de que desea guardar los cambios?', true).subscribe(
     result => {
       if (result) {
-        window.location.reload();
+        if (this.postMethod)
+          this.createRegister();
+        else {
+          this.editRegister();
+        }
       }
     });
   }
@@ -162,6 +171,43 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
       return true;
 
     return false;
+  }
+
+  /**
+   * Creates a new register.
+   *
+   * This function constructs a Register object using form control values and sends an HTTP POST request
+   * to create the register. Upon success, it displays a success message, notifies data update, and activates
+   * the close button. In case of an error, it logs the error and displays an error message.
+   */
+  createRegister(): void {
+    const register: Register = {
+      companyId: this.getControlValue('workCenter').id,
+      consumption: this.getControlValue('consumption'),
+      date: this.getControlValue('date')
+    }
+    this.httpRegister.postRegister(register).subscribe({
+      next: (response) => {
+        console.log(`Created successfully:`, response);
+        this.snackbar.openSnackBar("Añadido exitosamente...");
+        this.dataService.notifyDataUpdated();
+        this.activateCloseButton();
+      },
+      error: (error) => {
+        this.loading = false;
+        console.log(error);
+        this.snackbar.openSnackBar(`Error al añadir, intente de nuevo...`);
+      }
+    });
+  }
+
+  /**
+   * Edits an existing register.
+   *
+   * This function is currently empty and should be implemented to handle the editing of an existing register.
+   */
+  editRegister(): void {
+
   }
 
   /**

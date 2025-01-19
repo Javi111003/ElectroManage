@@ -79,7 +79,6 @@ export class ManageComponent implements OnInit, OnDestroy {
       if (id) {
         this.global.getOfficesByCenter(id).subscribe(offices => {
           this.reloadTableData(offices);
-          this.noResults = this.dataSource.data.length == 0;
         });
       }
     });
@@ -190,5 +189,6 @@ export class ManageComponent implements OnInit, OnDestroy {
       officeName: item.name,
       description: item.description
     }));
+    this.noResults = this.dataSource.data.length == 0;
   }
 }
