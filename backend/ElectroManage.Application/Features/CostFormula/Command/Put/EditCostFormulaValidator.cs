@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 
-namespace ElectroManage.Application.Features.CostFormula.Command.Post;
-public class CreateCostFormulaValidator : CoreValidator<CreateCostFormulaCommand>
+namespace ElectroManage.Application.Features.CostFormula.Command.Put;
+public class EditCostFormulaValidator : CoreValidator<EditCostFormulaCommand>
 {
-    public CreateCostFormulaValidator()
+    public EditCostFormulaValidator()
     {
         RuleFor(p => p.CompanyId)
             .GreaterThan(0)
