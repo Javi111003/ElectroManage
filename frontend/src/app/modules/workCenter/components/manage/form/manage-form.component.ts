@@ -1,7 +1,7 @@
-import { Component, HostBinding, Injector, OnDestroy, OnInit, Renderer2, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, Renderer2, signal } from '@angular/core';
 import * as L from 'leaflet';
 import { Modal } from 'bootstrap';
-import { FormBuilder, FormControl, FormGroup, NgControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
 import { AdminArea, CenterPropertyInfo, InstallationType } from '../../../../../models/workCenter.interface';
@@ -22,8 +22,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     public global: GlobalModule,
     private dataService: DataService,
     private renderer: Renderer2,
-    private snackbar: SnackbarService,
-    private injector: Injector
+    private snackbar: SnackbarService
   )
   {
     this.form = this.fb.group({
@@ -77,6 +76,10 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     { id: 1, name: 'por_ciento_extra' },
     { id: 2, name: 'aumento' }
   ];
+  variablesValues: Map<string, string> = new Map<string, string>([
+    ["por_ciento_extra", "15"],
+    ["aumento","20"]
+  ]);
   formulaSymbols: Item[] = [
     { id: -1, name: 'C' }, { id: -2, name: '^' },
     { id: -3, name: '\u221A' }, { id: -4, name: '.' },
@@ -568,9 +571,9 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
     const formContainer = document.getElementsByClassName('row mb-3');
     if (formContainer) {
-      for (let i = 0; i < formContainer.length; i++) {
-        formContainer[i].remove();
-      }
+      Array.from(formContainer).forEach((element: Element) => {
+        element.remove();
+      });
     }
   }
 
@@ -581,6 +584,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   createCenter(): void {
     // Implementation for creating a work center
     this.snackbar.openSnackBar('Añadido exitosamente...');
+    this.loading = false;
   }
 
   /**
@@ -590,6 +594,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   editCenter(): void {
     // Implementation for editing a work center
     this.snackbar.openSnackBar('Editado exitosamente...');
+    this.loading = false;
   }
 
   /**
@@ -620,6 +625,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
         const control = this.fb.control('', Validators.required);
         this.form.addControl(option.name, control);
+
         const formContainer = document.getElementById('form-container');
 
         if (formContainer) {
@@ -644,9 +650,20 @@ export class ManageFormComponent implements OnInit, OnDestroy {
           this.renderer.listen(input, 'input', mathValidator.onInputChange.bind(mathValidator));
           this.renderer.listen(input, 'keypress', mathValidator.onKeyPress.bind(mathValidator));
           this.renderer.listen(input, 'blur', (event) => {
-            control.setValue(event.target.value);
+            const value = event.target.value;
+            control.setValue(value);
+            if (value != "")
+              this.variablesValues.set(option.name, value);
             this.updateInputClass(input, control);
           });
+
+          if (!this.variablesValues.has(option.name)) {
+            this.variablesValues.set(option.name, "");
+          }
+
+          const value = this.variablesValues.get(option.name)!;
+          control.setValue(value);
+          this.renderer.setProperty(input, 'value', control.value);
 
           const errorDiv = this.renderer.createElement('div');
           errorDiv.className = "invalid-feedback"
@@ -674,6 +691,17 @@ export class ManageFormComponent implements OnInit, OnDestroy {
           i++;
           usedOptions.push(option.name);
         }
+      }
+    }
+
+    for (const variable of this.variablesValues.keys()) {
+      if (!usedOptions.includes(variable)) {
+        if (variable === "por_ciento_extra")
+          this.variablesValues.set("por_ciento_extra", "15");
+        else if (variable === "aumento")
+          this.variablesValues.set("aumento", "20");
+        else
+          this.variablesValues.delete(variable);
       }
     }
   }

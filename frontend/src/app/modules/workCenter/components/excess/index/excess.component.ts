@@ -90,6 +90,7 @@ export class ExcessComponent {
     ctrlValue.year(normalizedMonthAndYear.year());
     this.getControl('year').setValue(ctrlValue.year());
     this.getControl('month').setValue(ctrlValue.month());
+    console.log(this.form);
     this.date.setValue(ctrlValue);
     datepicker.close();
   }
@@ -110,7 +111,8 @@ export class ExcessComponent {
    */
   onClick(): void {
     if (!this.showTable) {
-      if (this.getControlValue('year') && this.getControlValue('month'))
+      console.log(this.form);
+      if (this.getControlValue('year') && this.getControlValue('month') >= 0)
         this.showTable = true;
       else
         this.global.openDialog('Por favor, selecciona un mes y un año.');
