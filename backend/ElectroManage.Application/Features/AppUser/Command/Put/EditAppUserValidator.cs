@@ -16,5 +16,9 @@ public class EditAppUserValidator : Validator<EditAppUserCommand>
             .WithMessage("The Company Id cannot be empty")
             .GreaterThan(0)
             .WithMessage("The Company Id must be greater than 0");
+
+        RuleForEach(x => x.Roles)
+            .Must(r => r.Length > 3 && r.Length <= 16)
+            .WithMessage("Role name must have a length between 4 and 16");
     }
 }

@@ -5,6 +5,6 @@ public record EditAppUserResponse
 {
     public long Id { get; set; }
     public string Username { get; set; } = string.Empty;
-    public string Role { get; set; } = string.Empty;
+    public IEnumerable<string> Roles { get; set; } = new HashSet<string>();
     public CompanyDTO Company { get; set; } = null!;
 }
