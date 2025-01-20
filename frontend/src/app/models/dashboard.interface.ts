@@ -11,7 +11,7 @@ export interface CentersPerYear {
 export interface MostConsumingCenter {
   companyId: number;
   companyName: string;
-  consumptionLimit: 0;
+  consumptionLimit: number;
   totalConsumption: number ;
 }
 

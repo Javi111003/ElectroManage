@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { DashboardService } from './dashboard.service';
 import { API_URL } from '../../config/api.config';
-import { BiggestCenters, CentersCreatedPerYear, MostConsumingCenters, MostWarnedCenters } from '../../models/dashboard.interface';
+import { BiggestCenter, CentersPerYear, MostConsumingCenter, MostWarnedCenter } from '../../models/dashboard.interface';
 
 describe('DashboardService', () => {
   let service: DashboardService;
@@ -28,7 +28,7 @@ describe('DashboardService', () => {
   describe('getCentersCreated', () => {
     it('should return centers created data for a specific year', () => {
       const testYear = 2023;
-      const mockResponse: CentersCreatedPerYear = {
+      const mockResponse: CentersPerYear = {
         createdComapniesThisYear: 2,
         deletedCompaniesThisYear:2,
         existingCompaniesThisYear:0
@@ -46,11 +46,11 @@ describe('DashboardService', () => {
 
   describe('getTopFiveConsumingCenters', () => {
     it('should return top five consuming centers', () => {
-      const mockResponse: MostConsumingCenters[] = [
-        { companyId: 1, 
-          totalConsumption: 1000 },
-        { companyId: 2, 
-          totalConsumption: 800 }
+      const mockResponse: MostConsumingCenter[] = [
+        { companyId: 1, companyName: "test center",
+          consumptionLimit: 0, totalConsumption: 1000 },
+        { companyId: 2, companyName: "test center 2",
+          consumptionLimit:0, totalConsumption: 800 }
       ];
 
       service.getTopFiveConsumingCenters().subscribe(response => {
@@ -65,7 +65,7 @@ describe('DashboardService', () => {
 
   describe('getTopFiveBiggestCenters', () => {
     it('should return top five biggest centers', () => {
-      const mockResponse: BiggestCenters[] = [
+      const mockResponse: BiggestCenter[] = [
         { companyId: 1, companyName: 'Company A', officeCount: 50 },
         { companyId: 2, companyName: 'Company B', officeCount: 40 }
       ];
@@ -82,16 +82,16 @@ describe('DashboardService', () => {
 
   describe('getTopFiveWarnedCenters', () => {
     it('should return top five warned centers', () => {
-      const mockResponse: MostWarnedCenters[] = [
+      const mockResponse: MostWarnedCenter[] = [
         { company:{
           id: 1,
           name: 'Company A'
-        },  
+        },
           countWarning: 15 },
         { company:{
           id: 2,
           name: 'Company B'
-        }, 
+        },
           countWarning: 10 }
       ];
 
