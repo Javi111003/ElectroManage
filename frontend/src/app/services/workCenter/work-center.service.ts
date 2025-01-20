@@ -1,4 +1,4 @@
-import { AdminArea, CenterDetails, CenterPropertyInfo, Formula, FormulaInfo, InstallationType, Location, ManagementTeam } from './../../models/workCenter.interface';
+import { AdminArea, CenterDetails, CenterPropertyInfo, Formula, FormulaInfo, InstallationType, Location, ManagementTeam, WorkCenterData } from './../../models/workCenter.interface';
 import { Injectable } from '@angular/core';
 import { API_URL } from '../../config/api.config';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -40,6 +40,16 @@ export class WorkCenterService {
    */
   getCenterDetailsList(): Observable<CenterDetails[]> {
     return this.http.get<CenterDetails[]>(`${API_URL}/v1/company`);
+  }
+
+  /**
+   * Posts a new work center to the API.
+   * This method sends an HTTP POST request to the API to create a new work center.
+   * @param center The data of the work center to be created.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  postCenter(center: WorkCenterData): Observable<any> {
+    return this.http.post<any>(`${API_URL}/v1/company`, center);
   }
 
   /**

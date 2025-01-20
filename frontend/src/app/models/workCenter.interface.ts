@@ -99,3 +99,13 @@ export interface Variable {
   variableName: string;
   expression: string;
 }
+
+// Center info to POST
+export interface WorkCenterData {
+  name: string;
+  areaId: number;
+  installationTypeId: number;
+  locationId: number;
+  managementTeamId: number;
+  consumptionLimit: number;
+}

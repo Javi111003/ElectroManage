@@ -534,6 +534,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         this.createOrEditInstance(isEdit, equipment);
       },
       error: (error) => {
+        this.loading = false;
         console.log(error);
       }
     });
@@ -553,7 +554,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     serviceMethod.call(this.officeService, equipment, this.data?.id).subscribe({
       next: (response) => {
         console.log(isEdit ? 'Edited successfully:' : 'Created successfully:', response);
-        const mssg = isEdit ? 'Editado exitosamente...' : 'Añadido exitosamente';
+        const mssg = isEdit ? 'Editado exitosamente...' : 'Añadido exitosamente...';
         this.snackbar.openSnackBar(mssg);
         this.dataService.notifyDataUpdated();
         this.activateCloseButton();
