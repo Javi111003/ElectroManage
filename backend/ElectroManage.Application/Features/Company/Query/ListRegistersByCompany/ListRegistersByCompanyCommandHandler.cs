@@ -30,7 +30,8 @@ public class ListRegistersByCompanyCommandHandler : CoreCommandHandler<ListRegis
             _logger.LogError($"{nameof(ExecuteAsync)} | Company with Id {command.Id} not found");
             ThrowError("Company with Id {command.Id} not found", 404);
         }
-        var registers = company.Registers.Select(r => new RegisterDTO
+        var registers = company.Registers.Where(r => r.Date >= command.Start && r.Date <= command.End)
+            .Select(r => new RegisterDTO
         {
             Id = r.Id,
             Date = r.Date,
