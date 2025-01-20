@@ -343,6 +343,10 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
    * @param typeName The name of the equipment type to be deleted.
    */
   deleteType(type: Item): void {
+    const eqType = this.getControlValue('type');
+    if (eqType && eqType.id == type.id)
+      this.getControl('type').setValue("");
+
     this.officeService.deleteEquipmentType(type.id).subscribe({
       next: (response) => {
         console.log('Deleted successfully:', response);
@@ -364,6 +368,10 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
    * @param brandName The name of the equipment brand to be deleted.
    */
   deleteBrand(brand: Item): void {
+    const brandName = this.getControlValue('brand');
+    if (brandName && brandName.id == brand.id)
+      this.getControl('brand').setValue("");
+
     this.officeService.deleteEquipmentBrand(brand.id).subscribe({
       next: (response) => {
         console.log('Deleted successfully:', response);

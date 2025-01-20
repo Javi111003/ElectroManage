@@ -17,5 +17,11 @@ export interface PolicyInfo {
   policyId: number;
   policyName: string;
   description: string;
+}
+
+// Policy applied to a work center
+export interface PolicyApplied {
+  efficiencyPolicy: PolicyInfo;
   applyingDate: string;
+  to: string;
 }
