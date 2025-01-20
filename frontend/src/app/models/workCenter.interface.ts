@@ -1,3 +1,5 @@
+import { PolicyApplied, PolicyInfo } from "./policy.interface";
+
 // Commonly required info of when listing centers
 export interface WorkCenter {
   id: number;
@@ -72,7 +74,8 @@ export interface CenterDetails {
   consumptionLimit: number;
   installationType: CenterPropertyInfo;
   administrativeArea: CenterPropertyInfo;
-  location: LocationInfo,
+  location: LocationInfo;
+  currentEfficiencyPolicy: PolicyApplied;
   status: string;
   managementTeam: ManagementTeamInfo;
 }
@@ -107,5 +110,6 @@ export interface WorkCenterData {
   installationTypeId: number;
   locationId: number;
   managementTeamId: number;
+  efficiencyPolicyId: number;
   consumptionLimit: number;
 }

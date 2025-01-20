@@ -354,6 +354,10 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * @param type The name of the installation type to be deleted.
    */
   deleteType(type: Item): void {
+    const instalType = this.getControlValue('instalationType');
+    if (instalType && instalType.id == type.id)
+      this.getControl('instalationType').setValue("");
+
     this.global.httpCenter.deleteInstallationType(type.id).subscribe({
       next: (response) => {
         console.log('Deleted successfully:', response);
@@ -424,6 +428,10 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * @param area The name of the area to be deleted.
    */
   deleteArea(area: Item): void {
+    const adminArea = this.getControlValue('adminAreaName');
+    if (adminArea && adminArea.id == area.id)
+      this.getControl('adminAreaName').setValue("");
+
     this.global.httpCenter.deleteAdminArea(area.id).subscribe({
       next: (response) => {
         console.log('Deleted successfully:', response);
@@ -623,12 +631,19 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.global.httpCenter.postLocation(location).subscribe({
       next: (response) => {
         console.log("Location created successfully", response);
+        const policy = this.getControlValue('policy');
+        let policyId = 0;
+        if (policy) {
+          policyId = policy.id;
+        }
+
         const center: WorkCenterData = {
           name: this.getControlValue('name'),
           areaId: this.getControlValue('adminAreaName').id,
           installationTypeId: this.getControlValue('instalationType').id,
           locationId: response.id,
           managementTeamId: 0,
+          efficiencyPolicyId: policyId,
           consumptionLimit: this.getControlValue('monthlyConsumptionLimit')
         };
 

@@ -127,11 +127,17 @@ export class ManageComponent implements OnInit, OnDestroy {
         console.log('Location Deleted successfully:', response);
         if (item.managementTeam)
           this.deleteTeam(item.managementTeam.companyId, item.managementTeam.id)
+        this.deleteFormula(item.id);
       },
       error: (error) => {
         console.log(error);
       }
     });
+  }
+
+  //documentar
+  deleteFormula(centerID: number): void {
+    // this.global.httpCenter.getCenterById(centerID)
   }
 
   /**
