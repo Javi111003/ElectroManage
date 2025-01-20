@@ -22,7 +22,8 @@ import { PasswordValidatorDirective } from '../../directives/password/password.d
 import { NumberValidationDirective } from '../../directives/integerValidation/number.validation.directive';
 import { EmailValidationDirective } from '../../directives/emailValidation/email-validation.directive';
 import { ShowForRolesDirective } from '../../directives/showForRoles/show-for-roles.directive';
-import { MathValidatorDirective } from '../../directives/MathValidator/math-validator.directive';
+import { MathValidatorDirective } from '../../directives/mathValidation/math-validator.directive';
+import { FloatValidationDirective } from '../../directives/floatValidation/float-validation.directive';
 
 //add the route of each module you need yo import here down.
 import { MatIconModule } from '@angular/material/icon';
@@ -34,7 +35,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { FloatValidationDirective } from '../../directives/floatValidation/float-validation.directive';
 
 @NgModule({
   declarations: [

@@ -1,15 +1,17 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, Renderer2, signal } from '@angular/core';
+import { map } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit, Renderer2, signal } from '@angular/core';
 import * as L from 'leaflet';
 import { Modal } from 'bootstrap';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
-import { AdminArea, CenterPropertyInfo, InstallationType } from '../../../../../models/workCenter.interface';
+import { AdminArea, InstallationType, WorkCenterData, Location, Formula, Variable } from '../../../../../models/workCenter.interface';
 import { Subscription } from 'rxjs';
 import { MAP_URL } from '../../../../../config/api.config';
 import { Item } from '../../../../../shared/shared.module';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
-import { MathValidatorDirective } from '../../../../../directives/MathValidator/math-validator.directive';
+import { MathValidatorDirective } from '../../../../../directives/mathValidation/math-validator.directive';
+import { PolicyService } from '../../../../../services/policy/policy.service';
 
 @Component({
   selector: 'app-center-manage-form',
@@ -22,7 +24,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     public global: GlobalModule,
     private dataService: DataService,
     private renderer: Renderer2,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+    private httpPolicy: PolicyService
   )
   {
     this.form = this.fb.group({
@@ -114,12 +117,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     { id: 1, name: 'Lucia' }, { id: 1, name: 'Martin' }
   ];
   policies: Item[] = [];
-  typeStringArray: string[] = [];
   typeArray: Item[] = [];
-  typeObjectArray: CenterPropertyInfo[] = [];
-  areaStringArray: string[] = [];
   areaArray: Item[] = [];
-  areaObjectArray: CenterPropertyInfo[] = [];
 
   ngOnInit() {
     const sub = this.dataService.currentData.subscribe(newData => {
@@ -161,9 +160,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     });
 
     this.subscriptions.add(sub);
-    this.updateFormula();
-    this.getAreas();
-    this.getTypes();
+    this.fetchData();
   }
 
   ngOnDestroy(): void {
@@ -186,6 +183,17 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   getControlValue(control: string): any {
     return this.form.get(control)?.value;
+  }
+
+  /**
+   * Fetches the necessary data for the form.
+   * This method updates the formula and retrieves areas, types, and policies.
+   */
+  fetchData(): void {
+    this.updateFormula();
+    this.getAreas();
+    this.getTypes();
+    this.getPolicies();
   }
 
   /**
@@ -247,7 +255,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       valid[0] = true;
 
     if (valid[0]) {
-      this.global.openDialog('¿Está seguro de que desea guardar los cambios?').subscribe(
+      this.global.openDialog('¿Está seguro de que desea guardar los cambios?', true).subscribe(
       result => {
         if (result) {
           if (this.postMethod)
@@ -313,12 +321,26 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   getTypes(): void {
     this.global.httpCenter.getInstallationType().subscribe(types => {
-      this.typeObjectArray = types;
-      this.typeStringArray = types.map(type => type.name);
       this.typeArray = types.map(type => {
         return {
           id: type.id,
           name: type.name
+        }
+      });
+    });
+  }
+
+  /**
+   * Retrieves the list of policies.
+   * This function fetches the list of policies from the server and updates the component's state.
+   * It populates the `policies` array with the fetched policies.
+   */
+  getPolicies(): void {
+    this.httpPolicy.getPolicies().subscribe(policies => {
+      this.policies = policies.map(policy => {
+        return {
+          id: policy.policyId,
+          name: policy.policyName
         }
       });
     });
@@ -385,8 +407,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   getAreas(): void {
     this.global.httpCenter.getAdminAreas().subscribe(areas => {
-      this.areaObjectArray = areas;
-      this.areaStringArray = areas.map(area => area.name);
       this.areaArray = areas.map(area => {
         return {
           id: area.id,
@@ -584,9 +604,93 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * This function is responsible for sending the necessary data to the server to create a new work center.
    */
   createCenter(): void {
-    // Implementation for creating a work center
-    this.snackbar.openSnackBar('Añadido exitosamente...');
-    this.loading = false;
+    const location: Location = {
+      addressDetails: this.getControlValue('location'),
+      coordenate: {
+        latitude: this.getControlValue('latitude'),
+        longitude: this.getControlValue('longitude')
+      }
+    };
+
+    this.createLocation(location);
+  }
+
+  /**
+   * Sends a request to create a new location.
+   * @param location - The location data to be sent to the server.
+   */
+  createLocation(location: Location): void {
+    this.global.httpCenter.postLocation(location).subscribe({
+      next: (response) => {
+        console.log("Location created successfully", response);
+        const center: WorkCenterData = {
+          name: this.getControlValue('name'),
+          areaId: this.getControlValue('adminAreaName').id,
+          installationTypeId: this.getControlValue('instalationType').id,
+          locationId: response.id,
+          managementTeamId: 0,
+          consumptionLimit: this.getControlValue('monthlyConsumptionLimit')
+        };
+
+        this.createCenterInstance(center);
+      },
+      error: (error) => {
+        this.loading = false;
+        console.log(error);
+      }
+    });
+  }
+
+  /**
+   * Sends a request to create a new work center instance.
+   * @param center - The work center data to be sent to the server.
+   */
+  createCenterInstance(center: WorkCenterData): void {
+    this.global.httpCenter.postCenter(center).subscribe({
+      next: (response) => {
+        console.log("Center created succesfully", response);
+        this.snackbar.openSnackBar("Añadido exitosamente...");
+        this.dataService.notifyDataUpdated();
+        this.activateCloseButton();
+
+        let variables: Variable[] = [];
+
+        for (const variable of this.variablesValues) {
+          variables.push({
+            variableName: variable[0],
+            expression: variable[1]
+          });
+        }
+
+        const formula: Formula = {
+          companyId: response.id,
+          name: `${response.id}`,
+          expression: this.getControlValue('formula'),
+          variables: variables
+        };
+
+        this.createFormula(formula);
+      },
+      error: (error) => {
+        this.loading = false;
+        console.log(error);
+      }
+    })
+  }
+
+  /**
+   * Sends a request to create a new formula.
+   * @param formula - The formula data to be sent to the server.
+   */
+  createFormula(formula: Formula): void {
+    this.global.httpCenter.postFormula(formula).subscribe({
+      next: (response) => {
+        console.log("Formula created successfully", response);
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
   }
 
   /**
