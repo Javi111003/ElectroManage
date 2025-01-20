@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 import { MAP_URL } from '../../../../../config/api.config';
 import { Item } from '../../../../../shared/shared.module';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
-import { MathValidatorDirective } from '../../../../../directives/mathValidator/math-validator.directive';
+import { MathValidatorDirective } from '../../../../../directives/MathValidator/math-validator.directive';
 
 @Component({
   selector: 'app-center-manage-form',

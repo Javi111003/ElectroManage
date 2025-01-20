@@ -22,7 +22,7 @@ import { PasswordValidatorDirective } from '../../directives/password/password.d
 import { NumberValidationDirective } from '../../directives/integerValidation/number.validation.directive';
 import { EmailValidationDirective } from '../../directives/emailValidation/email-validation.directive';
 import { ShowForRolesDirective } from '../../directives/showForRoles/show-for-roles.directive';
-import { MathValidatorDirective } from '../../directives/mathValidator/math-validator.directive';
+import { MathValidatorDirective } from '../../directives/MathValidator/math-validator.directive';
 
 //add the route of each module you need yo import here down.
 import { MatIconModule } from '@angular/material/icon';
