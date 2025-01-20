@@ -4,8 +4,15 @@
     <img src="logo.png" alt="Company Logo" routerLink="/">
     <p>Electro Manage</p>
     <div class="icons">
-      <mat-icon matBadge="15">notifications</mat-icon>
-      <span class="cdk-visually-hidden"></span>
+      <div class="notifications-menu-container">
+        <mat-icon [matBadge]="alerts.length - alertsViews" (click)="toggleNotificationsMenu($event)">notifications</mat-icon>
+        <span class="cdk-visually-hidden"></span>
+        <div class="notifications-menu" style="min-width: 500px; max-height: 330px; overflow: auto;" *ngIf="isNotificationsMenuOpen">
+          <ul class="info-section">
+            <li class="info-container" style="color: #8b1010;" *ngFor="let alert of alerts">{{ alert }}</li>
+          </ul>
+        </div>
+      </div>
       <div class="user-menu-container">
         <mat-icon (click)="toggleUserMenu($event)">person</mat-icon>
         <div class="user-menu" *ngIf="isUserMenuOpen">

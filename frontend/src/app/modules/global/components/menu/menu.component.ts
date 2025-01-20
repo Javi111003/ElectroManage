@@ -7,6 +7,7 @@ import { GlobalModule } from '../../global.module';
 import { UserById } from '../../../../models/credential.interface';
 import { UserService } from '../../../../services/user/user.service';
 import { Observable } from 'rxjs';
+import { WebSocketService } from '../../../../services/webSocket/web-socket.service';
 
 @Component({
   selector: 'app-menu',
@@ -40,8 +41,41 @@ import { Observable } from 'rxjs';
     ]
 })
 export class MenuComponent implements OnInit {
+  alerts: string[] = [
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+    "Ha excedido el límite de consumo para el mes de Enero",
+  ];
+  alertsViews: number = 0;
   menuItems: any[] = [];
-  isUserMenuOpen = false;
+  isUserMenuOpen: boolean = false;
+  isNotificationsMenuOpen: boolean = false;
   loginTime: string = '0h 0m 0s';
   private loginStartTime: number;
   userEmail: string = '';
@@ -58,7 +92,8 @@ export class MenuComponent implements OnInit {
     private menuService: MenuService,
     private router: Router,
     private auth: AuthService,
-    private httpUser: UserService
+    private httpUser: UserService,
+    private webSocketService: WebSocketService
   ) {
     const storedLoginTime = sessionStorage.getItem('loginTime');
     this.loginStartTime = storedLoginTime ? parseInt(storedLoginTime) : new Date().getTime();
@@ -87,6 +122,12 @@ export class MenuComponent implements OnInit {
     });
 
     setInterval(() => this.updateLoginTime(), 1000);
+
+    this.webSocketService.connect('ws://localhost:4200').subscribe(
+    (message) => this.alerts.push(message),
+    (err) => console.error(err),
+    () => console.warn('Connection closed')
+    );
   }
 
   isSidebarActive = false;
@@ -164,8 +205,17 @@ export class MenuComponent implements OnInit {
   toggleUserMenu(event: Event): void {
     event.stopPropagation();
     this.isUserMenuOpen = !this.isUserMenuOpen;
+    if (this.isNotificationsMenuOpen)
+      this.isNotificationsMenuOpen = false;
   }
 
+  toggleNotificationsMenu(event: Event): void {
+    event.stopPropagation();
+    this.alertsViews = this.alerts.length;
+    this.isNotificationsMenuOpen = !this.isNotificationsMenuOpen;
+    if (this.isUserMenuOpen)
+      this.isUserMenuOpen = false;
+  }
 
   /**
     * Handles the document click event to determine if the user menu should be closed.

@@ -67,7 +67,6 @@ export class IndexComponent implements OnInit, OnDestroy {
   getCentersCreated(year: number): void {
     this.http.getCentersCreated(year).subscribe(centers => {
       this.centersCreatedData = centers.createdComapniesThisYear;
-      console.log(this.centersCreatedData);
       this.createLineChart();
     });
   }
