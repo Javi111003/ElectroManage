@@ -36,4 +36,21 @@ public static class AppUserMapper
         });
         return response;
     }
+    public static IEnumerable<AppUserDto> MapToListUsersResponse(IEnumerable<Domain.Entites.Identity.AppUser> users, List<IList<string>> roles)
+    {
+        var i = 0;
+        var response = users.Select(u => new AppUserDto
+        {
+            Id = u.Id,
+            Company = new CompanyDTO
+            {
+                Id = u.Company.Id,
+                Name = u.Company.Name
+            },
+            Email = u.Email!,
+            Username = u.UserName!,
+            Roles = roles[i++] ?? []
+        });
+        return response;
+    }
 }
