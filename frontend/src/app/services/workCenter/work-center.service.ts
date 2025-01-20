@@ -1,11 +1,11 @@
-import { AdminArea, CenterDetails, CenterPropertyInfo, InstallationType, Location, ManagementTeam } from './../../models/workCenter.interface';
+import { AdminArea, CenterDetails, CenterPropertyInfo, Formula, FormulaInfo, InstallationType, Location, ManagementTeam } from './../../models/workCenter.interface';
 import { Injectable } from '@angular/core';
 import { API_URL } from '../../config/api.config';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { WorkCenter } from '../../models/workCenter.interface';
 import { MeanRegisterData, TotalConsumptionData } from '../../models/register.interface';
-import { Alert } from '../../models/alert.interface';
+import { Alert, Excess } from '../../models/alert.interface';
 
 
 @Injectable({
@@ -14,6 +14,12 @@ import { Alert } from '../../models/alert.interface';
 export class WorkCenterService {
   constructor(private http: HttpClient) { }
 
+  /**
+   * Fetches the details of a specific work center by its ID from the API.
+   * This method sends an HTTP GET request to the API to retrieve the details of a work center.
+   * @param id The ID of the work center to be fetched.
+   * @returns An Observable that resolves to a CenterDetails object.
+   */
   getCenterById(id: number): Observable<CenterDetails> {
     return this.http.get<CenterDetails>(`${API_URL}/v1/company/${id}`);
   }
@@ -64,6 +70,19 @@ export class WorkCenterService {
    */
   getAlerts(centerID: number): Observable<Alert> {
     return this.http.get<Alert>(`${API_URL}/v1/company/${centerID}/list_warnings`);
+  }
+
+  /**
+   * Fetches the excess data for a given date from the API.
+   * This method sends an HTTP GET request to the API to retrieve the excess data
+   * for a specified date.
+   * @param date The date for which to fetch the excess data.
+   * @returns An Observable that resolves to an Excess object.
+   */
+  getExcess(date: string): Observable<Excess[]> {
+    let param = new HttpParams();
+    param = param.append('date', date);
+    return this.http.get<Excess[]>(`${API_URL}/v1/company/limit`, { params: param });
   }
 
   /**
@@ -193,6 +212,26 @@ export class WorkCenterService {
    */
   deletelocation(id: number): Observable<any> {
     return this.http.delete<any>(`${API_URL}/v1/location/${id}`);
+  }
+
+  /**
+   * Posts a new cost formula to the API.
+   * This method sends an HTTP POST request to the API to create a new cost formula.
+   * @param formula The Formula object to be posted.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  postFormula(formula: Formula): Observable<any> {
+    return this.http.post<any>(`${API_URL}/v1/cost_formula`, formula);
+  }
+
+  /**
+   * Edits an existing cost formula.
+   * This method sends an HTTP PUT request to the API to update an existing cost formula.
+   * @param info The FormulaInfo object containing the updated information.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  editFormula(info: FormulaInfo): Observable<any> {
+    return this.http.put<any>(`${API_URL}/v1/cost_formula`, info);
   }
 
   /**

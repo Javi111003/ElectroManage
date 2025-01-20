@@ -4,7 +4,7 @@ import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
 import { Subscription } from 'rxjs';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
-import { Register } from '../../../../../models/register.interface';
+import { Register, RegisterInfo } from '../../../../../models/register.interface';
 import { RegisterService } from '../../../../../services/register/register.service';
 
 @Component({
@@ -49,12 +49,12 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
         if (newData[0]) {
           this.data = newData[0];
           this.form.patchValue(this.data);
-          const dateString = this.data.registerDate;
-          const dateParts = dateString.split('-');
-          const year = parseInt(dateParts[0], 10);
-          const month = parseInt(dateParts[1], 10) - 1;
-          const day = parseInt(dateParts[2], 10);
-          this.getControl('date').setValue(new Date(year, month, day));
+          if (this.data.date) {
+            const dateString = this.data.data;
+            const dateParts = dateString.split('-');
+            const dateObject = new Date(Date.UTC(+dateParts[0], +dateParts[1] - 1, +dateParts[2] + 1));
+            this.getControl('date').setValue(dateObject);
+          }
         }
         if (newData[1])
           this.getControl('workCenter').setValue(newData[1]);
@@ -133,6 +133,8 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
         else {
           this.editRegister();
         }
+      } else {
+        this.loading = false;
       }
     });
   }
@@ -173,42 +175,68 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     return false;
   }
 
+
   /**
-   * Creates a new register.
+   * Handles the register request.
    *
-   * This function constructs a Register object using form control values and sends an HTTP POST request
-   * to create the register. Upon success, it displays a success message, notifies data update, and activates
-   * the close button. In case of an error, it logs the error and displays an error message.
+   * This function sends a request to the server to either create or edit a register.
+   * It subscribes to the request observable and handles the response.
+   *
+   * @template T - The type of the register data.
+   * @param register - The register data to be sent in the request.
+   * @param request - The function that sends the request to the server.
+   * @param successMessage - The message to be displayed on successful request.
    */
-  createRegister(): void {
-    const register: Register = {
-      companyId: this.getControlValue('workCenter').id,
-      consumption: this.getControlValue('consumption'),
-      date: this.getControlValue('date')
-    }
-    this.httpRegister.postRegister(register).subscribe({
-      next: (response) => {
-        console.log(`Created successfully:`, response);
-        this.snackbar.openSnackBar("Añadido exitosamente...");
+  private handleRegisterRequest<T>(register: T, request: (data: T) => any, successMessage: string): void {
+    request(register).subscribe({
+      next: (response: any) => {
+        console.log(`${successMessage}:`, response);
+        this.snackbar.openSnackBar(successMessage);
         this.dataService.notifyDataUpdated();
         this.activateCloseButton();
       },
-      error: (error) => {
+      error: (error: any) => {
         this.loading = false;
         console.log(error);
-        this.snackbar.openSnackBar(`Error al añadir, intente de nuevo...`);
+        this.snackbar.openSnackBar(`Error, intente de nuevo...`);
       }
     });
   }
 
   /**
+   * Creates a new register.
+   *
+   * This function constructs a Register object using form control values and sends an HTTP POST request
+   * to create the register.
+   */
+  createRegister(): void {
+    const register: Register = {
+      companyId: this.getControlValue('workCenter').id,
+      consumption: this.getControlValue('consumption'),
+      date: this.global.formatLocalDate(this.getControlValue('date'))
+    };
+    this.handleRegisterRequest<Register>(register, (data) =>
+      this.httpRegister.postRegister(data), "Añadido exitosamente..."
+    );
+  }
+
+  /**
    * Edits an existing register.
    *
-   * This function is currently empty and should be implemented to handle the editing of an existing register.
+   * This function constructs a RegisterInfo object using form control values and sends an HTTP PUT request
+   * to update the register.
    */
   editRegister(): void {
-
+    const register: RegisterInfo = {
+      consumption: this.getControlValue('consumption'),
+      date: this.global.formatLocalDate(this.getControlValue('date'))
+    };
+    this.handleRegisterRequest<RegisterInfo>(register, (data) =>
+      this.httpRegister.editRegister(this.data.id, data), "Editado exitosamente..."
+    );
   }
+
+
 
   /**
    * This function is used to activate the close button of the modal.

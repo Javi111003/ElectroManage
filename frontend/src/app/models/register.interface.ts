@@ -33,3 +33,9 @@ export interface Register {
   consumption: number;
   date: string;
 }
+
+// Register to PUT
+export interface RegisterInfo {
+  consumption: number;
+  date: string;
+}

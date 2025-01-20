@@ -123,6 +123,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
             this.editOffice();
             this.postMethod = true;
           }
+        } else {
+          this.loading = false;
         }
       });
     } else {

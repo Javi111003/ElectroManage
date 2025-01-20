@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Register } from '../../models/register.interface';
+import { Register, RegisterInfo } from '../../models/register.interface';
 import { Observable } from 'rxjs';
 import { API_URL } from '../../config/api.config';
 
@@ -28,5 +28,16 @@ export class RegisterService {
    */
   deleteRegister(id: number): Observable<any> {
     return this.http.delete(`${API_URL}/v1/register/${id}`);
+  }
+
+  /**
+   * Edits an existing register by its ID.
+   * This method sends an HTTP PUT request to the API to update a register.
+   * @param id The ID of the register to be edited.
+   * @param info The RegisterInfo object containing the updated information.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  editRegister(id: number, info: RegisterInfo): Observable<any> {
+    return this.http.put(`${API_URL}/v1/register/${id}`, info);
   }
 }

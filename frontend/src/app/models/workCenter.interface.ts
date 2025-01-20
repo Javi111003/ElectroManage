@@ -76,3 +76,26 @@ export interface CenterDetails {
   status: string;
   managementTeam: ManagementTeamInfo;
 }
+
+// Formula info for POST
+export interface Formula {
+  companyId: number;
+  name: string;
+  expression: string;
+  variables: Variable[];
+}
+
+// Formula info to PUT
+export interface FormulaInfo {
+  formulaId: number;
+  companyId: number;
+  name: string;
+  expression: string;
+  variables: Variable[];
+}
+
+// Formula variables
+export interface Variable {
+  variableName: string;
+  expression: string;
+}

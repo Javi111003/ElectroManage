@@ -16,7 +16,7 @@
                   Este campo es obligatorio
                 </div>
               </div>
-              <div class="col-4 col-sm-6" *ngIf="!data">
+              <div class="col-4 col-sm-6" *ngIf="postMethod">
                 <label for="password" class="form-label">Contraseña</label>
                 <input type="password" class="form-control" id="password" formControlName="password" appPassword
                   [ngClass]="{'is-invalid': form.get('password')?.invalid && form.get('password')?.touched}">
@@ -28,7 +28,7 @@
             </div>
           </div>
           <div class="mb-3">
-            <div class="col-sm-6">
+            <div class="col-sm-6" *ngIf="postMethod">
               <label for="email">Correo</label>
               <input type="email" class="form-control" id="email" formControlName="email" appEmailValidation
                 [ngClass]="{'is-invalid': form.get('email')?.invalid && form.get('email')?.touched}">
