@@ -129,5 +129,7 @@
   "The company with id: {id} not found": "Sucursal no encontrada",
   "The register with the id: {id} not found": "Registro no encontrado",
   "Register with id {id} not found": "Registro no encontrado",
-  "Unable to read value of route parameter": "Parámetro inválido en la ruta"
+  "Unable to read value of route parameter": "Parámetro inválido en la ruta",
+  "Expression must not be empty": "La expresión no debe estar vacía",
+  "Variable must have a value or an expression as definition": "La variable debe tener un valor o una expresión como definición"
 }

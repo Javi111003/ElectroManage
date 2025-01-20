@@ -99,6 +99,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         else {
           this.editPolicy();
         }
+      } else {
+        this.loading = false;
       }
     });
   }

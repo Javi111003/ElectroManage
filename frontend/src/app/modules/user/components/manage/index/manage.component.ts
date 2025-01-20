@@ -35,7 +35,7 @@ export class ManageComponent {
     },
     {
       title: 'Centro de Trabajo',
-      field: 'workCenter'
+      field: 'center'
     }
   ];
   selectedItem: any = null;
@@ -57,7 +57,7 @@ export class ManageComponent {
    * Sets the data service with null data and false loading state, then shows the modal.
    */
   onAddClick(): void {
-    this.dataService.setData([null, false]);
+    this.dataService.setData([null, true, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }
@@ -92,7 +92,7 @@ export class ManageComponent {
   edit(item: any): void {
     this.httpUser.getById(item.id).subscribe(user => {
       item.role = user.roles.map(item => this.roles.get(item));
-      this.dataService.setData([item, false]);
+      this.dataService.setData([item, false, false]);
       const modal = new bootstrap.Modal(
         document.getElementById('exampleModal') as HTMLElement
       );
@@ -122,7 +122,8 @@ export class ManageComponent {
       userName: item.username,
       email: item.email,
       password: item.password,
-      workCenter: item.company.name
+      workCenter: item.company,
+      center: item.company.name
     }));
 
     this.noResults = this.dataSource.data.length == 0;

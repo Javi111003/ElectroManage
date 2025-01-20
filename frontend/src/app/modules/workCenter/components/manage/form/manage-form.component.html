@@ -18,7 +18,7 @@
               </div>
               <div class="col-4 col-sm-6">
                 <label for="monthlyConsumptionLimit" class="form-label">Límite de consumo mensual</label>
-                <input type="number" class="form-control" id="monthlyConsumptionLimit" formControlName="monthlyConsumptionLimit" appNumberValidation
+                <input type="text" class="form-control" id="monthlyConsumptionLimit" formControlName="monthlyConsumptionLimit" appFloatValidation
                   [ngClass]="{'is-invalid': form.get('monthlyConsumptionLimit')?.invalid && form.get('monthlyConsumptionLimit')?.touched}">
                 <div *ngIf="form.get('monthlyConsumptionLimit')?.invalid && form.get('monthlyConsumptionLimit')?.touched" class="invalid-feedback">
                   Este campo es obligatorio

@@ -123,7 +123,11 @@ export class AvgConsumptionComponent implements OnInit {
 
         if (centerName) {
           this.dataSources[centerName] = new MatTableDataSource();
-          this.dataSources[centerName].data = registers[index].yearCostDto;
+          this.dataSources[centerName].data = registers[index].yearCostDto.map(data => ({
+            year: data.year,
+            meanCost: data.meanCost.toFixed(2),
+            meanConsumption: data.meanConsumption.toFixed(2)
+          }));
           this.noResults[centerName] = this.dataSources[centerName].data.length == 0;
         }
       }

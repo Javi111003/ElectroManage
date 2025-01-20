@@ -1,16 +1,17 @@
-import { Directive, HostListener, Renderer2, ElementRef } from '@angular/core';
+import { Directive, HostListener } from '@angular/core';
+import { NgControl } from '@angular/forms';
 
 @Directive({
-  selector: '[appMathValidator]'
+  selector: '[appFloatValidation]'
 })
-// Directive to validate inputs which need math operators and numbers
-export class MathValidatorDirective {
-  constructor(private renderer: Renderer2, private el: ElementRef) {}
+// Directive to validate inputs which need positive floats
+export class FloatValidationDirective {
+  constructor(private ngControl: NgControl) { }
 
   @HostListener('input', ['$event'])
   onInputChange(event: KeyboardEvent): void {
     const input = (event.target as HTMLInputElement).value;
-    let sanitizedInput = input.replace(/[^0-9\+\-\*\/\^\s√\.\(\)]/g, '');
+    let sanitizedInput = input.replace(/[^0-9\.]/g, '');
     const parts = sanitizedInput.split('.');
 
     if (parts.length > 2) {
@@ -21,16 +22,15 @@ export class MathValidatorDirective {
       sanitizedInput = `0${sanitizedInput}`;
     }
 
-    if (sanitizedInput !== input) {
-      this.renderer.setProperty(event.target, 'value', sanitizedInput);
-    }
+    this.ngControl.control!.setValue(sanitizedInput);
   }
 
   @HostListener('keypress', ['$event'])
   onKeyPress(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;
     const charStr = String.fromCharCode(charCode);
-    const allowedCharacters = '0123456789+-*/^√.()';
+
+    const allowedCharacters = '0123456789.';
 
     if (!allowedCharacters.includes(charStr)) {
       event.preventDefault();
@@ -46,4 +46,3 @@ export class MathValidatorDirective {
     return true;
   }
 }
-

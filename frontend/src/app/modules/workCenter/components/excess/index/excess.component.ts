@@ -41,6 +41,7 @@ export class ExcessComponent {
   dateInitialize: Moment = [][0];
   readonly date = new FormControl(this.dateInitialize);
   showTable: boolean = false;
+  noResults: boolean = false;
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
     {
@@ -53,13 +54,18 @@ export class ExcessComponent {
     },
     {
       title:'Límite Mensual (Kw/h)',
-      field:'monthlyLimit'
+      field:'limit'
     },
     {
       title:'Exceso (Kw/h)',
-      field:'excess'
+      field:'exceeded'
     }
   ];
+  monthMapper: Map<number, string> = new Map<number, string>([
+    [0, 'Jan'], [1, 'Feb'], [2, 'Mar'], [3, 'Apr'],
+    [4, 'May'], [5, 'Jun'], [6, 'Jul'], [7, 'Aug'],
+    [8, 'Sep'], [9, 'Oct'], [10, 'Nov'], [11, 'Dec']
+  ])
 
   /**
    * Retrieves a FormControl from the form by its control name.
@@ -109,11 +115,13 @@ export class ExcessComponent {
   /**
    * Displays the table if both the year and month are selected.
    */
-  onClick(): void {
+  onConsultClick(): void {
     if (!this.showTable) {
-      console.log(this.form);
-      if (this.getControlValue('year') && this.getControlValue('month') >= 0)
+      this.noResults = false;
+      if (this.getControlValue('year') && this.getControlValue('month') >= 0) {
+        this.getExcess();
         this.showTable = true;
+      }
       else
         this.global.openDialog('Por favor, selecciona un mes y un año.');
     }
@@ -126,5 +134,20 @@ export class ExcessComponent {
   showDatepicker(datepicker: MatDatepicker<Moment>) {
     datepicker.open();
     this.showTable = false;
+  }
+
+  getExcess(): void {
+    const month = this.monthMapper.get(this.getControlValue('month'));
+    const year = this.getControlValue('year');
+    this.global.httpCenter.getExcess(`${month} ${year}`).subscribe(data => {
+      this.dataSource.data = data.map(item => ({
+        workCenter: item.company.name,
+        limit: item.limit,
+        consumption: item.consumption,
+        exceeded: item.exceeded
+      }));
+
+      this.noResults = this.dataSource.data.length == 0;
+    });
   }
 }

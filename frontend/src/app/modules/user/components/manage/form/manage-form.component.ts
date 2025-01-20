@@ -47,6 +47,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     ['Gerente', 'Manager'],
     ['Analista', 'Analist']
   ]);
+  postMethod: boolean = true;
 
   ngOnInit(): void {
     const sub = this.dataService.currentData.subscribe(newData => {
@@ -58,7 +59,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
           });
 
         this.form.patchValue(this.data);
-        this.loading = newData[1];
+        this.postMethod = newData[1];
+        this.loading = newData[2];
       }
     });
 
@@ -117,6 +119,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         if (result) {
           this.register();
           console.log('confirm');
+        } else {
+          this.loading = false;
         }
       });
     } else {
