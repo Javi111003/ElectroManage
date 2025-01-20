@@ -100,12 +100,14 @@
   color: rgb(255, 255, 255);
   border-radius: 5px;
   background-color: #00203b;
+  cursor: pointer;
 }
 .dropdown-label:hover a{
   color:white !important;
 }
 .dropdown-label:hover label{
   color: white;
+  cursor: pointer;
 }
 .dropdown-label:hover
 .sidebar li a:hover{
@@ -235,11 +237,11 @@
 .nav li .dropdown-label.active a {
   color: white;
 }
-.user-menu-container {
+.user-menu-container, .notifications-menu-container {
   position: relative;
   display: inline-block;
 }
-.user-menu {
+.user-menu, .notifications-menu {
   position: absolute;
   top: 100%;
   right: 0;
