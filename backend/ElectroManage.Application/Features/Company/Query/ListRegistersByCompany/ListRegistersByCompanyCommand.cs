@@ -5,4 +5,6 @@ namespace ElectroManage.Application.Features.Company.Query.ListRegistersByCompan
 public record ListRegistersByCompanyCommand : ICommand<IEnumerable<RegisterDTO>>
 {
     public long Id { get; set; }
+    public DateTime Start {  get; set; }
+    public DateTime End { get; set; }
 }
