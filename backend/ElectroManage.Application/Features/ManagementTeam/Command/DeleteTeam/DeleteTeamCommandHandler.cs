@@ -42,8 +42,7 @@ public class DeleteTeamCommandHandler : CoreCommandHandler<DeleteTeamCommand, De
 
         company.ManagementTeam = null;
         await companyRepository.UpdateAsync(company, false);
-        team.StatusBaseEntity = Domain.Enums.StatusEntityType.Delete;
-        await teamRepository.UpdateAsync(team, false);
+        await teamRepository.DeleteAsync(team, false);
         await UnitOfWork!.SaveChangesAsync();
 
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
