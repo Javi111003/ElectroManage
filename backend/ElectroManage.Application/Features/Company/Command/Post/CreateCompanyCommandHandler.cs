@@ -95,6 +95,7 @@ public class CreateCompanyCommandHandler : CoreCommandHandler<CreateCompanyComma
                 CommitTransaction(scopeDoWork);
             }
         }
+        await _unitOfWork.SaveChangesAsync();
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Completed");
         return CompanyMapper.ToResponse(company);
     }
