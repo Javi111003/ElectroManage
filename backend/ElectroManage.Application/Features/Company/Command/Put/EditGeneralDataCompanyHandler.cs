@@ -27,6 +27,7 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
             .Include(x => x.AministrativeArea)
             .Include(x => x.InstalationType)
             .Include(x => x.Location)
+            .Include(x => x.CostFormulas)
             .Include(x => x.EfficiencyPoliciesApplyed)
             .ThenInclude(x => x.EfficiencyPolicy)
         .FirstAsync();

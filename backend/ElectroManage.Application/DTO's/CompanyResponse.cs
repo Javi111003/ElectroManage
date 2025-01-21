@@ -10,4 +10,5 @@ public record CompanyResponse
     public AppliedEfficiencyPolicyDTO? CurrentEfficiencyPolicy { get; set; }
     public string Status { get; set; } = string.Empty;
     public ManagementTeamDto? ManagementTeam { get; set; }
+    public CostFormulaDTO? CurrentCostFormula {get; set; }
 }

@@ -1,7 +1,7 @@
 using ElectroManage.Application.DTO_s;
 
 namespace ElectroManage.Application.Features.CostFormula.Command.Post;
-public record CreateCostFormulaCommand : ICommand<CreateCostFormulaResponse>
+public record CreateCostFormulaCommand : ICommand<CostFormulaDTO>
 {
     public required long CompanyId { get; set; }
     public string? Name { get; set; }

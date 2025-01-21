@@ -1,8 +1,9 @@
+using ElectroManage.Application.DTO_s;
 using ElectroManage.Application.Features.CostFormula.Command.Post;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.CostFormula;
 
-public class CreateCostFormulaEndpoint : Endpoint<CreateCostFormulaCommand, CreateCostFormulaResponse>
+public class CreateCostFormulaEndpoint : Endpoint<CreateCostFormulaCommand, CostFormulaDTO>
 {
     public override void Configure()
     {

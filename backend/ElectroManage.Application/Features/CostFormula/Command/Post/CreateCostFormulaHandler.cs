@@ -1,10 +1,12 @@
 using ElectroManage.Application.Abstractions;
+using ElectroManage.Application.DTO_s;
+using ElectroManage.Application.Mappers;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using ElectroManage.Domain.Entites.Sucursal;
 using Microsoft.Extensions.Logging;
 
 namespace ElectroManage.Application.Features.CostFormula.Command.Post;
-public class CreateCostFormulaCommandHandler : CoreCommandHandler<CreateCostFormulaCommand, CreateCostFormulaResponse>
+public class CreateCostFormulaCommandHandler : CoreCommandHandler<CreateCostFormulaCommand, CostFormulaDTO>
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<CreateCostFormulaCommandHandler> _logger;
@@ -15,12 +17,13 @@ public class CreateCostFormulaCommandHandler : CoreCommandHandler<CreateCostForm
         _logger = logger;
         _checkUniqueService = checkUniqueService;
     }
-    public async override Task<CreateCostFormulaResponse> ExecuteAsync(CreateCostFormulaCommand command, CancellationToken ct = default)
+    public async override Task<CostFormulaDTO> ExecuteAsync(CreateCostFormulaCommand command, CancellationToken ct = default)
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
         var companyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Company>();
         var costFormulaRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.CostFormula>();
-        var company = await companyRepository.FirstAsync(useInactive: true, filters: c => c.Id == command.CompanyId);
+
+        var company = await companyRepository.FirstAsync(useInactive: false, filters: c => c.Id == command.CompanyId);
         if (company is null)
         {
             _logger.LogError($"{nameof(ExecuteAsync)} | Company with id {command.CompanyId} does not exists");
@@ -53,13 +56,6 @@ public class CreateCostFormulaCommandHandler : CoreCommandHandler<CreateCostForm
         }
         await _unitOfWork.SaveChangesAsync();
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
-        return new CreateCostFormulaResponse
-        {
-            Id = costFormula.Id,
-            Name = costFormula.Name,
-            Expression = costFormula.Expression,
-            Created = costFormula.Created,
-            Variables = command.Variables
-        };
+        return CostFormulaMapper.MapToCostFormulaDTO(costFormula);
     }
 }

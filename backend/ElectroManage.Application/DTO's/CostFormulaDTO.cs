@@ -1,8 +1,6 @@
-using ElectroManage.Application.DTO_s;
+namespace ElectroManage.Application.DTO_s;
 
-namespace ElectroManage.Application.Features.CostFormula.Query.Get;
-
-public record CostFormulaGetByIdResponse
+public record CostFormulaDTO
 {
     public long Id { get; set; }
     public string? Name { get; set; }
