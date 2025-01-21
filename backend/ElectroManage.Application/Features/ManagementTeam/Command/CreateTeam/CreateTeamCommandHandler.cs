@@ -39,7 +39,7 @@ public class CreateTeamCommandHandler : CoreCommandHandler<CreateTeamCommand, Ma
         ThrowIfAnyErrors(statusCode:404);
         if(company.ManagementTeam != null)
         {
-             await teamRepository.DeleteAsync(team);
+             await teamRepository.DeleteAsync(company.ManagementTeam, false);
         }
         var team = new Domain.Entites.Sucursal.ManagementTeam
         {
