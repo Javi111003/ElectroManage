@@ -55,7 +55,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     if (user.roles.includes('Admin'))
       this.getCenters();
     else
-      this.getManagerCenter(user.info.company.id);
+      this.getManagerCenter(user.company.id);
 
     const sub = this.dataService.dataUpdated$.subscribe(() => {
       const user: UserLogged = this.global.getUserInfo();
@@ -63,7 +63,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       if (user.roles.includes('Admin'))
         this.getCenters();
       else
-        this.getManagerCenter(user.info.company.id);
+        this.getManagerCenter(user.company.id);
     });
     this.subscriptions.add(sub);
   }

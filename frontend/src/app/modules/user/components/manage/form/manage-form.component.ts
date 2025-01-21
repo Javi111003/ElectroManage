@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
-import { RegisterUser } from '../../../../../models/credential.interface';
+import { EditedUser, RegisterUser } from '../../../../../models/credential.interface';
 import { UserService } from '../../../../../services/user/user.service';
 import { Subscription } from 'rxjs';
 import { Item } from '../../../../../shared/shared.module';
@@ -18,7 +18,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     public global: GlobalModule,
     private dataService: DataService,
-    private user: UserService,
+    private httpUser: UserService,
     private snackbar: SnackbarService
   )
   {
@@ -106,7 +106,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   onSubmit(): void {
     this.loading = true;
-    if (this.form.invalid) {
+    if (this.checkForm()) {
+      this.loading = false;
       this.global.openDialog('Por favor, rellene todos los campos.');
       this.markAllAsTouched();
       return;
@@ -117,8 +118,10 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       result => {
         console.log(result);
         if (result) {
-          this.register();
-          console.log('confirm');
+          if (this.postMethod)
+            this.register();
+          else
+            this.editUser();
         } else {
           this.loading = false;
         }
@@ -138,6 +141,19 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       const control = this.getControl(field);
       control?.markAsTouched();
     });
+  }
+
+  /**
+   * Checks the form validity and sets a default password if the form is in edit mode.
+   * This method sets a default password if the form is in edit mode (postMethod is false),
+   * and then checks if the form is invalid.
+   * @returns A boolean indicating whether the form is invalid.
+   */
+  checkForm(): boolean {
+    if (!this.postMethod)
+      this.getControl('password').setValue("String123.");
+
+    return this.form.invalid;
   }
 
   /**
@@ -162,7 +178,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       companyId: this.getControlValue('workCenter').id
     };
 
-    this.user.registerUser(registerData).subscribe({
+    this.httpUser.registerUser(registerData).subscribe({
       next: (response) => {
         console.log('User registered successfully:', response);
         this.snackbar.openSnackBar('Añadido exitosamente...');
@@ -173,6 +189,41 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         this.loading = false;
         console.log(error);
         this.snackbar.openSnackBar('Error al añadir, intente de nuevo...')
+      }
+    });
+  }
+
+  /**
+   * Edits an existing user based on the form data.
+   * This method retrieves the necessary data from the form, including selected roles,
+   * and attempts to update the user data on the server. If successful, it notifies the user
+   * and closes the modal. If the operation fails, it displays an error message.
+   */
+  editUser(): void {
+    const rolesSelected: Item[] = this.getControlValue('role');
+    let rolesToPost: string[] = [];
+
+    for (let i = 0; i < rolesSelected.length; i++) {
+      rolesToPost.push(this.roles.get(rolesSelected[i].name)!);
+    }
+
+    const userData: EditedUser = {
+      username: this.getControlValue('userName'),
+      roles: rolesToPost,
+      companyId: this.getControlValue('workCenter').id
+    };
+
+    this.httpUser.editUser(userData, this.data.id).subscribe({
+      next: (response) => {
+        console.log('User edited successfully:', response);
+        this.snackbar.openSnackBar('Edited successfully...');
+        this.dataService.notifyDataUpdated();
+        this.activateCloseButton();
+      },
+      error: (error) => {
+        this.loading = false;
+        console.log(error);
+        this.snackbar.openSnackBar('Error editing, please try again...')
       }
     });
   }

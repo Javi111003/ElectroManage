@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { API_URL } from '../../config/api.config';
-import { RegisterUser, UserById, UserInfo } from '../../models/credential.interface';
+import { EditedUser, RegisterUser, UserById } from '../../models/credential.interface';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
@@ -16,7 +16,7 @@ export class UserService {
    * @returns An Observable that resolves to an array of UserInfo objects.
    */
   getUsersList(): Observable<any> {
-    return this.http.get<UserInfo[]>(API_URL + '/v1/user');
+    return this.http.get<any>(API_URL + '/v1/user');
   }
 
   /**
@@ -37,6 +37,17 @@ export class UserService {
    */
   registerUser(registerData: RegisterUser): Observable<any> {
     return this.http.post<any>(API_URL + '/v1/register/user', registerData);
+  }
+
+  /**
+   * Edits an existing user in the system.
+   * This method sends an HTTP PUT request to the API to update the details of an existing user.
+   * @param user The updated user data.
+   * @param id The ID of the user to update.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  editUser(user: EditedUser, id: number): Observable<any> {
+    return this.http.put<any>(`${API_URL}/v1/user/${id}`, user);
   }
 
   /**

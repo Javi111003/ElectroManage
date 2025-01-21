@@ -35,8 +35,8 @@ export class EquipmentComponent implements OnInit, OnDestroy {
     });
 
     if (!this.global.getUserInfo().roles.includes('Admin')) {
-      const name = this.global.getUserInfo().info.company.name;
-      const id = this.global.getUserInfo().info.company.id;
+      const name = this.global.getUserInfo().company.name;
+      const id = this.global.getUserInfo().company.id;
       const workCenter: Item = {
         id: id,
         name: name

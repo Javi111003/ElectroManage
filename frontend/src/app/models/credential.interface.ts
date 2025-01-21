@@ -12,17 +12,13 @@ export interface AccessToken {
   expiration: string;
 }
 
-// User logged info + roles
+// User logged info
 export interface UserLogged {
-  info: UserInfo;
-  roles: string[];
-}
-
-// User info
-export interface UserInfo {
   id: number;
   email: string;
+  username: string;
   company: WorkCenter;
+  roles: string[];
 }
 
 // User data to register
@@ -30,6 +26,13 @@ export interface RegisterUser {
   email: string;
   username: string;
   password: string;
+  roles: string[];
+  companyId: number;
+}
+
+// User info to PUT
+export interface EditedUser {
+  username: string;
   roles: string[];
   companyId: number;
 }
