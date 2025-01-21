@@ -4,9 +4,13 @@ import { GlobalModule } from '../../../../global/global.module';
 import { PolicyService } from '../../../../../services/policy/policy.service';
 import { DataService } from '../../../../../services/data/data.service';
 import { MatTableModule } from '@angular/material/table';
+import { SharedModule } from '../../../../../shared/shared.module';
+import { WorkCenterModule } from '../../../../workCenter/workCenter.module';
+import { PolicyModule } from '../../../policy.module';
 import { of } from 'rxjs';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-describe('ManageComponent', () => {
+describe('ManagePolicyComponent', () => {
   let component: ManageComponent;
   let fixture: ComponentFixture<ManageComponent>;
   let policyServiceSpy: jasmine.SpyObj<PolicyService>;
@@ -34,7 +38,13 @@ describe('ManageComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [ ManageComponent ],
-      imports: [ MatTableModule ],
+      imports: [ 
+        BrowserAnimationsModule,
+        MatTableModule,
+        SharedModule,
+        WorkCenterModule,
+        PolicyModule  
+      ],
       providers: [
         { provide: PolicyService, useValue: policyService },
         { provide: DataService, useValue: dataService },
