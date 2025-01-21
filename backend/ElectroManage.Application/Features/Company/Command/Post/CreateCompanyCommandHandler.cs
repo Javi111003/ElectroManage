@@ -75,7 +75,7 @@ public class CreateCompanyCommandHandler : CoreCommandHandler<CreateCompanyComma
         
         using (var scopeDoWork = ScopeBeginTransactionAsync())
         {
-            await companyRepository.SaveAsync(company, false);
+            await companyRepository.SaveAsync(company);
 
             if(efficiencyPolicy is not null)
             {
