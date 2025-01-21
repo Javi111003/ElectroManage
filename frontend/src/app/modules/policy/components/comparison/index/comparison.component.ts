@@ -1,8 +1,7 @@
 import { GlobalModule } from '../../../../global/global.module';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
-import { AutocompleteComponent } from '../../../../../shared/components/autocomplete/autocomplete.component';
 import { PolicyByCompany } from '../../../../../models/policy.interface';
 import { PolicyService } from '../../../../../services/policy/policy.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -25,8 +24,8 @@ export class ComparisonComponent implements OnInit {
     });
 
     if (!this.global.getUserInfo().roles.includes('Admin')) {
-      const name = this.global.getUserInfo().info.company.name;
-      const id = this.global.getUserInfo().info.company.id;
+      const name = this.global.getUserInfo().company.name;
+      const id = this.global.getUserInfo().company.id;
       const workCenter: Item = {
         id: id,
         name: name

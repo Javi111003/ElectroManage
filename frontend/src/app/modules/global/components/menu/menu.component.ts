@@ -65,7 +65,7 @@ export class MenuComponent implements OnInit {
     const userLogged = sessionStorage.getItem('userLogged');
     if (userLogged) {
       const user = JSON.parse(userLogged);
-      this.getUserName(user.info.id).subscribe(userById => {
+      this.getUserName(user.id).subscribe(userById => {
         this.userEmail = userById.email;
         this.userName = userById.username;
         this.userRoles = user.roles.map((item: string) => this.roles.get(item));

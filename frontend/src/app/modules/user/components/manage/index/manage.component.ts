@@ -4,8 +4,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
-import { UserInfo } from '../../../../../models/credential.interface';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
+import { UserLogged } from '../../../../../models/credential.interface';
 
 declare var bootstrap: any;
 
@@ -39,7 +39,7 @@ export class ManageComponent {
     }
   ];
   selectedItem: any = null;
-  roles: Map<string, string> = new Map<string, string>([
+  rolesMapper: Map<string, string> = new Map<string, string>([
     ['Admin', 'Administrador'],
     ['Manager', 'Gerente'],
     ['Analist', 'Analista']
@@ -90,14 +90,11 @@ export class ManageComponent {
    * @param item The user item to be edited.
    */
   edit(item: any): void {
-    this.httpUser.getById(item.id).subscribe(user => {
-      item.role = user.roles.map(item => this.roles.get(item));
-      this.dataService.setData([item, false, false]);
-      const modal = new bootstrap.Modal(
-        document.getElementById('exampleModal') as HTMLElement
-      );
-      modal.show();
-    });
+    this.dataService.setData([item, false, false]);
+    const modal = new bootstrap.Modal(
+      document.getElementById('exampleModal') as HTMLElement
+    );
+    modal.show();
   }
 
   /**
@@ -106,22 +103,22 @@ export class ManageComponent {
    */
   getUserList(): void {
     this.httpUser.getUsersList().subscribe(users => {
-      const appUsers: UserInfo[] = users.appUsers;
+      const appUsers: UserLogged[] = users.appUsers;
       this.reloadTableData(appUsers);
     });
   }
 
   /**
-   * Reloads the table data with the provided offices data.
-   * Maps the offices data to the required format and sets it as the data source for the table.
-   * @param offices The array of offices data to be loaded into the table.
+   * Reloads the table data with the provided users data.
+   * Maps the users data to the required format and sets it as the data source for the table.
+   * @param users The array of users data to be loaded into the table.
    */
-  reloadTableData(offices: any[]) {
-    this.dataSource.data = offices.map(item => ({
+  reloadTableData(users: UserLogged[]) {
+    this.dataSource.data = users.map(item => ({
       id: item.id,
       userName: item.username,
       email: item.email,
-      password: item.password,
+      role: item.roles.map(role => this.rolesMapper.get(role)),
       workCenter: item.company,
       center: item.company.name
     }));

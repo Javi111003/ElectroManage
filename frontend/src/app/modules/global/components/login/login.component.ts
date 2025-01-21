@@ -1,4 +1,4 @@
-import { AccessToken, UserInfo, UserLogged } from './../../../../models/credential.interface';
+import { AccessToken, UserLogged } from './../../../../models/credential.interface';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../services/auth/auth.service';
@@ -63,13 +63,11 @@ export class LoginComponent {
         if (response && response.accessToken) {
           this.loading = false;
           const token: AccessToken = response.accessToken;
-          const info: UserInfo = {
-            id: response.id,
-            email: response.email,
-            company: response.company
-          }
           const user: UserLogged = {
-            info: info,
+            id: response.id,
+            username: "",
+            email: response.email,
+            company: response.company,
             roles: response.roles
           }
           // Guardar el tiempo de inicio de sesión

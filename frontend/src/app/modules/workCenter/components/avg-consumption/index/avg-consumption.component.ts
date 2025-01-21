@@ -34,8 +34,8 @@ export class AvgConsumptionComponent implements OnInit {
     })
 
     if (!this.global.getUserInfo().roles.includes('Admin')) {
-      const id = this.global.getUserInfo().info.company.id;
-      const name = this.global.getUserInfo().info.company.name;
+      const id = this.global.getUserInfo().company.id;
+      const name = this.global.getUserInfo().company.name;
       const workCenter: Item = {
         id: id,
         name: name

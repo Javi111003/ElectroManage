@@ -4,7 +4,7 @@ import { API_URL } from '../../config/api.config';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { WorkCenter } from '../../models/workCenter.interface';
-import { MeanRegisterData, TotalConsumptionData } from '../../models/register.interface';
+import { MeanRegisterData, RegisterByDay, TotalConsumptionData } from '../../models/register.interface';
 import { Alert, Excess } from '../../models/alert.interface';
 
 
@@ -67,8 +67,11 @@ export class WorkCenterService {
    * This method sends an HTTP GET request to the API to retrieve the register data.
    * @returns An Observable that resolves to a RegisterTotalConsumption object.
    */
-  getRegister(): Observable<TotalConsumptionData> {
-    return this.http.get<TotalConsumptionData>(`${API_URL}/v1/register`);
+  getRegister(id: number, startDate: string, endDate: string): Observable<TotalConsumptionData> {
+    let param = new HttpParams();
+    param = param.append('start', startDate);
+    param = param.append('end', endDate);
+    return this.http.get<TotalConsumptionData>(`${API_URL}/v1/company/${id}/registers`, { params: param });
   }
 
   /**

@@ -6,7 +6,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DataService } from '../../../../../services/data/data.service';
 import { Item } from '../../../../../shared/shared.module';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
-import { Register, TotalConsumptionData } from '../../../../../models/register.interface';
+import { Register, RegisterByDay, TotalConsumptionData } from '../../../../../models/register.interface';
 import { Subscription } from 'rxjs';
 import { RegisterService } from '../../../../../services/register/register.service';
 
@@ -32,8 +32,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
     });
 
     if (!this.global.getUserInfo().roles.includes('Admin')) {
-      const name = this.global.getUserInfo().info.company.name;
-      const id = this.global.getUserInfo().info.company.id;
+      const name = this.global.getUserInfo().company.name;
+      const id = this.global.getUserInfo().company.id;
       const workCenter: Item = {
         id: id,
         name: name
@@ -80,7 +80,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       const initDate = this.getControlValue('startDate');
       const endDate = this.getControlValue('endDate');
       if (id && initDate && endDate) {
-        this.getRegistersByCenterId(0);
+        this.getRegistersByCenterId(id, initDate, endDate);
       }
     });
     this.subscriptions.add(sub);
@@ -116,9 +116,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
    * formats the register dates, and updates the data source.
    * @param centerID - The ID of the center to fetch registers for.
    */
-  getRegistersByCenterId(centerID: number): void {
-    this.global.httpCenter.getRegister().subscribe(register => {
-      this.reloadTableData(register);
+  getRegistersByCenterId(centerID: number, startDate: Date, endDate: Date): void {
+    const start = this.global.formatLocalDate(startDate);
+    const end = this.global.formatLocalDate(endDate);
+    this.global.httpCenter.getRegister(centerID, start, end).subscribe(totalRegister => {
+      this.reloadTableData(totalRegister);
     })
   }
 
@@ -183,34 +185,16 @@ export class RegisterComponent implements OnInit, OnDestroy {
    */
   onConsultClick() {
     if (!this.showTable) {
-      if (this.getControlValue('workCenter').id &&
-      this.getControlValue('startDate') && this.getControlValue('endDate')) {
-        this.getRegistersByCenterId(0);
+      const id = this.getControlValue('workCenter').id;
+      const startDate = this.getControlValue('startDate');
+      const endDate = this.getControlValue('endDate');
+      if (id && startDate && endDate) {
+        this.getRegistersByCenterId(id, startDate, endDate);
         this.showTable = true;
       } else {
         this.global.openDialog('Por favor, selecciona un Centro de Trabajo, fecha de inicio y de fin válidos.');
       }
     }
-  }
-
-  /**
-  * Calculates the total cost.
-  * This function uses the reduce method to sum up all the values
-  * in the `costs` array and returns the total.
-  * @returns The total cost.
-  */
-  getTotalCost(costs: number[]): number {
-    return costs.reduce((acc, value) => acc + value, 0);
-  }
-
-  /**
-  * Calculates the total consumption.
-  * This function uses the reduce method to sum up all the values
-  * in the `consumptions` array and returns the total.
-  * @returns The total consumption.
-  */
-  getTotalConsumption(consumptions: number[]): number {
-    return consumptions.reduce((acc, value) => acc + value, 0);
   }
 
   /**
@@ -262,23 +246,21 @@ export class RegisterComponent implements OnInit, OnDestroy {
   /**
    * Reloads the table data with the provided list of registers.
    * This function updates the data source of the table with the new list of registers.
-   * @param register The list of registers to be used to reload the table data.
+   * @param totalRegister The list of registers to be used to reload the table data.
    */
-  reloadTableData(register: TotalConsumptionData): void {
-    this.dataSource.data = register.registers.map(register => ({
-      id: register.registerId,
-      date: register.registerDate,
-      registerDate: register.registerDate.substring(0, 10),
+  reloadTableData(totalRegister: TotalConsumptionData): void {
+    this.dataSource.data = totalRegister.registers.map(register => ({
+      id: register.id,
+      date: register.date,
+      registerDate: register.date.substring(0, 10),
       consumption: register.consumption.toFixed(2),
       cost: register.cost.toFixed(2)
     }));
 
-    const consumptions = register.registers.map(item => item.consumption);
-    const costs = register.registers.map(item => item.cost);
     this.footerTable = [
       'Total',
-      this.getTotalConsumption(consumptions).toFixed(2),
-      this.getTotalCost(costs).toFixed(2)
+      totalRegister.totalConsumption.toFixed(2),
+      totalRegister.totalCost.toFixed(2)
     ];
 
     this.noResults = this.dataSource.data.length == 0;
