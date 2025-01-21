@@ -123,11 +123,11 @@ export class MenuComponent implements OnInit {
 
     setInterval(() => this.updateLoginTime(), 1000);
 
-    this.webSocketService.connect('ws://localhost:4200').subscribe(
-    (message) => this.alerts.push(message),
-    (err) => console.error(err),
-    () => console.warn('Connection closed')
-    );
+    // this.webSocketService.connect('ws://localhost:4200').subscribe(
+    // (message) => this.alerts.push(message),
+    // (err) => console.error(err),
+    // () => console.warn('Connection closed')
+    // );
   }
 
   isSidebarActive = false;

@@ -1,8 +1,9 @@
 <div style="padding: 1rem;">
+    <!-- Vista para Gerente y Analista -->
     <div class="dashboard" *ngIf="!userInfo.roles.includes('Admin')">
         <section class="consumption">
             <div class="workcenter-limit-list">
-                <h6>Datos de Consumo</h6>
+                <h6>Datos de Consumo de {{ getCompanyName() }}</h6>
                 <ul id="limitList">
                     <li class="legend">
                         <span class="center-name"><strong>Nombre</strong></span>
@@ -10,9 +11,9 @@
                         <span class="limit"><strong>Límite</strong></span>
                     </li>
                     <li class="workcenter-item" *ngFor="let center of topConsumingCenters">
-                        <span>{{ center.companyId }}</span>
+                        <span>{{ center.companyName }}</span>
                         <span style="color: red;">{{ center.totalConsumption }}</span>
-                        <span style="color: gray;">{{ center.limit }}</span>
+                        <span style="color: gray;">{{ center.consumptionLimit}}</span>
                     </li>
                 </ul>
             </div>
@@ -22,7 +23,7 @@
         </section>
         <section class="alerts">
             <div class="workcenter-alerts-list">
-                <h6>Alertas</h6>
+                <h6>Alertas de {{ getCompanyName() }}</h6>
                 <ul id="alertList">
                     <li class="legend">
                         <span class="center-name"><strong>Nombre</strong></span>
@@ -39,7 +40,9 @@
             </div>
         </section>
     </div>
-    <div class="dashboard" *appShowForRoles="['Admin']">
+
+    <!-- Vista para Admin -->
+    <div class="dashboard" *ngIf="userInfo.roles.includes('Admin')">
         <section class="work-centers">
             <div class="total-centers">
                 <div class="info">
@@ -58,14 +61,6 @@
                 </div>
                 <div class="graph">
                     <canvas id="centersChart"></canvas>
-                </div>
-                <div>
-                    <label for="yearSelect"><strong>Año:</strong></label>
-                    <select id="yearSelect" (change)="onYearChange($event)">
-                        <option value="2023">2023</option>
-                        <option value="2024">2024</option>
-                        <option value="2025">2025</option>
-                    </select>
                 </div>
             </div>
             <div class="pie-chart-container">
@@ -87,9 +82,9 @@
                         <span class="limit"><strong>Límite</strong></span>
                     </li>
                     <li class="workcenter-item" *ngFor="let center of topConsumingCenters">
-                        <span>{{ center.companyId }}</span>
+                        <span>{{ center.companyName }}</span>
                         <span style="color: red;">{{ center.totalConsumption }}</span>
-                        <span style="color: gray;">{{ center.limit }}</span>
+                        <span style="color: gray;">{{ center.consumptionLimit }}</span>
                     </li>
                 </ul>
             </div>
