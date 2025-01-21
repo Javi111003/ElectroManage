@@ -23,7 +23,6 @@ export class DashboardService {
       `${API_URL}/v1/dashboard/count_created_deleted?year=${year}`
     );
   }
-
   /**
    * Retrieves the top five consuming centers.
    *
@@ -54,9 +53,9 @@ export class DashboardService {
    * @returns An Observable of an array of MostWarnedCenter objects, representing
    * the top five most warned centers.
    */
-  getTopFiveWarnedCenters(): Observable<MostWarnedCenter[]> {
+  getTopFiveWarnedCenters(year: number): Observable<MostWarnedCenter[]> {
     return this.http.get<MostWarnedCenter[]>(
-      `${API_URL}/v1/dashboard/top_five/company_count_warnings`
+      `${API_URL}/v1/dashboard/top_five/company_count_warnings/${year}`
     );
   }
 }
