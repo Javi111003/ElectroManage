@@ -50,9 +50,8 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
           this.data = newData[0];
           this.form.patchValue(this.data);
           if (this.data.date) {
-            const dateString = this.data.data;
-            const dateParts = dateString.split('-');
-            const dateObject = new Date(Date.UTC(+dateParts[0], +dateParts[1] - 1, +dateParts[2] + 1));
+            const dateString = this.data.date;
+            const dateObject = new Date(dateString);
             this.getControl('date').setValue(dateObject);
           }
         }
@@ -120,6 +119,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.loading = true;
     if (this.form.invalid) {
+      this.loading = false;
       this.global.openDialog('Por favor, rellene todos los campos.');
       this.markAllAsTouched();
       return;
@@ -187,7 +187,11 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
    * @param request - The function that sends the request to the server.
    * @param successMessage - The message to be displayed on successful request.
    */
-  private handleRegisterRequest<T>(register: T, request: (data: T) => any, successMessage: string): void {
+  private handleRegisterRequest<T>(
+    register: T,
+    request: (data: T) => any, successMessage: string,
+    action: string
+  ): void {
     request(register).subscribe({
       next: (response: any) => {
         console.log(`${successMessage}:`, response);
@@ -198,7 +202,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
       error: (error: any) => {
         this.loading = false;
         console.log(error);
-        this.snackbar.openSnackBar(`Error, intente de nuevo...`);
+        this.snackbar.openSnackBar(`Error al ${action}, intente de nuevo...`);
       }
     });
   }
@@ -215,8 +219,9 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
       consumption: this.getControlValue('consumption'),
       date: this.global.formatLocalDate(this.getControlValue('date'))
     };
+    console.log(register);
     this.handleRegisterRequest<Register>(register, (data) =>
-      this.httpRegister.postRegister(data), "Añadido exitosamente..."
+      this.httpRegister.postRegister(data), "Añadido exitosamente...", "añadir"
     );
   }
 
@@ -232,7 +237,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
       date: this.global.formatLocalDate(this.getControlValue('date'))
     };
     this.handleRegisterRequest<RegisterInfo>(register, (data) =>
-      this.httpRegister.editRegister(this.data.id, data), "Editado exitosamente..."
+      this.httpRegister.editRegister(this.data.id, data), "Editado exitosamente...", "editar"
     );
   }
 
