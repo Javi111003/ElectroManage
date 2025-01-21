@@ -3,7 +3,6 @@ using ElectroManage.Domain.DataAccess.Abstractions;
 using ElectroManage.Domain.Entites.Sucursal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Linq.Expressions;
 
 namespace ElectroManage.Application.Features.Register.Command.Post;
 public class CreateRegisterCommandHandler : CoreCommandHandler<CreateRegisterCommand, CreateRegisterResponse>
@@ -21,10 +20,12 @@ public class CreateRegisterCommandHandler : CoreCommandHandler<CreateRegisterCom
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
         var registerRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Register>();
+        var formulaRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.CostFormula>();
         var companyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Company>();
         var company = await companyRepository.GetAllListOnly(filters: x => x.Id == command.CompanyId)
             .Include(c => c.CostFormulas)
                 .ThenInclude(f => f.VariableDefinitions)
+                .AsSplitQuery()
             .FirstAsync();
         if (company == null)
         {
@@ -44,6 +45,7 @@ public class CreateRegisterCommandHandler : CoreCommandHandler<CreateRegisterCom
             StaticValue = command.Consumption
         });
         var cost = _costCalculator.EvaluateFormula(formula.Expression, [.. variables]);
+        await formulaRepository.UpdateAsync(formula, false);
         var register = new Domain.Entites.Sucursal.Register
         {
             CompanyId = command.CompanyId,
@@ -52,10 +54,11 @@ public class CreateRegisterCommandHandler : CoreCommandHandler<CreateRegisterCom
             Consumption = command.Consumption,
             Date = DateTime.UtcNow,
         };
-        await registerRepository.SaveAsync(register);
+        await registerRepository.SaveAsync(register, false);
         company.Registers.Add(register);
-        await companyRepository.UpdateAsync(company);
+        await companyRepository.UpdateAsync(company, false);
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
+        await _unitOfWork.SaveChangesAsync();
         return new CreateRegisterResponse
         {
             Id = register.Id,
