@@ -43,9 +43,7 @@ export class LocationComponent implements OnInit, AfterViewInit {
    */
   getCenterDetailsList():void{
     this.http.getCenterDetailsList().subscribe(centers => {
-      centers.map((center: any) => {
-        this.centerLocationData.push(center);
-      });
+      this.centerLocationData = centers;
     });
   }
 

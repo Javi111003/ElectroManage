@@ -34,15 +34,22 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   loading: boolean = false;
 
   ngOnInit(): void {
-    const sub = this.dataService.currentData.subscribe(newData => {
-      if (newData) {
-        this.data = newData[0];
-        this.postMethod = newData[1];
-        this.loading = newData[2];
-        this.form.patchValue(this.data);
-      }
-    });
-    this.subscriptions.add(sub);
+    if (this.dataService && this.dataService.currentData) {
+      const sub = this.dataService.currentData.subscribe({
+        next: (newData) => {
+          if (newData) {
+            this.data = newData[0];
+            this.postMethod = newData[1];
+            this.loading = newData[2];
+            this.form.patchValue(this.data);
+          }
+        },
+        error: (error) => {
+          console.error('Error en la suscripción:', error);
+        }
+      });
+      this.subscriptions.add(sub);
+    }
   }
 
   ngOnDestroy(): void {
