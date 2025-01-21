@@ -37,6 +37,10 @@ public class CreateTeamCommandHandler : CoreCommandHandler<CreateTeamCommand, Ma
             AddError($"User with id {id} does not exists or was'nt part of Company");
         }
         ThrowIfAnyErrors(statusCode:404);
+        if(company.ManagementTeam != null)
+        {
+             await teamRepository.DeleteAsync(team);
+        }
         var team = new Domain.Entites.Sucursal.ManagementTeam
         {
             Name = command.Name,
