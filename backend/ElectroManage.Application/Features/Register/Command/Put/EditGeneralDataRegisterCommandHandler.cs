@@ -20,10 +20,12 @@ public class EditGeneralDataRegisterCommandHandler : CoreCommandHandler<EditGene
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution starter");
         var registerRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Register>();
+        var formulaRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.CostFormula>();
         var register = await registerRepository.GetAllListOnly(useInactive: true, filters: x => x.Id == command.Id)
             .Include(r => r.Company)
                 .ThenInclude(c => c.CostFormulas)
                     .ThenInclude(f => f.VariableDefinitions)
+                    .AsSplitQuery()
                     .FirstAsync();
         if (register is null)
         {
@@ -43,6 +45,7 @@ public class EditGeneralDataRegisterCommandHandler : CoreCommandHandler<EditGene
             StaticValue = command.Consumption
         });
         var cost = _costCalculator.EvaluateFormula(formula.Expression, [.. variables]);
+        await formulaRepository.UpdateAsync(formula, false);
         register.Consumption = command.Consumption;
         register.Cost = cost;
         register.Date = command.Date;

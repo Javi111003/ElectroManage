@@ -8,9 +8,6 @@ public class EditCostFormulaValidator : CoreValidator<EditCostFormulaCommand>
         RuleFor(p => p.CompanyId)
             .GreaterThan(0)
             .WithMessage("CompanyId must be greater than 0");
-        RuleFor(p => p.Name)
-            .NotEmpty()
-            .WithMessage("Name must not be empty");
         RuleFor(p => p.Expression)
             .NotNull()
             .NotEmpty()

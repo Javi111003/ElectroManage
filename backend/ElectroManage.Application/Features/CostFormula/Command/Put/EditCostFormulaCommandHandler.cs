@@ -25,6 +25,7 @@ public class EditCostFormulaCommandHandler : CoreCommandHandler<EditCostFormulaC
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
         var companyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Company>();
         var costFormulaRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.CostFormula>();
+        var variableRepository = _unitOfWork.DbRepository<VariableDefinition>();
         
         var filter = new Expression<Func<Domain.Entites.Sucursal.CostFormula, bool>>[]
         {
@@ -66,11 +67,12 @@ public class EditCostFormulaCommandHandler : CoreCommandHandler<EditCostFormulaC
                     Expression = v.Expression,
                     Formula = costFormula
                 }).ToList();
-
+            foreach(var variable in costFormula.VariableDefinitions)
+            {
+                await variableRepository.DeleteAsync(variable, false);
+            }
             costFormula.VariableDefinitions = variables;
             await costFormulaRepository.UpdateAsync(costFormula, false);
-
-            company.CostFormulas.Add(costFormula);
             await companyRepository.UpdateAsync(company,false);
             CommitTransaction(scope);
         }
