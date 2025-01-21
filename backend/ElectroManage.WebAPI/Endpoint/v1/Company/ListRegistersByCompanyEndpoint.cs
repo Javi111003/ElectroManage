@@ -3,7 +3,7 @@ using ElectroManage.Application.Features.Company.Query.ListRegistersByCompany;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.Company;
 
-public class ListRegistersByCompanyEndpoint : Endpoint<ListRegistersByCompanyCommand, IEnumerable<RegisterDTO>>
+public class ListRegistersByCompanyEndpoint : Endpoint<ListRegistersByCompanyCommand, ListRegisterByCompanyResponse>
 {
     public override void Configure()
     {

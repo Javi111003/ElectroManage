@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace ElectroManage.Application.Features.Company.Query.ListRegistersByCompany;
 
-public class ListRegistersByCompanyCommandHandler : CoreCommandHandler<ListRegistersByCompanyCommand, IEnumerable<RegisterDTO>>
+public class ListRegistersByCompanyCommandHandler : CoreCommandHandler<ListRegistersByCompanyCommand, ListRegisterByCompanyResponse>
 {
     readonly IUnitOfWork _unitOfWork;
     readonly ILogger<ListRegistersByCompanyCommandHandler> _logger;
@@ -16,7 +16,7 @@ public class ListRegistersByCompanyCommandHandler : CoreCommandHandler<ListRegis
         _logger = logger;
     }
 
-    public override async Task<IEnumerable<RegisterDTO>> ExecuteAsync(ListRegistersByCompanyCommand command, CancellationToken ct = default)
+    public override async Task<ListRegisterByCompanyResponse> ExecuteAsync(ListRegistersByCompanyCommand command, CancellationToken ct = default)
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Started");
         var companyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Company>();
@@ -39,6 +39,11 @@ public class ListRegistersByCompanyCommandHandler : CoreCommandHandler<ListRegis
             Consumption = r.Consumption,
         }).OrderByDescending(r => r.Date);
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Completed");
-        return registers;
+        return new ListRegisterByCompanyResponse
+        {
+            TotalCost = registers.Sum(r => r.Cost),
+            TotalConsumption = registers.Sum(r => r.Consumption),
+            Registers = registers
+        };
     }
 }
