@@ -108,6 +108,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.loading = true;
 
     if (this.form.invalid) {
+      this.loading = false;
       this.global.openDialog('Por favor, rellene todos los campos.');
       this.markAllAsTouched();
       return;

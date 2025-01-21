@@ -45,7 +45,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     },
     {
       title: 'Límite Mensual',
-      field: 'monthlyLimit'
+      field: 'monthlyConsumptionLimit'
     }
   ];
 
@@ -127,7 +127,7 @@ export class ManageComponent implements OnInit, OnDestroy {
         console.log('Location Deleted successfully:', response);
         if (item.managementTeam)
           this.deleteTeam(item.managementTeam.companyId, item.managementTeam.id)
-        this.deleteFormula(item.id);
+        this.deleteFormula(item.currentCostFormula.id);
       },
       error: (error) => {
         console.log(error);
@@ -135,9 +135,23 @@ export class ManageComponent implements OnInit, OnDestroy {
     });
   }
 
-  //documentar
-  deleteFormula(centerID: number): void {
-    // this.global.httpCenter.getCenterById(centerID)
+  /**
+   * Deletes a formula associated with a work center.
+   *
+   * This function attempts to delete the formula identified by the given formula ID.
+   * It logs the result of the operation.
+   *
+   * @param formulaID The ID of the formula to be deleted.
+   */
+  deleteFormula(formulaID: number): void {
+    this.global.httpCenter.deleteFormula(formulaID).subscribe({
+      next: (response) => {
+        console.log('Formula Deleted successfully:', response);
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
   }
 
   /**
@@ -216,7 +230,9 @@ export class ManageComponent implements OnInit, OnDestroy {
       address: item.location.addressDetails,
       adminAreaName: item.administrativeArea.name,
       instalationType: item.installationType.name,
-      monthlyLimit: item.consumptionLimit
+      monthlyConsumptionLimit: item.consumptionLimit,
+      costFormula: item.currentCostFormula,
+      policy: item.currentEfficiencyPolicy
     }));
 
     this.noResults = this.dataSource.data.length == 0;
