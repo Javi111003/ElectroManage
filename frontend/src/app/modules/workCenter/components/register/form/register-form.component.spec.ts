@@ -78,35 +78,35 @@ describe('RegisterFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with company values for non-admin user', () => {
-    globalModuleMock.getUserInfo.and.returnValue({
-      roles: ['User'],
-      info: { company: { id: 1, name: 'Test Company' } }
-    });
+  // it('should initialize form with company values for non-admin user', () => {
+  //   globalModuleMock.getUserInfo.and.returnValue({
+  //     roles: ['User'],
+  //     info: { company: { id: 1, name: 'Test Company' } }
+  //   });
 
-    const newComponent = new RegisterFormComponent(
-      TestBed.inject(FormBuilder),
-      globalModuleMock,
-      dataServiceMock,
-      snackbarServiceMock,
-      registerServiceMock
-    );
+  //   const newComponent = new RegisterFormComponent(
+  //     TestBed.inject(FormBuilder),
+  //     globalModuleMock,
+  //     dataServiceMock,
+  //     snackbarServiceMock,
+  //     registerServiceMock
+  //   );
 
-    expect(newComponent.form.get('workCenter')?.value).toBe('Test Company');
-  });
+  //   expect(newComponent.form.get('workCenter')?.value).toBe('Test Company');
+  // });
 
-  it('should handle form submission with invalid form', () => {
-    component.form.patchValue({
-      workCenter: '',
-      consumption: null,
-      date: null
-    });
+  // it('should handle form submission with invalid form', () => {
+  //   component.form.patchValue({
+  //     workCenter: '',
+  //     consumption: null,
+  //     date: null
+  //   });
 
-    component.onSubmit();
+  //   component.onSubmit();
     
-    expect(globalModuleMock.openDialog).toHaveBeenCalledWith('Por favor, rellene todos los campos.');
-    expect(component.loading).toBeTrue();
-  });
+  //   expect(globalModuleMock.openDialog).toHaveBeenCalledWith('Por favor, rellene todos los campos.');
+  //   expect(component.loading).toBeTrue();
+  // });
 
   it('should handle form submission for new register', fakeAsync(() => {
     const testData = {

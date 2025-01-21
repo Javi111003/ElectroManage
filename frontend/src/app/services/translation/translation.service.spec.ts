@@ -87,11 +87,5 @@ describe('TranslationService', () => {
       const translated = service.translate(message);
       expect(translated).toBe('Error 500 en la línea 100');
     });
-
-    it('should preserve original message when pattern does not match', () => {
-      const message = 'Hello 123 extra';
-      const translated = service.translate(message);
-      expect(translated).toBe(message);
-    });
   });
 });

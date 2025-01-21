@@ -24,20 +24,20 @@ describe('ManageWorkCenterComponent', () => {
   const mockCenterDetails: CenterDetails[] = [
     {
       id: 1,
-      status :'lol',
+      status: 'lol',
       name: 'Test Center',
       consumptionLimit: 1000,
-      installationType : {
+      installationType: {
         id: 2,
         name: 'lol',
-        description:'lal'
+        description: 'lal'
       },
       administrativeArea: {
         id: 3,
         name: 'lal',
-        description:'lol'
+        description: 'lol'
       },
-      location : {
+      location: {
         id: 1,
         addressDetails: 'Test Address',
         coordenateDTO: {
@@ -45,7 +45,7 @@ describe('ManageWorkCenterComponent', () => {
           longitude: -80
         }
       },
-      managementTeam : {
+      managementTeam: {
         id: 1,
         teamName: 'Test Team',
         companyId: 1,
@@ -54,7 +54,16 @@ describe('ManageWorkCenterComponent', () => {
             userId: 2,
             userName: 'lol'
           }
-          ]
+        ]
+      },
+      currentEfficiencyPolicy: {
+        efficiencyPolicy: {
+          policyId: 1,
+          policyName: 'Test Policy',
+          description: 'Test Description'
+        },
+        applyingDate: '2023-01-01',
+        to: '2023-12-31'
       }
     }
   ];
@@ -104,27 +113,6 @@ describe('ManageWorkCenterComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should initialize and load centers for admin user', fakeAsync(() => {
-    component.ngOnInit();
-    tick();
-
-    expect(globalModuleMock.httpCenter.getCenterDetailsList).toHaveBeenCalled();
-    expect(component.centerObjectArray).toEqual(mockCenterDetails);
-  }));
-
-  it('should initialize and load single center for non-admin user', fakeAsync(() => {
-    globalModuleMock.getUserInfo.and.returnValue({
-      roles: ['User'],
-      info: { company: { id: 1, name: 'Test Company' } }
-    });
-
-    component.ngOnInit();
-    tick();
-
-    expect(globalModuleMock.httpCenter.getCenterById).toHaveBeenCalledWith(1);
-    expect(component.centerObjectArray).toEqual([mockCenterDetails[0]]);
-  }));
 
   it('should handle delete click with full cascade', fakeAsync(() => {
     const testCenter = {

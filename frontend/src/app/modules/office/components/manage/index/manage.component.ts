@@ -31,16 +31,19 @@ export class ManageComponent implements OnInit, OnDestroy {
     });
 
     if (!this.global.getUserInfo().roles.includes('Admin')) {
-      const name = this.global.getUserInfo().company.name;
-      const id = this.global.getUserInfo().company.id;
-      const workCenter: Item = {
-        id: id,
-        name: name
-      };
-      this.getControl('workCenter').setValue(workCenter);
-      this.global.getOfficesByCenter(id).subscribe(offices => {
-        this.reloadTableData(offices);
-      });
+      const userInfo = this.global.getUserInfo();
+      if (userInfo && userInfo.company) { // Agregar verificación
+        const name = userInfo.company.name;
+        const id = userInfo.company.id;
+        const workCenter: Item = {
+          id: id,
+          name: name
+        };
+        this.getControl('workCenter').setValue(workCenter);
+        this.global.getOfficesByCenter(id).subscribe(offices => {
+          this.reloadTableData(offices);
+        });
+      }
     }
 
     this.getControl('workCenter').valueChanges.subscribe(() => {

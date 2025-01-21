@@ -15,16 +15,12 @@ describe('ComparisonComponent', () => {
   let policyService: PolicyService;
   let globalModule: GlobalModule;
 
-  // Mock de datos para GlobalModule
+  // Actualizar el mock de datos para GlobalModule
   const mockUserInfo = {
     roles: ['User'],
-    info: {
+    company: {  // Cambiar info.company por company directamente
       id: 1,
-      email: 'test@test.com',
-      company: {
-        id: 1,
-        name: 'Test Company'
-      }
+      name: 'Test Company'
     }
   };
 
@@ -45,7 +41,10 @@ describe('ComparisonComponent', () => {
             getUserInfo: () => mockUserInfo,
             getWorkCenters: () => {},
             Reset: () => {},
-            openDialog: () => {}
+            openDialog: () => of(true),  // Añadir retorno de Observable
+            httpPolicy: {
+              getPoliciesByCenter: () => of([])  // Añadir mock para getPoliciesByCenter
+            }
           }
         },
         PolicyService

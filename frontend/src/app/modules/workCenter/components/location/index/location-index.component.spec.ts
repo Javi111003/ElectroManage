@@ -21,28 +21,37 @@ describe('LocationComponent', () => {
       location: {
         id: 1,
         addressDetails: 'Dirección 1',
-        coordenateDTO: { 
-          latitude: 22, 
-          longitude: -80 
+        coordenateDTO: {
+          latitude: 22,
+          longitude: -80
         }
       },
-      administrativeArea: { 
-        id: 1, 
-        name: 'Área 1', 
-        description: 'Descripción de Área 1' 
+      administrativeArea: {
+        id: 1,
+        name: 'Área 1',
+        description: 'Descripción de Área 1'
       },
-      installationType: { 
-        id: 1, 
-        name: 'Tipo 1', 
-        description: 'Descripción de Tipo 1' 
+      installationType: {
+        id: 1,
+        name: 'Tipo 1',
+        description: 'Descripción de Tipo 1'
       },
       consumptionLimit: 1000,
       status: 'ACTIVE',
-      managementTeam: { 
-        id: 1, 
-        teamName: 'Team 1', 
-        companyId: 1, 
-        members: [] 
+      managementTeam: {
+        id: 1,
+        teamName: 'Team 1',
+        companyId: 1,
+        members: []
+      },
+      currentEfficiencyPolicy: {
+        efficiencyPolicy: {
+          policyId: 1,
+          policyName: 'Test Policy',
+          description: 'Test Description'
+        },
+        applyingDate: '2023-01-01',
+        to: '2023-12-31'
       }
     }
   ];

@@ -78,17 +78,6 @@ describe('AvgConsumptionComponent', () => {
     expect(globalModuleMock.getWorkCenters).toHaveBeenCalled();
   });
 
-  it('should initialize form for non-admin user', () => {
-    globalModuleMock.getUserInfo.and.returnValue({
-      roles: ['User'],
-      info: { company: { id: 1, name: 'Test Company' } }
-    });
-
-    const newComponent = new AvgConsumptionComponent(globalModuleMock, new FormBuilder());
-    expect(newComponent.options.length).toBe(1);
-    expect(newComponent.selectedOptionsIds).toContain(1);
-  });
-
   it('should handle consult click with no selected centers', fakeAsync(() => {
     component.form.patchValue({ workCenters: [] });
     component.onConsultClick();

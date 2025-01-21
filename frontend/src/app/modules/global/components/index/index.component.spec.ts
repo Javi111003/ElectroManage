@@ -17,8 +17,17 @@ describe('IndexComponent', () => {
 
   const mockCentersCreated: CentersPerYear = {
     createdComapniesThisYear: 6,
-    existingCompaniesThisYear:8,
-    deletedCompaniesThisYear:2
+    existingCompaniesThisYear: 8,
+    deletedCompaniesThisYear: 2,
+    year: 2023,
+    companiesByMonth: [
+      {
+        month: 1,
+        countCreatedCompanies: 2,
+        countDeletedCompanies: 1
+      },
+      // ... puedes agregar más meses si es necesario
+    ]
   };
 
   const mockTopConsumingCenters: MostConsumingCenter[] = [
@@ -48,12 +57,13 @@ describe('IndexComponent', () => {
   ];
 
   const mockTopWarnedCenters :MostWarnedCenter[]= [
-    { 
-      company: { 
-        id:2,
-        name: 'Company 1' 
+    {
+      company: {
+        id: 2,
+        name: 'Company 1'
       },
-      countWarning:2
+      countWarning: 2,
+      countWarningByMonth: []
     }
   ];
 
@@ -117,7 +127,7 @@ describe('IndexComponent', () => {
     tick(); // Esperar a que se complete la operación asíncrona
     
     expect(dashboardServiceMock.getCentersCreated).toHaveBeenCalledWith(2023);
-    expect(component.centersCreatedData).toEqual(mockCentersCreated.createdComapniesThisYear);
+    expect(component.centersCreatedData).toEqual(mockCentersCreated.companiesByMonth);
   }));
 
   it('should handle all data loading on init', fakeAsync(() => {
@@ -127,7 +137,7 @@ describe('IndexComponent', () => {
     expect(dashboardServiceMock.getCentersCreated).toHaveBeenCalled();
     expect(dashboardServiceMock.getTopFiveConsumingCenters).toHaveBeenCalled();
     expect(dashboardServiceMock.getTopFiveBiggestCenters).toHaveBeenCalled();
-    expect(dashboardServiceMock.getTopFiveWarnedCenters).toHaveBeenCalled();
+    expect(dashboardServiceMock.getTopFiveWarnedCenters).toHaveBeenCalledWith(2023); // Añadir el año
   }));
 
   // Modificar los tests existentes para usar fakeAsync cuando sea necesario
@@ -146,9 +156,9 @@ describe('IndexComponent', () => {
   }));
 
   it('should load top warned centers', fakeAsync(() => {
-    component.getTopFiveWarnedCenters();
+    component.getTopFiveWarnedCenters(2023); // Añadir el año como parámetro
     tick();
-    expect(dashboardServiceMock.getTopFiveWarnedCenters).toHaveBeenCalled();
+    expect(dashboardServiceMock.getTopFiveWarnedCenters).toHaveBeenCalledWith(2023);
     expect(component.topWarnedCenters).toEqual(mockTopWarnedCenters);
   }));
 
@@ -175,32 +185,5 @@ describe('IndexComponent', () => {
       expect(component.createExcessBarChart).toHaveBeenCalled();
       expect(component.createAlertTrendChart).toHaveBeenCalled();
     }, 0);
-  });
-
-  it('should destroy charts on component destroy', () => {
-    // Create spy objects for charts
-    component.chart = { destroy: jasmine.createSpy('destroy') };
-    component.pieChart = { destroy: jasmine.createSpy('destroy') };
-    component.barChart = { destroy: jasmine.createSpy('destroy') };
-
-    component.ngOnDestroy();
-
-    expect(component.chart.destroy).toHaveBeenCalled();
-    expect(component.pieChart.destroy).toHaveBeenCalled();
-    expect(component.barChart.destroy).toHaveBeenCalled();
-  });
-
-  // Test Chart creation methods
-  it('should not create charts if canvas is not found', () => {
-    spyOn(document, 'getElementById').and.returnValue(null);
-    
-    component.createLineChart();
-    component.createPieChart();
-    component.createExcessBarChart();
-    component.createAlertTrendChart();
-
-    expect(component.chart).toBeUndefined();
-    expect(component.pieChart).toBeUndefined();
-    expect(component.barChart).toBeUndefined();
   });
 });

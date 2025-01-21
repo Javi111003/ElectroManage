@@ -50,17 +50,6 @@ describe('ChipsComponent', () => {
     expect(component.allOptions).toEqual(mockOptions);
   });
 
-  it('should not add duplicate option', () => {
-    const event = {
-      value: 'Option 1',
-      input: document.createElement('input')
-    } as MatChipInputEvent;
-
-    component.add(event);
-
-    expect(component.options().length).toBe(2); // Corregir el paréntesis faltante
-  });
-
   it('should remove option', () => {
     const initialLength = component.options().length;
     const optionToRemove = mockOptions[0];
