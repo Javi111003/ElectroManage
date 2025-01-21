@@ -1,8 +1,9 @@
+using ElectroManage.Application.DTO_s;
 using ElectroManage.Application.Features.CostFormula.Query.Get;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.CostFormula;
 
-public class CostFormulaGetByIdEndpoint : Endpoint<CostFormulaGetByIdCommand, CostFormulaGetByIdResponse>
+public class CostFormulaGetByIdEndpoint : Endpoint<CostFormulaGetByIdCommand, CostFormulaDTO>
 {
     public override void Configure()
     {

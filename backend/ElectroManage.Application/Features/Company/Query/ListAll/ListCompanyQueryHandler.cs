@@ -24,6 +24,8 @@ public class ListCompanyQueryHandler : CoreQueryHandler<ListCompanyQuery, IEnume
         .Include(x => x.InstalationType)
         .Include(x => x.Location)
         .Include(x => x.ManagementTeam)
+        .Include(x => x.CostFormulas)
+        .ThenInclude(x => x.VariableDefinitions)
         .Include(x => x.EfficiencyPoliciesApplyed)
         .ThenInclude(x => x.EfficiencyPolicy)
             .ToListAsync();

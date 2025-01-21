@@ -3,6 +3,7 @@ using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 using ElectroManage.Application.DTO_s;
+using Microsoft.EntityFrameworkCore;
 
 namespace ElectroManage.Application.Features.Company.Query.Get;
 
@@ -21,15 +22,17 @@ public class CompanyGetByIdCommandHandler : CoreCommandHandler<CompanyGetByIdCom
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
         var companyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Company>();
-        var include = new List<Expression<Func<Domain.Entites.Sucursal.Company, object>>>
-        {
-            x => x.AministrativeArea,
-            x => x.Location,
-            x => x.InstalationType,
-            x => x.ManagementTeam,
-            x => x.EfficiencyPoliciesApplyed
-        };
-        var company = await companyRepository.FirstAsync(useInactive: false, includes: include, filters: x => x.Id == command.Id);
+        var company = await companyRepository.GetAll(useInactive: false, filters: x => x.Id == command.Id)
+        .Include(x => x.AministrativeArea)
+        .Include(x => x.InstalationType)
+        .Include(x => x.Location)
+        .Include(x => x.ManagementTeam)
+        .Include(x => x.CostFormulas)
+        .ThenInclude(x => x.VariableDefinitions)
+        .Include(x => x.EfficiencyPoliciesApplyed)
+        .ThenInclude(x => x.EfficiencyPolicy)
+        .FirstAsync();
+        
         if (company is null)
         {
             _logger.LogInformation($"Company with id: {command.Id} not found");

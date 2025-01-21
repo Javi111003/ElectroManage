@@ -1,7 +1,7 @@
 using ElectroManage.Application.DTO_s;
 
 namespace ElectroManage.Application.Features.CostFormula.Command.Put;
-public record EditCostFormulaCommand : ICommand<EditCostFormulaResponse>
+public record EditCostFormulaCommand : ICommand<CostFormulaDTO>
 {
     public required long FormulaId {get;set;}
     public required long CompanyId { get; set; }
