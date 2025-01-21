@@ -29,11 +29,6 @@ public class CreateTeamCommandHandler : CoreCommandHandler<CreateTeamCommand, Ma
             _logger.LogError($"{nameof(ExecuteAsync)} | Company with id {command.CompanyId} does not exists");
             ThrowError($"Company with id {command.CompanyId} does not exists");
         }
-        if(company.ManagementTeam != null)
-        {
-            _logger.LogError($"{nameof(ExecuteAsync)} | Company with id {command.CompanyId} already have a management team");
-            ThrowError($"Company with id {command.CompanyId} already have a management team");
-        }
         var members = await usersRepository.GetAll(filters: u => command.UserIds.Contains(u.Id) && u.CompanyId == company.Id).ToListAsync();
         var notExistantUsers = command.UserIds.Except(members.Select(u => u.Id).ToList());
         foreach (var id in notExistantUsers)
