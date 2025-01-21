@@ -581,7 +581,13 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       '"', '\'', '<', '>', ',', '.', '?', '/'
     ];
 
-    if (numbers.includes(option[0]) || symbols.find(symbol => option.includes(symbol)) != undefined) {
+    const array = option.split(" ");
+
+    if (
+      numbers.includes(option[0]) ||
+      symbols.find(symbol => option.includes(symbol)) != undefined ||
+      array.length > 1
+    ) {
       return false;
     }
 

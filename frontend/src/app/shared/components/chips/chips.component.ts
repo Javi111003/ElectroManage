@@ -1,18 +1,20 @@
-import { Component, Input } from '@angular/core';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { computed, inject, model, signal } from '@angular/core';
+import { computed, model, signal } from '@angular/core';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Item } from '../../shared.module';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-chips',
   templateUrl: './chips.component.html',
-  styleUrl: './chips.component.css'
+  styleUrl: './chips.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipsComponent {
   @Input() label: string = '';
+  @Input() placeholder: string = "Añadir etiqueta...";
   @Input() options = signal([
     {
       id: 0,
@@ -35,6 +37,7 @@ export class ChipsComponent {
       ? this.allOptions.filter(option => option.name.toLowerCase().includes(currentOption))
       : this.allOptions.slice();
   });
+  dropListOrientation: 'horizontal' | 'vertical' = 'horizontal';
 
   /**
    * This function is used to add a new option to the chip list.
@@ -51,8 +54,23 @@ export class ChipsComponent {
       name: value
     };
 
-    if (this.allOptions.find(option => option.name === value) != undefined)
-      return;
+    const validate = this.validateOption(value);
+    if (value && validate) {
+      this.options.update(options => [...options, obj]);
+      this.allOptions.push(obj);
+    }
+
+    this.function(value, validate);
+    this.currentOption.set('');
+  }
+
+  onChipClick(name: string): void {
+    const value = (name || '').trim();
+    const id = this.allOptions.length;
+    const obj = {
+      id: id,
+      name: value
+    };
 
     const validate = this.validateOption(value);
     if (value && validate) {
@@ -62,6 +80,15 @@ export class ChipsComponent {
 
     this.function(value, validate);
     this.currentOption.set('');
+  }
+
+
+  drop(event: CdkDragDrop<Item[]>) {
+    this.options.update(options => {
+      moveItemInArray(options, event.previousIndex, event.currentIndex);
+      console.log(event);
+      return [...options];
+    });
   }
 
   /**
