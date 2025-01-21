@@ -157,74 +157,77 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Registers a new user based on the form data.
-   * This method retrieves the necessary data from the form, validates the work center selection,
-   * and then attempts to save the user data to the server. If successful, it reloads the page.
-   * If the operation fails, it displays an error message to the user.
+   * Retrieves the roles to be posted.
+   * This method extracts the selected roles from the form control and maps them to their corresponding role names.
+   * @returns An array of role names to be posted.
+   */
+  private getRolesToPost(): string[] {
+    const rolesSelected: Item[] = this.getControlValue('role');
+    return rolesSelected.map(role => this.roles.get(role.name)!);
+  }
+
+  /**
+   * Handles the response from a successful HTTP request.
+   * This method logs the success message and response, displays a success snackbar message,
+   * notifies that data has been updated, and activates the close button of the modal.
+   * @param response The response object from the HTTP request.
+   * @param successMessage The message to log upon success.
+   * @param errorMessage The message to display in case of an error.
+   */
+  private handleResponse(response: any, successMessage: string, errorMessage: string) {
+    console.log(successMessage, response);
+    this.snackbar.openSnackBar('Añadido exitosamente...');
+    this.dataService.notifyDataUpdated();
+    this.activateCloseButton();
+  }
+
+  /**
+   * Handles errors from an HTTP request.
+   * This method logs the error, sets the loading state to false, and displays an error snackbar message.
+   * @param error The error object from the HTTP request.
+   * @param errorMessage The message to display in case of an error.
+   */
+  private handleError(error: any, errorMessage: string) {
+    this.loading = false;
+    console.log(error);
+    this.snackbar.openSnackBar(errorMessage);
+  }
+
+  /**
+   * Registers a new user.
+   * This method constructs a RegisterUser object using form control values and sends an HTTP POST request
+   * to register the user. It handles the response and errors appropriately.
    */
   register(): void {
-    const rolesSelected: Item[] = this.getControlValue('role');
-    let rolesToPost: string[] = [];
-
-    for (let i = 0; i < rolesSelected.length; i++) {
-      rolesToPost.push(this.roles.get(rolesSelected[i].name)!);
-    }
-
     const registerData: RegisterUser = {
       email: this.getControlValue('email'),
       username: this.getControlValue('userName'),
       password: this.getControlValue('password'),
-      roles: rolesToPost,
+      roles: this.getRolesToPost(),
       companyId: this.getControlValue('workCenter').id
     };
 
     this.httpUser.registerUser(registerData).subscribe({
-      next: (response) => {
-        console.log('User registered successfully:', response);
-        this.snackbar.openSnackBar('Añadido exitosamente...');
-        this.dataService.notifyDataUpdated();
-        this.activateCloseButton();
-      },
-      error: (error) => {
-        this.loading = false;
-        console.log(error);
-        this.snackbar.openSnackBar('Error al añadir, intente de nuevo...')
-      }
+      next: (response) => this.handleResponse(response, 'User registered successfully', 'Añadido exitosamente...'),
+      error: (error) => this.handleError(error, 'Error al añadir, intente de nuevo...')
     });
   }
 
   /**
-   * Edits an existing user based on the form data.
-   * This method retrieves the necessary data from the form, including selected roles,
-   * and attempts to update the user data on the server. If successful, it notifies the user
-   * and closes the modal. If the operation fails, it displays an error message.
+   * Edits an existing user.
+   * This method constructs an EditedUser object using form control values and sends an HTTP PUT request
+   * to update the user. It handles the response and errors appropriately.
    */
   editUser(): void {
-    const rolesSelected: Item[] = this.getControlValue('role');
-    let rolesToPost: string[] = [];
-
-    for (let i = 0; i < rolesSelected.length; i++) {
-      rolesToPost.push(this.roles.get(rolesSelected[i].name)!);
-    }
-
     const userData: EditedUser = {
       username: this.getControlValue('userName'),
-      roles: rolesToPost,
+      roles: this.getRolesToPost(),
       companyId: this.getControlValue('workCenter').id
     };
 
     this.httpUser.editUser(userData, this.data.id).subscribe({
-      next: (response) => {
-        console.log('User edited successfully:', response);
-        this.snackbar.openSnackBar('Edited successfully...');
-        this.dataService.notifyDataUpdated();
-        this.activateCloseButton();
-      },
-      error: (error) => {
-        this.loading = false;
-        console.log(error);
-        this.snackbar.openSnackBar('Error editing, please try again...')
-      }
+      next: (response) => this.handleResponse(response, 'User edited successfully', 'Edited successfully...'),
+      error: (error) => this.handleError(error, 'Error editing, please try again...')
     });
   }
 

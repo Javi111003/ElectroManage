@@ -78,11 +78,19 @@ export interface CenterDetails {
   currentEfficiencyPolicy: PolicyApplied;
   status: string;
   managementTeam: ManagementTeamInfo;
+  currentCostFormula: CurrentFormula;
 }
 
 // Formula info for POST
 export interface Formula {
   companyId: number;
+  name: string;
+  expression: string;
+  variables: Variable[];
+}
+
+export interface CurrentFormula {
+  id: number;
   name: string;
   expression: string;
   variables: Variable[];

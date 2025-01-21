@@ -116,7 +116,7 @@
                   [control]="getControl('policy')"
                 ></app-autocomplete>
               </div>
-              <div *ngIf="getControlValue('policy').id" class="col-4 col-sm-4">
+              <div *ngIf="getControlValue('policy') && getControlValue('policy').id" class="col-4 col-sm-4">
                 <label for="applyingDate" class="form-label">Fecha de aplicación</label> <br>
                 <app-datepicker class="form-control" id="applyingDate"
                   [filter]="filterDate"

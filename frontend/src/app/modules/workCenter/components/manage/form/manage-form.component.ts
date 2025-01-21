@@ -127,16 +127,23 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         this.form.patchValue(this.data);
 
         if (this.data) {
-          if (this.data.applyingDate) {
-            const dateString = this.data.applyingDate;
-            const dateParts = dateString.split('-');
-            const dateObject = new Date(Date.UTC(+dateParts[0], +dateParts[1] - 1, +dateParts[2] + 1));
+          console.log(this.data.policy);
+          if (this.data.policy) {
+            const dateString = this.data.policy.applyingDate;
+            const dateObject = new Date(dateString);
+            console.log(dateString);
             this.getControl('applyingDate').setValue(dateObject);
+            const policyApplied: Item = {
+              id: this.data.policy.efficiencyPolicy.policyId,
+              name: this.data.policy.efficiencyPolicy.policyName
+            };
+            console.log(policyApplied);
+            this.getControl('policy').setValue(policyApplied);
           }
           const areaId = this.data.adminArea.id;
           const area: Item = {
             id: areaId,
-            name: this.data.areaAdminName
+            name: this.data.adminAreaName
           };
           const instalTypeId = this.data.instalType.id;
           const instalType: Item = {
