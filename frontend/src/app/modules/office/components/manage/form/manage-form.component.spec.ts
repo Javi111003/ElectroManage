@@ -20,8 +20,12 @@ describe('ManageFormOfficeComponent', () => {
       getWorkCenters: jasmine.createSpy('getWorkCenters'),
       getUserInfo: jasmine.createSpy('getUserInfo').and.returnValue({
         roles: ['User'],
-        info: { company: { id: 1, name: 'Test Company' } }
-      })
+        company: { // Cambiar info.company por company directamente
+          id: 1,
+          name: 'Test Company'
+        }
+      }),
+      openDialog: jasmine.createSpy('openDialog').and.returnValue(of(true))
     };
 
     dataServiceMock = jasmine.createSpyObj('DataService', ['setData']);

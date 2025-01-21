@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { UserService } from './user.service';
 import { API_URL } from '../../config/api.config';
-import { RegisterUser, UserById, UserInfo } from '../../models/credential.interface';
+import { RegisterUser, UserById, UserLogged } from '../../models/credential.interface';
 
 describe('UserService', () => {
   let service: UserService;
@@ -27,14 +27,16 @@ describe('UserService', () => {
 
   describe('getUsersList', () => {
     it('should return list of users', () => {
-      const mockUsers: UserInfo[] = [
+      const mockUsers: UserLogged[] = [
         {
           id: 1,
           email: 'test@test.com',
           company: {
             id: 1,
             name: 'Test Company'
-          }
+          },
+          username: '',
+          roles: []
         }
       ];
 

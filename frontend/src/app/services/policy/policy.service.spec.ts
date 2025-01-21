@@ -54,7 +54,6 @@ describe('PolicyService', () => {
           policyId: 1,
           policyName: 'Test Policy',
           description: 'Test Description',
-          applyingDate: '2023-01-01'
         }
       ];
 

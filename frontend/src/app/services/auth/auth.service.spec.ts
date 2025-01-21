@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AuthService } from './auth.service';
 import { API_URL } from '../../config/api.config';
-import { Credential, UserLogged, UserInfo } from '../../models/credential.interface';
+import { Credential, UserLogged,} from '../../models/credential.interface';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -61,13 +61,12 @@ describe('AuthService', () => {
   describe('getUserRoles', () => {
     it('should return user roles from session storage', () => {
       const mockUser: UserLogged = {
-        info: {
+        id: 1,
+        email: 'test@test.com',
+        username: 'lol',
+        company: {
           id: 1,
-          email: 'test@test.com',
-          company: {
-            id: 1,
-            name: 'Test Company',
-          }
+          name: 'Test Company',
         },
         roles: ['ADMIN', 'USER']
       };

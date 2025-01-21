@@ -32,8 +32,9 @@ describe('ManageOfficeComponent', () => {
       getOfficesByCenter: jasmine.createSpy('getOfficesByCenter').and.returnValue(of([])),
       getUserInfo: jasmine.createSpy('getUserInfo').and.returnValue({
         roles: ['User'],
-        info: {
-          company: { id: 1, name: 'Test Company' }
+        company: { // Cambiar info.company por company directamente
+          id: 1,
+          name: 'Test Company'
         }
       }),
       httpOffice: {

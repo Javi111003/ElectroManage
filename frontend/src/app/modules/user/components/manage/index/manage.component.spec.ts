@@ -33,7 +33,7 @@ describe('ManageUserComponent', () => {
 
     dataUpdatedSubject = new Subject<void>();
     currentDataSubject = new BehaviorSubject<any>(null);
-    userServiceMock = jasmine.createSpyObj('UserService', ['getUsersList', 'getById', 'deleteUser']);
+    userServiceMock = jasmine.createSpyObj('UserService', ['getUsersList', 'deleteUser']);
     dataServiceMock = jasmine.createSpyObj('DataService', ['setData', 'notifyDataUpdated']);
     // Añadir tanto dataUpdated$ como currentData al mock
     Object.defineProperty(dataServiceMock, 'dataUpdated$', {
@@ -45,12 +45,6 @@ describe('ManageUserComponent', () => {
     snackbarServiceMock = jasmine.createSpyObj('SnackbarService', ['openSnackBar']);
 
     userServiceMock.getUsersList.and.returnValue(of({ appUsers: [] }));
-    userServiceMock.getById.and.returnValue(of({
-      email: 'test@test.com',
-      username: 'testuser',
-      company: { id: 1, name: 'Test Company' },
-      roles: ['USER']
-    }));
     userServiceMock.deleteUser.and.returnValue(of({}));
 
     const globalModuleMock = {
@@ -99,9 +93,9 @@ describe('ManageUserComponent', () => {
   });
 
   it('should handle edit user', () => {
-    const testUser = { id: 1 };
+    const testUser = { id: 1, name: 'Test User' };
     component.edit(testUser);
-    expect(userServiceMock.getById).toHaveBeenCalledWith(1);
+    expect(dataServiceMock.setData).toHaveBeenCalledWith([testUser, false, false]);
   });
 
   it('should update data when notified', () => {

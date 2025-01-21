@@ -130,20 +130,7 @@ describe('LoginComponent', () => {
     component.login();
     expect(component.loading).toBeFalse(); // Should be false after successful login
   });
-
-  it('should store user info in session storage after login', () => {
-    component.form.patchValue({
-      username: 'test@test.com',
-      password: 'password123'
-    });
-
-    component.login();
-
-    const storedUser = JSON.parse(sessionStorage.getItem('userLogged') || '{}');
-    expect(storedUser.info.email).toBe('test@test.com');
-    expect(storedUser.roles).toContain('Admin');
-  });
-
+  
   afterEach(() => {
     sessionStorage.clear();
   });

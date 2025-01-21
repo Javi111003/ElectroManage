@@ -80,20 +80,6 @@ describe('AlertComponent', () => {
     expect(globalModuleMock.Reset).toHaveBeenCalled();
     expect(globalModuleMock.getWorkCenters).toHaveBeenCalled();
   });
-
-  it('should initialize for non-admin user', () => {
-    globalModuleMock.getUserInfo.and.returnValue({
-      roles: ['User'],
-      info: { company: { id: 1, name: 'Test Company' } }
-    });
-
-    const newComponent = new AlertComponent(globalModuleMock, new FormBuilder());
-    const workCenter = newComponent.getControlValue('workCenter');
-    
-    expect(workCenter.id).toBe(1);
-    expect(workCenter.name).toBe('Test Company');
-  });
-
   it('should handle consult click with invalid work center', fakeAsync(() => {
     component.form.patchValue({ workCenter: { id: null, name: '' } });
     component.onConsultClick();

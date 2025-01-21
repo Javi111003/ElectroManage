@@ -50,6 +50,15 @@ describe('WorkCenterService', () => {
         teamName: 'Test Team',
         companyId: 1,
         members: [{ userId: 1, userName: 'Test User' }]
+      },
+      currentEfficiencyPolicy: {
+        efficiencyPolicy: {
+          policyId: 1,
+          policyName: 'Test Policy',
+          description: 'Test Description'
+        },
+        applyingDate: '2023-01-01',
+        to: '2023-12-31'
       }
     };
 
@@ -87,11 +96,10 @@ describe('WorkCenterService', () => {
       totalConsumption: 1000,
       totalCost: 500,
       registers: [{
-        registerId: 1,
-        workCenterId: 1,
+        id: 1,
         consumption: 100,
         cost: 50,
-        registerDate: '2023-01-01'
+        date: '2023-01-01'
       }]
     };
 
@@ -107,11 +115,15 @@ describe('WorkCenterService', () => {
     };
 
     it('should get register data', () => {
-      service.getRegister().subscribe(register => {
+      const testId = 1;
+      const testStartDate = '2023-01-01';
+      const testEndDate = '2023-12-31';
+
+      service.getRegister(testId, testStartDate, testEndDate).subscribe(register => {
         expect(register).toEqual(mockRegister);
       });
 
-      const req = httpMock.expectOne(`${API_URL}/v1/register`);
+      const req = httpMock.expectOne(`${API_URL}/v1/company/${testId}/registers?start=${testStartDate}&end=${testEndDate}`);
       expect(req.request.method).toBe('GET');
       req.flush(mockRegister);
     });

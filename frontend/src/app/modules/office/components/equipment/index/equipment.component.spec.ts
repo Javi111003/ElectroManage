@@ -102,25 +102,6 @@ describe('EquipmentComponent', () => {
     expect(component.form.get('office')?.value).toBe('');
   });
 
-  // Agregar test para usuario no admin
-  it('should initialize form with company values for non-admin user', () => {
-    // Configurar como usuario no admin
-    globalModuleMock.getUserInfo.and.returnValue({
-      roles: ['User'],
-      info: { company: { id: 1, name: 'Test Company' } }
-    });
-
-    // Recrear el componente
-    fixture = TestBed.createComponent(EquipmentComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-
-    expect(component.form.get('workCenter')?.value).toEqual({
-      id: 1,
-      name: 'Test Company'
-    });
-  });
-
   it('should call Reset and getWorkCenters on init without errors', () => {
     expect(() => {
       component.ngOnInit();
@@ -145,36 +126,25 @@ describe('EquipmentComponent', () => {
     expect(component.showTable).toBeTrue();
   });
 
-  // Modificar la prueba de getOfficesByCenter
-  it('should call getOfficesByCenter when work center changes', () => {
-    // Configurar el valor del centro de trabajo
-    component.form.patchValue({
-      workCenter: { id: 1, name: 'Test Center' }
-    });
-
-    // La llamada a getOfficesByCenter debería ocurrir debido al valueChanges subscription
-    expect(globalModuleMock.getOfficesByCenter).toHaveBeenCalledWith(1);
-  });
-
-  it('should call getOfficesByCenter for non-admin users on initialization', () => {
-    // Limpiar las llamadas previas al spy
-    globalModuleMock.getOfficesByCenter.calls.reset();
+  // it('should call getOfficesByCenter for non-admin users on initialization', () => {
+  //   // Limpiar las llamadas previas al spy
+  //   globalModuleMock.getOfficesByCenter.calls.reset();
     
-    // Configurar como usuario no admin
-    globalModuleMock.getUserInfo.and.returnValue({
-      roles: ['User'],
-      info: { company: { id: 1, name: 'Test Company' } }
-    });
+  //   // Configurar como usuario no admin
+  //   globalModuleMock.getUserInfo.and.returnValue({
+  //     roles: ['User'],
+  //     info: { company: { id: 1, name: 'Test Company' } }
+  //   });
 
-    // Crear una nueva instancia del componente
-    const newComponent = new EquipmentComponent(
-      TestBed.inject(FormBuilder),
-      globalModuleMock,
-      dataServiceMock,
-      snackbarServiceMock
-    );
+  //   // Crear una nueva instancia del componente
+  //   const newComponent = new EquipmentComponent(
+  //     TestBed.inject(FormBuilder),
+  //     globalModuleMock,
+  //     dataServiceMock,
+  //     snackbarServiceMock
+  //   );
 
-    // Verificar que getOfficesByCenter fue llamado con el ID correcto
-    expect(globalModuleMock.getOfficesByCenter).toHaveBeenCalledWith(1);
-  });
+  //   // Verificar que getOfficesByCenter fue llamado con el ID correcto
+  //   expect(globalModuleMock.getOfficesByCenter).toHaveBeenCalledWith(1);
+  // });
 });

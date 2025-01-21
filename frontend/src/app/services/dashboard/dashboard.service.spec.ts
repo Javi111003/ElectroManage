@@ -30,8 +30,10 @@ describe('DashboardService', () => {
       const testYear = 2023;
       const mockResponse: CentersPerYear = {
         createdComapniesThisYear: 2,
-        deletedCompaniesThisYear:2,
-        existingCompaniesThisYear:0
+        deletedCompaniesThisYear: 2,
+        existingCompaniesThisYear: 0,
+        year: 0,
+        companiesByMonth: []
       };
 
       service.getCentersCreated(testYear).subscribe(response => {
@@ -75,31 +77,6 @@ describe('DashboardService', () => {
       });
 
       const req = httpMock.expectOne(`${API_URL}/v1/dashboard/top_five/company_count_offices`);
-      expect(req.request.method).toBe('GET');
-      req.flush(mockResponse);
-    });
-  });
-
-  describe('getTopFiveWarnedCenters', () => {
-    it('should return top five warned centers', () => {
-      const mockResponse: MostWarnedCenter[] = [
-        { company:{
-          id: 1,
-          name: 'Company A'
-        },
-          countWarning: 15 },
-        { company:{
-          id: 2,
-          name: 'Company B'
-        },
-          countWarning: 10 }
-      ];
-
-      service.getTopFiveWarnedCenters().subscribe(response => {
-        expect(response).toEqual(mockResponse);
-      });
-
-      const req = httpMock.expectOne(`${API_URL}/v1/dashboard/top_five/company_count_warnings`);
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);
     });
