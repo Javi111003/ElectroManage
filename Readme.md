@@ -10,7 +10,7 @@ Este proyecto es una API web desarrollada en .NET 8.
 
 - `ElectroManage.WebAPI/`: Contiene la API web.
 - `ElectroManage.Domain/`: Contiene las entidades de dominio y configuraciones.
-- `ElectroManage.Application/`: Contiene la lógica de aplicación.
+- `ElectroManage.Application/`: Contiene la lógica de aplicación. 
 - `backend/`: Contiene la web API y toda la lógica del backend.
 - `frontend/`: Contiene la parte visual de la aplicación web
 
