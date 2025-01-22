@@ -39,8 +39,8 @@ public class GetMeanCostLastThreeYearsCompanysQueryHandler : CoreCommandHandler<
                 years.Add(new YearCostDTO
                 {
                     Year = year,
-                    MeanCost = company.Registers.Where(x => x.Created.Year == year).Sum(x => x.Cost) / 365,
-                    MeanConsumption = company.Registers.Where(X => X.Created.Year == year).Sum(x => x.Consumption) / 365,
+                    MeanCost = company.Registers.Where(x => x.Created.Year == year).Sum(x => x.Cost) / 12,
+                    MeanConsumption = company.Registers.Where(X => X.Created.Year == year).Sum(x => x.Consumption) / 12,
                 });
                 year -= 1;
             }
