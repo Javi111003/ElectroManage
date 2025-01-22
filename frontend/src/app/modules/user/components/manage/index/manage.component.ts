@@ -90,6 +90,7 @@ export class ManageComponent {
    * @param item The user item to be edited.
    */
   edit(item: any): void {
+    console.log(item);
     this.dataService.setData([item, false, false]);
     const modal = new bootstrap.Modal(
       document.getElementById('exampleModal') as HTMLElement

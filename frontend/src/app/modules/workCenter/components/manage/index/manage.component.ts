@@ -36,7 +36,7 @@ export class ManageComponent implements OnInit, OnDestroy {
       field: 'adminAreaName'
     },
     {
-      title: 'Tipo de instalación',
+      title: 'Tipo de Instalación',
       field: 'instalationType'
     },
     {
@@ -44,8 +44,16 @@ export class ManageComponent implements OnInit, OnDestroy {
       field: 'address'
     },
     {
+      title: 'Política de Eficiencia Actual',
+      field: 'efficiencyPolicy'
+    },
+    {
       title: 'Límite Mensual',
       field: 'monthlyConsumptionLimit'
+    },
+    {
+      title: 'Equipo Responsable',
+      field: 'teamMembers'
     }
   ];
 
@@ -100,7 +108,6 @@ export class ManageComponent implements OnInit, OnDestroy {
         this.global.httpCenter.deleteCenter(item.id).subscribe({
           next: (response) => {
             console.log('Deleted successfully:', response);
-            this.dataService.notifyDataUpdated();
             this.deleteLocation(item);
             this.snackbar.openSnackBar('Eliminado exitosamente...');
           },
@@ -125,9 +132,9 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.global.httpCenter.deletelocation(item.location.id).subscribe({
       next: (response) => {
         console.log('Location Deleted successfully:', response);
-        if (item.managementTeam)
-          this.deleteTeam(item.managementTeam.companyId, item.managementTeam.id)
-        this.deleteFormula(item.currentCostFormula.id);
+        if (item.team)
+          this.deleteTeam(item.team.id, item.team.companyId);
+        this.deleteFormula(item.costFormula.id);
       },
       error: (error) => {
         console.log(error);
@@ -146,6 +153,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   deleteFormula(formulaID: number): void {
     this.global.httpCenter.deleteFormula(formulaID).subscribe({
       next: (response) => {
+        this.dataService.notifyDataUpdated();
         console.log('Formula Deleted successfully:', response);
       },
       error: (error) => {
@@ -181,7 +189,12 @@ export class ManageComponent implements OnInit, OnDestroy {
    * @param item The work center instance to be edited.
    */
   edit(item: any): void {
-    this.dataService.setData([item, false, false]);
+    console.log(item);
+    let data = item;
+    if (!this.global.getUserInfo().roles.includes('Admin')) {
+      data = this.dataSource.data[0];
+    }
+    this.dataService.setData([data, false, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }
@@ -193,6 +206,7 @@ export class ManageComponent implements OnInit, OnDestroy {
    * It also calls the reloadTableData function to update the table with the new data.
    */
   getCenters(): void {
+    console.log("update");
     this.global.httpCenter.getCenterDetailsList().subscribe(centers => {
       this.centerObjectArray = centers;
       this.reloadTableData(centers);
@@ -220,20 +234,37 @@ export class ManageComponent implements OnInit, OnDestroy {
    * @param centers The list of work centers to be used to reload the table data.
    */
   reloadTableData(centers: CenterDetails[]): void {
-    this.dataSource.data = centers.map(item => ({
+    this.dataSource.data = centers.map(item => {
+      const team = item.managementTeam;
+      const policy = item.currentEfficiencyPolicy;
+      let members = "-";
+      let efficiencyPolicy = "-";
+      if (team) {
+        const users = team.members.map(member => member.userName);
+        members = users.join(", ");
+        members.substring(0, members.length - 2);
+      }
+      if (policy) {
+        efficiencyPolicy = policy.efficiencyPolicy.policyName;
+      }
+      console.log(members);
+      console.log(team);
+      return ({
       id: item.id,
       location: item.location,
       adminArea: item.administrativeArea,
       instalType: item.installationType,
-      team: item.managementTeam,
+      team: team,
+      teamMembers: members,
       name: item.name,
       address: item.location.addressDetails,
       adminAreaName: item.administrativeArea.name,
       instalationType: item.installationType.name,
       monthlyConsumptionLimit: item.consumptionLimit,
       costFormula: item.currentCostFormula,
-      policy: item.currentEfficiencyPolicy
-    }));
+      policy: policy,
+      efficiencyPolicy: efficiencyPolicy
+    })});
 
     this.noResults = this.dataSource.data.length == 0;
   }

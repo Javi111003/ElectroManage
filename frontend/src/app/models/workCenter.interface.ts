@@ -25,7 +25,7 @@ export interface CenterPropertyInfo {
   description: string;
 }
 
-// Team info for POST
+// Team info for POST and PUT
 export interface ManagementTeam {
   name: string | null;
   userIds: number[];
@@ -45,13 +45,20 @@ export interface TeamMember {
   userName: string;
 }
 
-// Location info for POST and PUT
+// Location info for POST
 export interface Location {
   addressDetails: string;
   coordenate: {
     latitude: number;
     longitude: number;
   }
+}
+
+// Location info for PUT
+export interface LocationEdited {
+  addressDetails: string;
+  latitude: number;
+  longitude: number;
 }
 
 // Location info needed when listing centers in detail
@@ -89,6 +96,7 @@ export interface Formula {
   variables: Variable[];
 }
 
+// Formula of a specific center
 export interface CurrentFormula {
   id: number;
   name: string;

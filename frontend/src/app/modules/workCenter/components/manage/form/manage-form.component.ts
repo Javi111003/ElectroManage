@@ -5,13 +5,15 @@ import { Modal } from 'bootstrap';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
-import { AdminArea, InstallationType, WorkCenterData, Location, Formula, Variable } from '../../../../../models/workCenter.interface';
+import { AdminArea, InstallationType, WorkCenterData, Location, Formula, Variable, LocationEdited, ManagementTeam, FormulaInfo, TeamMember } from '../../../../../models/workCenter.interface';
 import { Subscription } from 'rxjs';
 import { MAP_URL } from '../../../../../config/api.config';
 import { Item } from '../../../../../shared/shared.module';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
 import { MathValidatorDirective } from '../../../../../directives/mathValidation/math-validator.directive';
 import { PolicyService } from '../../../../../services/policy/policy.service';
+import { UserLogged } from '../../../../../models/credential.interface';
+import { UserService } from '../../../../../services/user/user.service';
 
 @Component({
   selector: 'app-center-manage-form',
@@ -25,23 +27,25 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     private dataService: DataService,
     private renderer: Renderer2,
     private snackbar: SnackbarService,
-    private httpPolicy: PolicyService
+    private httpPolicy: PolicyService,
+    private httpUser: UserService
   )
   {
     this.form = this.fb.group({
       name: ['', Validators.required],
       adminAreaName: ['', Validators.required],
       instalationType: ['', Validators.required],
-      policy: '',
+      policy: null,
       monthlyConsumptionLimit: [null, Validators.required],
       formula: ['', Validators.required],
-      teamWork: [],
+      teamWork: null,
       latitude: [null, Validators.required],
       longitude: [null, Validators.required],
       location: ['', Validators.required],
       applyingDate: null
     });
     this.dataService.setData(null);
+
     this.form.get('instalationType')!.valueChanges.subscribe(() => {
       if (String(this.getControlValue('instalationType')).trim() == '') {
         this.enableAddType = false;
@@ -112,10 +116,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   ];
   data: any;
   form: FormGroup;
-  teamWork: Item[] = [
-    { id: 1, name: 'Juan' }, { id: 1, name: 'Pedro' },
-    { id: 1, name: 'Lucia' }, { id: 1, name: 'Martin' }
-  ];
+  centerWorkers: Item[] = [];
   policies: Item[] = [];
   typeArray: Item[] = [];
   areaArray: Item[] = [];
@@ -124,22 +125,52 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     const sub = this.dataService.currentData.subscribe(newData => {
       if (newData) {
         this.data = newData[0];
+        this.postMethod = newData[1];
         this.form.patchValue(this.data);
 
         if (this.data) {
-          console.log(this.data.policy);
           if (this.data.policy) {
             const dateString = this.data.policy.applyingDate;
             const dateObject = new Date(dateString);
-            console.log(dateString);
             this.getControl('applyingDate').setValue(dateObject);
             const policyApplied: Item = {
               id: this.data.policy.efficiencyPolicy.policyId,
               name: this.data.policy.efficiencyPolicy.policyName
             };
-            console.log(policyApplied);
             this.getControl('policy').setValue(policyApplied);
           }
+
+          const team = this.data.team;
+          if (team) {
+            const members: Item[] = team.members.map((member: TeamMember) => {
+              return {
+                id: member.userId,
+                name: member.userName
+              }
+            });
+            this.getControl('teamWork').setValue(members);
+          }
+
+          const costFormula = this.data.costFormula;
+          if (costFormula) {
+            this.getControl('formula').setValue(costFormula.expression);
+            const tokens = costFormula.expression.split(" ");
+            const array: Item[] = [];
+            for (let i = 0; i < tokens.length; i++) {
+              array.push({
+                id: i + 1,
+                name: tokens[i]
+              });
+            }
+            this.options.update(options => options = array);
+
+            for (const variable of costFormula.variables) {
+              this.variablesValues.set(variable.variableName, variable.expression);
+            }
+
+            this.assignValues();
+          }
+
           const areaId = this.data.adminArea.id;
           const area: Item = {
             id: areaId,
@@ -154,6 +185,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
           const latitude = this.data.location.coordenateDTO.latitude;
           const longitude = this.data.location.coordenateDTO.longitude;
 
+          this.getWorkers();
+
           this.getControl('adminAreaName').setValue(area);
           this.getControl('instalationType').setValue(instalType);
           this.getControl('location').setValue(location);
@@ -161,7 +194,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
           this.getControl('longitude').setValue(longitude);
         }
 
-        this.postMethod = newData[1];
         this.loading = newData[2];
       }
     });
@@ -204,6 +236,20 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Fetches the list of workers associated with the current company.
+   * This method sends an HTTP request to retrieve the list of workers for the company identified by the current data's ID.
+   * Upon receiving the response, it maps the worker data to an array of objects containing worker IDs and usernames.
+   */
+  getWorkers(): void {
+    this.httpUser.getUserByCompany(this.data.id).subscribe(workers => {
+      this.centerWorkers = workers.map(worker => ({
+        id: worker.id,
+        name: worker.username
+      }));
+    });
+  }
+
+  /**
    * Resets the form and clears all form fields when the modal is closed.
    */
   onCloseModal(): void {
@@ -213,10 +259,10 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       name: '',
       adminAreaName: '',
       instalationType: '',
-      policy: '',
+      policy: null,
       monthlyConsumptionLimit: null,
       formula: '',
-      teamWork: [],
+      teamWork: null,
       latitude: null,
       longitude: null,
       location: '',
@@ -244,6 +290,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   onSubmit(): void {
     this.loading = true;
+    console.log(this.form);
     if (this.form.invalid) {
       this.global.openDialog('Por favor, rellene todos los campos.');
       this.markAllAsTouched();
@@ -251,11 +298,16 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const options = [
-      this.getControlValue('adminAreaName').id, this.getControlValue('instalationType').id,
-      this.getControlValue('policy').id
+    const policy = this.getControlValue('policy');
+    let options = [
+      this.getControlValue('adminAreaName').id, this.getControlValue('instalationType').id
     ];
-    const response = ['Nombre de Área', 'Tipo de Instalación', 'Nombre de Política'];
+    let response = ['Nombre de Área', 'Tipo de Instalación'];
+    if (policy) {
+      options.push(policy.id);
+      response.push('Nombre de Política');
+    }
+
     const valid = this.global.allValid(options, response);
 
     if(valid[1] == 'Nombre de Política' && this.getControlValue('policy') === "")
@@ -469,7 +521,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     const year = d?.getFullYear();
 
     if (year !== undefined && month !== undefined && day !== undefined &&
-      (year < Tyear || (year === Tyear && (month < Tmonth) || (month === Tmonth && day < Tday))))
+      (year < Tyear || (year === Tyear && (month < Tmonth) || (month === Tmonth && day <= Tday))))
       return true;
 
     return false;
@@ -726,9 +778,192 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * This function is responsible for sending the necessary data to the server to edit an existing work center.
    */
   editCenter(): void {
-    // Implementation for editing a work center
-    this.snackbar.openSnackBar('Editado exitosamente...');
-    this.loading = false;
+    const location: LocationEdited = {
+      addressDetails: this.getControlValue('location'),
+      latitude: this.getControlValue('latitude'),
+      longitude: this.getControlValue('longitude')
+    };
+
+    this.editLocation(location);
+  }
+
+  /**
+   * Edits the location of a work center.
+   * Sends a request to update the location details of a work center.
+   * @param location - The updated location details.
+   */
+  editLocation(location: LocationEdited): void {
+    this.global.httpCenter.editLocation(location, this.data.location.id).subscribe({
+      next: (response) => {
+        console.log("Location edited successfully", response);
+        console.log(this.data);
+        const teamWork = this.getControlValue('teamWork');
+        console.log(teamWork);
+        if (teamWork) {
+          const team: ManagementTeam = {
+            name: `${this.data.id}`,
+            userIds: teamWork.map((user: Item) => user.id)
+          }
+
+          console.log(team);
+
+          if (!this.data.team)
+            this.createTeam(team, response.id);
+          else
+            this.editTeam(team, response.id);
+        } else {
+          const policy = this.getControlValue('policy');
+          let policyId = 0;
+          console.log('policy', policy);
+          if (policy) {
+            policyId = policy.id;
+          }
+
+          const center: WorkCenterData = {
+            name: this.getControlValue('name'),
+            areaId: this.getControlValue('adminAreaName').id,
+            installationTypeId: this.getControlValue('instalationType').id,
+            locationId: response.id,
+            managementTeamId: 0,
+            efficiencyPolicyId: policyId,
+            consumptionLimit: this.getControlValue('monthlyConsumptionLimit')
+          };
+
+          this.editCenterInstance(center);
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        console.log(error);
+      }
+    });
+  }
+
+  /**
+   * Creates a new management team for a work center.
+   * Sends a request to create a management team and associates it with a work center.
+   * @param team - The management team details.
+   * @param locationID - The ID of the location to associate with the team.
+   */
+  createTeam(team: ManagementTeam, locationID: number): void {
+    this.global.httpCenter.postManagementTeam(team, this.data.id).subscribe({
+      next: (response) => {
+        console.log("Team created successfully", response);
+        const policy = this.getControlValue('policy');
+        let policyId = 0;
+        if (policy) {
+          policyId = policy.id;
+        }
+
+        const center: WorkCenterData = {
+          name: this.getControlValue('name'),
+          areaId: this.getControlValue('adminAreaName').id,
+          installationTypeId: this.getControlValue('instalationType').id,
+          locationId: locationID,
+          managementTeamId: response.id,
+          efficiencyPolicyId: policyId,
+          consumptionLimit: this.getControlValue('monthlyConsumptionLimit')
+        };
+
+        this.editCenterInstance(center);
+      },
+      error: (error) => {
+        this.loading = false;
+        console.log(error);
+      }
+    });
+  }
+
+  /**
+   * Edits an existing management team.
+   * Sends a request to update the details of a management team.
+   * @param team - The updated management team details.
+   * @param locationID - The ID of the location associated with the team.
+   */
+  editTeam(team: ManagementTeam, locationID: number): void {
+    console.log(team, this.data.id, this.data.team.id);
+    this.global.httpCenter.editManagementTeam(team, this.data.id, this.data.team.id).subscribe({
+      next: (response) => {
+        console.log("Team edited successfully", response);
+        const policy = this.getControlValue('policy');
+        let policyId = 0;
+        if (policy) {
+          policyId = policy.id;
+        }
+
+        const center: WorkCenterData = {
+          name: this.getControlValue('name'),
+          areaId: this.getControlValue('adminAreaName').id,
+          installationTypeId: this.getControlValue('instalationType').id,
+          locationId: locationID,
+          managementTeamId: response.id,
+          efficiencyPolicyId: policyId,
+          consumptionLimit: this.getControlValue('monthlyConsumptionLimit')
+        };
+
+        this.editCenterInstance(center);
+      },
+      error: (error) => {
+        this.loading = false;
+        console.log(error);
+      }
+    });
+  }
+
+  /**
+   * Edits a work center instance.
+   * Sends a request to update the details of a work center.
+   * @param center - The updated work center data.
+   */
+  editCenterInstance(center: WorkCenterData): void {
+    console.log(center, this.data.id);
+    this.global.httpCenter.editCenter(center, this.data.id).subscribe({
+      next: (response) => {
+        console.log("Center edited succesfully", response);
+        this.snackbar.openSnackBar("Editado exitosamente...");
+
+        let variables: Variable[] = [];
+
+        for (const variable of this.variablesValues) {
+          variables.push({
+            variableName: variable[0],
+            expression: variable[1]
+          });
+        }
+
+        const formula: FormulaInfo = {
+          formulaId: this.data.costFormula.id,
+          companyId: response.id,
+          name: `${response.id}`,
+          expression: this.getControlValue('formula'),
+          variables: variables
+        };
+
+        this.editFormula(formula);
+      },
+      error: (error) => {
+        this.loading = false;
+        console.log(error);
+      }
+    })
+  }
+
+  /**
+   * Edits a formula associated with a work center.
+   * Sends a request to update the formula details.
+   * @param formula - The updated formula information.
+   */
+  editFormula(formula: FormulaInfo): void {
+    this.global.httpCenter.editFormula(formula).subscribe({
+      next: (response) => {
+        console.log("Formula edited successfully", response);
+        this.dataService.notifyDataUpdated();
+        this.activateCloseButton();
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
   }
 
   /**

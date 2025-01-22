@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { API_URL } from '../../config/api.config';
-import { EditedUser, RegisterUser, UserById } from '../../models/credential.interface';
+import { EditedUser, RegisterUser, UserById, UserLogged } from '../../models/credential.interface';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
@@ -25,8 +25,18 @@ export class UserService {
    * @param id The ID of the user to retrieve.
    * @returns An Observable that resolves to a UserById object.
    */
-  getById(id: number): Observable<UserById> {
+  getUserById(id: number): Observable<UserById> {
     return this.http.get<UserById>(`${API_URL}/v1/user/${id}`);
+  }
+
+  /**
+   * Fetches the list of users associated with a specific company from the API.
+   * This method sends an HTTP GET request to the API to retrieve a list of users for a given company ID.
+   * @param companyID The ID of the company whose users are to be retrieved.
+   * @returns An Observable that resolves to an array of UserLogged objects.
+   */
+  getUserByCompany(companyID: number): Observable<UserLogged[]> {
+    return this.http.get<UserLogged[]>(`${API_URL}/v1/company/${companyID}/list_users`);
   }
 
   /**

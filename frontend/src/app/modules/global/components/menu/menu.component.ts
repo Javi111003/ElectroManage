@@ -184,7 +184,7 @@ export class MenuComponent implements OnInit {
    * @returns An observable containing the username of the user.
    */
   getUserName(id: number): Observable<UserById> {
-    return this.httpUser.getById(id);
+    return this.httpUser.getUserById(id);
   }
 
   /**

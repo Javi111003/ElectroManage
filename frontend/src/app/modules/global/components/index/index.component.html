@@ -1,5 +1,4 @@
 <div style="padding: 1rem;">
-    <!-- Vista para Gerente y Analista -->
     <div class="dashboard" *ngIf="!userInfo.roles.includes('Admin')">
         <section class="consumption">
             <div class="workcenter-limit-list">
@@ -40,23 +39,21 @@
             </div>
         </section>
     </div>
-
-    <!-- Vista para Admin -->
     <div class="dashboard" *ngIf="userInfo.roles.includes('Admin')">
         <section class="work-centers">
             <div class="total-centers">
                 <div class="info">
                     <div class="total">
                         <h2><strong>Total Centros:</strong></h2>
-                        <p>50</p>
+                        <p>{{totalCentersPerYear}}</p>
                     </div>
                     <div class="total">
                         <h2><strong>Nuevos este mes:</strong></h2>
-                        <p>10</p>
+                        <p>{{createdCentersThisMonth}}</p>
                     </div>
                     <div class="total">
                         <h2><strong>Cerrados este mes:</strong></h2>
-                        <p>2</p>
+                        <p>{{deletedCentersThisMonth}}</p>
                     </div>
                 </div>
                 <div class="graph">

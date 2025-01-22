@@ -192,6 +192,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     request: (data: T) => any, successMessage: string,
     action: string
   ): void {
+    console.log(register);
     request(register).subscribe({
       next: (response: any) => {
         console.log(`${successMessage}:`, response);

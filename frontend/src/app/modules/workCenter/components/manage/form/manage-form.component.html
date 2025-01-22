@@ -122,14 +122,11 @@
                   [filter]="filterDate"
                   [control]="getControl('applyingDate')"
                 ></app-datepicker>
-                <div *ngIf="form.get('applyingDate')?.invalid && form.get('applyingDate')?.touched" class="invalid-feedback">
-                  Este campo es obligatorio
-                </div>
               </div>
               <div *ngIf="!postMethod" class="col-4 col-sm-4">
                 <label for="teamWork" class="form-label">Equipo responsable</label>
                 <app-checkbox class="form-control" id="teamWork"
-                  [options]="teamWork"
+                  [options]="centerWorkers"
                   [label]="'Trabajadores'"
                   [control]="getControl('teamWork')"
                 ></app-checkbox>

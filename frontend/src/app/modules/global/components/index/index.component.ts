@@ -24,7 +24,11 @@ export class IndexComponent implements OnInit{
   chart: any;
   pieChart: any;
   barChart: any;
-  selectedYear: number = 2023;
+  selectedYear: number = 2025;
+  actualMonth: number = 0;
+  totalCentersPerYear: number = 0;
+  createdCentersThisMonth: number = 0;
+  deletedCentersThisMonth: number = 0;
   userInfo: UserLogged = [][0];
   centersCreatedData: CompanybyMonthData[]=[];
   topConsumingCenters: any[] = [];
@@ -37,6 +41,8 @@ export class IndexComponent implements OnInit{
    */
   ngOnInit(): void {
     this.userInfo = this.global.getUserInfo();
+    const today = new Date();
+    this.actualMonth = today.getMonth();
     this.loadAllData();
   }
   /**
@@ -61,7 +67,7 @@ export class IndexComponent implements OnInit{
    * Retrieves and processes specific data for a company.
    * This method fetches consumption and alert data for a specific company
    * and creates the corresponding charts.
-   * 
+   *
    * @param companyId The ID of the company to fetch data for.
    */
   getCompanySpecificData(companyId: number): void {
@@ -70,13 +76,11 @@ export class IndexComponent implements OnInit{
       const startDate = `${currentYear}-01-01`;
       const endDate = `${currentYear}-12-31`;
       this.httpCenter.getRegister(companyId, startDate, endDate).subscribe(data => {
-        // En lugar de usar monthlyConsumption, usaremos el formato estándar
         this.topConsumingCenters = [{
           companyName: centerDetails.name,
           totalConsumption: data.totalConsumption,
           consumptionLimit: centerDetails.consumptionLimit
         }];
-        console.log(this.topConsumingCenters);
         this.createExcessBarChart();
         const monthlyConsumption = new Array(12).fill(0).map(() => ({
           totalConsumption: 0,
@@ -87,67 +91,27 @@ export class IndexComponent implements OnInit{
           monthlyConsumption[month].totalConsumption += register.consumption;
           monthlyConsumption[month].count++;
         });
-        const monthlyAverages = monthlyConsumption.map(month => 
-          month.count > 0 ? month.totalConsumption / month.count : 0
-        );
-        this.createMonthlyConsumptionChart(monthlyAverages);
       });
       this.httpCenter.getAlerts(companyId).subscribe(data => {
         const monthlyWarnings = new Array(12).fill(0);
+        console.log(data);
         data.warnings.forEach(warning => {
-          const month =warning.month;
+          const month = warning.month - 1;
           monthlyWarnings[month]++;
         });
         this.topWarnedCenters = [{
           company: {
-            id: centerDetails.id, // Usamos el id del centerDetails 
-            name: centerDetails.name // Usamos el nombre del centerDetails
+            id: centerDetails.id,
+            name: centerDetails.name
           },
           countWarning: data.warnings.length,
           countWarningByMonth: monthlyWarnings.map((count, index) => ({
-            month: index + 1,
-            countWarning: count
+            month: index,
+            countWarnings: count
           }))
         }];
         this.createAlertTrendChart();
       });
-    });
-  }
-
-  /**
-   * Creates a chart showing the monthly consumption data.
-   * This method generates a line chart displaying average monthly consumption.
-   * 
-   * @param monthlyData Array of monthly consumption averages.
-   */
-  createMonthlyConsumptionChart(monthlyData: number[]): void {
-    const canvas = document.getElementById('monthlyConsumptionChart') as HTMLCanvasElement;
-    this.barChart = new Chart(canvas, {
-      type: 'line',
-      data: {
-        labels: [
-          'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-        ],
-        datasets: [{
-          label: 'Consumo Mensual Promedio',
-          data: monthlyData,
-          borderColor: '#2ecc71',
-          backgroundColor: 'rgba(46, 204, 113, 0.2)',
-          borderWidth: 2,
-          pointRadius: 4
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: true, position: 'top' }
-        },
-        scales: {
-          x: { title: { display: true, text: 'Meses' } },
-          y: { beginAtZero: true, title: { display: true, text: 'Consumo Promedio (kWh)' } }
-        }
-      }
     });
   }
 
@@ -158,7 +122,6 @@ export class IndexComponent implements OnInit{
   getCentersCreated(year: number): void {
     this.http.getCentersCreated(year).subscribe(centers => {
       this.centersCreatedData = centers.companiesByMonth;
-      console.log(this.centersCreatedData);
       this.createLineChart();
     });
   }
@@ -189,7 +152,6 @@ export class IndexComponent implements OnInit{
   getTopFiveWarnedCenters(year:number): void {
     this.http.getTopFiveWarnedCenters(year).subscribe(centers => {
       this.topWarnedCenters = centers;
-      console.log(this.topWarnedCenters);
       this.createAlertTrendChart();
     });
   }
@@ -202,7 +164,12 @@ export class IndexComponent implements OnInit{
   createLineChart(): void {
     const canvas = document.getElementById('centersChart') as HTMLCanvasElement;
     const createdData = this.centersCreatedData.map(data => data.countCreatedCompanies);
+    const totalCreatedCenters = createdData.reduce((acc, item) => acc += item);
     const deletedData = this.centersCreatedData.map(data => data.countDeletedCompanies);
+    const totalDeletedCenters = deletedData.reduce((acc, item) => acc += item);
+    this.createdCentersThisMonth = createdData[this.actualMonth];
+    this.deletedCentersThisMonth = deletedData[this.actualMonth];
+    this.totalCentersPerYear = totalCreatedCenters - totalDeletedCenters;
     this.chart = new Chart(canvas, {
       type: 'line',
       data: {
@@ -251,6 +218,7 @@ export class IndexComponent implements OnInit{
    */
   createPieChart(): void {
     const canvas = document.getElementById('officesChart') as HTMLCanvasElement;
+    const colors = this.topBiggestCenters.map(() => `#${Math.floor(Math.random()*16777215).toString(16)}`);
     this.pieChart = new Chart(canvas, {
       type: 'doughnut',
       data: {
@@ -258,7 +226,7 @@ export class IndexComponent implements OnInit{
         datasets: [{
           label: 'Distribución de Oficinas',
           data: this.topBiggestCenters.map(center => center.officeCount),
-          backgroundColor: ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6'],
+          backgroundColor: colors,
           borderColor: '#ffffff',
           borderWidth: 2
         }]
@@ -279,7 +247,6 @@ export class IndexComponent implements OnInit{
    */
   createExcessBarChart(): void {
     const canvas = document.getElementById('excessChart') as HTMLCanvasElement;
-    const isAdmin = this.userInfo.roles.includes('Admin');
     const data = {
       labels: this.topConsumingCenters.map(center => center.companyName),
       datasets: [
@@ -304,13 +271,13 @@ export class IndexComponent implements OnInit{
       data: data,
       options: {
         responsive: true,
-        maintainAspectRatio: false, // Añadido para mantener consistencia
+        maintainAspectRatio: false,
         plugins: {
           legend: { display: true, position: 'top' }
         },
         scales: {
-          x: { title: { display: true, text: 'Centros' } }, // X-axis title
-          y: { beginAtZero: true, title: { display: true, text: 'Consumo (kWh)' } } // Y-axis title
+          x: { title: { display: true, text: 'Centros' } },
+          y: { beginAtZero: true, title: { display: true, text: 'Consumo (kWh)' } }
         }
       }
     });
@@ -324,6 +291,9 @@ export class IndexComponent implements OnInit{
   createAlertTrendChart(): void {
     const canvas = document.getElementById('alertTrendChart') as HTMLCanvasElement;
     const isAdmin = this.userInfo.roles.includes('Admin');
+    console.log(this.topWarnedCenters);
+
+    const colors = this.topWarnedCenters.map(() => `#${Math.floor(Math.random()*16777215).toString(16)}`);
     this.chart = new Chart(canvas, {
       type: 'line',
       data: {
@@ -331,10 +301,10 @@ export class IndexComponent implements OnInit{
           'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
           'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
         ],
-        datasets: this.topWarnedCenters.map(center => ({
-          label: isAdmin ? center.company.name : 'Mi Empresa',
-          data: center.countWarningByMonth.map(warning => warning.countWarning),
-          borderColor: '#3498db',
+        datasets: this.topWarnedCenters.map((center, index) => ({
+          label: isAdmin ? center.company.name : this.global.getUserInfo().company.name,
+          data: center.countWarningByMonth.map(warning => warning.countWarnings),
+          borderColor: colors[index],
           fill: false
         }))
       },
@@ -348,7 +318,7 @@ export class IndexComponent implements OnInit{
           y: { beginAtZero: true, title: { display: true, text: 'Número de Alertas' } }
         },
         animation: {
-          duration: 9000,
+          duration: 5000,
           easing: 'easeOutQuart',
         }
       }
@@ -369,7 +339,7 @@ export class IndexComponent implements OnInit{
    * Gets the name of the company for display purposes.
    * This method returns either the company name from the consuming centers
    * or the user's company name depending on the role.
-   * 
+   *
    * @returns The name of the company to display.
    */
   getCompanyName(): string {
