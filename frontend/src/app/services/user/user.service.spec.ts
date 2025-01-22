@@ -63,7 +63,7 @@ describe('UserService', () => {
         roles: ['USER']
       };
 
-      service.getById(userId).subscribe(user => {
+      service.getUserById(userId).subscribe(user => {
         expect(user).toEqual(mockUser);
       });
 

@@ -53,12 +53,16 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     const sub = this.dataService.currentData.subscribe(newData => {
       if (newData) {
         this.data = newData[0];
-        if (this.data)
-          this.data.role = this.data.role.map((role: string) => {
+        this.form.patchValue(this.data);
+        if (this.data) {
+          console.log(this.data.role);
+          const roles = this.data.role.map((role: string) => {
             return this.TextRoles.find(item => item.name === role)
           });
 
-        this.form.patchValue(this.data);
+          this.getControl('role').setValue(roles);
+        }
+
         this.postMethod = newData[1];
         this.loading = newData[2];
       }
@@ -176,7 +180,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   private handleResponse(response: any, successMessage: string, errorMessage: string) {
     console.log(successMessage, response);
-    this.snackbar.openSnackBar('Añadido exitosamente...');
+    this.snackbar.openSnackBar(errorMessage);
     this.dataService.notifyDataUpdated();
     this.activateCloseButton();
   }
@@ -226,8 +230,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     };
 
     this.httpUser.editUser(userData, this.data.id).subscribe({
-      next: (response) => this.handleResponse(response, 'User edited successfully', 'Edited successfully...'),
-      error: (error) => this.handleError(error, 'Error editing, please try again...')
+      next: (response) => this.handleResponse(response, 'User edited successfully', 'Editado exitosamente...'),
+      error: (error) => this.handleError(error, 'Error al editar, intente de nuevo...')
     });
   }
 

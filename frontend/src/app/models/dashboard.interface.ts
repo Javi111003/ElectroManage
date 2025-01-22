@@ -35,7 +35,9 @@ export interface MostWarnedCenter {
   countWarning: number;
   countWarningByMonth: WarningByMonth[];
 }
+
+// Warnings of each center by month
 export interface WarningByMonth {
   month: number;
-  countWarning: number;
+  countWarnings: number;
 }

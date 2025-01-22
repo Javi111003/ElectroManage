@@ -1,10 +1,10 @@
-import { AdminArea, CenterDetails, CenterPropertyInfo, Formula, FormulaInfo, InstallationType, Location, ManagementTeam, WorkCenterData } from './../../models/workCenter.interface';
+import { AdminArea, CenterDetails, CenterPropertyInfo, Formula, FormulaInfo, InstallationType, Location, LocationEdited, ManagementTeam, WorkCenterData } from './../../models/workCenter.interface';
 import { Injectable } from '@angular/core';
 import { API_URL } from '../../config/api.config';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { WorkCenter } from '../../models/workCenter.interface';
-import { MeanRegisterData, RegisterByDay, TotalConsumptionData } from '../../models/register.interface';
+import { MeanRegisterData, TotalConsumptionData } from '../../models/register.interface';
 import { Alert, Excess } from '../../models/alert.interface';
 
 
@@ -50,6 +50,16 @@ export class WorkCenterService {
    */
   postCenter(center: WorkCenterData): Observable<any> {
     return this.http.post<any>(`${API_URL}/v1/company`, center);
+  }
+
+  /**
+   * Edits an existing work center.
+   * This method sends an HTTP PUT request to the API to update the details of an existing work center.
+   * @param center The data of the work center to be updated.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  editCenter(center: WorkCenterData, id: number): Observable<any> {
+    return this.http.put<any>(`${API_URL}/v1/company/${id}`, center);
   }
 
   /**
@@ -186,6 +196,17 @@ export class WorkCenterService {
   }
 
   /**
+   * Edits an existing management team.
+   * This method sends an HTTP PUT request to the API to update an existing management team.
+   * @param team The ManagementTeam object to be updated.
+   * @param centerID The ID of the work center associated with the team.
+   * @returns An Observable that resolves to the response from the API.
+   */
+  editManagementTeam(team: ManagementTeam, centerID: number, teamID: number): Observable<any> {
+    return this.http.put<any>(`${API_URL}/v1/company/${centerID}/team/${teamID}`, team);
+  }
+
+  /**
    * Deletes a management team from the API.
    * This method sends an HTTP DELETE request to the API to remove a management team.
    * @param CenterID The ID of the work center associated with the team.
@@ -213,7 +234,7 @@ export class WorkCenterService {
    * @param locationID The ID of the location to be updated.
    * @returns An Observable that resolves to the response from the API.
    */
-  editLocation(location: Location, locationID: number): Observable<any> {
+  editLocation(location: LocationEdited, locationID: number): Observable<any> {
     return this.http.put<any>(`${API_URL}/v1/location/${locationID}`, location);
   }
 

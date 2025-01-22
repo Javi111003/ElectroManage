@@ -24,3 +24,6 @@
   margin-top: 5px;
   gap: 8px;
 }
+.hidden {
+  display: none;
+}

@@ -45,6 +45,12 @@ describe('ManageUserComponent', () => {
     snackbarServiceMock = jasmine.createSpyObj('SnackbarService', ['openSnackBar']);
 
     userServiceMock.getUsersList.and.returnValue(of({ appUsers: [] }));
+    userServiceMock.getUserById.and.returnValue(of({
+      email: 'test@test.com',
+      username: 'testuser',
+      company: { id: 1, name: 'Test Company' },
+      roles: ['USER']
+    }));
     userServiceMock.deleteUser.and.returnValue(of({}));
 
     const globalModuleMock = {
@@ -54,12 +60,12 @@ describe('ManageUserComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [ 
+      declarations: [
         ManageComponent,
-        ManageFormComponent 
+        ManageFormComponent
       ],
       imports: [
-        SharedModule, 
+        SharedModule,
         MatTableModule,
         BrowserAnimationsModule
       ],
@@ -95,7 +101,7 @@ describe('ManageUserComponent', () => {
   it('should handle edit user', () => {
     const testUser = { id: 1, name: 'Test User' };
     component.edit(testUser);
-    expect(dataServiceMock.setData).toHaveBeenCalledWith([testUser, false, false]);
+    expect(userServiceMock.getUserById).toHaveBeenCalledWith(1);
   });
 
   it('should update data when notified', () => {

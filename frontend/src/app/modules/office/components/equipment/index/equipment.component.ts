@@ -191,7 +191,6 @@ export class EquipmentComponent implements OnInit, OnDestroy {
    */
   onConsultClick(): void {
     if (!this.showTable) {
-      this.noResults = false;
       const center = this.getControlValue('workCenter');
       const office = this.getControlValue('office');
       if (center && office && center.id && office.id) {

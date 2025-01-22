@@ -42,9 +42,9 @@
       [deleteFunction]="delete.bind(this)"
       >
     </app-table>
-    <div *ngIf="noResults" [class.hidden]="!showTable">
-      <app-no-results></app-no-results>
-    </div>
   </div>
+</div>
+<div *ngIf="noResults" [class.hidden]="!showTable">
+  <app-no-results></app-no-results>
 </div>
 <app-equipment-form></app-equipment-form>

@@ -52,17 +52,17 @@ describe('MenuComponent', () => {
     routerMock = jasmine.createSpyObj('Router', ['navigate']);
     authServiceMock = jasmine.createSpyObj('AuthService', ['logout']);
     userServiceMock = jasmine.createSpyObj('UserService', ['getById']);
-    
+
     // Crear el mock con una estructura más completa
     globalModuleMock = {
       getUserInfo: jasmine.createSpy('getUserInfo').and.returnValue({
         roles: ['Admin'],
-        info: { 
-          id: 1, 
-          company: { 
-            id: 1, 
-            name: 'Test Company' 
-          } 
+        info: {
+          id: 1,
+          company: {
+            id: 1,
+            name: 'Test Company'
+          }
         }
       }),
       // Agregar cualquier otro método o propiedad necesaria
@@ -76,7 +76,7 @@ describe('MenuComponent', () => {
         { id: 'test2', isOpen: false }
       ]
     }));
-    userServiceMock.getById.and.returnValue(of(mockUserById));
+    userServiceMock.getUserById.and.returnValue(of(mockUserById));
 
     sessionStorage.setItem('userLogged', JSON.stringify(mockUser));
     sessionStorage.setItem('loginTime', new Date().getTime().toString());
@@ -84,9 +84,9 @@ describe('MenuComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [
           ShowForRolesDirective,
-         MenuComponent 
+         MenuComponent
         ],
-      imports: [ 
+      imports: [
         BrowserAnimationsModule,
         MatIconModule  // Añadir MatIconModule
       ],
@@ -150,11 +150,11 @@ describe('MenuComponent', () => {
       { id: 'test1', isOpen: false },
       { id: 'test2', isOpen: false }
     ];
-    
+
     // Primera llamada a toggle - debería cambiar a true
     component.toggleOption('test1');
     expect(component.menuItems[0].isOpen).toBeTrue();
-    
+
     // Segunda llamada a toggle - debería cambiar a false
     component.toggleOption('test1');
     expect(component.menuItems[0].isOpen).toBeFalse();
@@ -164,7 +164,7 @@ describe('MenuComponent', () => {
     component.getUserName(1).subscribe(user => {
       expect(user).toEqual(mockUserById);
     });
-    expect(userServiceMock.getById).toHaveBeenCalledWith(1);
+    expect(userServiceMock.getUserById).toHaveBeenCalledWith(1);
   });
 
   it('should handle logout', () => {
@@ -177,27 +177,27 @@ describe('MenuComponent', () => {
   it('should toggle user menu', () => {
     const mockEvent = new Event('click');
     spyOn(mockEvent, 'stopPropagation');
-    
+
     expect(component.isUserMenuOpen).toBeFalse();
     component.toggleUserMenu(mockEvent);
     expect(component.isUserMenuOpen).toBeTrue();
     expect(mockEvent.stopPropagation).toHaveBeenCalled();
   });
-  
+
   it('should update login time', fakeAsync(() => {
     const startTime = new Date().getTime();
     sessionStorage.setItem('loginTime', startTime.toString());
-    
+
     // Crear nueva instancia para que use el nuevo tiempo
     fixture = TestBed.createComponent(MenuComponent);
     component = fixture.componentInstance;
-    
+
     // Avanzar el tiempo simulado
     tick(3600000); // 1 hora
-    
+
     // Forzar actualización
     (component as any).updateLoginTime();
-    
+
     expect(component.loginTime).toContain('1h');
   }));
 

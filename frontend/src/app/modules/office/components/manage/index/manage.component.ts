@@ -55,6 +55,9 @@ export class ManageComponent implements OnInit, OnDestroy {
         });
       }
     });
+
+    console.log(this.showTable)
+    console.log(this.noResults)
   }
 
   private subscriptions: Subscription = new Subscription();
@@ -130,7 +133,6 @@ export class ManageComponent implements OnInit, OnDestroy {
    */
    onConsultClick(condition: boolean = !this.showTable): void {
     if (condition) {
-      this.noResults = false;
       const id = this.getControlValue('workCenter').id;
       if (id) {
         this.showTable = true;
