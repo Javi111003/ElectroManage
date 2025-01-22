@@ -27,6 +27,7 @@ public class CompanyGetByIdCommandHandler : CoreCommandHandler<CompanyGetByIdCom
         .Include(x => x.InstalationType)
         .Include(x => x.Location)
         .Include(x => x.ManagementTeam)
+            .ThenInclude(x => x.Members)
         .Include(x => x.CostFormulas)
             .ThenInclude(x => x.VariableDefinitions)
                 .AsSplitQuery()
