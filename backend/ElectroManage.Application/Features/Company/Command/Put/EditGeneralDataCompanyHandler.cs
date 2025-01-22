@@ -101,8 +101,8 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
                 };
                 company.EfficiencyPoliciesApplyed.Add(newPolicy);
                 efficiencyPolicy.EfficiencyPolicyCompanies.Add(newPolicy);
+                await efficiencyPolicyRepository.UpdateAsync(efficiencyPolicy, false);
             }
-            await efficiencyPolicyRepository.UpdateAsync(efficiencyPolicy, false);
             await companyRepository.UpdateAsync(company, false);
             await efficiencyPolicyCompanyRepository.UpdateAsync(lastPolicy,false);
             CommitTransaction(scopeDoWork);
