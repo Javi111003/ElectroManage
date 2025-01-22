@@ -41,7 +41,7 @@ public static class CompanyMapper
                     Latitude = company.Location.Latitude
                 }
             },
-            CurrentEfficiencyPolicy = company.EfficiencyPoliciesApplyed.Count == 0 ? null : EfficiencyPolicyMapper.MapToAppliedEfficiencyPolicyDTO(company.EfficiencyPoliciesApplyed.Last()),
+            CurrentEfficiencyPolicy = company.EfficiencyPoliciesApplyed.Where(epc => epc.StatusBaseEntity == Domain.Enums.StatusEntityType.Active).Count() == 0 ? null : EfficiencyPolicyMapper.MapToAppliedEfficiencyPolicyDTO(company.EfficiencyPoliciesApplyed.Where(epc => epc.StatusBaseEntity == Domain.Enums.StatusEntityType.Active).Last()),
             CurrentCostFormula = company.CostFormulas.Count == 0 ? null : CostFormulaMapper.MapToCostFormulaDTO(company.CostFormulas.Last()),
             Status = company.StatusBaseEntity.ToString(),
             ManagementTeam = company.ManagementTeam is null ? null : ManagementTeamMapper.MapToManagementTeamDto(company.ManagementTeam)

@@ -30,7 +30,7 @@ public class ListRegistersByCompanyCommandHandler : CoreCommandHandler<ListRegis
             _logger.LogError($"{nameof(ExecuteAsync)} | Company with Id {command.Id} not found");
             ThrowError("Company with Id {command.Id} not found", 404);
         }
-        var registers = company.Registers.Where(r => r.Date >= command.Start && r.Date <= command.End)
+        var registers = company.Registers.Where(r => r.Date.Date >= command.Start.Date && r.Date.Date <= command.End.Date && r.StatusBaseEntity == Domain.Enums.StatusEntityType.Active)
             .Select(r => new RegisterDTO
         {
             Id = r.Id,
