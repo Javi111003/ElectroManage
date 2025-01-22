@@ -22,16 +22,17 @@ public class CompanyGetByIdCommandHandler : CoreCommandHandler<CompanyGetByIdCom
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
         var companyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Company>();
-        var company = await companyRepository.GetAll(useInactive: false, filters: x => x.Id == command.Id)
+        var company = await companyRepository.GetAllListOnly(filters: x => x.Id == command.Id)
         .Include(x => x.AministrativeArea)
         .Include(x => x.InstalationType)
         .Include(x => x.Location)
         .Include(x => x.ManagementTeam)
         .Include(x => x.CostFormulas)
-        .ThenInclude(x => x.VariableDefinitions)
+            .ThenInclude(x => x.VariableDefinitions)
+                .AsSplitQuery()
         .Include(x => x.EfficiencyPoliciesApplyed)
-        .ThenInclude(x => x.EfficiencyPolicy)
-        .FirstAsync();
+            .ThenInclude(x => x.EfficiencyPolicy)
+        .FirstOrDefaultAsync();
         
         if (company is null)
         {

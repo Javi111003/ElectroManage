@@ -25,7 +25,7 @@ public class ListEfficiencyPoliciesByCompanyQueryHandler : CoreQueryHandler<List
         
         var company = await companyRepository.GetAll(useInactive: true, filters: x => x.Id == command.CompanyId)
             .Include(x => x.EfficiencyPoliciesApplyed)
-            .ThenInclude(x => x.EfficiencyPolicy).FirstAsync();
+            .ThenInclude(x => x.EfficiencyPolicy).FirstOrDefaultAsync();
 
         if (company is null)
         {

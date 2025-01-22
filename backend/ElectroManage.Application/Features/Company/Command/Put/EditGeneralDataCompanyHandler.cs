@@ -30,7 +30,7 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
             .Include(x => x.CostFormulas)
             .Include(x => x.EfficiencyPoliciesApplyed)
             .ThenInclude(x => x.EfficiencyPolicy)
-        .FirstAsync();
+        .FirstOrDefaultAsync();
         if (company is null)
         {
             _logger.LogError($"Company with id: {command.Id} not found");
