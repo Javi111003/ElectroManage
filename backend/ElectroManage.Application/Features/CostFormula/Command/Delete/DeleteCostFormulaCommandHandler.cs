@@ -39,8 +39,6 @@ public class DeleteCostFormulaCommandHandler : CoreCommandHandler<DeleteCostForm
             ThrowError("Company with id {command.CompanyId} does not exists", 404);
         }
         costFormula.StatusBaseEntity = Domain.Enums.StatusEntityType.Delete;
-        company.CostFormulas.Remove(costFormula);
-        await companyRepository.UpdateAsync(company, false);
         await costFormulaRepository.UpdateAsync(costFormula, false);
         await UnitOfWork!.SaveChangesAsync();
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
