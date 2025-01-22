@@ -12,7 +12,7 @@ Antes de comenzar, asegúrese de haber cumplido con los siguientes requisitos:
   npm install -g @angular/cli
   ```
 
-## Instalación
+## Instalación 
 
 Para configurar el proyecto frontend, siga estos pasos:
 
