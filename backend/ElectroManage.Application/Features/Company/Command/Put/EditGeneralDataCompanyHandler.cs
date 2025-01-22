@@ -91,12 +91,16 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
             company.LocationId = command.LocationId;
             company.Location = location;
     
-            var lastPolicy = company.EfficiencyPoliciesApplyed.Last(); 
-            if(efficiencyPolicy is not null && lastPolicy.EfficiencyPolicyId != efficiencyPolicy.Id)
+            var lastPolicy = company.EfficiencyPoliciesApplyed.Where(p => p.StatusBaseEntity == Domain.Enums.StatusEntityType.Active).Count() > 0 ? company.EfficiencyPoliciesApplyed.Where(p => p.StatusBaseEntity == Domain.Enums.StatusEntityType.Active).Last() : null; 
+            if(lastPolicy is not null)
+            {
+                lastPolicy.To = DateTime.Now;
+                lastPolicy.StatusBaseEntity = Domain.Enums.StatusEntityType.Inactive;
+                await efficiencyPolicyCompanyRepository.UpdateAsync(lastPolicy, false);
+            }
+            if(efficiencyPolicy is not null && (lastPolicy is null || lastPolicy.EfficiencyPolicyId != efficiencyPolicy.Id))
             {
                 var currentTime = DateTime.Now;
-                lastPolicy.To = currentTime;
-                lastPolicy.StatusBaseEntity = Domain.Enums.StatusEntityType.Inactive;
                 var newPolicy = new Domain.Entites.Sucursal.EfficiencyPolicyCompany
                 {
                     CompanyId = company.Id,
@@ -105,14 +109,8 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
                 };
                 company.EfficiencyPoliciesApplyed.Add(newPolicy);
                 efficiencyPolicy.EfficiencyPolicyCompanies.Add(newPolicy);
-                await efficiencyPolicyCompanyRepository.UpdateAsync(lastPolicy, false);
+                await efficiencyPolicyCompanyRepository.SaveAsync(newPolicy, false);
                 await efficiencyPolicyRepository.UpdateAsync(efficiencyPolicy, false);
-            }
-            else if(efficiencyPolicy is null)
-            {
-                lastPolicy.To = DateTime.Now;
-                lastPolicy.StatusBaseEntity = Domain.Enums.StatusEntityType.Inactive;
-                await efficiencyPolicyCompanyRepository.UpdateAsync(lastPolicy, false);
             }
             await companyRepository.UpdateAsync(company, false);
             CommitTransaction(scopeDoWork);
