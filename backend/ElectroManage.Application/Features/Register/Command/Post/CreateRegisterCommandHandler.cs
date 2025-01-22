@@ -52,7 +52,7 @@ public class CreateRegisterCommandHandler : CoreCommandHandler<CreateRegisterCom
             Company = company,
             Cost = cost,
             Consumption = command.Consumption,
-            Date = DateTime.UtcNow,
+            Date = command.Date,
         };
         await registerRepository.SaveAsync(register, false);
         company.Registers.Add(register);
