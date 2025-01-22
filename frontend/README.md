@@ -10,7 +10,7 @@ Antes de comenzar, asegúrese de haber cumplido con los siguientes requisitos:
 - **Angular CLI**: Instale Angular CLI globalmente usando npm:
   ```bash
   npm install -g @angular/cli
-  ```
+  ``` 
 
 ## Instalación
 
