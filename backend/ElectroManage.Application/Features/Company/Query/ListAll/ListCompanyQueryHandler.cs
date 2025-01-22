@@ -24,11 +24,12 @@ public class ListCompanyQueryHandler : CoreQueryHandler<ListCompanyQuery, IEnume
         .Include(x => x.InstalationType)
         .Include(x => x.Location)
         .Include(x => x.ManagementTeam)
+            .ThenInclude(x => x.Members)
         .Include(x => x.CostFormulas)
         .ThenInclude(x => x.VariableDefinitions)
         .Include(x => x.EfficiencyPoliciesApplyed)
         .ThenInclude(x => x.EfficiencyPolicy)
-            .ToListAsync();
+            .ToListAsync(ct);
         var companiesResponses = companies.Select(x => CompanyMapper.ToResponse(x)).ToList();
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
         return companiesResponses;
