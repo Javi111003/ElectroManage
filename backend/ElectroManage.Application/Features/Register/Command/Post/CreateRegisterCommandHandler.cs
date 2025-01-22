@@ -26,7 +26,7 @@ public class CreateRegisterCommandHandler : CoreCommandHandler<CreateRegisterCom
             .Include(c => c.CostFormulas)
                 .ThenInclude(f => f.VariableDefinitions)
                 .AsSplitQuery()
-            .FirstAsync();
+            .FirstOrDefaultAsync();
         if (company == null)
         {
             _logger.LogError($"The company with id: {command.CompanyId} not found");

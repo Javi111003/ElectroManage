@@ -26,7 +26,7 @@ public class EditGeneralDataRegisterCommandHandler : CoreCommandHandler<EditGene
                 .ThenInclude(c => c.CostFormulas)
                     .ThenInclude(f => f.VariableDefinitions)
                     .AsSplitQuery()
-                    .FirstAsync();
+                    .FirstOrDefaultAsync();
         if (register is null)
         {
             _logger.LogError($"The register with the id: {command.Id} not found");
