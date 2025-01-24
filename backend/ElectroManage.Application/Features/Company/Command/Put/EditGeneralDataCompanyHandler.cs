@@ -100,12 +100,11 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
             }
             if(efficiencyPolicy is not null && (lastPolicy is null || lastPolicy.EfficiencyPolicyId != efficiencyPolicy.Id))
             {
-                var currentTime = DateTime.Now;
                 var newPolicy = new Domain.Entites.Sucursal.EfficiencyPolicyCompany
                 {
                     CompanyId = company.Id,
                     EfficiencyPolicyId = command.EfficiencyPolicyId,
-                    ApplyingDate = currentTime,
+                    ApplyingDate = command.PolicyApplyingDate,
                 };
                 company.EfficiencyPoliciesApplyed.Add(newPolicy);
                 efficiencyPolicy.EfficiencyPolicyCompanies.Add(newPolicy);

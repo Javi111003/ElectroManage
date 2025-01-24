@@ -10,5 +10,6 @@ public record CreateCompanyCommand : ICommand<CompanyResponse>
     public long LocationId { get; set; }
     public long ManagementTeamId { get; set; }
     public long EfficiencyPolicyId { get; set; }
+    public DateTime PolicyApplyingDate {get; set; }
     public decimal ConsumptionLimit { get; set; }
 }
