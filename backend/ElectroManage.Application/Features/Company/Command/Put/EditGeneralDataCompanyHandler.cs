@@ -92,7 +92,7 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
             company.Location = location;
     
             var lastPolicy = company.EfficiencyPoliciesApplyed.Where(p => p.StatusBaseEntity == Domain.Enums.StatusEntityType.Active).Count() > 0 ? company.EfficiencyPoliciesApplyed.Where(p => p.StatusBaseEntity == Domain.Enums.StatusEntityType.Active).Last() : null; 
-            if(lastPolicy is not null)
+            if(lastPolicy is not null && efficiencyPolicy is not null && lastPolicy.EfficiencyPolicyId != efficiencyPolicy.Id)
             {
                 lastPolicy.To = DateTime.Now;
                 lastPolicy.StatusBaseEntity = Domain.Enums.StatusEntityType.Inactive;
