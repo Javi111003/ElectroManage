@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="col-12">
-      <div class="table">
+      <div class="table" [class.hidden]="dataSource.data.length == 0">
         <app-table
           [dataSource]="dataSource"
           [displayedColumns]="displayedColumns"

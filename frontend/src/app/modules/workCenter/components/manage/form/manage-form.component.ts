@@ -1,4 +1,3 @@
-import { map } from 'rxjs/operators';
 import { Component, OnDestroy, OnInit, Renderer2, signal } from '@angular/core';
 import * as L from 'leaflet';
 import { Modal } from 'bootstrap';
@@ -12,7 +11,6 @@ import { Item } from '../../../../../shared/shared.module';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
 import { MathValidatorDirective } from '../../../../../directives/mathValidation/math-validator.directive';
 import { PolicyService } from '../../../../../services/policy/policy.service';
-import { UserLogged } from '../../../../../models/credential.interface';
 import { UserService } from '../../../../../services/user/user.service';
 
 @Component({
@@ -140,17 +138,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
             this.getControl('policy').setValue(policyApplied);
           }
 
-          const team = this.data.team;
-          if (team) {
-            const members: Item[] = team.members.map((member: TeamMember) => {
-              return {
-                id: member.userId,
-                name: member.userName
-              }
-            });
-            this.getControl('teamWork').setValue(members);
-          }
-
           const costFormula = this.data.costFormula;
           if (costFormula) {
             this.getControl('formula').setValue(costFormula.expression);
@@ -246,6 +233,14 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         id: worker.id,
         name: worker.username
       }));
+
+      const team = this.data.team;
+      if (team) {
+        const members: Item[] = this.centerWorkers.filter(worker =>
+          team.members.find((member: TeamMember) => member.userId == worker.id && member.userName == worker.name)
+        );
+        this.getControl('teamWork').setValue(members);
+      }
     });
   }
 
@@ -796,10 +791,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.global.httpCenter.editLocation(location, this.data.location.id).subscribe({
       next: (response) => {
         console.log("Location edited successfully", response);
-        console.log(this.data);
         const teamWork = this.getControlValue('teamWork');
-        console.log(teamWork);
-        if (teamWork) {
+        if (teamWork && teamWork.length) {
           const team: ManagementTeam = {
             name: `${this.data.id}`,
             userIds: teamWork.map((user: Item) => user.id)
@@ -957,8 +950,22 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.global.httpCenter.editFormula(formula).subscribe({
       next: (response) => {
         console.log("Formula edited successfully", response);
-        this.dataService.notifyDataUpdated();
-        this.activateCloseButton();
+        const teamWork = this.getControlValue('teamWork');
+        if (teamWork && !teamWork.length && this.data.team.id) {
+          this.global.httpCenter.deleteManagementTeam(this.data.id, this.data.team.id).subscribe({
+            next: (response) => {
+              console.log('Team Deleted successfully:', response);
+              this.dataService.notifyDataUpdated();
+              this.activateCloseButton();
+            },
+            error: (error) => {
+              console.log(error);
+            }
+          });
+        } else {
+          this.dataService.notifyDataUpdated();
+          this.activateCloseButton();
+        }
       },
       error: (error) => {
         console.log(error);

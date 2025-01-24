@@ -45,15 +45,12 @@
     <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
       <div class="example-element-detail"
            [@detailExpand]="isRowExpanded(element.name) ? 'expanded' : 'collapsed'">
-        <div class="example-element-detail" *ngIf="dataSources[element.name] && dataSources[element.name].data.length > 0">
+        <div class="example-element-detail">
           <app-table
             [dataSource]="dataSources[element.name]"
             [displayedColumns]="displayedColumns"
           >
           </app-table>
-        </div>
-        <div *ngIf="noResults[element.name]" [class.hidden]="!showTable">
-          <app-no-results></app-no-results>
         </div>
       </div>
     </td>

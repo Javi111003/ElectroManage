@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="col-12">
-      <div class="table" *ngIf="!noResults">
+      <div class="table" [class.hidden]="!noResults">
         <app-table
           [dataSource]="dataSource"
           [displayedColumns]="displayedColumns"

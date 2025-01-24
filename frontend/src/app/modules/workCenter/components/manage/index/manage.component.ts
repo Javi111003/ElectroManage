@@ -189,7 +189,6 @@ export class ManageComponent implements OnInit, OnDestroy {
    * @param item The work center instance to be edited.
    */
   edit(item: any): void {
-    console.log(item);
     let data = item;
     if (!this.global.getUserInfo().roles.includes('Admin')) {
       data = this.dataSource.data[0];
@@ -206,7 +205,6 @@ export class ManageComponent implements OnInit, OnDestroy {
    * It also calls the reloadTableData function to update the table with the new data.
    */
   getCenters(): void {
-    console.log("update");
     this.global.httpCenter.getCenterDetailsList().subscribe(centers => {
       this.centerObjectArray = centers;
       this.reloadTableData(centers);
@@ -247,8 +245,6 @@ export class ManageComponent implements OnInit, OnDestroy {
       if (policy) {
         efficiencyPolicy = policy.efficiencyPolicy.policyName;
       }
-      console.log(members);
-      console.log(team);
       return ({
       id: item.id,
       location: item.location,

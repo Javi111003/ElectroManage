@@ -33,7 +33,7 @@
     </app-button>
     <app-button></app-button>
   </div>
-  <div class="form-table" *ngIf="showTable && dataSource.data.length > 0">
+  <div class="form-table" [class.hidden]="!showTable || dataSource.data.length == 0">
     <app-table
       [dataSource]="dataSource"
       [displayedColumns]="displayedColumns"
