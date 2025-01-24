@@ -50,7 +50,6 @@ export class AvgConsumptionComponent implements OnInit {
   selectedOptionsIds: (number | any) [] = [];
   options: Item[] = [];
   dataSources: { [key: string]: MatTableDataSource<any> } = {};
-  noResults: { [key: string]: boolean } = {};
   displayedColumns: ConfigColumn[] = [
     {
       title: 'Año',
@@ -128,7 +127,6 @@ export class AvgConsumptionComponent implements OnInit {
             meanCost: data.meanCost.toFixed(2),
             meanConsumption: data.meanConsumption.toFixed(2)
           }));
-          this.noResults[centerName] = this.dataSources[centerName].data.length == 0;
         }
       }
     });

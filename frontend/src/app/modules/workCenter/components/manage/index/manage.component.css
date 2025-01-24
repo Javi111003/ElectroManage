@@ -8,3 +8,6 @@
   align-items: center;
   align-content: left;
 }
+.hidden {
+  display: none;
+}

@@ -245,4 +245,9 @@ export class MenuComponent implements OnInit {
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
     this.loginTime = `${hours}h ${minutes}m ${seconds}s`;
   }
+
+  navigateHome(): void {
+   this.router.navigate(["/"]);
+   this.currentURL = "/";
+  }
 }

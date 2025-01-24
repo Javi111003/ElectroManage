@@ -35,7 +35,7 @@
       <app-button class="exportPDF"></app-button>
     </div>
   </form>
-  <div class="table" [class.hidden]="!showTable" *ngIf="dataSource.data.length > 0">
+  <div class="table" [class.hidden]="!showTable || dataSource.data.length == 0">
     <app-table
       [dataSource]="dataSource"
       [displayedColumns]="displayedColumns"
