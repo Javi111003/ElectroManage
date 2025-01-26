@@ -104,7 +104,7 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
                 {
                     CompanyId = company.Id,
                     EfficiencyPolicyId = command.EfficiencyPolicyId,
-                    ApplyingDate = command.PolicyApplyingDate,
+                    ApplyingDate = command.PolicyApplyingDate ?? DateTime.Now,
                 };
                 company.EfficiencyPoliciesApplyed.Add(newPolicy);
                 efficiencyPolicy.EfficiencyPolicyCompanies.Add(newPolicy);
