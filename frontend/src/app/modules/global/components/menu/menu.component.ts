@@ -41,37 +41,9 @@ import { WebSocketService } from '../../../../services/webSocket/web-socket.serv
     ]
 })
 export class MenuComponent implements OnInit {
-  alerts: string[] = [
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-    "Ha excedido el límite de consumo para el mes de Enero",
-  ];
+  isSidebarActive = false;
+  currentURL = '/';
+  alerts: string[] = [];
   alertsViews: number = 0;
   menuItems: any[] = [];
   isUserMenuOpen: boolean = false;
@@ -111,7 +83,12 @@ export class MenuComponent implements OnInit {
   ngOnInit(): void {
     this.menuService.getMenuOptions().subscribe(data => {
       this.menuItems = data.menuItems;
-      this.currentURL = window.location.href.substring(22, window.location.href.length);
+      const array = window.location.href.substring(7, window.location.href.length).split("/");
+      let URL = [];
+      for (let i = 1; i < array.length; i++) {
+        URL.push(array[i]);
+      }
+      this.currentURL = URL.join("/");
       if (this.currentURL === '')
         this.currentURL = '/'
 
@@ -122,16 +99,7 @@ export class MenuComponent implements OnInit {
     });
 
     setInterval(() => this.updateLoginTime(), 1000);
-
-    // this.webSocketService.connect('ws://localhost:4200').subscribe(
-    // (message) => this.alerts.push(message),
-    // (err) => console.error(err),
-    // () => console.warn('Connection closed')
-    // );
   }
-
-  isSidebarActive = false;
-  currentURL = '/';
 
   /**
    * Toggles the visibility of the sidebar.
@@ -198,10 +166,10 @@ export class MenuComponent implements OnInit {
   }
 
   /**
-    * Toggles the visibility of the user menu.
-    * Prevents the event from propagating to avoid closing the menu immediately.
-    * @param event The event that triggered the toggle action.
-    */
+   * Toggles the visibility of the user menu.
+   * Prevents the event from propagating to avoid closing the menu immediately.
+   * @param event The event that triggered the toggle action.
+   */
   toggleUserMenu(event: Event): void {
     event.stopPropagation();
     this.isUserMenuOpen = !this.isUserMenuOpen;
@@ -209,6 +177,15 @@ export class MenuComponent implements OnInit {
       this.isNotificationsMenuOpen = false;
   }
 
+
+  /**
+   * Toggles the state of the notifications menu.
+   * This method stops the propagation of the event, updates the view count of alerts,
+   * toggles the notifications menu open/close state, and ensures the user menu is closed
+   * if it was open.
+   * @param event - The event that triggered the toggle action.
+   *
+   */
   toggleNotificationsMenu(event: Event): void {
     event.stopPropagation();
     this.alertsViews = this.alerts.length;
@@ -218,11 +195,11 @@ export class MenuComponent implements OnInit {
   }
 
   /**
-    * Handles the document click event to determine if the user menu should be closed.
-    * This method checks if the click occurred outside the user menu container.
-    * If the click is outside, it sets `isUserMenuOpen` to `false`, closing the user menu.
-    * @param event - The mouse event triggered by the document click.
-    */
+   * Handles the document click event to determine if the user menu should be closed.
+   * This method checks if the click occurred outside the user menu container.
+   * If the click is outside, it sets `isUserMenuOpen` to `false`, closing the user menu.
+   * @param event - The mouse event triggered by the document click.
+   */
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const userMenuContainer = document.querySelector('.user-menu-container');
@@ -246,6 +223,9 @@ export class MenuComponent implements OnInit {
     this.loginTime = `${hours}h ${minutes}m ${seconds}s`;
   }
 
+  /**
+   * Navigates the user to the home page and updates the current URL.
+   */
   navigateHome(): void {
    this.router.navigate(["/"]);
    this.currentURL = "/";

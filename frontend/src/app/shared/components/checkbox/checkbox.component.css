@@ -6,6 +6,12 @@ mat-label {
   align-items: center !important;
   background: white !important;
 }
+.disabled-select {
+  opacity: 0.5;
+}
+.disabled-select mat-select {
+  pointer-events: none;
+}
 ::ng-deep .mat-mdc-select-panel {
   background: white !important;
 }
@@ -20,10 +26,4 @@ mat-label {
 }
 ::ng-deep .mat-pseudo-checkbox-full.mat-pseudo-checkbox-checked {
   background-color: #00203b !important;
-}
-.disabled-select {
-  opacity: 0.5;
-}
-.disabled-select mat-select {
-  pointer-events: none;
 }

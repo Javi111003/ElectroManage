@@ -14,3 +14,6 @@ body {
   width: 240px !important;
   height: 300px !important;
 }
+.hidden {
+  display: none;
+}

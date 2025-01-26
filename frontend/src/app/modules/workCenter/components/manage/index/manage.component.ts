@@ -16,12 +16,6 @@ declare var bootstrap: any;
   styleUrl: './manage.component.css'
 })
 export class ManageComponent implements OnInit, OnDestroy {
-  constructor (
-    public global: GlobalModule,
-    private dataService: DataService,
-    private snackbar: SnackbarService
-  ) {}
-
   private subscriptions: Subscription = new Subscription();
   centerObjectArray: CenterDetails[] = [];
   noResults: boolean = false;
@@ -56,6 +50,12 @@ export class ManageComponent implements OnInit, OnDestroy {
       field: 'teamMembers'
     }
   ];
+
+  constructor (
+    public global: GlobalModule,
+    private dataService: DataService,
+    private snackbar: SnackbarService
+  ) {}
 
   ngOnInit(): void {
     const user: UserLogged = this.global.getUserInfo();

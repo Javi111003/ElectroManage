@@ -13,6 +13,12 @@ import { SnackbarService } from '../../../../../services/snackbar/snackbar.servi
   styleUrl: './manage-form.component.css'
 })
 export class ManageFormComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription = new Subscription();
+  form: FormGroup;
+  data: any;
+  postMethod: boolean = true;
+  loading: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
@@ -26,12 +32,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     });
     this.dataService.setData(null);
   }
-
-  private subscriptions: Subscription = new Subscription();
-  form: FormGroup;
-  data: any;
-  postMethod: boolean = true;
-  loading: boolean = false;
 
   ngOnInit(): void {
     if (this.dataService && this.dataService.currentData) {
@@ -54,26 +54,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-  }
-
-  /**
-   * Retrieves the FormControl object for a given control name from the form.
-   * This method is used to access and manipulate form controls dynamically.
-   * @param control The name of the control to retrieve.
-   * @returns The FormControl object associated with the specified control name.
-   */
-  getControl(control: string): FormControl {
-    return this.form.get(control) as FormControl;
-  }
-
-  /**
-   * Retrieves the value of a given control from the form.
-   * This method is used to access the current value of a form control.
-   * @param control The name of the control to retrieve the value from.
-   * @returns The current value of the specified control.
-   */
-  getControlValue(control: string): any {
-    return this.form.get(control)?.value;
   }
 
   /**
@@ -120,7 +100,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   markAllAsTouched(): void {
     Object.keys(this.form.controls).forEach(field => {
-      const control = this.form.get(field);
+      const control = this.global.getControl(this.form, field);
       control?.markAsTouched();
     });
   }
@@ -133,8 +113,8 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * @param isEdit - Whether the operation is an edit (true) or create (false)
    */
   handlePolicy(isEdit: boolean): void {
-    const name = this.getControlValue('policyName');
-    const description = this.getControlValue('description');
+    const name = this.global.getControlValue(this.form, 'policyName');
+    const description = this.global.getControlValue(this.form, 'description');
     const policy: Policy = { name, description };
 
     let request$;

@@ -22,21 +22,6 @@ const moment = _rollupMoment || _moment;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExcessComponent {
-  constructor(
-    public global: GlobalModule,
-    private fb: FormBuilder
-  ) {
-    this.form = fb.group({
-      month: 0,
-      year: 0
-    });
-
-    this.form.valueChanges.subscribe(() => {
-      this.showTable = false;
-      this.dataSource.data = [];
-    });
-  }
-
   form: FormGroup;
   dateInitialize: Moment = [][0];
   readonly date = new FormControl(this.dateInitialize);
@@ -67,22 +52,19 @@ export class ExcessComponent {
     [8, 'Sep'], [9, 'Oct'], [10, 'Nov'], [11, 'Dec']
   ])
 
-  /**
-   * Retrieves a FormControl from the form by its control name.
-   * @param control The name of the control to retrieve.
-   * @returns The FormControl associated with the given control name.
-   */
-  getControl(control: string): FormControl {
-    return this.form.get(control) as FormControl;
-  }
+  constructor(
+    public global: GlobalModule,
+    private fb: FormBuilder
+  ) {
+    this.form = fb.group({
+      month: 0,
+      year: 0
+    });
 
-  /**
-   * Retrieves the value of a FormControl from the form by its control name.
-   * @param control The name of the control to retrieve the value from.
-   * @returns The value of the FormControl associated with the given control name.
-   */
-  getControlValue(control: string): any {
-    return this.form.get(control)?.value;
+    this.form.valueChanges.subscribe(() => {
+      this.showTable = false;
+      this.dataSource.data = [];
+    });
   }
 
   /**
@@ -94,8 +76,8 @@ export class ExcessComponent {
     const ctrlValue = this.date.value ?? moment();
     ctrlValue.month(normalizedMonthAndYear.month());
     ctrlValue.year(normalizedMonthAndYear.year());
-    this.getControl('year').setValue(ctrlValue.year());
-    this.getControl('month').setValue(ctrlValue.month());
+    this.global.getControl(this.form, 'year').setValue(ctrlValue.year());
+    this.global.getControl(this.form, 'month').setValue(ctrlValue.month());
     console.log(this.form);
     this.date.setValue(ctrlValue);
     datepicker.close();
@@ -118,7 +100,7 @@ export class ExcessComponent {
   onConsultClick(): void {
     if (!this.showTable) {
       this.noResults = false;
-      if (this.getControlValue('year') && this.getControlValue('month') >= 0) {
+      if (this.global.getControlValue(this.form, 'year') && this.global.getControlValue(this.form, 'month') >= 0) {
         this.getExcess();
         this.showTable = true;
       }
@@ -137,8 +119,8 @@ export class ExcessComponent {
   }
 
   getExcess(): void {
-    const month = this.monthMapper.get(this.getControlValue('month'));
-    const year = this.getControlValue('year');
+    const month = this.monthMapper.get(this.global.getControlValue(this.form, 'month'));
+    const year = this.global.getControlValue(this.form, 'year');
     this.global.httpCenter.getExcess(`${month} ${year}`).subscribe(data => {
       this.dataSource.data = data.map(item => ({
         workCenter: item.company.name,

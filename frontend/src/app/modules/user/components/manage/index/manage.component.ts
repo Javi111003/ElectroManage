@@ -1,5 +1,5 @@
 import { UserService } from './../../../../../services/user/user.service';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { GlobalModule } from '../../../../global/global.module';
@@ -14,14 +14,7 @@ declare var bootstrap: any;
   templateUrl: './manage.component.html',
   styleUrl: './manage.component.css'
 })
-export class ManageComponent {
-  constructor (
-    public global: GlobalModule,
-    private dataService: DataService,
-    private httpUser: UserService,
-    private snackbar: SnackbarService
-  ) {}
-
+export class ManageComponent implements OnInit {
   noResults: boolean = false;
   dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
   displayedColumns: ConfigColumn[] = [
@@ -44,6 +37,13 @@ export class ManageComponent {
     ['Manager', 'Gerente'],
     ['Analist', 'Analista']
   ]);
+
+  constructor (
+    public global: GlobalModule,
+    private dataService: DataService,
+    private httpUser: UserService,
+    private snackbar: SnackbarService
+  ) {}
 
   ngOnInit() {
     this.getUserList();

@@ -4,7 +4,7 @@
       <app-autocomplete
         [label]="'Centro de Trabajo'"
         [options]="global.workCenters"
-        [control]="getControl('workCenter')"
+        [control]="global.getControl(form, 'workCenter')"
         [isDisabled]="!global.getUserInfo().roles.includes('Admin')"
         >
       </app-autocomplete>
@@ -13,8 +13,8 @@
       <app-autocomplete
         [label]="'Oficina'"
         [options]="global.offices"
-        [control]="getControl('office')"
-        [isDisabled]="!getControlValue('workCenter').id"
+        [control]="global.getControl(form, 'office')"
+        [isDisabled]="!global.getControlValue(form, 'workCenter').id"
         >
       </app-autocomplete>
     </div>

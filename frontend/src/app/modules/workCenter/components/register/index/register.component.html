@@ -4,19 +4,19 @@
       <app-autocomplete class="autocomplete"
         [label]="'Centro de Trabajo'"
         [options]="global.workCenters"
-        [control]="getControl('workCenter')"
+        [control]="global.getControl(form, 'workCenter')"
         [isDisabled]="!global.getUserInfo().roles.includes('Admin')"
       >
       </app-autocomplete>
       <app-datepicker class="startDate"
         [filter]="filterStartDate"
         [label]="'Desde'"
-        [control]="getControl('startDate')"
+        [control]="global.getControl(form, 'startDate')"
       ></app-datepicker>
       <app-datepicker class="endDate"
         [filter]="filterEndDate"
         [label]="'Hasta'"
-        [control]="getControl('endDate')"
+        [control]="global.getControl(form, 'endDate')"
       ></app-datepicker>
     </div>
     <div class="form-buttons">

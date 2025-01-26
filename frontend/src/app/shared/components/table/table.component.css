@@ -7,7 +7,7 @@ tr th {
   background-color:#00203b;
   color: white;
 }
-th{
+th {
   width: 20000px;
 }
 .actionsColumn {
@@ -43,9 +43,6 @@ th{
 }
 tr.mat-mdc-footer-row {
   font-weight: bold;
-}
-.hidden {
-  display: none;
 }
 ::ng-deep tfoot.mat-mdc-table-sticky {
   bottom: -10px !important;

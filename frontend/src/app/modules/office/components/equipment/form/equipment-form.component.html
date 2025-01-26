@@ -13,7 +13,7 @@
                 <app-autocomplete class="form-control" id="workCenter"
                   [options]="global.workCenters"
                   [label]="'Centros de Trabajo'"
-                  [control]="getControl('workCenter')"
+                  [control]="global.getControl(form, 'workCenter')"
                   [isDisabled]="!global.getUserInfo().roles.includes('Admin')"
                   ></app-autocomplete>
                 <div *ngIf="form.get('workCenter')?.invalid && form.get('workCenter')?.touched" class="invalid-feedback">
@@ -25,8 +25,8 @@
                 <app-autocomplete class="form-control" id="office"
                   [options]="this.global.offices"
                   [label]="'Oficinas'"
-                  [control]="getControl('office')"
-                  [isDisabled]="!checkDisabled(getControlValue('workCenter'))"
+                  [control]="global.getControl(form, 'office')"
+                  [isDisabled]="!checkDisabled(global.getControlValue(form, 'workCenter'))"
                 ></app-autocomplete>
                 <div *ngIf="form.get('office')?.invalid && form.get('office')?.touched" class="invalid-feedback">
                   Este campo es obligatorio
@@ -56,7 +56,7 @@
                   <app-autocomplete class="form-control" id="type"
                     [options]="typeArray"
                     [label]="'Tipos'"
-                    [control]="getControl('type')"
+                    [control]="global.getControl(form, 'type')"
                     [showIcon]="true"
                     [deleteOption]="deleteType.bind(this)"
                   ></app-autocomplete>
@@ -81,7 +81,7 @@
                   <app-autocomplete class="form-control" id="brand"
                     [options]="brandArray"
                     [label]="'Marcas'"
-                    [control]="getControl('brand')"
+                    [control]="global.getControl(form, 'brand')"
                     [showIcon]="true"
                     [deleteOption]="deleteBrand.bind(this)"
                   ></app-autocomplete>
@@ -141,7 +141,7 @@
                   <app-autocomplete class="form-control" id="useFrequency"
                   [options]="useFrequencies"
                   [label]="'Frecuencia'"
-                  [control]="getControl('useFrequency')"
+                  [control]="global.getControl(form, 'useFrequency')"
                 ></app-autocomplete>
                 <div *ngIf="form.get('useFrequency')?.invalid && form.get('useFrequency')?.touched" class="invalid-feedback">
                     Este campo es obligatorio
@@ -152,7 +152,7 @@
                   <app-autocomplete class="form-control" id="maintenanceStatus"
                     [options]="maintenanceStatus"
                     [label]="'Estado'"
-                    [control]="getControl('maintenanceStatus')"
+                    [control]="global.getControl(form, 'maintenanceStatus')"
                   ></app-autocomplete>
                   <div *ngIf="form.get('maintenanceStatus')?.invalid && form.get('maintenanceStatus')?.touched" class="invalid-feedback">
                     Este campo es obligatorio
@@ -175,7 +175,7 @@
                 <label for="instalationDate" class="form-label">Fecha de instalación</label> <br>
                 <app-datepicker
                   [filter]="filterInstalationDate"
-                  [control]="getControl('instalationDate')"
+                  [control]="global.getControl(form, 'instalationDate')"
                 ></app-datepicker>
                 <div *ngIf="form.get('instalationDate')?.invalid && form.get('instalationDate')?.touched" class="invalid-feedback">
                   Este campo es obligatorio

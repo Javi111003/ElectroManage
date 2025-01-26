@@ -11,30 +11,6 @@ import { Item } from '../../../../../shared/shared.module';
   styleUrl: './alert.component.css'
 })
 export class AlertComponent implements OnInit {
-  constructor(
-    public global: GlobalModule,
-    private fb: FormBuilder
-  ) {
-    this.form = this.fb.group({
-      workCenter: ''
-    });
-
-    if (!this.global.getUserInfo().roles.includes('Admin')) {
-      const name = this.global.getUserInfo().company.name;
-      const id = this.global.getUserInfo().company.id;
-      const workCenter: Item = {
-        id: id,
-        name: name
-      };
-      this.getControl('workCenter').setValue(workCenter);
-    }
-
-    this.form.valueChanges.subscribe(() => {
-      this.showTable = false;
-      this.dataSource.data = [];
-    });
-  }
-
   form: FormGroup;
   showTable: boolean = false;
   noResults: boolean = false;
@@ -58,27 +34,33 @@ export class AlertComponent implements OnInit {
     }
   ];
 
+  constructor(
+    public global: GlobalModule,
+    private fb: FormBuilder
+  ) {
+    this.form = this.fb.group({
+      workCenter: ''
+    });
+
+    if (!this.global.getUserInfo().roles.includes('Admin')) {
+      const name = this.global.getUserInfo().company.name;
+      const id = this.global.getUserInfo().company.id;
+      const workCenter: Item = {
+        id: id,
+        name: name
+      };
+      this.global.getControl(this.form, 'workCenter').setValue(workCenter);
+    }
+
+    this.form.valueChanges.subscribe(() => {
+      this.showTable = false;
+      this.dataSource.data = [];
+    });
+  }
+
   ngOnInit(): void {
     this.global.Reset();
     this.global.getWorkCenters();
-  }
-
-  /**
-   * Returns the form control with the specified name.
-   * @param control The name of the form control to retrieve.
-   * @returns The form control with the specified name.
-   */
-  getControl(control: string): FormControl {
-    return this.form.get(control) as FormControl;
-  }
-
-  /**
-   * Returns the value of the form control with the specified name.
-   * @param control The name of the form control to retrieve the value from.
-   * @returns The value of the form control with the specified name.
-   */
-  getControlValue(control: string): any {
-    return this.form.get(control)?.value;
   }
 
   /**
@@ -88,7 +70,7 @@ export class AlertComponent implements OnInit {
   onConsultClick() {
     if (!this.showTable) {
       this.noResults = false;
-      const id = this.getControlValue('workCenter').id;
+      const id = this.global.getControlValue(this.form, 'workCenter').id;
       if (id) {
         this.getAlerts(id);
         this.showTable = true;

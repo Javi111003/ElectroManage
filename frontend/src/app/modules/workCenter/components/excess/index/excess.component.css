@@ -4,9 +4,6 @@
 .example-month-picker .mat-calendar-arrow {
   display: none !important;
 }
-.hidden {
-  display: none;
-}
 .form {
   padding: 1rem;
   display: flex;

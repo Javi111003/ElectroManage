@@ -78,8 +78,8 @@ describe('ExcessComponent', () => {
   it('should initialize form with default values', () => {
     expect(component.form.get('month')).toBeTruthy();
     expect(component.form.get('year')).toBeTruthy();
-    expect(component.getControlValue('month')).toBe(0);
-    expect(component.getControlValue('year')).toBe(0);
+    expect(component.global.getControlValue('month')).toBe(0);
+    expect(component.global.getControlValue('year')).toBe(0);
   });
 
   it('should handle date filtering correctly', () => {
@@ -94,12 +94,12 @@ describe('ExcessComponent', () => {
   it('should set month and year correctly', fakeAsync(() => {
     const testDate = moment('2023-06-15');
     const mockDatepicker = { close: jasmine.createSpy('close') };
-    
+
     component.setMonthAndYear(testDate, mockDatepicker as any);
     tick();
 
-    expect(component.getControlValue('month')).toBe(5); // June is 5 (0-based)
-    expect(component.getControlValue('year')).toBe(2023);
+    expect(component.global.getControlValue('month')).toBe(5); // June is 5 (0-based)
+    expect(component.global.getControlValue('year')).toBe(2023);
     expect(mockDatepicker.close).toHaveBeenCalled();
   }));
 
@@ -136,9 +136,9 @@ describe('ExcessComponent', () => {
   it('should hide table when showing datepicker', () => {
     const mockDatepicker = { open: jasmine.createSpy('open') };
     component.showTable = true;
-    
+
     component.showDatepicker(mockDatepicker as any);
-    
+
     expect(component.showTable).toBeFalse();
     expect(mockDatepicker.open).toHaveBeenCalled();
   });

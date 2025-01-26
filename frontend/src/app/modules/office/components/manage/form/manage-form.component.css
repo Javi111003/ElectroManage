@@ -1,6 +1,6 @@
-::ng-deep .cdk-overlay-container {
-  z-index: 9999;
-}
 #workCenter {
   border: none;
+}
+::ng-deep .cdk-overlay-container {
+  z-index: 9999;
 }

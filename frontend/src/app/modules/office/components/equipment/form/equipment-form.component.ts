@@ -1,10 +1,10 @@
 import { EquipmentInstance, EquipmentSpecificationEdited } from './../../../../../models/equipment.interface';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
 import { OfficeService } from '../../../../../services/office/office.service';
-import { EquipmentBrand, EquipmentSpecification, EquipmentType, EquipPropertyInfo } from '../../../../../models/equipment.interface';
+import { EquipmentBrand, EquipmentSpecification, EquipmentType } from '../../../../../models/equipment.interface';
 import { Subscription } from 'rxjs';
 import { Item } from '../../../../../shared/shared.module';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
@@ -15,6 +15,40 @@ import { SnackbarService } from '../../../../../services/snackbar/snackbar.servi
   styleUrl: './equipment-form.component.css'
 })
 export class EquipmentFormComponent implements OnInit, OnDestroy {
+  @Input() data: any;
+  private subscriptions: Subscription = new Subscription();
+  postMethod: boolean = true;
+  loading: boolean = false;
+  form: FormGroup;
+  enableAddType: boolean = false;
+  typeArray: Item[] = [];
+  enableAddBrand: boolean = false;
+  brandArray: Item[] = [];
+  useFrequencies: Item[] = [
+    { id: 1, name: 'Alta' },
+    { id: 2, name: 'Media' },
+    { id: 3, name: 'Baja' }
+  ];
+  useFrequencyMatch: Map<string, string> = new Map<string, string>([
+    ['Alta', 'High'],
+    ['Media', 'Medium'],
+    ['Baja', 'Low']
+  ]);
+  maintenanceStatus: Item[] = [
+    { id: 1, name: 'Bueno' },
+    { id: 2, name: 'Regular' },
+    { id: 3, name: 'Malo' }
+  ];
+  maintenanceStatusMatch: Map<string, string> = new Map<string, string>([
+    ['Bueno', 'Good'],
+    ['Regular', 'Regular'],
+    ['Malo', 'Bad']
+  ]);
+  criticalMatch: Map<string, boolean> = new Map<string, boolean>([
+    ['Sí', true],
+    ['No', false]
+  ])
+
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
@@ -42,83 +76,27 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     this.dataService.setData(null);
 
     this.form.get('type')!.valueChanges.subscribe(() => {
-      if (String(this.getControlValue('type')).trim() == '') {
+      if (String(this.global.getControlValue(this.form, 'type')).trim() == '') {
         this.enableAddType = false;
         return;
       }
 
-      if (this.getControlValue('type')) {
-        this.enableAddType = !this.getControlValue('type').id;
+      if (this.global.getControlValue(this.form, 'type')) {
+        this.enableAddType = !this.global.getControlValue(this.form, 'type').id;
       }
     });
 
     this.form.get('brand')!.valueChanges.subscribe(() => {
-      if (this.getControlValue('brand') && this.getControlValue('brand').id) {
+      if (this.global.getControlValue(this.form, 'brand') && this.global.getControlValue(this.form, 'brand').id) {
         this.enableAddBrand = false;
         return;
       }
 
-      if (this.getControlValue('brand')) {
-        this.enableAddBrand = !this.getControlValue('brand').id;
+      if (this.global.getControlValue(this.form, 'brand')) {
+        this.enableAddBrand = !this.global.getControlValue(this.form, 'brand').id;
       }
     });
   }
-
-  @Input() data: any;
-  private subscriptions: Subscription = new Subscription();
-  enableAddType: boolean = false;
-  enableAddBrand: boolean = false;
-  postMethod: boolean = true;
-  loading: boolean = false;
-  form: FormGroup;
-  useFrequencies: Item[] = [
-    {
-      id: 1,
-      name: 'Alta'
-    },
-    {
-      id: 2,
-      name: 'Media'
-    },
-    {
-      id: 3,
-      name: 'Baja'
-    }
-  ];
-  useFrequencyMatch: Map<string, string> = new Map<string, string>([
-    ['Alta', 'High'],
-    ['Media', 'Medium'],
-    ['Baja', 'Low']
-  ]);
-  maintenanceStatus: Item[] = [
-    {
-      id: 1,
-      name: 'Bueno'
-    },
-    {
-      id: 2,
-      name: 'Regular'
-    },
-    {
-      id: 3,
-      name: 'Malo'
-    }
-  ];
-  maintenanceStatusMatch: Map<string, string> = new Map<string, string>([
-    ['Bueno', 'Good'],
-    ['Regular', 'Regular'],
-    ['Malo', 'Bad']
-  ]);
-  criticalMatch: Map<string, boolean> = new Map<string, boolean>([
-    ['Sí', true],
-    ['No', false]
-  ])
-  typeStringArray: string[] = [];
-  typeArray: Item[] = [];
-  typeObjectArray: EquipPropertyInfo[] = [];
-  brandStringArray: string[] = [];
-  brandArray: Item[] = [];
-  brandObjectArray: EquipPropertyInfo[] = [];
 
   ngOnInit() {
     const sub = this.dataService.currentData.subscribe(newData => {
@@ -127,8 +105,8 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         const post = newData[3];
 
         this.form.patchValue(this.data);
-        this.getControl('workCenter').setValue(newData[1]);
-        this.getControl('office').setValue(newData[2]);
+        this.global.getControl(this.form, 'workCenter').setValue(newData[1]);
+        this.global.getControl(this.form, 'office').setValue(newData[2]);
 
         if (this.data) {
           const type: Item = {
@@ -142,17 +120,17 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
           const useFrequency = this.useFrequencies.find(item => item.name === this.data.useFrequency);
           const maintenanceStatus = this.maintenanceStatus.find(item => item.name === this.data.maintenanceStatus);
 
-          this.getControl('type').setValue(type);
-          this.getControl('brand').setValue(brand);
-          this.getControl('useFrequency').setValue(useFrequency);
-          this.getControl('maintenanceStatus').setValue(maintenanceStatus);
-          this.getControl('criticalEnergySystem').setValue(this.criticalMatch.get(this.data.criticalEnergySystem));
+          this.global.getControl(this.form, 'type').setValue(type);
+          this.global.getControl(this.form, 'brand').setValue(brand);
+          this.global.getControl(this.form, 'useFrequency').setValue(useFrequency);
+          this.global.getControl(this.form, 'maintenanceStatus').setValue(maintenanceStatus);
+          this.global.getControl(this.form, 'criticalEnergySystem').setValue(this.criticalMatch.get(this.data.criticalEnergySystem));
 
           if (this.data.instalationDate) {
             const dateString = this.data.instalationDate;
             const dateParts = dateString.split('-');
             const dateObject = new Date(Date.UTC(+dateParts[0], +dateParts[1] - 1, +dateParts[2] + 1));
-            this.getControl('instalationDate').setValue(dateObject);
+            this.global.getControl(this.form, 'instalationDate').setValue(dateObject);
           }
         }
         this.postMethod = post;
@@ -166,9 +144,9 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     this.getBrands();
 
     this.form.get('workCenter')?.valueChanges.subscribe(() => {
-      this.getControl('office').reset();
-      if (this.getControlValue('workCenter')) {
-        const id = this.getControlValue('workCenter').id;
+      this.global.getControl(this.form, 'office').reset();
+      if (this.global.getControlValue(this.form, 'workCenter')) {
+        const id = this.global.getControlValue(this.form, 'workCenter').id;
         if (id) {
           this.global.getOfficesByCenter(id);
         }
@@ -194,24 +172,6 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * This function is used to get the form control by its name.
-   * @param control The name of the form control.
-   * @returns The form control with the specified name.
-   */
-  getControl(control: string): FormControl {
-    return this.form.get(control) as FormControl;
-  }
-
-  /**
-   * This function is used to get the value of a form control by its name.
-   * @param control The name of the form control.
-   * @returns The value of the form control with the specified name.
-   */
-  getControlValue(control: string): any {
-    return this.form.get(control)?.value;
-  }
-
-  /**
    * Closes the modal and resets the form.
    * This function is called when the user clicks the 'Cerrar' button in the modal.
    * It resets the form to its initial state, including the installation date.
@@ -221,7 +181,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     this.form.reset();
     this.enableAddBrand = this.enableAddType = false;
     const today = new Date();
-    this.getControl('instalationDate').setValue(today);
+    this.global.getControl(this.form, 'instalationDate').setValue(today);
   }
 
   /**
@@ -240,9 +200,9 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     }
 
     const options = [
-      this.getControlValue('workCenter').id, this.getControlValue('office').id,
-      this.getControlValue('type').id, this.getControlValue('brand').id,
-      this.getControlValue('useFrequency').id, this.getControlValue('maintenanceStatus').id
+      this.global.getControlValue(this.form, 'workCenter').id, this.global.getControlValue(this.form, 'office').id,
+      this.global.getControlValue(this.form, 'type').id, this.global.getControlValue(this.form, 'brand').id,
+      this.global.getControlValue(this.form, 'useFrequency').id, this.global.getControlValue(this.form, 'maintenanceStatus').id
     ];
     const response = [
       'Centro de Trabajo', 'Nombre de Oficina', 'Tipo de Equipo',
@@ -276,7 +236,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
    */
   markAllAsTouched(): void {
     Object.keys(this.form.controls).forEach(field => {
-      const control = this.getControl(field);
+      const control = this.global.getControl(this.form, field);
       control?.markAsTouched();
     });
   }
@@ -313,7 +273,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
   addType(): void {
     this.enableAddType = false;
     const eqType: EquipmentType = {
-      name: this.getControlValue('type'),
+      name: this.global.getControlValue(this.form, 'type'),
       description: null
     };
     this.officeService.postEquipmentType(eqType).subscribe({
@@ -321,7 +281,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         console.log('Created successfully:', response);
         this.snackbar.openSnackBar('Añadido exitosamente...');
         this.getTypes();
-        this.getControl('type').setValue(
+        this.global.getControl(this.form, 'type').setValue(
           {
             id: response.id,
             name: response.name
@@ -343,9 +303,9 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
    * @param typeName The name of the equipment type to be deleted.
    */
   deleteType(type: Item): void {
-    const eqType = this.getControlValue('type');
+    const eqType = this.global.getControlValue(this.form, 'type');
     if (eqType && eqType.id == type.id)
-      this.getControl('type').setValue("");
+      this.global.getControl(this.form, 'type').setValue("");
 
     this.officeService.deleteEquipmentType(type.id).subscribe({
       next: (response) => {
@@ -368,9 +328,9 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
    * @param brandName The name of the equipment brand to be deleted.
    */
   deleteBrand(brand: Item): void {
-    const brandName = this.getControlValue('brand');
+    const brandName = this.global.getControlValue(this.form, 'brand');
     if (brandName && brandName.id == brand.id)
-      this.getControl('brand').setValue("");
+      this.global.getControl(this.form, 'brand').setValue("");
 
     this.officeService.deleteEquipmentBrand(brand.id).subscribe({
       next: (response) => {
@@ -394,7 +354,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
   addBrand(): void {
     this.enableAddBrand = !this.enableAddBrand;
     const eqBrand: EquipmentBrand = {
-      name: this.getControlValue('brand'),
+      name: this.global.getControlValue(this.form, 'brand'),
       description: null
     };
     this.officeService.postEquipmentBrand(eqBrand).subscribe({
@@ -402,7 +362,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         console.log('Created successfully:', response);
         this.snackbar.openSnackBar('Añadido exitosamente...');
         this.getBrands();
-        this.getControl('brand').setValue(
+        this.global.getControl(this.form, 'brand').setValue(
           {
             id: response.id,
             name: response.name
@@ -419,12 +379,9 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
   /**
    * Retrieves the list of equipment types.
    * This function fetches the list of equipment types from the server and updates the component's state.
-   * It populates the `typeObjectArray` with the fetched types and `typeStringArray` with their names.
    */
   getTypes(): void {
     this.officeService.getEquipmentTypeList().subscribe(types => {
-      this.typeObjectArray = types;
-      this.typeStringArray = types.map(type => type.name);
       this.typeArray = types.map(type => {
         return {
           id: type.id,
@@ -437,12 +394,9 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
   /**
    * This function retrieves the list of equipment brands.
    * It fetches the list of equipment brands from the server and updates the component's state.
-   * It populates the `brandObjectArray` with the fetched brands and `brandStringArray` with their names.
    */
   getBrands(): void {
     this.officeService.getEquipmentBrandList().subscribe(brands => {
-      this.brandObjectArray = brands;
-      this.brandStringArray = brands.map(brand => brand.name);
       this.brandArray = brands.map(brand => {
         return {
           id: brand.id,
@@ -499,17 +453,17 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
    * @returns An object containing the common values from the form controls.
    */
   getCommonValues() {
-    const typeID = this.getControlValue('type').id;
-    const brandID = this.getControlValue('brand').id;
-    const useFrequency = this.useFrequencyMatch.get(this.getControlValue('useFrequency').name)!;
-    const maintenanceStatus = this.maintenanceStatusMatch.get(this.getControlValue('maintenanceStatus').name)!;
-    const model = this.getControlValue('model');
-    const capacity = this.getControlValue('capacity');
-    const critical = this.getControlValue('criticalEnergySystem');
-    const avgConsumption = this.getControlValue('averageConsumption');
-    const lifeSpanYears = this.getControlValue('lifeSpanYears');
-    const efficiency = this.getControlValue('efficiency');
-    const installDate = this.getControlValue('instalationDate');
+    const typeID = this.global.getControlValue(this.form, 'type').id;
+    const brandID = this.global.getControlValue(this.form, 'brand').id;
+    const useFrequency = this.useFrequencyMatch.get(this.global.getControlValue(this.form, 'useFrequency').name)!;
+    const maintenanceStatus = this.maintenanceStatusMatch.get(this.global.getControlValue(this.form, 'maintenanceStatus').name)!;
+    const model = this.global.getControlValue(this.form, 'model');
+    const capacity = this.global.getControlValue(this.form, 'capacity');
+    const critical = this.global.getControlValue(this.form, 'criticalEnergySystem');
+    const avgConsumption = this.global.getControlValue(this.form, 'averageConsumption');
+    const lifeSpanYears = this.global.getControlValue(this.form, 'lifeSpanYears');
+    const efficiency = this.global.getControlValue(this.form, 'efficiency');
+    const installDate = this.global.getControlValue(this.form, 'instalationDate');
 
     return {
       typeID, brandID, useFrequency, maintenanceStatus, model, capacity, critical,
@@ -537,7 +491,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
           maintenanceStatus: commonValues.maintenanceStatus,
           useFrequency: commonValues.useFrequency,
           equipmentSpecificationId: response.id,
-          officeId: this.getControlValue('office').id
+          officeId: this.global.getControlValue(this.form, 'office').id
         };
         this.createOrEditInstance(isEdit, equipment);
       },

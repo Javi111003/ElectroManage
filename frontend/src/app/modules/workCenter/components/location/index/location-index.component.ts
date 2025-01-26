@@ -11,6 +11,10 @@ import { LOCATION_URL } from '../../../../../config/api.config';
   styleUrl: './location-index.component.css'
 })
 export class LocationComponent implements OnInit, AfterViewInit {
+  centerLocationData: any[] = [];
+  form: FormGroup;
+  map!: L.Map;
+
   constructor (
     public global: GlobalModule,
     private fb: FormBuilder,
@@ -20,10 +24,6 @@ export class LocationComponent implements OnInit, AfterViewInit {
       workCenter: ''
     });
   }
-
-  centerLocationData: any[] = [];
-  form: FormGroup;
-  map!: L.Map;
 
   ngOnInit(): void {
     this.global.Reset();
@@ -48,24 +48,6 @@ export class LocationComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Gets a form control by its name
-   * @param control Name of the control to retrieve
-   * @returns FormControl instance
-   */
-  getControl(control: string): FormControl {
-    return this.form.get(control) as FormControl;
-  }
-
-  /**
-   * Gets the value of a form control
-   * @param control Name of the control to get value from
-   * @returns The value of the specified control
-   */
-  getControlValue(control: string): any {
-    return this.form.get(control)?.value;
-  }
-
-  /**
    * Initializes the Leaflet map with default settings
    * Centers the map view on Cuba
    */
@@ -77,7 +59,16 @@ export class LocationComponent implements OnInit, AfterViewInit {
     this.map.invalidateSize();
   }
 
-
+  /**
+   * Displays the location of the center with the specified ID on the map.
+   *
+   * This function searches for the center with the given ID in the `centerLocationData` array.
+   * If a center is found, it sets the map view to the center's coordinates at zoom level 16
+   * and opens a popup with the center's details.
+   *
+   * @param id - The ID of the center to display.
+   * @void
+   */
   showCenterLocation(id: number): void {
     const center = this.centerLocationData.find(center => center.id === id);
     if (center) {
@@ -99,8 +90,8 @@ export class LocationComponent implements OnInit, AfterViewInit {
    * Validates the selection and displays the location on the map
    */
   onLocateClick() {
-    if (this.getControlValue('workCenter').name) {
-      this.showCenterLocation(this.getControlValue('workCenter').id);
+    if (this.global.getControlValue(this.form, 'workCenter').name) {
+      this.showCenterLocation(this.global.getControlValue(this.form, 'workCenter').id);
     } else {
       this.global.openDialog('Por favor, selecciona un Centro de Trabajo');
     }

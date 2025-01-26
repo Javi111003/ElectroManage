@@ -14,12 +14,6 @@ Chart.register(...registerables);
   styleUrls: ['./index.component.css']
 })
 export class IndexComponent implements OnInit{
-  constructor(
-    private global: GlobalModule,
-    private http: DashboardService,
-    public httpCenter: WorkCenterService,
-  ){ }
-
   years = ['2023', '2024', '2025'];
   chart: any;
   pieChart: any;
@@ -34,6 +28,12 @@ export class IndexComponent implements OnInit{
   topConsumingCenters: any[] = [];
   topBiggestCenters: any[] = [];
   topWarnedCenters: MostWarnedCenter[] = [];
+
+  constructor(
+    private global: GlobalModule,
+    private http: DashboardService,
+    public httpCenter: WorkCenterService,
+  ){ }
 
   /**
    * Initializes the component by getting user information and loading data.

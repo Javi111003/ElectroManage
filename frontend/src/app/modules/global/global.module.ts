@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgFor, NgIf } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { DialogComponent } from '../../shared/components/dialog/dialog.component';
 
 //global components
@@ -88,6 +88,8 @@ import { Observable } from 'rxjs';
   ]
 })
 export class GlobalModule {
+  workCenters: Item[] = [];
+  offices: Item[] = [];
 
   constructor(
     public httpCenter: WorkCenterService,
@@ -95,8 +97,25 @@ export class GlobalModule {
     public dialog: MatDialog
   ) { }
 
-  workCenters: Item[] = [];
-  offices: Item[] = [];
+  /**
+   * This function is used to get the form control by its name.
+   * @param form - The form group containing the control.
+   * @param control The name of the form control.
+   * @returns The form control with the specified name.
+   */
+  getControl(form: FormGroup, control: string): FormControl {
+    return form.get(control) as FormControl;
+  }
+
+  /**
+   * This function is used to get the value of a form control by its name.
+   * @param form - The form group containing the control.
+   * @param control The name of the form control.
+   * @returns The value of the form control with the specified name.
+   */
+  getControlValue(form: FormGroup, control: string): any {
+    return form.get(control)?.value;
+  }
 
   /**
    * This function retrieves the user information from the session storage.

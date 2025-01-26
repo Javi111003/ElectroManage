@@ -13,63 +13,7 @@ import { Item } from '../../../../../shared/shared.module';
   styleUrl: './comparison.component.css'
 })
 export class ComparisonComponent implements OnInit {
-  constructor(
-    public global: GlobalModule,
-    private httpPolicy: PolicyService,
-    private fb: FormBuilder
-  ) {
-    this.form = this.fb.group({
-      workCenter: '',
-      policy: ''
-    });
-
-    if (!this.global.getUserInfo().roles.includes('Admin')) {
-      const name = this.global.getUserInfo().company.name;
-      const id = this.global.getUserInfo().company.id;
-      const workCenter: Item = {
-        id: id,
-        name: name
-      };
-      this.getControl('workCenter').setValue(workCenter);
-      this.getPolicies(id);
-    }
-
-    this.form.get('workCenter')?.valueChanges.subscribe(() => {
-      this.getControl('policy').reset();
-      this.policies = [];
-      if (this.getControlValue('workCenter')) {
-        const id = this.getControlValue('workCenter').id;
-        if (id) {
-          this.httpPolicy.getPoliciesByCenter(id).subscribe(policies => {
-            this.objectsPolicy = policies;
-            this.policies = policies.map(policy => ({
-              id: policy.id,
-              name: policy.name
-            }));
-          });
-        }
-      }
-    });
-
-    this.form.get('workCenter')?.valueChanges.subscribe(() => {
-      const policy = this.getControlValue('policy');
-      if (policy) {
-        if (policy.id) {
-          const centerID = this.objectsPolicy.find(item => item.id === policy.id)!.companyId;
-          this.getBeforeAfterInfo(policy.id, centerID);
-        }
-      }
-    });
-
-    this.form.valueChanges.subscribe(() => {
-      this.showTable = false;
-      this.dataSourceBefore.data = [];
-      this.dataSourceAfter.data = [];
-    });
-  }
-
   form: FormGroup;
-
   optionsPolicy: string[] = [];
   policies: Item[] = [];
   objectsPolicy: PolicyByCompany[] = [];
@@ -91,37 +35,71 @@ export class ComparisonComponent implements OnInit {
     }
   ];
 
+  constructor(
+    public global: GlobalModule,
+    private httpPolicy: PolicyService,
+    private fb: FormBuilder
+  ) {
+    this.form = this.fb.group({
+      workCenter: '',
+      policy: ''
+    });
+
+    if (!this.global.getUserInfo().roles.includes('Admin')) {
+      const name = this.global.getUserInfo().company.name;
+      const id = this.global.getUserInfo().company.id;
+      const workCenter: Item = {
+        id: id,
+        name: name
+      };
+      this.global.getControl(this.form, 'workCenter').setValue(workCenter);
+      this.getPolicies(id);
+    }
+
+    this.form.get('workCenter')?.valueChanges.subscribe(() => {
+      this.global.getControl(this.form, 'policy').reset();
+      this.policies = [];
+      if (this.global.getControlValue(this.form, 'workCenter')) {
+        const id = this.global.getControlValue(this.form, 'workCenter').id;
+        if (id) {
+          this.httpPolicy.getPoliciesByCenter(id).subscribe(policies => {
+            this.objectsPolicy = policies;
+            this.policies = policies.map(policy => ({
+              id: policy.id,
+              name: policy.name
+            }));
+          });
+        }
+      }
+    });
+
+    this.form.get('workCenter')?.valueChanges.subscribe(() => {
+      const policy = this.global.getControlValue(this.form, 'policy');
+      if (policy) {
+        if (policy.id) {
+          const centerID = this.objectsPolicy.find(item => item.id === policy.id)!.companyId;
+          this.getBeforeAfterInfo(policy.id, centerID);
+        }
+      }
+    });
+
+    this.form.valueChanges.subscribe(() => {
+      this.showTable = false;
+      this.dataSourceBefore.data = [];
+      this.dataSourceAfter.data = [];
+    });
+  }
 
   ngOnInit(): void {
     this.global.Reset();
     this.global.getWorkCenters();
     this.form.get('workCenter')?.valueChanges.subscribe(() => {
-      this.getControl('policy').reset();
-      const id = this.getControlValue('workCenter').id;
+      this.global.getControl(this.form, 'policy').reset();
+      const id = this.global.getControlValue(this.form, 'workCenter').id;
       if (id) {
         this.getPolicies(id);
       }
     });
-  }
-
-  /**
-   * Retrieves the FormControl object for a given control name from the form.
-   * This method is used to access and manipulate form controls dynamically.
-   * @param control The name of the control to retrieve.
-   * @returns The FormControl object associated with the specified control name.
-   */
-  getControl(control: string): FormControl {
-    return this.form.get(control) as FormControl;
-  }
-
-  /**
-   * Retrieves the value of a given control from the form.
-   * This method is used to access the current value of a form control.
-   * @param control The name of the control to retrieve the value from.
-   * @returns The current value of the specified control.
-   */
-  getControlValue(control: string): any {
-    return this.form.get(control)?.value;
   }
 
   /**
@@ -131,7 +109,7 @@ export class ComparisonComponent implements OnInit {
    */
   onClick() {
     if (!this.showTable) {
-      if (this.getControlValue('workCenter').id && this.getControlValue('policy').id) {
+      if (this.global.getControlValue(this.form, 'workCenter').id && this.global.getControlValue(this.form, 'policy').id) {
         this.showTable = true;
       } else {
         this.showTable = false;

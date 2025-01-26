@@ -4,15 +4,15 @@
       <app-autocomplete
         [label]="'Centro de Trabajo'"
         [options]="global.workCenters"
-        [control]="getControl('workCenter')"
+        [control]="global.getControl(form, 'workCenter')"
         [isDisabled]="!global.getUserInfo().roles.includes('Admin')"
       >
       </app-autocomplete>
       <app-autocomplete #policyAutocomplete
         [label]="'Política'"
         [options]="policies"
-        [control]="getControl('policy')"
-        [isDisabled]="!getControlValue('workCenter').id"
+        [control]="global.getControl(form, 'policy')"
+        [isDisabled]="!global.getControlValue(form, 'workCenter').id"
       >
       </app-autocomplete>
     </div>
