@@ -18,35 +18,6 @@ declare var bootstrap: any;
   styleUrl: './register.component.css'
 })
 export class RegisterComponent implements OnInit, OnDestroy {
-  constructor (
-    public global: GlobalModule,
-    private fb: FormBuilder,
-    private dataService: DataService,
-    private snackbar: SnackbarService,
-    private httpRegister: RegisterService
-  ) {
-    this.form = this.fb.group({
-      startDate: [null],
-      endDate: [null],
-      workCenter: ''
-    });
-
-    if (!this.global.getUserInfo().roles.includes('Admin')) {
-      const name = this.global.getUserInfo().company.name;
-      const id = this.global.getUserInfo().company.id;
-      const workCenter: Item = {
-        id: id,
-        name: name
-      };
-      this.getControl('workCenter').setValue(workCenter);
-    }
-
-    this.form.valueChanges.subscribe(() => {
-      this.showTable = false;
-      this.dataSource.data = [];
-    });
-  }
-
   private subscriptions: Subscription = new Subscription();
   form: FormGroup;
   showTable: boolean = false;
@@ -68,17 +39,46 @@ export class RegisterComponent implements OnInit, OnDestroy {
     }
   ];
 
+  constructor (
+    public global: GlobalModule,
+    private fb: FormBuilder,
+    private dataService: DataService,
+    private snackbar: SnackbarService,
+    private httpRegister: RegisterService
+  ) {
+    this.form = this.fb.group({
+      startDate: [null],
+      endDate: [null],
+      workCenter: ''
+    });
+
+    if (!this.global.getUserInfo().roles.includes('Admin')) {
+      const name = this.global.getUserInfo().company.name;
+      const id = this.global.getUserInfo().company.id;
+      const workCenter: Item = {
+        id: id,
+        name: name
+      };
+      this.global.getControl(this.form, 'workCenter').setValue(workCenter);
+    }
+
+    this.form.valueChanges.subscribe(() => {
+      this.showTable = false;
+      this.dataSource.data = [];
+    });
+  }
+
   ngOnInit(): void {
     this.global.Reset();
     this.global.getWorkCenters();
     this.form.get('startDate')?.valueChanges.subscribe(() => {
-      this.getControl('endDate').reset();
+      this.global.getControl(this.form, 'endDate').reset();
     });
 
     const sub = this.dataService.dataUpdated$.subscribe(() => {
-      const id = this.getControlValue('workCenter').id;
-      const initDate = this.getControlValue('startDate');
-      const endDate = this.getControlValue('endDate');
+      const id = this.global.getControlValue(this.form, 'workCenter').id;
+      const initDate = this.global.getControlValue(this.form, 'startDate');
+      const endDate = this.global.getControlValue(this.form, 'endDate');
       if (id && initDate && endDate) {
         this.getRegistersByCenterId(id, initDate, endDate);
       }
@@ -88,26 +88,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-  }
-
-  /**
-   * Retrieves a form control by its name.
-   *
-   * @param control - The name of the control to retrieve.
-   * @returns The FormControl associated with the given name.
-   */
-  getControl(control: string): FormControl {
-    return this.form.get(control) as FormControl;
-  }
-
-  /**
-   * Retrieves the value of a form control by its name.
-   *
-   * @param control - The name of the control whose value is to be retrieved.
-   * @returns The value of the specified form control.
-   */
-  getControlValue(control: string): any {
-    return this.form.get(control)?.value;
   }
 
   /**
@@ -154,10 +134,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
    * @returns A boolean value indicating if the date is valid.
    */
   filterEndDate = (d: Date | null): boolean => {
-    if (!this.getControlValue('startDate') || !d)
+    if (!this.global.getControlValue(this.form, 'startDate') || !d)
       return false;
 
-    let dateSelected = this.getControlValue('startDate');
+    let dateSelected = this.global.getControlValue(this.form, 'startDate');
     const DSday = dateSelected.getDate();
     const DSmonth = dateSelected.getMonth();
     const DSyear = dateSelected.getFullYear();
@@ -185,9 +165,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
    */
   onConsultClick() {
     if (!this.showTable) {
-      const id = this.getControlValue('workCenter').id;
-      const startDate = this.getControlValue('startDate');
-      const endDate = this.getControlValue('endDate');
+      this.noResults = false;
+      const id = this.global.getControlValue(this.form, 'workCenter').id;
+      const startDate = this.global.getControlValue(this.form, 'startDate');
+      const endDate = this.global.getControlValue(this.form, 'endDate');
       if (id && startDate && endDate) {
         this.getRegistersByCenterId(id, startDate, endDate);
         this.showTable = true;
@@ -203,7 +184,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
    * Then, it shows the modal with the ID 'exampleModal'.
    */
   add(): void {
-    this.dataService.setData([null, this.getControlValue('workCenter'), true, false]);
+    this.dataService.setData([null, this.global.getControlValue(this.form, 'workCenter'), true, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }
@@ -238,7 +219,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
    * @param item - The item to be edited.
    */
   edit(item: any): void {
-    this.dataService.setData([item, this.getControlValue('workCenter'), false, false]);
+    this.dataService.setData([item, this.global.getControlValue(this.form, 'workCenter'), false, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
   }

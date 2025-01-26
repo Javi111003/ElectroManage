@@ -44,7 +44,7 @@
                 <app-checkbox class="form-control" id="role"
                   [options]="TextRoles"
                   [label]="'Roles'"
-                  [control]="getControl('role')"
+                  [control]="global.getControl(form, 'role')"
                 ></app-checkbox>
                 <div *ngIf="form.get('role')?.invalid && form.get('role')?.touched" class="invalid-feedback">
                   Este campo es obligatorio
@@ -55,7 +55,7 @@
                 <app-autocomplete class="form-control" id="workCenter"
                   [options]="global.workCenters"
                   [label]="'Centros de trabajo'"
-                  [control]="getControl('workCenter')"
+                  [control]="global.getControl(form, 'workCenter')"
                 ></app-autocomplete>
                 <div *ngIf="form.get('workCenter')?.invalid && form.get('workCenter')?.touched" class="invalid-feedback">
                   Este campo es obligatorio

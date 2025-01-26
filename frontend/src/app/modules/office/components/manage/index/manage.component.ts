@@ -15,6 +15,22 @@ declare var bootstrap: any;
   styleUrls: ['./manage.component.css']
 })
 export class ManageComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription = new Subscription();
+  form: FormGroup;
+  showTable: boolean = false;
+  noResults: boolean = false;
+  dataSource: MatTableDataSource<any> = new MatTableDataSource();
+  displayedColumns: ConfigColumn[] = [
+    {
+      title: 'Nombre',
+      field: 'officeName'
+    },
+    {
+      title: 'Descripción',
+      field: 'description'
+    }
+  ];
+
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
@@ -39,15 +55,15 @@ export class ManageComponent implements OnInit, OnDestroy {
           id: id,
           name: name
         };
-        this.getControl('workCenter').setValue(workCenter);
+        this.global.getControl(this.form, 'workCenter').setValue(workCenter);
         this.global.getOfficesByCenter(id).subscribe(offices => {
           this.reloadTableData(offices);
         });
       }
     }
 
-    this.getControl('workCenter').valueChanges.subscribe(() => {
-      const id = this.getControlValue('workCenter').id;
+    this.global.getControl(this.form, 'workCenter').valueChanges.subscribe(() => {
+      const id = this.global.getControlValue(this.form, 'workCenter').id;
       if (id) {
         console.log(id);
         this.global.getOfficesByCenter(id).subscribe(offices => {
@@ -60,28 +76,12 @@ export class ManageComponent implements OnInit, OnDestroy {
     console.log(this.noResults)
   }
 
-  private subscriptions: Subscription = new Subscription();
-  form: FormGroup;
-  showTable: boolean = false;
-  noResults: boolean = false;
-  dataSource: MatTableDataSource<any> = new MatTableDataSource();
-  displayedColumns: ConfigColumn[] = [
-    {
-      title: 'Nombre',
-      field: 'officeName'
-    },
-    {
-      title: 'Descripción',
-      field: 'description'
-    }
-  ];
-
   ngOnInit() {
     this.global.Reset();
     this.global.getWorkCenters();
 
     const sub = this.dataService.dataUpdated$.subscribe(() => {
-      const id = this.getControlValue('workCenter').id;
+      const id = this.global.getControlValue(this.form, 'workCenter').id;
       if (id) {
         this.global.getOfficesByCenter(id).subscribe(offices => {
           this.reloadTableData(offices);
@@ -96,31 +96,13 @@ export class ManageComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * This function is used to get the form control by its name.
-   * @param control The name of the form control.
-   * @returns The form control with the specified name.
-   */
-  getControl(control: string): FormControl {
-    return this.form.get(control) as FormControl;
-  }
-
-  /**
-   * This function is used to get the value of a form control by its name.
-   * @param control The name of the form control.
-   * @returns The value of the form control with the specified name.
-   */
-  getControlValue(control: string): any {
-    return this.form.get(control)?.value;
-  }
-
-  /**
    * This function is used to handle the "Add" button click event.
    * It retrieves the value of 'workCenter' from the form control,
    * sets it along with a null value and a boolean indicating it's a new entry,
    * and then opens the modal for adding a new equipment.
    */
   onAddClick(): void {
-    const center = this.getControlValue('workCenter');
+    const center = this.global.getControlValue(this.form, 'workCenter');
     this.dataService.setData([null, center, true, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
@@ -133,7 +115,7 @@ export class ManageComponent implements OnInit, OnDestroy {
    */
    onConsultClick(condition: boolean = !this.showTable): void {
     if (condition) {
-      const id = this.getControlValue('workCenter').id;
+      const id = this.global.getControlValue(this.form, 'workCenter').id;
       if (id) {
         this.showTable = true;
       }
@@ -176,7 +158,7 @@ export class ManageComponent implements OnInit, OnDestroy {
    * @param item The office instance to be edited.
    */
   edit(item: any): void {
-    this.dataService.setData([item, this.getControlValue('workCenter'), false, false]);
+    this.dataService.setData([item, this.global.getControlValue(this.form, 'workCenter'), false, false]);
     const modalElement = document.getElementById('exampleModal') as HTMLElement;
     const modal = new bootstrap.Modal(modalElement);
     modal.show();

@@ -14,6 +14,22 @@ import { SnackbarService } from '../../../../../services/snackbar/snackbar.servi
   styleUrl: './manage-form.component.css'
 })
 export class ManageFormComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription = new Subscription();
+  loading: boolean = false;
+  data: any;
+  form: FormGroup;
+  TextRoles: Item[] = [
+    { id: 1, name: 'Administrador' },
+    { id: 2, name: 'Gerente' },
+    { id: 3, name: 'Analista' }
+  ];
+  roles: Map<string, string> = new Map<string, string>([
+    ['Administrador', 'Admin'],
+    ['Gerente', 'Manager'],
+    ['Analista', 'Analist']
+  ]);
+  postMethod: boolean = true;
+
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
@@ -33,22 +49,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.dataService.setData(null);
   }
 
-  private subscriptions: Subscription = new Subscription();
-  loading: boolean = false;
-  data: any;
-  form: FormGroup;
-  TextRoles: Item[] = [
-    { id: 1, name: 'Administrador' },
-    { id: 2, name: 'Gerente' },
-    { id: 3, name: 'Analista' }
-  ];
-  roles: Map<string, string> = new Map<string, string>([
-    ['Administrador', 'Admin'],
-    ['Gerente', 'Manager'],
-    ['Analista', 'Analist']
-  ]);
-  postMethod: boolean = true;
-
   ngOnInit(): void {
     const sub = this.dataService.currentData.subscribe(newData => {
       if (newData) {
@@ -60,7 +60,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
             return this.TextRoles.find(item => item.name === role)
           });
 
-          this.getControl('role').setValue(roles);
+          this.global.getControl(this.form, 'role').setValue(roles);
         }
 
         this.postMethod = newData[1];
@@ -75,23 +75,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-  }
-
-  /**
-   * Initializes the component by setting up the form and subscribing to data changes.
-   */
-  getControl(control: string): FormControl {
-    return this.form.get(control) as FormControl;
-  }
-
-  /**
-   * Retrieves the FormControl object for a given control name from the form.
-   * This method is used to access and manipulate form controls dynamically.
-   * @param control The name of the control to retrieve.
-   * @returns The FormControl object associated with the specified control name.
-   */
-  getControlValue(control: string): any {
-    return this.form.get(control)?.value;
   }
 
   /**
@@ -117,7 +100,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.getControlValue('workCenter').id) {
+    if (this.global.getControlValue(this.form, 'workCenter').id) {
       this.global.openDialog('¿Está seguro de que desea guardar los cambios?', true).subscribe(
       result => {
         console.log(result);
@@ -142,7 +125,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   markAllAsTouched(): void {
     Object.keys(this.form.controls).forEach(field => {
-      const control = this.getControl(field);
+      const control = this.global.getControl(this.form, field);
       control?.markAsTouched();
     });
   }
@@ -155,7 +138,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   checkForm(): boolean {
     if (!this.postMethod)
-      this.getControl('password').setValue("String123.");
+      this.global.getControl(this.form, 'password').setValue("String123.");
 
     return this.form.invalid;
   }
@@ -166,7 +149,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * @returns An array of role names to be posted.
    */
   private getRolesToPost(): string[] {
-    const rolesSelected: Item[] = this.getControlValue('role');
+    const rolesSelected: Item[] = this.global.getControlValue(this.form, 'role');
     return rolesSelected.map(role => this.roles.get(role.name)!);
   }
 
@@ -204,11 +187,11 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   register(): void {
     const registerData: RegisterUser = {
-      email: this.getControlValue('email'),
-      username: this.getControlValue('userName'),
-      password: this.getControlValue('password'),
+      email: this.global.getControlValue(this.form, 'email'),
+      username: this.global.getControlValue(this.form, 'userName'),
+      password: this.global.getControlValue(this.form, 'password'),
       roles: this.getRolesToPost(),
-      companyId: this.getControlValue('workCenter').id
+      companyId: this.global.getControlValue(this.form, 'workCenter').id
     };
 
     this.httpUser.registerUser(registerData).subscribe({
@@ -224,9 +207,9 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   editUser(): void {
     const userData: EditedUser = {
-      username: this.getControlValue('userName'),
+      username: this.global.getControlValue(this.form, 'userName'),
       roles: this.getRolesToPost(),
-      companyId: this.getControlValue('workCenter').id
+      companyId: this.global.getControlValue(this.form, 'workCenter').id
     };
 
     this.httpUser.editUser(userData, this.data.id).subscribe({

@@ -3,7 +3,7 @@
     <app-checkbox
       [label]="'Centros de Trabajo'"
       [options]="global.getUserInfo().roles.includes('Admin') ? this.global.workCenters : options"
-      [control]="getControl('workCenters')"
+      [control]="global.getControl(form, 'workCenters')"
       [isDisabled]="!global.getUserInfo().roles.includes('Admin')"
       >
     </app-checkbox>
@@ -21,7 +21,7 @@
   </div>
 </div>
 <table mat-table
-       [dataSource]="this.getControlValue('workCenters')" multiTemplateDataRows
+       [dataSource]="global.getControlValue(form, 'workCenters')" multiTemplateDataRows
        class="mat-elevation-z8" [hidden]="!showTable">
   @for (column of columnsToDisplay; track column) {
     <ng-container matColumnDef="{{column}}">

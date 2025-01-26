@@ -13,7 +13,7 @@
                 <app-autocomplete class="form-control" id="workCenter"
                   [options]="global.workCenters"
                   [label]="'Centros de Trabajo'"
-                  [control]="getControl('workCenter')"
+                  [control]="global.getControl(form, 'workCenter')"
                   [isDisabled]="!global.getUserInfo().roles.includes('Admin')"
                 ></app-autocomplete>
                 <div *ngIf="form.get('workCenter')?.invalid && form.get('workCenter')?.touched" class="invalid-feedback">
@@ -29,7 +29,7 @@
                 <label for="date" class="form-label">Fecha</label> <br>
                 <app-datepicker
                   [filter]="filterDate"
-                  [control]="getControl('date')"
+                  [control]="global.getControl(form, 'date')"
                 ></app-datepicker>
                 <div *ngIf="form.get('date')?.invalid && form.get('date')?.touched" class="invalid-feedback">
                   Este campo es obligatorio

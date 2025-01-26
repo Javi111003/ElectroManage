@@ -16,7 +16,6 @@ export class AutocompleteComponent implements OnInit, OnChanges {
   @Input() control: FormControl = new FormControl();
   @Input() showIcon: boolean = false;
   @Input() deleteOption: (...args: any[]) => any = ()=>{};
-
   filteredOptions: Observable<Item[]> = [][0];
 
   ngOnInit() {

@@ -94,7 +94,7 @@ describe('LocationComponent', () => {
 
   it('should get form control value correctly', () => {
     component.form.get('workCenter')?.setValue('test');
-    expect(component.getControlValue('workCenter')).toBe('test');
+    expect(component.global.getControlValue('workCenter')).toBe('test');
   });
 
   it('should show dialog when no work center is selected', () => {
@@ -107,9 +107,9 @@ describe('LocationComponent', () => {
     const mockCenter = { id: 1, name: 'Centro 1' };
     component.form.get('workCenter')?.setValue(mockCenter);
     spyOn(component, 'showCenterLocation');
-    
+
     component.onLocateClick();
-    
+
     expect(component.showCenterLocation).toHaveBeenCalledWith(1);
   });
 });

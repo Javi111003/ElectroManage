@@ -19,63 +19,21 @@ import { UserService } from '../../../../../services/user/user.service';
   styleUrl: './manage-form.component.css'
 })
 export class ManageFormComponent implements OnInit, OnDestroy {
-  constructor(
-    private fb: FormBuilder,
-    public global: GlobalModule,
-    private dataService: DataService,
-    private renderer: Renderer2,
-    private snackbar: SnackbarService,
-    private httpPolicy: PolicyService,
-    private httpUser: UserService
-  )
-  {
-    this.form = this.fb.group({
-      name: ['', Validators.required],
-      adminAreaName: ['', Validators.required],
-      instalationType: ['', Validators.required],
-      policy: null,
-      monthlyConsumptionLimit: [null, Validators.required],
-      formula: ['', Validators.required],
-      teamWork: null,
-      latitude: [null, Validators.required],
-      longitude: [null, Validators.required],
-      location: ['', Validators.required],
-      applyingDate: null
-    });
-    this.dataService.setData(null);
-
-    this.form.get('instalationType')!.valueChanges.subscribe(() => {
-      if (String(this.getControlValue('instalationType')).trim() == '') {
-        this.enableAddType = false;
-        return;
-      }
-
-      const type = this.getControlValue('instalationType');
-      if (type)
-        this.enableAddType = !type.id;
-    });
-
-    this.form.get('adminAreaName')!.valueChanges.subscribe(() => {
-      if (String(this.getControlValue('adminAreaName')).trim() == '') {
-        this.enableAddArea = false;
-        return;
-      }
-
-      const area = this.getControlValue('adminAreaName');
-      if (area)
-        this.enableAddArea = !area.id;
-    });
-  }
-
   private subscriptions: Subscription = new Subscription();
+  private map!: L.Map;
+  private marker!: L.Marker;
+  private modal!: Modal;
+  data: any;
+  form: FormGroup;
+  centerWorkers: Item[] = [];
+  policies: Item[] = [];
+  typeArray: Item[] = [];
   enableAddType: boolean = false;
+  areaArray: Item[] = [];
   enableAddArea: boolean = false;
   postMethod: boolean = true;
   locationConfirm: boolean = true;
   loading: boolean = false;
-  private map!: L.Map;
-  private marker!: L.Marker;
-  private modal!: Modal;
   formulaVariables: Item[] = [
     { id: 0, name: 'consumo' },
     { id: 1, name: 'por_ciento_extra' },
@@ -112,12 +70,54 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     'name', 'adminAreaName', 'instalationType', 'policy', 'monthlyConsumptionLimit',
     'formula', 'teamWork', 'latitude', 'longitude', 'location', 'applyingDate'
   ];
-  data: any;
-  form: FormGroup;
-  centerWorkers: Item[] = [];
-  policies: Item[] = [];
-  typeArray: Item[] = [];
-  areaArray: Item[] = [];
+
+  constructor(
+    private fb: FormBuilder,
+    public global: GlobalModule,
+    private dataService: DataService,
+    private renderer: Renderer2,
+    private snackbar: SnackbarService,
+    private httpPolicy: PolicyService,
+    private httpUser: UserService
+  )
+  {
+    this.form = this.fb.group({
+      name: ['', Validators.required],
+      adminAreaName: ['', Validators.required],
+      instalationType: ['', Validators.required],
+      policy: null,
+      monthlyConsumptionLimit: [null, Validators.required],
+      formula: ['', Validators.required],
+      teamWork: null,
+      latitude: [null, Validators.required],
+      longitude: [null, Validators.required],
+      location: ['', Validators.required],
+      applyingDate: null
+    });
+    this.dataService.setData(null);
+
+    this.form.get('instalationType')!.valueChanges.subscribe(() => {
+      if (String(this.global.getControlValue(this.form, 'instalationType')).trim() == '') {
+        this.enableAddType = false;
+        return;
+      }
+
+      const type = this.global.getControlValue(this.form, 'instalationType');
+      if (type)
+        this.enableAddType = !type.id;
+    });
+
+    this.form.get('adminAreaName')!.valueChanges.subscribe(() => {
+      if (String(this.global.getControlValue(this.form, 'adminAreaName')).trim() == '') {
+        this.enableAddArea = false;
+        return;
+      }
+
+      const area = this.global.getControlValue(this.form, 'adminAreaName');
+      if (area)
+        this.enableAddArea = !area.id;
+    });
+  }
 
   ngOnInit() {
     const sub = this.dataService.currentData.subscribe(newData => {
@@ -130,17 +130,17 @@ export class ManageFormComponent implements OnInit, OnDestroy {
           if (this.data.policy) {
             const dateString = this.data.policy.applyingDate;
             const dateObject = new Date(dateString);
-            this.getControl('applyingDate').setValue(dateObject);
+            this.global.getControl(this.form, 'applyingDate').setValue(dateObject);
             const policyApplied: Item = {
               id: this.data.policy.efficiencyPolicy.policyId,
               name: this.data.policy.efficiencyPolicy.policyName
             };
-            this.getControl('policy').setValue(policyApplied);
+            this.global.getControl(this.form, 'policy').setValue(policyApplied);
           }
 
           const costFormula = this.data.costFormula;
           if (costFormula) {
-            this.getControl('formula').setValue(costFormula.expression);
+            this.global.getControl(this.form, 'formula').setValue(costFormula.expression);
             const tokens = costFormula.expression.split(" ");
             const array: Item[] = [];
             for (let i = 0; i < tokens.length; i++) {
@@ -174,11 +174,11 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
           this.getWorkers();
 
-          this.getControl('adminAreaName').setValue(area);
-          this.getControl('instalationType').setValue(instalType);
-          this.getControl('location').setValue(location);
-          this.getControl('latitude').setValue(latitude);
-          this.getControl('longitude').setValue(longitude);
+          this.global.getControl(this.form, 'adminAreaName').setValue(area);
+          this.global.getControl(this.form, 'instalationType').setValue(instalType);
+          this.global.getControl(this.form, 'location').setValue(location);
+          this.global.getControl(this.form, 'latitude').setValue(latitude);
+          this.global.getControl(this.form, 'longitude').setValue(longitude);
         }
 
         this.loading = newData[2];
@@ -191,24 +191,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-  }
-
-  /**
-   * Retrieves a FormControl instance by its name from the form.
-   * @param control The name of the control to retrieve.
-   * @returns The FormControl instance if found, otherwise undefined.
-   */
-  getControl(control: string): FormControl {
-    return this.form.get(control) as FormControl;
-  }
-
-  /**
-   * Retrieves the value of a FormControl by its name from the form.
-   * @param control The name of the control to get value from.
-   * @returns The value of the specified control if found, otherwise undefined.
-   */
-  getControlValue(control: string): any {
-    return this.form.get(control)?.value;
   }
 
   /**
@@ -239,7 +221,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         const members: Item[] = this.centerWorkers.filter(worker =>
           team.members.find((member: TeamMember) => member.userId == worker.id && member.userName == worker.name)
         );
-        this.getControl('teamWork').setValue(members);
+        this.global.getControl(this.form, 'teamWork').setValue(members);
       }
     });
   }
@@ -276,6 +258,10 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       { id: 2, name: 'aumento' }
     ]);
 
+    this.variablesValues = new Map<string, string>([
+      ["por_ciento_extra", "15"],
+      ["aumento","20"]
+    ]);
     this.updateFormula();
   }
 
@@ -293,9 +279,9 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const policy = this.getControlValue('policy');
+    const policy = this.global.getControlValue(this.form, 'policy');
     let options = [
-      this.getControlValue('adminAreaName').id, this.getControlValue('instalationType').id
+      this.global.getControlValue(this.form, 'adminAreaName').id, this.global.getControlValue(this.form, 'instalationType').id
     ];
     let response = ['Nombre de Área', 'Tipo de Instalación'];
     if (policy) {
@@ -305,7 +291,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
     const valid = this.global.allValid(options, response);
 
-    if(valid[1] == 'Nombre de Política' && this.getControlValue('policy') === "")
+    if(valid[1] == 'Nombre de Política' && this.global.getControlValue(this.form, 'policy') === "")
       valid[0] = true;
 
     if (valid[0]) {
@@ -331,7 +317,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   markAllAsTouched(): void {
     Object.keys(this.form.controls).forEach(field => {
-      const control = this.getControl(field);
+      const control = this.global.getControl(this.form, field);
       control?.markAsTouched();
     });
   }
@@ -345,7 +331,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   addType(): void {
     this.enableAddType = false;
     const instType: InstallationType = {
-      name: this.getControlValue('instalationType'),
+      name: this.global.getControlValue(this.form, 'instalationType'),
       description: null
     };
 
@@ -354,7 +340,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         this.snackbar.openSnackBar('Añadido exitosamente...');
         console.log('Created successfully:', response);
         this.getTypes();
-        this.getControl('instalationType').setValue(
+        this.global.getControl(this.form, 'instalationType').setValue(
           {
             id: response.id,
             name: response.name
@@ -408,9 +394,9 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * @param type The name of the installation type to be deleted.
    */
   deleteType(type: Item): void {
-    const instalType = this.getControlValue('instalationType');
+    const instalType = this.global.getControlValue(this.form, 'instalationType');
     if (instalType && instalType.id == type.id)
-      this.getControl('instalationType').setValue("");
+      this.global.getControl(this.form, 'instalationType').setValue("");
 
     this.global.httpCenter.deleteInstallationType(type.id).subscribe({
       next: (response) => {
@@ -435,7 +421,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   addArea(): void {
     this.enableAddArea = false;
     const area: AdminArea = {
-      name: this.getControlValue('adminAreaName'),
+      name: this.global.getControlValue(this.form, 'adminAreaName'),
       description: null
     };
 
@@ -444,7 +430,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         console.log('Created successfully:', response);
         this.snackbar.openSnackBar('Añadido exitosamente...');
         this.getAreas();
-        this.getControl('adminAreaName').setValue(
+        this.global.getControl(this.form, 'adminAreaName').setValue(
           {
             id: response.id,
             name: response.name
@@ -482,9 +468,9 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * @param area The name of the area to be deleted.
    */
   deleteArea(area: Item): void {
-    const adminArea = this.getControlValue('adminAreaName');
+    const adminArea = this.global.getControlValue(this.form, 'adminAreaName');
     if (adminArea && adminArea.id == area.id)
-      this.getControl('adminAreaName').setValue("");
+      this.global.getControl(this.form, 'adminAreaName').setValue("");
 
     this.global.httpCenter.deleteAdminArea(area.id).subscribe({
       next: (response) => {
@@ -673,10 +659,10 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   createCenter(): void {
     const location: Location = {
-      addressDetails: this.getControlValue('location'),
+      addressDetails: this.global.getControlValue(this.form, 'location'),
       coordenate: {
-        latitude: this.getControlValue('latitude'),
-        longitude: this.getControlValue('longitude')
+        latitude: this.global.getControlValue(this.form, 'latitude'),
+        longitude: this.global.getControlValue(this.form, 'longitude')
       }
     };
 
@@ -691,20 +677,20 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.global.httpCenter.postLocation(location).subscribe({
       next: (response) => {
         console.log("Location created successfully", response);
-        const policy = this.getControlValue('policy');
+        const policy = this.global.getControlValue(this.form, 'policy');
         let policyId = 0;
         if (policy) {
           policyId = policy.id;
         }
 
         const center: WorkCenterData = {
-          name: this.getControlValue('name'),
-          areaId: this.getControlValue('adminAreaName').id,
-          installationTypeId: this.getControlValue('instalationType').id,
+          name: this.global.getControlValue(this.form, 'name'),
+          areaId: this.global.getControlValue(this.form, 'adminAreaName').id,
+          installationTypeId: this.global.getControlValue(this.form, 'instalationType').id,
           locationId: response.id,
           managementTeamId: 0,
           efficiencyPolicyId: policyId,
-          consumptionLimit: this.getControlValue('monthlyConsumptionLimit')
+          consumptionLimit: this.global.getControlValue(this.form, 'monthlyConsumptionLimit')
         };
 
         this.createCenterInstance(center);
@@ -740,7 +726,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         const formula: Formula = {
           companyId: response.id,
           name: `${response.id}`,
-          expression: this.getControlValue('formula'),
+          expression: this.global.getControlValue(this.form, 'formula'),
           variables: variables
         };
 
@@ -774,9 +760,9 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    */
   editCenter(): void {
     const location: LocationEdited = {
-      addressDetails: this.getControlValue('location'),
-      latitude: this.getControlValue('latitude'),
-      longitude: this.getControlValue('longitude')
+      addressDetails: this.global.getControlValue(this.form, 'location'),
+      latitude: this.global.getControlValue(this.form, 'latitude'),
+      longitude: this.global.getControlValue(this.form, 'longitude')
     };
 
     this.editLocation(location);
@@ -791,7 +777,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.global.httpCenter.editLocation(location, this.data.location.id).subscribe({
       next: (response) => {
         console.log("Location edited successfully", response);
-        const teamWork = this.getControlValue('teamWork');
+        const teamWork = this.global.getControlValue(this.form, 'teamWork');
         if (teamWork && teamWork.length) {
           const team: ManagementTeam = {
             name: `${this.data.id}`,
@@ -805,7 +791,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
           else
             this.editTeam(team, response.id);
         } else {
-          const policy = this.getControlValue('policy');
+          const policy = this.global.getControlValue(this.form, 'policy');
           let policyId = 0;
           console.log('policy', policy);
           if (policy) {
@@ -813,13 +799,13 @@ export class ManageFormComponent implements OnInit, OnDestroy {
           }
 
           const center: WorkCenterData = {
-            name: this.getControlValue('name'),
-            areaId: this.getControlValue('adminAreaName').id,
-            installationTypeId: this.getControlValue('instalationType').id,
+            name: this.global.getControlValue(this.form, 'name'),
+            areaId: this.global.getControlValue(this.form, 'adminAreaName').id,
+            installationTypeId: this.global.getControlValue(this.form, 'instalationType').id,
             locationId: response.id,
             managementTeamId: 0,
             efficiencyPolicyId: policyId,
-            consumptionLimit: this.getControlValue('monthlyConsumptionLimit')
+            consumptionLimit: this.global.getControlValue(this.form, 'monthlyConsumptionLimit')
           };
 
           this.editCenterInstance(center);
@@ -842,20 +828,20 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.global.httpCenter.postManagementTeam(team, this.data.id).subscribe({
       next: (response) => {
         console.log("Team created successfully", response);
-        const policy = this.getControlValue('policy');
+        const policy = this.global.getControlValue(this.form, 'policy');
         let policyId = 0;
         if (policy) {
           policyId = policy.id;
         }
 
         const center: WorkCenterData = {
-          name: this.getControlValue('name'),
-          areaId: this.getControlValue('adminAreaName').id,
-          installationTypeId: this.getControlValue('instalationType').id,
+          name: this.global.getControlValue(this.form, 'name'),
+          areaId: this.global.getControlValue(this.form, 'adminAreaName').id,
+          installationTypeId: this.global.getControlValue(this.form, 'instalationType').id,
           locationId: locationID,
           managementTeamId: response.id,
           efficiencyPolicyId: policyId,
-          consumptionLimit: this.getControlValue('monthlyConsumptionLimit')
+          consumptionLimit: this.global.getControlValue(this.form, 'monthlyConsumptionLimit')
         };
 
         this.editCenterInstance(center);
@@ -878,20 +864,20 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.global.httpCenter.editManagementTeam(team, this.data.id, this.data.team.id).subscribe({
       next: (response) => {
         console.log("Team edited successfully", response);
-        const policy = this.getControlValue('policy');
+        const policy = this.global.getControlValue(this.form, 'policy');
         let policyId = 0;
         if (policy) {
           policyId = policy.id;
         }
 
         const center: WorkCenterData = {
-          name: this.getControlValue('name'),
-          areaId: this.getControlValue('adminAreaName').id,
-          installationTypeId: this.getControlValue('instalationType').id,
+          name: this.global.getControlValue(this.form, 'name'),
+          areaId: this.global.getControlValue(this.form, 'adminAreaName').id,
+          installationTypeId: this.global.getControlValue(this.form, 'instalationType').id,
           locationId: locationID,
           managementTeamId: response.id,
           efficiencyPolicyId: policyId,
-          consumptionLimit: this.getControlValue('monthlyConsumptionLimit')
+          consumptionLimit: this.global.getControlValue(this.form, 'monthlyConsumptionLimit')
         };
 
         this.editCenterInstance(center);
@@ -928,7 +914,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
           formulaId: this.data.costFormula.id,
           companyId: response.id,
           name: `${response.id}`,
-          expression: this.getControlValue('formula'),
+          expression: this.global.getControlValue(this.form, 'formula'),
           variables: variables
         };
 
@@ -950,7 +936,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     this.global.httpCenter.editFormula(formula).subscribe({
       next: (response) => {
         console.log("Formula edited successfully", response);
-        const teamWork = this.getControlValue('teamWork');
+        const teamWork = this.global.getControlValue(this.form, 'teamWork');
         if (teamWork && !teamWork.length && this.data.team.id) {
           this.global.httpCenter.deleteManagementTeam(this.data.id, this.data.team.id).subscribe({
             next: (response) => {

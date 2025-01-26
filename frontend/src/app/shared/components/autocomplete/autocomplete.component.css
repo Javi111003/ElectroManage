@@ -1,3 +1,6 @@
+.hidden {
+  display: none;
+}
 .example-full-width {
   width: auto;
 }
@@ -8,9 +11,6 @@ mat-label {
 .mat-mdc-option.mdc-list-item {
   align-items: center !important;
   background: white !important;
-}
-::ng-deep .cdk-overlay-pane:not(.mat-mdc-autocomplete-panel-above) div.mat-mdc-autocomplete-panel {
-  background-color: white !important;
 }
 .custom-option {
   border-bottom: 1px solid #ccc;
@@ -37,6 +37,9 @@ mat-icon:hover {
   flex-direction: row;
   align-items: center;
 }
-.hidden {
-  display: none;
+::ng-deep div.mat-mdc-autocomplete-panel.mat-mdc-autocomplete-visible {
+  background-color: white !important;
+}
+::ng-deep .cdk-overlay-pane:not(.mat-mdc-autocomplete-panel-above) div.mat-mdc-autocomplete-panel {
+  background-color: white !important;
 }

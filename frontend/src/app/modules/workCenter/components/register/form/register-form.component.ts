@@ -13,6 +13,12 @@ import { RegisterService } from '../../../../../services/register/register.servi
   styleUrl: './register-form.component.css'
 })
 export class RegisterFormComponent implements OnInit, OnDestroy {
+  @Input() data: any;
+  private subscriptions: Subscription = new Subscription();
+  loading: boolean = false;
+  postMethod: boolean = true;
+  form: FormGroup;
+
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
@@ -33,15 +39,9 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     this.dataService.setData(null);
     if (!this.global.getUserInfo().roles.includes('Admin')) {
       const workcenter = this.global.getUserInfo().company.name;
-      this.getControl('workCenter').setValue(workcenter);
+      this.global.getControl(this.form, 'workCenter').setValue(workcenter);
     }
   }
-
-  @Input() data: any;
-  private subscriptions: Subscription = new Subscription();
-  loading: boolean = false;
-  postMethod: boolean = true;
-  form: FormGroup;
 
   ngOnInit() {
     const sub = this.dataService.currentData.subscribe(newData => {
@@ -52,11 +52,11 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
           if (this.data.date) {
             const dateString = this.data.date;
             const dateObject = new Date(dateString);
-            this.getControl('date').setValue(dateObject);
+            this.global.getControl(this.form, 'date').setValue(dateObject);
           }
         }
         if (newData[1])
-          this.getControl('workCenter').setValue(newData[1]);
+          this.global.getControl(this.form, 'workCenter').setValue(newData[1]);
 
         this.postMethod = newData[2];
         this.loading = newData[3];
@@ -71,26 +71,6 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Retrieves a form control by its name.
-   *
-   * @param control - The name of the control to retrieve.
-   * @returns The FormControl associated with the given name.
-   */
-  getControl(control: string): FormControl {
-    return this.form.get(control) as FormControl;
-  }
-
-  /**
-   * Retrieves the value of a form control by its name.
-   *
-   * @param control - The name of the control whose value is to be retrieved.
-   * @returns The value of the specified form control.
-   */
-  getControlValue(control: string): any {
-    return this.form.get(control)?.value;
-  }
-
-  /**
    * Resets the form and sets default values for certain fields.
    *
    * This function resets the form to its initial state and sets the 'date' field
@@ -102,10 +82,10 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
-    this.getControl('date').setValue(yesterday);
+    this.global.getControl(this.form, 'date').setValue(yesterday);
     if (!this.global.getUserInfo().roles.includes('Admin')) {
       const workcenter = this.global.getUserInfo().company.name;
-      this.getControl('workCenter').setValue(workcenter);
+      this.global.getControl(this.form, 'workCenter').setValue(workcenter);
     }
   }
 
@@ -147,7 +127,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
    */
   markAllAsTouched(): void {
     Object.keys(this.form.controls).forEach(field => {
-      const control = this.getControl(field);
+      const control = this.global.getControl(this.form, field);
       control?.markAsTouched();
     });
   }
@@ -216,9 +196,9 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
    */
   createRegister(): void {
     const register: Register = {
-      companyId: this.getControlValue('workCenter').id,
-      consumption: this.getControlValue('consumption'),
-      date: this.global.formatLocalDate(this.getControlValue('date'))
+      companyId: this.global.getControlValue(this.form, 'workCenter').id,
+      consumption: this.global.getControlValue(this.form, 'consumption'),
+      date: this.global.formatLocalDate(this.global.getControlValue(this.form, 'date'))
     };
     console.log(register);
     this.handleRegisterRequest<Register>(register, (data) =>
@@ -234,8 +214,8 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
    */
   editRegister(): void {
     const register: RegisterInfo = {
-      consumption: this.getControlValue('consumption'),
-      date: this.global.formatLocalDate(this.getControlValue('date'))
+      consumption: this.global.getControlValue(this.form, 'consumption'),
+      date: this.global.formatLocalDate(this.global.getControlValue(this.form, 'date'))
     };
     this.handleRegisterRequest<RegisterInfo>(register, (data) =>
       this.httpRegister.editRegister(this.data.id, data), "Editado exitosamente...", "editar"

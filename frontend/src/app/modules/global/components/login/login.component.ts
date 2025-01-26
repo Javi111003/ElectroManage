@@ -12,6 +12,9 @@ import { Credential } from '../../../../models/credential.interface';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+  form: FormGroup;
+  loading: boolean = false;
+
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -24,9 +27,6 @@ export class LoginComponent {
       password: ['', Validators.required]
     });
   }
-
-  form: FormGroup;
-  loading: boolean = false;
 
   /**
    * Initializes the login form with the required fields.

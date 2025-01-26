@@ -14,6 +14,12 @@ import { SnackbarService } from '../../../../../services/snackbar/snackbar.servi
   styleUrls: ['./manage-form.component.css']
 })
 export class ManageFormComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription = new Subscription();
+  data: any;
+  form: FormGroup;
+  postMethod: boolean = true;
+  loading: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     public global: GlobalModule,
@@ -35,15 +41,9 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         id: id,
         name: name
       };
-      this.getControl('workCenter').setValue(workCenter);
+      this.global.getControl(this.form, 'workCenter').setValue(workCenter);
     }
   }
-
-  private subscriptions: Subscription = new Subscription();
-  data: any;
-  form: FormGroup;
-  postMethod: boolean = true;
-  loading: boolean = false;
 
   ngOnInit() {
     this.global.Reset();
@@ -59,7 +59,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
           this.form.patchValue(this.data);
 
         if (center)
-          this.getControl('workCenter').setValue(center);
+          this.global.getControl(this.form, 'workCenter').setValue(center);
       }
     });
 
@@ -68,26 +68,6 @@ export class ManageFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-  }
-
-  /**
-   * Retrieves the FormControl object for a given control name from the form.
-   * This method is used to access and manipulate form controls dynamically.
-   * @param control The name of the control to retrieve.
-   * @returns The FormControl object associated with the specified control name.
-   */
-  getControl(control: string): FormControl {
-    return this.form.get(control) as FormControl;
-  }
-
-  /**
-   * Retrieves the value of a given control from the form.
-   * This method is used to access the current value of a form control.
-   * @param control The name of the control to retrieve the value from.
-   * @returns The current value of the specified control.
-   */
-  getControlValue(control: string): any {
-    return this.form.get(control)?.value;
   }
 
   /**
@@ -114,7 +94,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.getControlValue('workCenter').id) {
+    if (this.global.getControlValue(this.form, 'workCenter').id) {
       this.global.openDialog('¿Está seguro de que desea guardar los cambios?', true).subscribe(
       result => {
         if (result) {
@@ -162,9 +142,9 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * The office instance is then posted to the server for creation.
    */
   getOfficeObject(): Office {
-    const id = this.getControlValue('workCenter').id;
-    const name = this.getControlValue('officeName');
-    const description = this.getControlValue('description');
+    const id = this.global.getControlValue(this.form, 'workCenter').id;
+    const name = this.global.getControlValue(this.form, 'officeName');
+    const description = this.global.getControlValue(this.form, 'description');
     const office = {
       companyId: id,
       name: name,

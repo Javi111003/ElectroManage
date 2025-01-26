@@ -37,7 +37,6 @@ export class ChipsComponent {
       ? this.allOptions.filter(option => option.name.toLowerCase().includes(currentOption))
       : this.allOptions.slice();
   });
-  dropListOrientation: 'horizontal' | 'vertical' = 'horizontal';
 
   /**
    * This function is used to add a new option to the chip list.
@@ -64,6 +63,17 @@ export class ChipsComponent {
     this.currentOption.set('');
   }
 
+  /**
+   * Handles the click event for a chip and performs various operations based on the chip's name.
+   *
+   * This function takes the name of the chip, trims any extra whitespace, and creates an object with a unique ID
+   * and the trimmed name. It then validates the name and if the validation passes, updates the options list and
+   * appends the new object to the allOptions array. Finally, it calls another function with the value and validation result
+   * and resets the current option.
+   *
+   * @param name - The name of the chip that was clicked.
+   * @void
+   */
   onChipClick(name: string): void {
     const value = (name || '').trim();
     const id = this.allOptions.length;
@@ -82,7 +92,16 @@ export class ChipsComponent {
     this.currentOption.set('');
   }
 
-
+  /**
+   * Handles the drop event for drag-and-drop functionality and updates the options list.
+   *
+   * This function takes a drag-and-drop event, moves the item within the options array
+   * from its previous index to its current index, logs the event to the console,
+   * and returns the updated options array.
+   *
+   * @param {CdkDragDrop<Item[]>} event - The drag-and-drop event containing information about the moved item.
+   * @void
+   */
   drop(event: CdkDragDrop<Item[]>) {
     this.options.update(options => {
       moveItemInArray(options, event.previousIndex, event.currentIndex);

@@ -25,9 +25,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   @Input() showFooter: boolean = false;
   @Input() deleteFunction: (...args: any[]) => any = () => {};
   @Input() editFunction: (item: any) => any = (item) => {};
-
   @ViewChild(MatPaginator) paginator: MatPaginator = [][0];
-
   headings: string[] = [];
 
   ngAfterViewInit() {
@@ -43,7 +41,6 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.headings.push('deleteColumn');
     }
   }
-
 
   /**
    * Truncates a string to fit within the width of the table cell, appending ellipsis if necessary.
@@ -61,7 +58,6 @@ export class TableComponent implements OnInit, AfterViewInit {
 
     return element;
   }
-
 
   /**
    * Generates a tooltip string for a given element based on its length and the number of displayed columns.

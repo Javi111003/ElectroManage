@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="col-12">
-      <div class="table" [class.hidden]="!noResults">
+      <div class="table" [class.hidden]="noResults">
         <app-table
           [dataSource]="dataSource"
           [displayedColumns]="displayedColumns"
@@ -21,7 +21,7 @@
           [editFunction]="edit.bind(this)"
         ></app-table>
       </div>
-      <div *ngIf="noResults">
+      <div [class.hidden]="!noResults">
         <app-no-results></app-no-results>
       </div>
     </div>

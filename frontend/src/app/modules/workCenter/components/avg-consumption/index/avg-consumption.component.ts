@@ -20,6 +20,29 @@ import { Item } from '../../../../../shared/shared.module';
   ]
 })
 export class AvgConsumptionComponent implements OnInit {
+  form: FormGroup;
+  selectedOptionsIds: (number | any) [] = [];
+  options: Item[] = [];
+  columnsToDisplay = ['Centro de Trabajo'];
+  columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
+  expandedElements: string[] = [];
+  showTable: boolean = false;
+  dataSources: { [key: string]: MatTableDataSource<any> } = {};
+  displayedColumns: ConfigColumn[] = [
+    {
+      title: 'Año',
+      field: 'year'
+    },
+    {
+      title: 'Costo ($)',
+      field: 'meanCost'
+    },
+    {
+      title: 'Consumo Promedio (Kw/h)',
+      field: 'meanConsumption'
+    }
+  ];
+
   constructor (
     public global: GlobalModule,
     private fb: FormBuilder
@@ -41,39 +64,16 @@ export class AvgConsumptionComponent implements OnInit {
         name: name
       };
       this.options = [workCenter];
-      this.getControl('workCenters').setValue(this.options);
+      this.global.getControl(this.form, 'workCenters').setValue(this.options);
       this.findCenterIds();
     }
   }
-
-  form: FormGroup;
-  selectedOptionsIds: (number | any) [] = [];
-  options: Item[] = [];
-  dataSources: { [key: string]: MatTableDataSource<any> } = {};
-  displayedColumns: ConfigColumn[] = [
-    {
-      title: 'Año',
-      field: 'year'
-    },
-    {
-      title: 'Costo ($)',
-      field: 'meanCost'
-    },
-    {
-      title: 'Consumo Promedio (Kw/h)',
-      field: 'meanConsumption'
-    }
-  ];
-  columnsToDisplay = ['Centro de Trabajo'];
-  columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
-  expandedElements: string[] = [];
-  showTable: boolean = false;
 
   ngOnInit() {
     this.global.Reset();
     this.global.getWorkCenters();
     if (this.global.getUserInfo().roles.includes('Admin')) {
-      this.getControl('workCenters').valueChanges.subscribe(() => {
+      this.global.getControl(this.form, 'workCenters').valueChanges.subscribe(() => {
         this.findCenterIds();
         this.expandedElements = [];
       });
@@ -81,28 +81,10 @@ export class AvgConsumptionComponent implements OnInit {
   }
 
   /**
-   * This function is used to get the form control by its name.
-   * @param control The name of the form control.
-   * @returns The form control with the specified name.
-   */
-  getControl(control: string): FormControl {
-    return this.form.get(control) as FormControl;
-  }
-
-  /**
-   * This function is used to get the value of a form control by its name.
-   * @param control The name of the form control.
-   * @returns The value of the form control with the specified name.
-   */
-  getControlValue(control: string): any {
-    return this.form.get(control)?.value;
-  }
-
-  /**
    * Finds the IDs of the selected work centers
    */
   findCenterIds() {
-    this.selectedOptionsIds = this.getControlValue('workCenters').map((item: Item) => item.id);
+    this.selectedOptionsIds = this.global.getControlValue(this.form, 'workCenters').map((item: Item) => item.id);
   }
 
   /**
@@ -138,7 +120,7 @@ export class AvgConsumptionComponent implements OnInit {
    */
   onConsultClick() {
     if (!this.showTable) {
-      const workCenters = this.getControlValue('workCenters');
+      const workCenters = this.global.getControlValue(this.form, 'workCenters');
       if (workCenters && workCenters.length > 0)
       {
         this.showTable = true;
@@ -156,6 +138,7 @@ export class AvgConsumptionComponent implements OnInit {
    */
   onProyectionClick() {
     this.global.openDialog('No esta implementado');
+    this.dataSources = {};
   }
 
   /**

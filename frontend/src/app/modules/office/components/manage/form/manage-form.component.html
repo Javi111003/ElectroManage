@@ -28,7 +28,7 @@
             <app-autocomplete class="form-control" id="workCenter"
               [options]="global.workCenters"
               [label]="'Centros de trabajo'"
-              [control]="getControl('workCenter')"
+              [control]="global.getControl(form, 'workCenter')"
               [isDisabled]="!global.getUserInfo().roles.includes('Admin')"
             ></app-autocomplete>
             <div *ngIf="form.get('workCenter')?.invalid && form.get('workCenter')?.touched" class="invalid-feedback">

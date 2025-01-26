@@ -34,7 +34,7 @@
                 <app-autocomplete class="form-control" id="adminAreaName"
                   [options]="areaArray"
                   [label]="'Áreas'"
-                  [control]="getControl('adminAreaName')"
+                  [control]="global.getControl(form, 'adminAreaName')"
                   [showIcon]="true"
                   [deleteOption]="deleteArea.bind(this)"
                 ></app-autocomplete>
@@ -59,7 +59,7 @@
                 <app-autocomplete class="form-control" id="instalationType"
                   [options]="typeArray"
                   [label]="'Tipos'"
-                  [control]="getControl('instalationType')"
+                  [control]="global.getControl(form, 'instalationType')"
                   [showIcon]="true"
                   [deleteOption]="deleteType.bind(this)"
                 ></app-autocomplete>
@@ -113,14 +113,14 @@
                 <app-autocomplete class="form-control" id="policy"
                   [options]="policies"
                   [label]="'Políticas'"
-                  [control]="getControl('policy')"
+                  [control]="global.getControl(form, 'policy')"
                 ></app-autocomplete>
               </div>
-              <div *ngIf="getControlValue('policy') && getControlValue('policy').id" class="col-4 col-sm-4">
+              <div *ngIf="global.getControlValue(form, 'policy') && global.getControlValue(form, 'policy').id" class="col-4 col-sm-4">
                 <label for="applyingDate" class="form-label">Fecha de aplicación</label> <br>
                 <app-datepicker class="form-control" id="applyingDate"
                   [filter]="filterDate"
-                  [control]="getControl('applyingDate')"
+                  [control]="global.getControl(form, 'applyingDate')"
                 ></app-datepicker>
               </div>
               <div *ngIf="!postMethod" class="col-4 col-sm-4">
@@ -128,7 +128,7 @@
                 <app-checkbox class="form-control" id="teamWork"
                   [options]="centerWorkers"
                   [label]="'Trabajadores'"
-                  [control]="getControl('teamWork')"
+                  [control]="global.getControl(form, 'teamWork')"
                 ></app-checkbox>
               </div>
             </div>

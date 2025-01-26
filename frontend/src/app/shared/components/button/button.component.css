@@ -15,9 +15,6 @@ button:hover {
   background-color: #00203b;
   color: white;
 }
-.hidden {
-  display: none;
-}
 .disabled-select {
   opacity: 0.5;
   pointer-events: none;
@@ -25,4 +22,7 @@ button:hover {
 .button app-progress-spinner {
   position: relative;
   left: 45%;
+}
+.hidden {
+  display: none;
 }

@@ -18,54 +18,6 @@ declare var bootstrap: any;
 })
 
 export class EquipmentComponent implements OnInit, OnDestroy {
-  constructor(
-    private fb: FormBuilder,
-    public global: GlobalModule,
-    private dataService: DataService,
-    private snackbar: SnackbarService
-  ) {
-    this.form = this.fb.group({
-      workCenter: '',
-      office: ''
-    });
-
-    this.form.valueChanges.subscribe(() => {
-      this.showTable = false;
-      this.dataSource.data = [];
-    });
-
-    if (!this.global.getUserInfo().roles.includes('Admin')) {
-      const name = this.global.getUserInfo().company.name;
-      const id = this.global.getUserInfo().company.id;
-      const workCenter: Item = {
-        id: id,
-        name: name
-      };
-      this.getControl('workCenter').setValue(workCenter);
-      this.global.getOfficesByCenter(id);
-    }
-
-    this.form.get('workCenter')?.valueChanges.subscribe(() => {
-      this.getControl('office').reset();
-      this.global.offices = [];
-      if (this.getControlValue('workCenter')) {
-        const id = this.getControlValue('workCenter').id;
-        if (id) {
-          this.global.getOfficesByCenter(id);
-        }
-      }
-    });
-
-    this.form.get('office')?.valueChanges.subscribe(() => {
-      if (this.getControlValue('office')) {
-        const id = this.getControlValue('office').id;
-        if (id) {
-          this.getEquipmentsByOffice();
-        }
-      }
-    });
-  }
-
   private subscriptions: Subscription = new Subscription();
   data: any;
   form: FormGroup;
@@ -135,12 +87,60 @@ export class EquipmentComponent implements OnInit, OnDestroy {
     }
   ];
 
+  constructor(
+    private fb: FormBuilder,
+    public global: GlobalModule,
+    private dataService: DataService,
+    private snackbar: SnackbarService
+  ) {
+    this.form = this.fb.group({
+      workCenter: '',
+      office: ''
+    });
+
+    this.form.valueChanges.subscribe(() => {
+      this.showTable = false;
+      this.dataSource.data = [];
+    });
+
+    if (!this.global.getUserInfo().roles.includes('Admin')) {
+      const name = this.global.getUserInfo().company.name;
+      const id = this.global.getUserInfo().company.id;
+      const workCenter: Item = {
+        id: id,
+        name: name
+      };
+      this.global.getControl(this.form, 'workCenter').setValue(workCenter);
+      this.global.getOfficesByCenter(id);
+    }
+
+    this.form.get('workCenter')?.valueChanges.subscribe(() => {
+      this.global.getControl(this.form, 'office').reset();
+      this.global.offices = [];
+      if (this.global.getControlValue(this.form, 'workCenter')) {
+        const id = this.global.getControlValue(this.form, 'workCenter').id;
+        if (id) {
+          this.global.getOfficesByCenter(id);
+        }
+      }
+    });
+
+    this.form.get('office')?.valueChanges.subscribe(() => {
+      if (this.global.getControlValue(this.form, 'office')) {
+        const id = this.global.getControlValue(this.form, 'office').id;
+        if (id) {
+          this.getEquipmentsByOffice();
+        }
+      }
+    });
+  }
+
   ngOnInit(): void {
     this.global.Reset();
     this.global.getWorkCenters();
 
     const sub = this.dataService.dataUpdated$.subscribe(() => {
-      const office = this.getControlValue('office');
+      const office = this.global.getControlValue(this.form, 'office');
       if (office && office.id) {
         this.getEquipmentsByOffice();
       }
@@ -153,29 +153,11 @@ export class EquipmentComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * This function is used to get the form control by its name.
-   * @param control The name of the form control.
-   * @returns The form control with the specified name.
-   */
-  getControl(control: string): FormControl {
-    return this.form.get(control) as FormControl;
-  }
-
-  /**
-   * This function is used to get the value of a form control by its name.
-   * @param control The name of the form control.
-   * @returns The value of the form control with the specified name.
-   */
-  getControlValue(control: string): any {
-    return this.form.get(control)?.value;
-  }
-
-  /**
    * This function retrieves the list of equipment based on the selected office.
    * It updates the dataSource for the MatTable with the list of equipment.
    */
   getEquipmentsByOffice(): void {
-    const office = this.getControlValue('office');
+    const office = this.global.getControlValue(this.form, 'office');
     if (office && office.id) {
       this.global.httpOffice.getEquipmentList(office.id).subscribe(equipments => {
         this.equipmentObjects = equipments;
@@ -191,8 +173,8 @@ export class EquipmentComponent implements OnInit, OnDestroy {
    */
   onConsultClick(): void {
     if (!this.showTable) {
-      const center = this.getControlValue('workCenter');
-      const office = this.getControlValue('office');
+      const center = this.global.getControlValue(this.form, 'workCenter');
+      const office = this.global.getControlValue(this.form, 'office');
       if (center && office && center.id && office.id) {
         this.showTable = true;
       } else {
@@ -209,8 +191,8 @@ export class EquipmentComponent implements OnInit, OnDestroy {
    * and then opens the modal for adding a new equipment.
    */
   onAddClick(): void {
-    const center = this.getControlValue('workCenter');
-    const office = this.getControlValue('office');
+    const center = this.global.getControlValue(this.form, 'workCenter');
+    const office = this.global.getControlValue(this.form, 'office');
     this.dataService.setData([null, center, office, true]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
@@ -258,8 +240,8 @@ export class EquipmentComponent implements OnInit, OnDestroy {
    */
   edit(item: any): void {
     this.dataService.setData([
-      item, this.getControlValue('workCenter'),
-      this.getControlValue('office'), false
+      item, this.global.getControlValue(this.form, 'workCenter'),
+      this.global.getControlValue(this.form, 'office'), false
     ]);
     const modalElement = document.getElementById('exampleModal') as HTMLElement;
     const modal = new bootstrap.Modal(modalElement);

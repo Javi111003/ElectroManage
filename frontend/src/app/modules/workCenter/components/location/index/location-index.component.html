@@ -3,7 +3,7 @@
       <app-autocomplete class="mb-3"
         [label]="'Centro de Trabajo'"
         [options]="global.workCenters"
-        [control]="getControl('workCenter')"
+        [control]="global.getControl(form, 'workCenter')"
       >
       </app-autocomplete>
       <button class="location-btn mb-3" (click)="onLocateClick()">

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { GlobalModule } from '../../../../global/global.module';
@@ -15,14 +15,7 @@ declare var bootstrap: any;
   templateUrl: './manage.component.html',
   styleUrl: './manage.component.css'
 })
-export class ManageComponent implements OnInit {
-  constructor (
-    public global: GlobalModule,
-    private policyService: PolicyService,
-    private dataService: DataService,
-    private snackbar: SnackbarService
-  ) {}
-
+export class ManageComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
   noResults: boolean = false;
   policyStringArray: string[] = [];
@@ -39,6 +32,13 @@ export class ManageComponent implements OnInit {
       field: 'description'
     },
   ];
+
+  constructor (
+    public global: GlobalModule,
+    private policyService: PolicyService,
+    private dataService: DataService,
+    private snackbar: SnackbarService
+  ) {}
 
   ngOnInit(): void {
     this.getPolicies();
