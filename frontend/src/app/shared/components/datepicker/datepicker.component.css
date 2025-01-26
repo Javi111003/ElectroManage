@@ -12,3 +12,7 @@
 .mdc-text-field__input {
   color: black !important;
 }
+.disabled-select {
+  opacity: 0.5;
+  pointer-events: none;
+}

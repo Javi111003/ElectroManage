@@ -109,6 +109,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         }
       });
     } else {
+      this.loading = false;
       this.global.openDialog("Por favor, selecciona un Centro de Trabajo válido.");
     }
   }
