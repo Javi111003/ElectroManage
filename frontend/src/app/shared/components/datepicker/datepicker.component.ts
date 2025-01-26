@@ -9,8 +9,14 @@ import { DateFilterFn } from '@angular/material/datepicker';
   styleUrl: './datepicker.component.css',
   providers: [
     provideNativeDateAdapter(),
-    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
-    { provide: LOCALE_ID, useValue: 'es' }
+    {
+      provide: MAT_DATE_LOCALE,
+      useValue: 'es-ES'
+    },
+    {
+      provide: LOCALE_ID,
+      useValue: 'es'
+    }
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
@@ -19,4 +25,5 @@ export class DatepickerComponent {
   @Input() filter: DateFilterFn<any> = [][0];
   @Input() control: FormControl = new FormControl();
   @Input() label: string = 'Elige una fecha';
+  @Input() isDisabled: boolean = false;
 }

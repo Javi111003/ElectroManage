@@ -127,5 +127,6 @@ export interface WorkCenterData {
   locationId: number;
   managementTeamId: number;
   efficiencyPolicyId: number;
+  policyApplyingDate: string;
   consumptionLimit: number;
 }

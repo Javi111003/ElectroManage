@@ -121,6 +121,7 @@
                 <app-datepicker class="form-control" id="applyingDate"
                   [filter]="filterDate"
                   [control]="global.getControl(form, 'applyingDate')"
+                  [isDisabled]="checkApplyingDateDesabled()"
                 ></app-datepicker>
               </div>
               <div *ngIf="!postMethod" class="col-4 col-sm-4">
@@ -152,7 +153,7 @@
                   [options]="options"
                   [function]="updateFormula.bind(this)"
                   [deleteOption]="updateFormula.bind(this)"
-                  [validateOption]="validateOption.bind(this)"
+                  [validateOption]="validateFormulaOption.bind(this)"
                 ></app-chips>
               </div>
               <div class="col-sm-3">
