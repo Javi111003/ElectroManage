@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { DashboardService } from '../../../../services/dashboard/dashboard.service';
 import { GlobalModule } from '../../global.module';
@@ -28,12 +28,15 @@ export class IndexComponent implements OnInit{
   topConsumingCenters: any[] = [];
   topBiggestCenters: any[] = [];
   topWarnedCenters: MostWarnedCenter[] = [];
+  innerWidth: number;
 
   constructor(
     private global: GlobalModule,
     private http: DashboardService,
     public httpCenter: WorkCenterService,
-  ){ }
+  ) {
+    this.innerWidth = window.innerWidth;
+  }
 
   /**
    * Initializes the component by getting user information and loading data.
@@ -200,8 +203,18 @@ export class IndexComponent implements OnInit{
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
-          legend: { display: true, position: 'top' }
+          legend: {
+            display: true,
+            position: window.innerWidth <= 768 ? 'bottom' : 'top',
+            labels: {
+              boxWidth: window.innerWidth <= 768 ? 10 : 20,
+              font: {
+                size: window.innerWidth <= 768 ? 10 : 12
+              }
+            }
+          }
         },
         scales: {
           x: { title: { display: true, text: 'Meses' } },
@@ -233,8 +246,18 @@ export class IndexComponent implements OnInit{
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
-          legend: { position: 'bottom' }
+          legend: {
+            display: true,
+            position: window.innerWidth <= 768 ? 'bottom' : 'top',
+            labels: {
+              boxWidth: window.innerWidth <= 768 ? 10 : 20,
+              font: {
+                size: window.innerWidth <= 768 ? 10 : 12
+              }
+            }
+          }
         }
       }
     });
@@ -273,7 +296,16 @@ export class IndexComponent implements OnInit{
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { display: true, position: 'top' }
+          legend: {
+            display: true,
+            position: window.innerWidth <= 768 ? 'bottom' : 'top',
+            labels: {
+              boxWidth: window.innerWidth <= 768 ? 10 : 20,
+              font: {
+                size: window.innerWidth <= 768 ? 10 : 12
+              }
+            }
+          }
         },
         scales: {
           x: { title: { display: true, text: 'Centros' } },
@@ -310,8 +342,18 @@ export class IndexComponent implements OnInit{
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
-          legend: { display: true, position: 'top' }
+          legend: {
+            display: true,
+            position: window.innerWidth <= 768 ? 'bottom' : 'top',
+            labels: {
+              boxWidth: window.innerWidth <= 768 ? 10 : 20,
+              font: {
+                size: window.innerWidth <= 768 ? 10 : 12
+              }
+            }
+          }
         },
         scales: {
           x: { title: { display: true, text: 'Meses' } },
@@ -347,6 +389,15 @@ export class IndexComponent implements OnInit{
       return this.topConsumingCenters[0]?.companyName || '';
     } else {
       return this.userInfo.company?.name || 'Mi Empresa';
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.innerWidth = window.innerWidth;
+    if (this.chart) {
+      this.chart.destroy();
+      this.loadAllData();
     }
   }
 }

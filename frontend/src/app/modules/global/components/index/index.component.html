@@ -1,111 +1,115 @@
 <div style="padding: 1rem;">
     <div class="dashboard" *ngIf="!userInfo.roles.includes('Admin')">
-        <section class="consumption">
-            <div class="workcenter-limit-list">
-                <h6>Datos de Consumo de {{ getCompanyName() }}</h6>
-                <ul id="limitList">
-                    <li class="legend">
-                        <span class="center-name"><strong>Nombre</strong></span>
-                        <span class="excess"><strong>Consumo</strong></span>
-                        <span class="limit"><strong>Límite</strong></span>
-                    </li>
-                    <li class="workcenter-item" *ngFor="let center of topConsumingCenters">
-                        <span>{{ center.companyName }}</span>
-                        <span style="color: red;">{{ center.totalConsumption }}</span>
-                        <span style="color: gray;">{{ center.consumptionLimit}}</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="workcenter-graph">
-                <canvas id="excessChart"></canvas>
-            </div>
-        </section>
-        <section class="alerts">
-            <div class="workcenter-alerts-list">
-                <h6>Alertas de {{ getCompanyName() }}</h6>
-                <ul id="alertList">
-                    <li class="legend">
-                        <span class="center-name"><strong>Nombre</strong></span>
-                        <span class="alerts-legend"><strong>Alertas</strong></span>
-                    </li>
-                    <li class="workcenter-item" *ngFor="let alert of topWarnedCenters">
-                        <span class="name">{{ alert.company.name }}</span>
-                        <span style="color: red;">{{ alert.countWarning }}</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="alert-graph">
-                <canvas id="alertTrendChart"></canvas>
-            </div>
-        </section>
+        <div class="dashboard-content" [class.mobile]="innerWidth <= 768">
+            <section class="consumption">
+                <div class="workcenter-limit-list">
+                    <h6>Datos de Consumo de {{ getCompanyName() }}</h6>
+                    <ul id="limitList">
+                        <li class="legend">
+                            <span class="center-name"><strong>Nombre</strong></span>
+                            <span class="excess"><strong>Consumo</strong></span>
+                            <span class="limit"><strong>Límite</strong></span>
+                        </li>
+                        <li class="workcenter-item" *ngFor="let center of topConsumingCenters">
+                            <span>{{ center.companyName }}</span>
+                            <span style="color: red;">{{ center.totalConsumption }}</span>
+                            <span style="color: gray;">{{ center.consumptionLimit}}</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="workcenter-graph">
+                    <canvas id="excessChart"></canvas>
+                </div>
+            </section>
+            <section class="alerts">
+                <div class="workcenter-alerts-list">
+                    <h6>Alertas de {{ getCompanyName() }}</h6>
+                    <ul id="alertList">
+                        <li class="legend">
+                            <span class="center-name"><strong>Nombre</strong></span>
+                            <span class="alerts-legend"><strong>Alertas</strong></span>
+                        </li>
+                        <li class="workcenter-item" *ngFor="let alert of topWarnedCenters">
+                            <span class="name">{{ alert.company.name }}</span>
+                            <span style="color: red;">{{ alert.countWarning }}</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="alert-graph">
+                    <canvas id="alertTrendChart"></canvas>
+                </div>
+            </section>
+        </div>
     </div>
     <div class="dashboard" *ngIf="userInfo.roles.includes('Admin')">
-        <section class="work-centers">
-            <div class="total-centers">
-                <div class="info">
-                    <div class="total">
-                        <h2><strong>Total Centros:</strong></h2>
-                        <p>{{totalCentersPerYear}}</p>
+        <div class="dashboard-content" [class.mobile]="innerWidth <= 768">
+            <section class="work-centers">
+                <div class="total-centers">
+                    <div class="info">
+                        <div class="total">
+                            <h2><strong>Total Centros:</strong></h2>
+                            <p>{{totalCentersPerYear}}</p>
+                        </div>
+                        <div class="total">
+                            <h2><strong>Nuevos este mes:</strong></h2>
+                            <p>{{createdCentersThisMonth}}</p>
+                        </div>
+                        <div class="total">
+                            <h2><strong>Cerrados este mes:</strong></h2>
+                            <p>{{deletedCentersThisMonth}}</p>
+                        </div>
                     </div>
-                    <div class="total">
-                        <h2><strong>Nuevos este mes:</strong></h2>
-                        <p>{{createdCentersThisMonth}}</p>
-                    </div>
-                    <div class="total">
-                        <h2><strong>Cerrados este mes:</strong></h2>
-                        <p>{{deletedCentersThisMonth}}</p>
+                    <div class="graph">
+                        <canvas id="centersChart"></canvas>
                     </div>
                 </div>
-                <div class="graph">
-                    <canvas id="centersChart"></canvas>
+                <div class="pie-chart-container">
+                    <div class="text">
+                        <p><strong>Cantidad de Oficinas</strong></p>
+                    </div>
+                    <div>
+                        <canvas id="officesChart"></canvas>
+                    </div>
                 </div>
-            </div>
-            <div class="pie-chart-container">
-                <div class="text">
-                    <p><strong>Cantidad de Oficinas</strong></p>
+            </section>
+            <section class="consumption">
+                <div class="workcenter-limit-list">
+                    <h6>Centros con Exceso de Consumo</h6>
+                    <ul id="limitList">
+                        <li class="legend">
+                            <span class="center-name"><strong>Nombre</strong></span>
+                            <span class="excess"><strong>Consumo</strong></span>
+                            <span class="limit"><strong>Límite</strong></span>
+                        </li>
+                        <li class="workcenter-item" *ngFor="let center of topConsumingCenters">
+                            <span>{{ center.companyName }}</span>
+                            <span style="color: red;">{{ center.totalConsumption }}</span>
+                            <span style="color: gray;">{{ center.consumptionLimit }}</span>
+                        </li>
+                    </ul>
                 </div>
-                <div>
-                    <canvas id="officesChart"></canvas>
+                <div class="workcenter-graph">
+                    <canvas id="excessChart"></canvas>
                 </div>
-            </div>
-        </section>
-        <section class="consumption">
-            <div class="workcenter-limit-list">
-                <h6>Centros con Exceso de Consumo</h6>
-                <ul id="limitList">
-                    <li class="legend">
-                        <span class="center-name"><strong>Nombre</strong></span>
-                        <span class="excess"><strong>Consumo</strong></span>
-                        <span class="limit"><strong>Límite</strong></span>
-                    </li>
-                    <li class="workcenter-item" *ngFor="let center of topConsumingCenters">
-                        <span>{{ center.companyName }}</span>
-                        <span style="color: red;">{{ center.totalConsumption }}</span>
-                        <span style="color: gray;">{{ center.consumptionLimit }}</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="workcenter-graph">
-                <canvas id="excessChart"></canvas>
-            </div>
-        </section>
-        <section class="alerts">
-            <div class="workcenter-alerts-list">
-                <h6>Centros con mayor cantidad de Alertas</h6>
-                <ul id="alertList">
-                    <li class="legend">
-                        <span class="center-name"><strong>Nombre</strong></span>
-                        <span class="alerts-legend"><strong>Alertas</strong></span>
-                    </li>
-                    <li class="workcenter-item" *ngFor="let alert of topWarnedCenters">
-                        <span class="name">{{ alert.company.name }}</span>
-                        <span style="color: red;">{{ alert.countWarning }}</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="alert-graph">
-                <canvas id="alertTrendChart"></canvas>
-            </div>
-        </section>
+            </section>
+            <section class="alerts">
+                <div class="workcenter-alerts-list">
+                    <h6>Centros con mayor cantidad de Alertas</h6>
+                    <ul id="alertList">
+                        <li class="legend">
+                            <span class="center-name"><strong>Nombre</strong></span>
+                            <span class="alerts-legend"><strong>Alertas</strong></span>
+                        </li>
+                        <li class="workcenter-item" *ngFor="let alert of topWarnedCenters">
+                            <span class="name">{{ alert.company.name }}</span>
+                            <span style="color: red;">{{ alert.countWarning }}</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="alert-graph">
+                    <canvas id="alertTrendChart"></canvas>
+                </div>
+            </section>
+        </div>
     </div>
 </div>
