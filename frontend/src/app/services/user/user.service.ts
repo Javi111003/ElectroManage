@@ -30,13 +30,13 @@ export class UserService {
   }
 
   /**
-   * Fetches the list of users associated with a specific company from the API.
-   * This method sends an HTTP GET request to the API to retrieve a list of users for a given company ID.
-   * @param companyID The ID of the company whose users are to be retrieved.
+   * Fetches the list of users associated with a specific center from the API.
+   * This method sends an HTTP GET request to the API to retrieve a list of users for a given center ID.
+   * @param centerID The ID of the center whose users are to be retrieved.
    * @returns An Observable that resolves to an array of UserLogged objects.
    */
-  getUserByCompany(companyID: number): Observable<UserLogged[]> {
-    return this.http.get<UserLogged[]>(`${API_URL}/v1/company/${companyID}/list_users`);
+  getUserByCompany(centerID: number): Observable<UserLogged[]> {
+    return this.http.get<UserLogged[]>(`${API_URL}/v1/company/${centerID}/list_users`);
   }
 
   /**
