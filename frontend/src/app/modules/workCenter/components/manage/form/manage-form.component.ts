@@ -455,7 +455,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
    * @returns True if the applying date must be disabled, otherwise false.
    */
   checkApplyingDateDesabled(): boolean {
-    if (this.data.policy) {
+    if (this.data && this.data.policy) {
       const policy = this.global.getControlValue(this.form, 'policy');
       if (policy && policy.id) {
         console.log(this.data.policy.efficiencyPolicy.policyId == policy.id)

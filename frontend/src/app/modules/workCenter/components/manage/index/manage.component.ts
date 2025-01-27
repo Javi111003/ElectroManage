@@ -7,6 +7,7 @@ import { SnackbarService } from '../../../../../services/snackbar/snackbar.servi
 import { CenterDetails } from '../../../../../models/workCenter.interface';
 import { Subscription } from 'rxjs';
 import { UserLogged } from '../../../../../models/credential.interface';
+import { UserService } from '../../../../../services/user/user.service';
 
 declare var bootstrap: any;
 
@@ -54,7 +55,8 @@ export class ManageComponent implements OnInit, OnDestroy {
   constructor (
     public global: GlobalModule,
     private dataService: DataService,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+    private httpUser: UserService
   ) {}
 
   ngOnInit(): void {
@@ -109,6 +111,7 @@ export class ManageComponent implements OnInit, OnDestroy {
           next: (response) => {
             console.log('Deleted successfully:', response);
             this.deleteLocation(item);
+            this.deleteUsers(item.id);
             this.snackbar.openSnackBar('Eliminado exitosamente...');
           },
           error: (error) => {
@@ -178,6 +181,29 @@ export class ManageComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.log(error);
+      }
+    });
+  }
+
+  /**
+   * Deletes all users associated with the center.
+   *
+   * This function attempts to delete all users identified by the given
+   * center ID. It logs the result of the operation.
+   *
+   * @param centerID The ID of the work center associated with the users.
+   */
+  deleteUsers(centerID: number): void {
+    this.httpUser.getUserByCompany(centerID).subscribe(users => {
+      for (let i = 0; i < users.length; i++) {
+        this.httpUser.deleteUser(users[i].id).subscribe({
+          next: (response) => {
+            console.log(`User ${users[i].username} deleted successfully:`, response);
+          },
+          error: (error) => {
+            console.log(error);
+          }
+        });
       }
     });
   }
