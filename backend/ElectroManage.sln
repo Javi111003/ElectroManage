@@ -19,6 +19,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElectroManage.Common.Dtos",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElectroManage.Application", "ElectroManage.Application\ElectroManage.Application.csproj", "{797A15A5-C752-49A9-A931-B6D6BC29D5F0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F6FC7B4A-55BF-4697-8313-BA9FE0F52DE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectroManage.Application.Tests", "ElectroManage.Application.Tests\ElectroManage.Application.Tests.csproj", "{3941F39D-1306-4E2D-B35B-73F9E0A1EB84}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +57,10 @@ Global
 		{797A15A5-C752-49A9-A931-B6D6BC29D5F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{797A15A5-C752-49A9-A931-B6D6BC29D5F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{797A15A5-C752-49A9-A931-B6D6BC29D5F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3941F39D-1306-4E2D-B35B-73F9E0A1EB84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3941F39D-1306-4E2D-B35B-73F9E0A1EB84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3941F39D-1306-4E2D-B35B-73F9E0A1EB84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3941F39D-1306-4E2D-B35B-73F9E0A1EB84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,6 +73,7 @@ Global
 		{CA256FB3-6FEA-429D-9C7A-AD7136FC775D} = {B8F2208E-BB27-48F7-A59A-E0D8BFCDB4A2}
 		{D9E5948B-B570-4189-9201-6C8F6CDA7D67} = {B8F2208E-BB27-48F7-A59A-E0D8BFCDB4A2}
 		{797A15A5-C752-49A9-A931-B6D6BC29D5F0} = {B8F2208E-BB27-48F7-A59A-E0D8BFCDB4A2}
+		{3941F39D-1306-4E2D-B35B-73F9E0A1EB84} = {F6FC7B4A-55BF-4697-8313-BA9FE0F52DE7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {83AB6473-39EC-4E6A-A1AA-9AAF99D13066}
