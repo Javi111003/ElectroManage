@@ -229,11 +229,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
       this.global.openDialog('¿Está seguro de que desea guardar los cambios?', true).subscribe(
       result => {
         if (result) {
-          if (this.postMethod)
-            this.createCenter();
-          else {
-            this.editCenter();
-          }
+          this.saveData();
         } else {
           this.loading = false;
         }
@@ -580,6 +576,106 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Generates a new location instance for save it in the server
+   * @returns a new `Location` or `LocationEdited` instance according to
+   * creation or edition mode.
+   */
+  generateLocationInstance(): Location | LocationEdited {
+    const addressDetails = this.global.getControlValue(this.form, 'location');
+    const latitude = this.global.getControlValue(this.form, 'latitude');
+    const longitude = this.global.getControlValue(this.form, 'longitude');
+
+    if (this.postMethod) {
+      return {
+        addressDetails: addressDetails,
+        coordenate: {
+          latitude: latitude,
+          longitude: longitude
+        }
+      }
+    }
+
+    return {
+      addressDetails: addressDetails,
+      latitude: latitude,
+      longitude: longitude
+    }
+  }
+
+  /**
+   * Generates a new work center instance for save it in the server
+   * @param locationID The id of the location associated with the center
+   * @param teamID The id of the team associated with the center
+   * @returns a `WorkCenterData` instance to be posted or put
+   */
+  generateCenterInstance(locationID: number, teamID: number): WorkCenterData {
+    const policy = this.global.getControlValue(this.form, 'policy');
+    let policyId = 0;
+    let applyingDate = null;
+    if (policy) {
+      policyId = policy.id;
+      applyingDate = this.global.getControlValue(this.form, 'applyingDate');
+    }
+
+    return {
+      name: this.global.getControlValue(this.form, 'name'),
+      areaId: this.global.getControlValue(this.form, 'adminAreaName').id,
+      installationTypeId: this.global.getControlValue(this.form, 'instalationType').id,
+      locationId: locationID,
+      managementTeamId: teamID,
+      efficiencyPolicyId: policyId,
+      policyApplyingDate: applyingDate,
+      consumptionLimit: this.global.getControlValue(this.form, 'monthlyConsumptionLimit')
+    };
+  }
+
+  /**
+   * Generates a new formula instance for save it in the server
+   * @param centerID The id of the center associated with the formula
+   * @returns a new `Formula` or `FormulaInfo` instance according to
+   * creation or edition mode.
+   */
+  generateFormulaInstance(centerID: number): Formula | FormulaInfo {
+    let variables: Variable[] = [];
+
+    for (const variable of this.variablesValues) {
+      variables.push({
+        variableName: variable[0],
+        expression: variable[1]
+      });
+    }
+
+    if (this.postMethod) {
+      return {
+        companyId: centerID,
+        name: `${centerID}`,
+        expression: this.global.getControlValue(this.form, 'formula'),
+        variables: variables
+      };
+    }
+
+    return {
+      formulaId: this.data.costFormula.id,
+      companyId: centerID,
+      name: `${centerID}`,
+      expression: this.global.getControlValue(this.form, 'formula'),
+      variables: variables
+    };
+  }
+
+  /**
+   * Generates a new management team for save it in the server
+   * @returns a new `ManagementTeam` instance to be posted and put
+   */
+  generateTeamInstance(): ManagementTeam {
+    const teamWork = this.global.getControlValue(this.form, 'teamWork');
+    return {
+      name: `${this.data.id}`,
+      userIds: teamWork.map((user: Item) => user.id)
+    }
+  }
+
   // Fetch Region
 
   /**
@@ -693,7 +789,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  // POST Region
+  // POST and PUT Region
 
   /**
    * Adds a new installation type.
@@ -760,145 +856,145 @@ export class ManageFormComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Creates a new work center.
-   * This function is responsible for sending the necessary data to the server to create a new work center.
+   * Creates a new work center or edits an existing one.
+   * This function is responsible for sending the necessary data to the server to create or edit a work center.
    */
-  createCenter(): void {
-    const location: Location = {
-      addressDetails: this.global.getControlValue(this.form, 'location'),
-      coordenate: {
-        latitude: this.global.getControlValue(this.form, 'latitude'),
-        longitude: this.global.getControlValue(this.form, 'longitude')
-      }
-    };
-
-    this.createLocation(location);
+  saveData(): void {
+    this.createOrEditLocation();
   }
 
   /**
-   * Sends a request to create a new location.
-   * @param location - The location data to be sent to the server.
+   * Sends a request to create or edit a location.
+   * It creates or edits a location and then it creates or edits
+   * a work center (or a team if the user selects any available member)
    */
-  createLocation(location: Location): void {
-    this.global.httpCenter.postLocation(location).subscribe({
-      next: (response) => {
-        console.log("Location created successfully", response);
-        const policy = this.global.getControlValue(this.form, 'policy');
-        let policyId = 0;
-        let applyingDate = null;
-        if (policy) {
-          policyId = policy.id;
-          applyingDate = this.global.getControlValue(this.form, 'applyingDate');
+  createOrEditLocation(): void {
+    const location = this.generateLocationInstance();
+    if (this.postMethod) {
+      this.global.httpCenter.postLocation(location as Location).subscribe({
+        next: (response) => {
+          console.log("Location created successfully", response);
+          this.createOrEditCenter(response.id);
+        },
+        error: (error) => {
+          this.loading = false;
+          console.log(error);
         }
-
-        const center: WorkCenterData = {
-          name: this.global.getControlValue(this.form, 'name'),
-          areaId: this.global.getControlValue(this.form, 'adminAreaName').id,
-          installationTypeId: this.global.getControlValue(this.form, 'instalationType').id,
-          locationId: response.id,
-          managementTeamId: 0,
-          efficiencyPolicyId: policyId,
-          policyApplyingDate: applyingDate,
-          consumptionLimit: this.global.getControlValue(this.form, 'monthlyConsumptionLimit')
-        };
-
-        this.createCenterInstance(center);
-      },
-      error: (error) => {
-        this.loading = false;
-        console.log(error);
-      }
-    });
-  }
-
-  /**
-   * Sends a request to create a new work center instance.
-   * @param center - The work center data to be sent to the server.
-   */
-  createCenterInstance(center: WorkCenterData): void {
-    this.global.httpCenter.postCenter(center).subscribe({
-      next: (response) => {
-        console.log("Center created succesfully", response);
-        this.snackbar.openSnackBar("Añadido exitosamente...");
-        this.dataService.notifyDataUpdated();
-        this.activateCloseButton();
-
-        let variables: Variable[] = [];
-
-        for (const variable of this.variablesValues) {
-          variables.push({
-            variableName: variable[0],
-            expression: variable[1]
-          });
+      });
+    } else {
+      this.global.httpCenter.editLocation(location as LocationEdited, this.data.location.id).subscribe({
+        next: (response) => {
+          console.log("Location edited successfully", response);
+          const teamWork = this.global.getControlValue(this.form, 'teamWork');
+          if (teamWork && teamWork.length) {
+            this.createOrEditTeam(response.id);
+          } else {
+            this.createOrEditCenter(response.id);
+          }
+        },
+        error: (error) => {
+          this.loading = false;
+          console.log(error);
         }
-
-        const formula: Formula = {
-          companyId: response.id,
-          name: `${response.id}`,
-          expression: this.global.getControlValue(this.form, 'formula'),
-          variables: variables
-        };
-
-        this.createFormula(formula);
-      },
-      error: (error) => {
-        this.loading = false;
-        console.log(error);
-      }
-    })
+      });
+    }
   }
 
   /**
-   * Sends a request to create a new formula.
-   * @param formula - The formula data to be sent to the server.
+   * Sends a request to create or edit a work center instance.
+   * @param locationID - The id of the location associated to the center.
+   * @param teamID - The id of the management team associated to the center.
    */
-  createFormula(formula: Formula): void {
-    this.global.httpCenter.postFormula(formula).subscribe({
-      next: (response) => {
-        console.log("Formula created successfully", response);
-      },
-      error: (error) => {
-        console.log(error);
-      }
-    })
+  createOrEditCenter(locationID: number, teamID: number = 0): void {
+    const center = this.generateCenterInstance(locationID, teamID);
+    if (this.postMethod) {
+      this.global.httpCenter.postCenter(center).subscribe({
+        next: (response) => {
+          console.log("Center created succesfully", response);
+          this.createOrEditFormula(response.id);
+        },
+        error: (error) => {
+          this.loading = false;
+          console.log(error);
+        }
+      })
+    } else {
+      this.global.httpCenter.editCenter(center, this.data.id).subscribe({
+        next: (response) => {
+          console.log("Center edited succesfully", response);
+          this.createOrEditFormula(response.id);
+        },
+        error: (error) => {
+          this.loading = false;
+          console.log(error);
+        }
+      })
+    }
   }
 
   /**
-   * Creates a new management team for a work center.
-   * Sends a request to create a management team and associates it with a work center.
-   * @param team - The management team details.
+   * Sends a request to create or edit a formula.
+   * @param centerID - The id of the center associated to the formula.
+   */
+  createOrEditFormula(centerID: number): void {
+    const formula = this.generateFormulaInstance(centerID);
+    if (this.postMethod) {
+      this.global.httpCenter.postFormula(formula as Formula).subscribe({
+        next: (response) => {
+          console.log("Formula created successfully", response);
+          this.snackbar.openSnackBar("Añadido exitosamente...");
+          this.dataService.notifyDataUpdated();
+          this.activateCloseButton();
+        },
+        error: (error) => {
+          this.loading = false;
+          console.log(error);
+        }
+      });
+    } else {
+      const formula = this.generateFormulaInstance(centerID);
+      this.global.httpCenter.editFormula(formula as FormulaInfo).subscribe({
+        next: (response) => {
+          console.log("Formula edited successfully", response);
+          this.deleteTeam();
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      });
+    }
+  }
+
+  /**
+   * Creates or edits a management team for a work center.
+   * Sends a request to create or edit a management team and associates it with a work center.
    * @param locationID - The ID of the location to associate with the team.
    */
-  createTeam(team: ManagementTeam, locationID: number): void {
-    this.global.httpCenter.postManagementTeam(team, this.data.id).subscribe({
-      next: (response) => {
-        console.log("Team created successfully", response);
-        const policy = this.global.getControlValue(this.form, 'policy');
-        let policyId = 0;
-        let applyingDate = null;
-        if (policy) {
-          policyId = policy.id;
-          applyingDate = this.global.getControlValue(this.form, 'applyingDate');
+  createOrEditTeam(locationID: number): void {
+    const team = this.generateTeamInstance();
+    if (!this.data.team) {
+      this.global.httpCenter.postManagementTeam(team, this.data.id).subscribe({
+        next: (response) => {
+          console.log("Team created successfully", response);
+          this.createOrEditCenter(locationID, response.id);
+        },
+        error: (error) => {
+          this.loading = false;
+          console.log(error);
         }
-
-        const center: WorkCenterData = {
-          name: this.global.getControlValue(this.form, 'name'),
-          areaId: this.global.getControlValue(this.form, 'adminAreaName').id,
-          installationTypeId: this.global.getControlValue(this.form, 'instalationType').id,
-          locationId: locationID,
-          managementTeamId: response.id,
-          efficiencyPolicyId: policyId,
-          policyApplyingDate: applyingDate,
-          consumptionLimit: this.global.getControlValue(this.form, 'monthlyConsumptionLimit')
-        };
-
-        this.editCenterInstance(center);
-      },
-      error: (error) => {
-        this.loading = false;
-        console.log(error);
-      }
-    });
+      });
+    } else {
+      this.global.httpCenter.editManagementTeam(team, this.data.id, this.data.team.id).subscribe({
+        next: (response) => {
+          console.log("Team edited successfully", response);
+          this.createOrEditCenter(locationID, response.id);
+        },
+        error: (error) => {
+          this.loading = false;
+          console.log(error);
+        }
+      });
+    }
   }
 
   // DELETE Region
@@ -953,180 +1049,29 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  // PUT Region
-
   /**
-   * Edits an existing work center.
-   * This function is responsible for sending the necessary data to the server to edit an existing work center.
+   * Deletes a management team.
+   * This function is used to remove a management team when an user removes all members
+   * of the current team of the center
    */
-  editCenter(): void {
-    const location: LocationEdited = {
-      addressDetails: this.global.getControlValue(this.form, 'location'),
-      latitude: this.global.getControlValue(this.form, 'latitude'),
-      longitude: this.global.getControlValue(this.form, 'longitude')
-    };
-
-    this.editLocation(location);
-  }
-
-  /**
-   * Edits the location of a work center.
-   * Sends a request to update the location details of a work center.
-   * @param location - The updated location details.
-   */
-  editLocation(location: LocationEdited): void {
-    this.global.httpCenter.editLocation(location, this.data.location.id).subscribe({
-      next: (response) => {
-        console.log("Location edited successfully", response);
-        const teamWork = this.global.getControlValue(this.form, 'teamWork');
-        if (teamWork && teamWork.length) {
-          const team: ManagementTeam = {
-            name: `${this.data.id}`,
-            userIds: teamWork.map((user: Item) => user.id)
-          }
-
-          console.log(team);
-
-          if (!this.data.team)
-            this.createTeam(team, response.id);
-          else
-            this.editTeam(team, response.id);
-        } else {
-          const policy = this.global.getControlValue(this.form, 'policy');
-          let policyId = 0;
-          let applyingDate = null;
-          if (policy) {
-            policyId = policy.id;
-            applyingDate = this.global.getControlValue(this.form, 'applyingDate');
-          }
-
-          const center: WorkCenterData = {
-            name: this.global.getControlValue(this.form, 'name'),
-            areaId: this.global.getControlValue(this.form, 'adminAreaName').id,
-            installationTypeId: this.global.getControlValue(this.form, 'instalationType').id,
-            locationId: response.id,
-            managementTeamId: 0,
-            efficiencyPolicyId: policyId,
-            policyApplyingDate: applyingDate,
-            consumptionLimit: this.global.getControlValue(this.form, 'monthlyConsumptionLimit')
-          };
-
-          this.editCenterInstance(center);
-        }
-      },
-      error: (error) => {
-        this.loading = false;
-        console.log(error);
-      }
-    });
-  }
-
-  /**
-   * Edits an existing management team.
-   * Sends a request to update the details of a management team.
-   * @param team - The updated management team details.
-   * @param locationID - The ID of the location associated with the team.
-   */
-  editTeam(team: ManagementTeam, locationID: number): void {
-    console.log(team, this.data.id, this.data.team.id);
-    this.global.httpCenter.editManagementTeam(team, this.data.id, this.data.team.id).subscribe({
-      next: (response) => {
-        console.log("Team edited successfully", response);
-        const policy = this.global.getControlValue(this.form, 'policy');
-        let policyId = 0;
-        let applyingDate = null;
-        if (policy) {
-          policyId = policy.id;
-          applyingDate = this.global.getControlValue(this.form, 'applyingDate');
-        }
-
-        const center: WorkCenterData = {
-          name: this.global.getControlValue(this.form, 'name'),
-          areaId: this.global.getControlValue(this.form, 'adminAreaName').id,
-          installationTypeId: this.global.getControlValue(this.form, 'instalationType').id,
-          locationId: locationID,
-          managementTeamId: response.id,
-          efficiencyPolicyId: policyId,
-          policyApplyingDate: applyingDate,
-          consumptionLimit: this.global.getControlValue(this.form, 'monthlyConsumptionLimit')
-        };
-
-        this.editCenterInstance(center);
-      },
-      error: (error) => {
-        this.loading = false;
-        console.log(error);
-      }
-    });
-  }
-
-  /**
-   * Edits a work center instance.
-   * Sends a request to update the details of a work center.
-   * @param center - The updated work center data.
-   */
-  editCenterInstance(center: WorkCenterData): void {
-    console.log(center, this.data.id);
-    this.global.httpCenter.editCenter(center, this.data.id).subscribe({
-      next: (response) => {
-        console.log("Center edited succesfully", response);
-        this.snackbar.openSnackBar("Editado exitosamente...");
-
-        let variables: Variable[] = [];
-
-        for (const variable of this.variablesValues) {
-          variables.push({
-            variableName: variable[0],
-            expression: variable[1]
-          });
-        }
-
-        const formula: FormulaInfo = {
-          formulaId: this.data.costFormula.id,
-          companyId: response.id,
-          name: `${response.id}`,
-          expression: this.global.getControlValue(this.form, 'formula'),
-          variables: variables
-        };
-
-        this.editFormula(formula);
-      },
-      error: (error) => {
-        this.loading = false;
-        console.log(error);
-      }
-    })
-  }
-
-  /**
-   * Edits a formula associated with a work center.
-   * Sends a request to update the formula details.
-   * @param formula - The updated formula information.
-   */
-  editFormula(formula: FormulaInfo): void {
-    this.global.httpCenter.editFormula(formula).subscribe({
-      next: (response) => {
-        console.log("Formula edited successfully", response);
-        const teamWork = this.global.getControlValue(this.form, 'teamWork');
-        if (teamWork && !teamWork.length && this.data.team.id) {
-          this.global.httpCenter.deleteManagementTeam(this.data.id, this.data.team.id).subscribe({
-            next: (response) => {
-              console.log('Team Deleted successfully:', response);
-              this.dataService.notifyDataUpdated();
-              this.activateCloseButton();
-            },
-            error: (error) => {
-              console.log(error);
-            }
-          });
-        } else {
+  deleteTeam(): void {
+    const teamWork = this.global.getControlValue(this.form, 'teamWork');
+    if (teamWork && !teamWork.length && this.data.team.id) {
+      this.global.httpCenter.deleteManagementTeam(this.data.id, this.data.team.id).subscribe({
+        next: (response) => {
+          console.log('Team Deleted successfully:', response);
+          this.snackbar.openSnackBar("Editado exitosamente...");
           this.dataService.notifyDataUpdated();
           this.activateCloseButton();
+        },
+        error: (error) => {
+          console.log(error);
         }
-      },
-      error: (error) => {
-        console.log(error);
-      }
-    })
+      });
+    } else {
+      this.snackbar.openSnackBar("Editado exitosamente...");
+      this.dataService.notifyDataUpdated();
+      this.activateCloseButton();
+    }
   }
 }
