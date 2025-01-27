@@ -83,7 +83,7 @@ public class CreateCompanyCommandHandler : CoreCommandHandler<CreateCompanyComma
                 {
                     EfficiencyPolicyId = efficiencyPolicy.Id,
                     CompanyId = company.Id,
-                    ApplyingDate = command.PolicyApplyingDate
+                    ApplyingDate = command.PolicyApplyingDate ?? DateTime.Now
                 };
                 await efficiencyPolicyCompanyRepository.SaveAsync(efficiencyPolicyCompany, false);
 
