@@ -68,6 +68,9 @@
   background-color: #ffffff;
   padding: 20px;
   border-radius: 5px;
+  position: relative;
+  width: 100%;
+  min-height: 300px;
 }
 .pie-chart-container {
   position: relative;
@@ -94,6 +97,11 @@
 #officesChart {
   width: 100% !important;
   height: 100% !important;
+}
+#centersChart {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 300px;
 }
 #yearSelect {
   grid-area: year-select;
@@ -212,16 +220,17 @@
   padding: 10px;
   border-bottom: 1px solid #ddd;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr;  /* Cambiado de 1fr 1fr 1fr a 2fr 1fr */
   align-items: center;
   opacity: 0;
   transform: translateY(20px);
   animation: slideIn 3s forwards;
+  gap: 20px;  /* Añadido gap entre columnas */
 }
 .workcenter-alerts-list li.legend {
   font-weight: bold;
   text-align: left;
-  gap: 200px;
+  gap: 20px;  /* Ajustado el gap para que coincida */
 }
 .workcenter-alerts-list li:last-child {
   border-bottom: none;
@@ -232,8 +241,11 @@
 }
 .workcenter-alerts-list .alerts-legend {
   color: #ff0606;
-  text-align:left;
+  text-align: center;  /* Cambiado de left a center */
   font-weight: bold;
+}
+.workcenter-item span:last-child {
+  text-align: center;  /* Centrar los números de alertas */
 }
 .workcenter-graph {
   width: 60%;
@@ -280,4 +292,166 @@
 }
 .total:nth-child(3) {
   animation-delay: 0.9s;
+}
+
+/* Añadir estas media queries al final del archivo */
+@media screen and (max-width: 768px) {
+  .dashboard {
+    padding: 0.4rem !important;
+  }
+
+  .work-centers {
+    flex-direction: column;
+  }
+
+  .total-centers {
+    width: 100%;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "info"
+      "graph"
+      "year-select";
+    gap: 10px;
+    padding: 10px;
+    height: auto;
+  }
+
+  .info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    height: auto;
+    padding: 5px;
+  }
+
+  .total {
+    padding: 8px;
+    min-height: auto;
+    width: 100%;
+  }
+
+  .graph {
+    min-height: 250px;
+    padding: 10px;
+    margin-bottom: 10px;
+    height: 250px;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .graph canvas {
+    max-width: 100%;
+    height: auto !important;
+  }
+
+  .pie-chart-container {
+    width: 100%;
+    height: 300px;
+    margin-top: 10px;
+  }
+
+  #officesChart {
+    max-height: 250px !important;
+  }
+
+  #centersChart {
+    max-height: 250px !important;
+    width: 100% !important;
+  }
+
+  .consumption,
+  .alerts {
+    flex-direction: column;
+  }
+
+  .workcenter-limit-list,
+  .workcenter-graph,
+  .workcenter-alerts-list,
+  .alert-graph {
+    width: 100%;
+  }
+
+  .workcenter-limit-list li,
+  .workcenter-alerts-list li {
+    font-size: 0.9rem;
+    gap: 10px;
+  }
+
+  .workcenter-item {
+    gap: 10px;
+  }
+
+  .total h2 {
+    font-size: 1.2rem;
+  }
+
+  .total p {
+    font-size: 0.9rem;
+  }
+
+  #yearSelect {
+    width: 100%;
+    justify-self: center;
+  }
+
+  .graph canvas,
+  .workcenter-graph canvas,
+  .alert-graph canvas {
+    height: 300px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .info {
+    grid-template-columns: 1fr;
+  }
+
+  .total {
+    padding: 5px;
+  }
+
+  .total h2 {
+    font-size: 0.9rem;
+  }
+
+  .total p {
+    font-size: 0.9rem;
+  }
+
+  .graph {
+    min-height: 200px;
+    height: 200px;
+  }
+
+  .pie-chart-container {
+    height: 250px;
+  }
+
+  #officesChart {
+    max-height: 200px !important;
+  }
+
+  #centersChart {
+    max-height: 200px !important;
+  }
+
+  .workcenter-limit-list li,
+  .workcenter-alerts-list li {
+    font-size: 0.8rem;
+    padding: 8px;
+  }
+
+  .total h2 {
+    font-size: 1rem;
+  }
+
+  .total p {
+    font-size: 0.8rem;
+  }
+
+  .graph canvas,
+  .workcenter-graph canvas,
+  .alert-graph canvas {
+    height: 250px !important;
+  }
 }
