@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { API_URL } from '../../config/api.config';
-import { Policy, PolicyByCompany, PolicyInfo } from '../../models/policy.interface';
+import { Policy, PolicyApplied, PolicyInfo } from '../../models/policy.interface';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -17,8 +17,8 @@ export class PolicyService {
    * @param centerID The ID of the work center for which to fetch policies.
    * @returns An Observable that resolves to an array of Policy objects.
    */
-  getPoliciesByCenter(centerID: number): Observable<PolicyByCompany[]> {
-    return this.http.get<PolicyByCompany[]>(`${API_URL}/v1/company/${centerID}/list_policies`);
+  getPoliciesByCenter(centerID: number): Observable<PolicyApplied[]> {
+    return this.http.get<PolicyApplied[]>(`${API_URL}/v1/company/${centerID}/list_policies`);
   }
 
   /**
