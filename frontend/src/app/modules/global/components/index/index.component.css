@@ -220,17 +220,17 @@
   padding: 10px;
   border-bottom: 1px solid #ddd;
   display: grid;
-  grid-template-columns: 2fr 1fr;  /* Cambiado de 1fr 1fr 1fr a 2fr 1fr */
+  grid-template-columns: 2fr 1fr;  
   align-items: center;
   opacity: 0;
   transform: translateY(20px);
   animation: slideIn 3s forwards;
-  gap: 20px;  /* Añadido gap entre columnas */
+  gap: 20px; 
 }
 .workcenter-alerts-list li.legend {
   font-weight: bold;
   text-align: left;
-  gap: 20px;  /* Ajustado el gap para que coincida */
+  gap: 20px;  
 }
 .workcenter-alerts-list li:last-child {
   border-bottom: none;
@@ -241,11 +241,11 @@
 }
 .workcenter-alerts-list .alerts-legend {
   color: #ff0606;
-  text-align: center;  /* Cambiado de left a center */
+  text-align: center; 
   font-weight: bold;
 }
 .workcenter-item span:last-child {
-  text-align: center;  /* Centrar los números de alertas */
+  text-align: center; 
 }
 .workcenter-graph {
   width: 60%;
@@ -294,7 +294,6 @@
   animation-delay: 0.9s;
 }
 
-/* Añadir estas media queries al final del archivo */
 @media screen and (max-width: 768px) {
   .dashboard {
     padding: 0.4rem !important;

@@ -95,6 +95,13 @@ export class WorkCenterService {
     return this.http.get<Alert>(`${API_URL}/v1/company/${centerID}/list_warnings`);
   }
 
+  /**
+   * Fetches the monthly warnings for a specific work center from the API.
+   * This method sends an HTTP GET request to the API to retrieve the count of warnings
+   * grouped by month for a specified work center.
+   * @param centerID The ID of the work center for which to fetch monthly warnings.
+   * @returns An Observable that resolves to a WarningByMonthResponse array containing the monthly warning counts.
+   */
   getAlertsById(centerID: number): Observable<WarningByMonthResponse> {
     return this.http.get<WarningByMonthResponse>(`${API_URL}/v1/company/${centerID}/Warnings_ByMonth`);
   }
