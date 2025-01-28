@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { PolicyService } from './policy.service';
 import { API_URL } from '../../config/api.config';
-import { Policy, PolicyByCompany, PolicyInfo } from '../../models/policy.interface';
+import { Policy, PolicyApplied, PolicyInfo } from '../../models/policy.interface';
 
 describe('PolicyService', () => {
   let service: PolicyService;
@@ -28,12 +28,15 @@ describe('PolicyService', () => {
   describe('getPoliciesByCenter', () => {
     it('should return policies for a specific center', () => {
       const centerId = 1;
-      const mockPolicies: PolicyByCompany[] = [
+      const mockPolicies: PolicyApplied[] = [
         {
-          id: 1,
-          name: 'Test Policy',
-          applyingDate: '2023-01-01',
-          companyId: centerId
+          efficiencyPolicy: {
+            policyId: 1,
+            policyName: 'Test Policy',
+            description: 'testing policy'
+          },
+          applyingDate: '2025-01-10',
+          to: '2025-01-26'
         }
       ];
 

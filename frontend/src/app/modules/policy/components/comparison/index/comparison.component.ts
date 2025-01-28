@@ -2,7 +2,6 @@ import { GlobalModule } from '../../../../global/global.module';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
-import { PolicyByCompany } from '../../../../../models/policy.interface';
 import { PolicyService } from '../../../../../services/policy/policy.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Item } from '../../../../../shared/shared.module';
@@ -14,9 +13,7 @@ import { Item } from '../../../../../shared/shared.module';
 })
 export class ComparisonComponent implements OnInit {
   form: FormGroup;
-  optionsPolicy: string[] = [];
   policies: Item[] = [];
-  objectsPolicy: PolicyByCompany[] = [];
   showTable: boolean = false;
   dataSourceBefore: MatTableDataSource<any> = [][0];
   dataSourceAfter: MatTableDataSource<any> = [][0];
@@ -62,22 +59,16 @@ export class ComparisonComponent implements OnInit {
       if (this.global.getControlValue(this.form, 'workCenter')) {
         const id = this.global.getControlValue(this.form, 'workCenter').id;
         if (id) {
-          this.httpPolicy.getPoliciesByCenter(id).subscribe(policies => {
-            this.objectsPolicy = policies;
-            this.policies = policies.map(policy => ({
-              id: policy.id,
-              name: policy.name
-            }));
-          });
+          this.getPolicies(id);
         }
       }
     });
 
-    this.form.get('workCenter')?.valueChanges.subscribe(() => {
+    this.form.get('policy')?.valueChanges.subscribe(() => {
       const policy = this.global.getControlValue(this.form, 'policy');
       if (policy) {
         if (policy.id) {
-          const centerID = this.objectsPolicy.find(item => item.id === policy.id)!.companyId;
+          const centerID = this.global.getControlValue(this.form, 'workCenter').id;
           this.getBeforeAfterInfo(policy.id, centerID);
         }
       }
@@ -107,7 +98,7 @@ export class ComparisonComponent implements OnInit {
    * Checks if a valid center and policy are selected, and if so, sets the table to be active.
    * If not, displays an alert message.
    */
-  onClick() {
+  onConsultClick() {
     if (!this.showTable) {
       if (this.global.getControlValue(this.form, 'workCenter').id && this.global.getControlValue(this.form, 'policy').id) {
         this.showTable = true;
@@ -121,16 +112,14 @@ export class ComparisonComponent implements OnInit {
   /**
    * Retrieves policies based on the selected center ID.
    * Updates the optionsPolicy array with the names of the policies.
-   * @param centerSelectedId The ID of the selected center.
+   * @param centerID The ID of the selected center.
    */
-  getPolicies(centerSelectedId: any) {
-    this.httpPolicy.getPoliciesByCenter(centerSelectedId).subscribe(policies => {
-      this.objectsPolicy = policies;
-      this.optionsPolicy = policies.map(policy => policy.name);
+  getPolicies(centerID: any) {
+    this.httpPolicy.getPoliciesByCenter(centerID).subscribe(policies => {
       this.policies = policies.map(policy => {
         return {
-          id: policy.id,
-          name: policy.name
+          id: policy.efficiencyPolicy.policyId,
+          name: policy.efficiencyPolicy.policyName
         }
       })
     });
