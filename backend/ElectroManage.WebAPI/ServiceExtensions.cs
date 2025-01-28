@@ -31,6 +31,7 @@ public static class ServiceExtensions
         services.AddScoped<ITokenHandler, JwtHandler>();
         services.AddScoped<IFileWriterService, FileWriterService>();
         services.AddScoped<ICostCalculator, CostCalculator>();
+        services.AddScoped<IProyectionService, ProyectionService>();
         services.AddSingleton<IEmailSender<AppUser>, IdentityEmailSender>();
     }
     public static void AddGenericRepositoryExtension(this IServiceCollection services)
