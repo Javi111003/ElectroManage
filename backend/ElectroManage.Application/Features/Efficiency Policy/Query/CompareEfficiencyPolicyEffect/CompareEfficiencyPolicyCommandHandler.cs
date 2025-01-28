@@ -45,14 +45,15 @@ public class CompareEfficiencyPolicyEffectCommandHandler : CoreCommandHandler<Co
         var appliedPolicy = company.EfficiencyPoliciesApplyed.Last(x => x.EfficiencyPolicyId == command.EfficiencyPolicyId);
 
         var start = appliedPolicy.ApplyingDate.Date;
-        var end = appliedPolicy.To ?? DateTime.UtcNow;     // in case the policy is currently active we use the current date as end date
-        var timeSpan = end.Date - start;
+        var end = appliedPolicy.To?.Date ?? DateTime.UtcNow.Date;     // in case the policy is currently active we use the current date as end date
+        TimeSpan timeSpan = start - end ;
+        DateTime startBeforePeriod = start - timeSpan;
 
-        var registersBefore = company.Registers.Where(r => r.Date.Date >= start - timeSpan && r.Date.Date <= start && r.StatusBaseEntity == Domain.Enums.StatusEntityType.Active)
+        var registersBefore = company.Registers.Where(r => r.Date.Date >= startBeforePeriod && r.Date.Date <= start && r.StatusBaseEntity == Domain.Enums.StatusEntityType.Active)
             .Select(RegisterMapper.MapToRegisterDto)
             .OrderByDescending(r => r.Date);
 
-        var registersAfter = company.Registers.Where(r => r.Date.Date <= end.Date && r.Date.Date >= start && r.StatusBaseEntity == Domain.Enums.StatusEntityType.Active)
+        var registersAfter = company.Registers.Where(r => r.Date.Date <= end && r.Date.Date >= start && r.StatusBaseEntity == Domain.Enums.StatusEntityType.Active)
             .Select(RegisterMapper.MapToRegisterDto)
             .OrderByDescending(r => r.Date);
         
