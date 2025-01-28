@@ -1,4 +1,5 @@
 ﻿using ElectroManage.Application.DTO_s;
+using ElectroManage.Application.Mappers;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
@@ -28,22 +29,13 @@ public class ListRegistersByCompanyCommandHandler : CoreCommandHandler<ListRegis
         if (company == null)
         {
             _logger.LogError($"{nameof(ExecuteAsync)} | Company with Id {command.Id} not found");
-            ThrowError("Company with Id {command.Id} not found", 404);
+            ThrowError($"Company with Id {command.Id} not found", 404);
         }
         var registers = company.Registers.Where(r => r.Date.Date >= command.Start.Date && r.Date.Date <= command.End.Date && r.StatusBaseEntity == Domain.Enums.StatusEntityType.Active)
-            .Select(r => new RegisterDTO
-        {
-            Id = r.Id,
-            Date = r.Date,
-            Cost = r.Cost,
-            Consumption = r.Consumption,
-        }).OrderByDescending(r => r.Date);
+            .Select(RegisterMapper.MapToRegisterDto)
+            .OrderByDescending(r => r.Date);
+        
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Completed");
-        return new ListRegisterByCompanyResponse
-        {
-            TotalCost = registers.Sum(r => r.Cost),
-            TotalConsumption = registers.Sum(r => r.Consumption),
-            Registers = registers
-        };
+        return RegisterMapper.MapToListRegisterResponse(registers);
     }
 }

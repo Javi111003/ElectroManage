@@ -1,7 +1,4 @@
-﻿using ElectroManage.Application.DTO_s;
-
-namespace ElectroManage.Application.Features.Company.Query.ListRegistersByCompany;
-
+namespace ElectroManage.Application.DTO_s;
 public record ListRegisterByCompanyResponse
 {
     public double TotalCost { get; set; }
