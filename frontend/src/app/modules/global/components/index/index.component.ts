@@ -150,7 +150,6 @@ export class IndexComponent implements OnInit, OnDestroy {
    */
   createLineChart(): void {
     const canvas = document.getElementById('centersChart') as HTMLCanvasElement;
-    // Destruir el gráfico existente si existe
     if (this.lineChart) {
       this.lineChart.destroy();
     }
@@ -219,7 +218,6 @@ export class IndexComponent implements OnInit, OnDestroy {
    */
   createPieChart(): void {
     const canvas = document.getElementById('officesChart') as HTMLCanvasElement;
-    // Destruir el gráfico existente si existe
     if (this.pieChart) {
       this.pieChart.destroy();
     }
@@ -265,7 +263,6 @@ export class IndexComponent implements OnInit, OnDestroy {
    */
   createExcessBarChart(): void {
     const canvas = document.getElementById('excessChart') as HTMLCanvasElement;
-    // Destruir el gráfico existente si existe
     if (this.barChart) {
       this.barChart.destroy();
     }
@@ -323,7 +320,6 @@ export class IndexComponent implements OnInit, OnDestroy {
    */
   createAlertTrendChart(): void {
     const canvas = document.getElementById('alertTrendChart') as HTMLCanvasElement;
-    // Destruir el gráfico existente si existe
     if (this.alertChart) {
       this.alertChart.destroy();
     }
