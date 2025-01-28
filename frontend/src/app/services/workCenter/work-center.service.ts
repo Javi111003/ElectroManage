@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { WorkCenter } from '../../models/workCenter.interface';
 import { MeanRegisterData, TotalConsumptionData } from '../../models/register.interface';
 import { Alert, Excess } from '../../models/alert.interface';
-
+import { WarningByMonthResponse } from '../../models/dashboard.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -93,6 +93,10 @@ export class WorkCenterService {
    */
   getAlerts(centerID: number): Observable<Alert> {
     return this.http.get<Alert>(`${API_URL}/v1/company/${centerID}/list_warnings`);
+  }
+
+  getAlertsById(centerID: number): Observable<WarningByMonthResponse> {
+    return this.http.get<WarningByMonthResponse>(`${API_URL}/v1/company/${centerID}/Warnings_ByMonth`);
   }
 
   /**
