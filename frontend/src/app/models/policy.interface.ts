@@ -1,3 +1,5 @@
+import { TotalConsumptionData } from "./register.interface";
+
 // Policy info for POST and PUT
 export interface Policy {
   name: string;
@@ -16,4 +18,10 @@ export interface PolicyApplied {
   efficiencyPolicy: PolicyInfo;
   applyingDate: string;
   to: string;
+}
+
+// Info of a policy before and after its application
+export interface PolicyComparison {
+  before: TotalConsumptionData;
+  after: TotalConsumptionData;
 }
