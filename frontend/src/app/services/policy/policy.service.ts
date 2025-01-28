@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { API_URL } from '../../config/api.config';
-import { Policy, PolicyApplied, PolicyInfo } from '../../models/policy.interface';
+import { Policy, PolicyApplied, PolicyComparison, PolicyInfo } from '../../models/policy.interface';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -19,6 +19,13 @@ export class PolicyService {
    */
   getPoliciesByCenter(centerID: number): Observable<PolicyApplied[]> {
     return this.http.get<PolicyApplied[]>(`${API_URL}/v1/company/${centerID}/list_policies`);
+  }
+
+  getPolicyComparison(centerID: number, policyID: number): Observable<PolicyComparison> {
+    let param = new HttpParams();
+    param = param.append('companyId', centerID);
+    param = param.append('efficiencyPolicyId', policyID);
+    return this.http.get<PolicyComparison>(`${API_URL}/v1/policy/compare`, { params: param });
   }
 
   /**

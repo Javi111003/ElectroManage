@@ -32,6 +32,8 @@
       <app-table class="before"
         [dataSource]="dataSourceBefore"
         [displayedColumns]="displayedColumns"
+        [footer]="footerTableBefore"
+        [showFooter]="true"
       ></app-table>
     </div>
     <div>
@@ -39,6 +41,8 @@
       <app-table class="after"
         [dataSource]="dataSourceAfter"
         [displayedColumns]="displayedColumns"
+        [footer]="footerTableAfter"
+        [showFooter]="true"
       ></app-table>
     </div>
   </div>

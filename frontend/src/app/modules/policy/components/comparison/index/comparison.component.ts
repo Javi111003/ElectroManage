@@ -5,6 +5,8 @@ import { ConfigColumn } from '../../../../../shared/components/table/table.compo
 import { PolicyService } from '../../../../../services/policy/policy.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Item } from '../../../../../shared/shared.module';
+import { PolicyComparison } from '../../../../../models/policy.interface';
+import { RegisterByDay } from '../../../../../models/register.interface';
 
 @Component({
   selector: 'app-comparison',
@@ -15,12 +17,16 @@ export class ComparisonComponent implements OnInit {
   form: FormGroup;
   policies: Item[] = [];
   showTable: boolean = false;
-  dataSourceBefore: MatTableDataSource<any> = [][0];
-  dataSourceAfter: MatTableDataSource<any> = [][0];
+  registersBefore: RegisterByDay[] = [];
+  registersAfter: RegisterByDay[] = [];
+  footerTableBefore: any[] = [];
+  footerTableAfter: any[] = [];
+  dataSourceBefore: MatTableDataSource<any> = new MatTableDataSource();
+  dataSourceAfter: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
     {
       title: 'Día',
-      field: 'registerDate'
+      field: 'date'
     },
     {
       title: 'Consumo (Kw/h)',
@@ -119,7 +125,7 @@ export class ComparisonComponent implements OnInit {
       this.policies = policies.map(policy => {
         return {
           id: policy.efficiencyPolicy.policyId,
-          name: policy.efficiencyPolicy.policyName
+          name: `${policy.efficiencyPolicy.policyName} [${policy.applyingDate.substring(0, 10)}]`
         }
       })
     });
@@ -132,7 +138,34 @@ export class ComparisonComponent implements OnInit {
    * @param centerID The ID of the center to which the policy is applied.
    */
   getBeforeAfterInfo(policyID: number, centerID: number): void {
-    // not implemented
-    console.log("No implementado");
+    this.httpPolicy.getPolicyComparison(centerID, policyID).subscribe(comparison => {
+      this.registersAfter = comparison.after.registers;
+      this.registersBefore = comparison.before.registers;
+      this.reloadTables(comparison);
+    });
+  }
+
+  reloadTables(comparison: PolicyComparison): void {
+    this.dataSourceBefore.data = comparison.before.registers.map(register => ({
+      date: register.date.substring(0, 10),
+      consumption: register.consumption.toFixed(2),
+      cost: register.cost.toFixed(2)
+    }));
+    this.footerTableBefore = [
+      'Total',
+      comparison.before.totalConsumption.toFixed(2),
+      comparison.before.totalCost.toFixed(2)
+    ];
+
+    this.dataSourceAfter.data = comparison.after.registers.map(register => ({
+      date: register.date.substring(0, 10),
+      consumption: register.consumption.toFixed(2),
+      cost: register.cost.toFixed(2)
+    }));
+    this.footerTableAfter = [
+      'Total',
+      comparison.after.totalConsumption.toFixed(2),
+      comparison.after.totalCost.toFixed(2)
+    ];
   }
 }
