@@ -41,3 +41,5 @@ export interface WarningByMonth {
   month: number;
   countWarnings: number;
 }
+
+export type WarningByMonthResponse = WarningByMonth[];

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { Chart, registerables } from 'chart.js';
+import { Chart, ChartTypeRegistry, ChartConfiguration, ChartType, registerables } from 'chart.js';
 import { DashboardService } from '../../../../services/dashboard/dashboard.service';
 import { GlobalModule } from '../../global.module';
 import { WorkCenterService } from '../../../../services/workCenter/work-center.service';
@@ -13,11 +13,12 @@ Chart.register(...registerables);
   templateUrl: './index.component.html',
   styleUrls: ['./index.component.css']
 })
-export class IndexComponent implements OnInit{
+export class IndexComponent implements OnInit, OnDestroy {
   years = ['2023', '2024', '2025'];
-  chart: any;
-  pieChart: any;
-  barChart: any;
+  lineChart: Chart<keyof ChartTypeRegistry> | null = null;
+  pieChart: Chart<'doughnut'> | null = null;
+  barChart: Chart<'bar'> | null = null;
+  alertChart: Chart<'line'> | null = null;
   selectedYear: number = 2025;
   actualMonth: number = 0;
   totalCentersPerYear: number = 0;
@@ -85,33 +86,16 @@ export class IndexComponent implements OnInit{
           consumptionLimit: centerDetails.consumptionLimit
         }];
         this.createExcessBarChart();
-        const monthlyConsumption = new Array(12).fill(0).map(() => ({
-          totalConsumption: 0,
-          count: 0
-        }));
-        data.registers.forEach(register => {
-          const month = new Date(register.date).getMonth();
-          monthlyConsumption[month].totalConsumption += register.consumption;
-          monthlyConsumption[month].count++;
-        });
       });
-      this.httpCenter.getAlerts(companyId).subscribe(data => {
-        const monthlyWarnings = new Array(12).fill(0);
-        console.log(data);
-        data.warnings.forEach(warning => {
-          const month = warning.month - 1;
-          monthlyWarnings[month]++;
-        });
+
+      this.httpCenter.getAlertsById(companyId).subscribe(warnings => {
         this.topWarnedCenters = [{
           company: {
             id: centerDetails.id,
             name: centerDetails.name
           },
-          countWarning: data.warnings.length,
-          countWarningByMonth: monthlyWarnings.map((count, index) => ({
-            month: index,
-            countWarnings: count
-          }))
+          countWarning: warnings.reduce((sum: number, month) => sum + month.countWarnings, 0),
+          countWarningByMonth: warnings
         }];
         this.createAlertTrendChart();
       });
@@ -166,6 +150,10 @@ export class IndexComponent implements OnInit{
    */
   createLineChart(): void {
     const canvas = document.getElementById('centersChart') as HTMLCanvasElement;
+    // Destruir el gráfico existente si existe
+    if (this.lineChart) {
+      this.lineChart.destroy();
+    }
     const createdData = this.centersCreatedData.map(data => data.countCreatedCompanies);
     const totalCreatedCenters = createdData.reduce((acc, item) => acc += item);
     const deletedData = this.centersCreatedData.map(data => data.countDeletedCompanies);
@@ -173,7 +161,7 @@ export class IndexComponent implements OnInit{
     this.createdCentersThisMonth = createdData[this.actualMonth];
     this.deletedCentersThisMonth = deletedData[this.actualMonth];
     this.totalCentersPerYear = totalCreatedCenters - totalDeletedCenters;
-    this.chart = new Chart(canvas, {
+    this.lineChart = new Chart(canvas, {
       type: 'line',
       data: {
         labels: [
@@ -231,8 +219,13 @@ export class IndexComponent implements OnInit{
    */
   createPieChart(): void {
     const canvas = document.getElementById('officesChart') as HTMLCanvasElement;
+    // Destruir el gráfico existente si existe
+    if (this.pieChart) {
+      this.pieChart.destroy();
+    }
     const colors = this.topBiggestCenters.map(() => `#${Math.floor(Math.random()*16777215).toString(16)}`);
-    this.pieChart = new Chart(canvas, {
+    
+    const config: ChartConfiguration<'doughnut'> = {
       type: 'doughnut',
       data: {
         labels: this.topBiggestCenters.map(center => center.companyName),
@@ -260,7 +253,9 @@ export class IndexComponent implements OnInit{
           }
         }
       }
-    });
+    };
+    
+    this.pieChart = new Chart(canvas, config);
   }
 
   /**
@@ -270,28 +265,32 @@ export class IndexComponent implements OnInit{
    */
   createExcessBarChart(): void {
     const canvas = document.getElementById('excessChart') as HTMLCanvasElement;
-    const data = {
-      labels: this.topConsumingCenters.map(center => center.companyName),
-      datasets: [
-        {
-          label: 'Consumo (kWh)',
-          data: this.topConsumingCenters.map(center => center.totalConsumption),
-          backgroundColor: '#ff1900',
-          borderColor: 'rgba(231, 76, 60, 1)',
-          borderWidth: 1
-        },
-        {
-          label: 'Límite (kWh)',
-          data: this.topConsumingCenters.map(center => center.consumptionLimit),
-          backgroundColor: 'rgba(127, 140, 141, 0.8)',
-          borderColor: 'rgba(127, 140, 141, 1)',
-          borderWidth: 1
-        }
-      ]
-    };
-    this.barChart = new Chart(canvas, {
+    // Destruir el gráfico existente si existe
+    if (this.barChart) {
+      this.barChart.destroy();
+    }
+    
+    const config: ChartConfiguration<'bar'> = {
       type: 'bar',
-      data: data,
+      data: {
+        labels: this.topConsumingCenters.map(center => center.companyName),
+        datasets: [
+          {
+            label: 'Consumo (kWh)',
+            data: this.topConsumingCenters.map(center => center.totalConsumption),
+            backgroundColor: '#ff1900',
+            borderColor: 'rgba(231, 76, 60, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Límite (kWh)',
+            data: this.topConsumingCenters.map(center => center.consumptionLimit),
+            backgroundColor: 'rgba(127, 140, 141, 0.8)',
+            borderColor: 'rgba(127, 140, 141, 1)',
+            borderWidth: 1
+          }
+        ]
+      },
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -312,7 +311,9 @@ export class IndexComponent implements OnInit{
           y: { beginAtZero: true, title: { display: true, text: 'Consumo (kWh)' } }
         }
       }
-    });
+    };
+    
+    this.barChart = new Chart(canvas, config);
   }
 
   /**
@@ -322,11 +323,15 @@ export class IndexComponent implements OnInit{
    */
   createAlertTrendChart(): void {
     const canvas = document.getElementById('alertTrendChart') as HTMLCanvasElement;
+    // Destruir el gráfico existente si existe
+    if (this.alertChart) {
+      this.alertChart.destroy();
+    }
     const isAdmin = this.userInfo.roles.includes('Admin');
     console.log(this.topWarnedCenters);
 
     const colors = this.topWarnedCenters.map(() => `#${Math.floor(Math.random()*16777215).toString(16)}`);
-    this.chart = new Chart(canvas, {
+    this.alertChart = new Chart(canvas, {
       type: 'line',
       data: {
         labels: [
@@ -395,9 +400,30 @@ export class IndexComponent implements OnInit{
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.innerWidth = window.innerWidth;
-    if (this.chart) {
-      this.chart.destroy();
-      this.loadAllData();
+    this.destroyAllCharts();
+    this.loadAllData();
+  }
+
+  destroyAllCharts(): void {
+    if (this.lineChart) {
+      this.lineChart.destroy();
+      this.lineChart = null;
     }
+    if (this.pieChart) {
+      this.pieChart.destroy();
+      this.pieChart = null;
+    }
+    if (this.barChart) {
+      this.barChart.destroy();
+      this.barChart = null;
+    }
+    if (this.alertChart) {
+      this.alertChart.destroy();
+      this.alertChart = null;
+    }
+  }
+
+  ngOnDestroy() {
+    this.destroyAllCharts();
   }
 }
