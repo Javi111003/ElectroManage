@@ -35,13 +35,13 @@ public class CompareEfficiencyPolicyEffectCommandHandler : CoreCommandHandler<Co
             ThrowError($"Company with Id {command.CompanyId} not found", 404);
         }
 
-        var policy = await efficiencyPolicyRepository.FirstAsync(filters: x => x.Id == command.EfficiencyPolicyId);
+        var policy = await efficiencyPolicyRepository.GetByIdAsync( command.EfficiencyPolicyId , useInactive: true);
         if (policy == null)
         {
             _logger.LogError($"{nameof(ExecuteAsync)} | Efficiency Policy with Id {command.EfficiencyPolicyId} not found");
             ThrowError($"Efficiency Policy with Id {command.EfficiencyPolicyId} not found", 404);
         }
-
+        
         var appliedPolicy = company.EfficiencyPoliciesApplyed.FirstOrDefault(x => x.EfficiencyPolicyId == command.EfficiencyPolicyId && x.ApplyingDate.Date == command.ApplyingDate.Date);
         if(appliedPolicy is null)
         {
@@ -54,7 +54,7 @@ public class CompareEfficiencyPolicyEffectCommandHandler : CoreCommandHandler<Co
         TimeSpan timeSpan = end - start ;
         DateTime startBeforePeriod = start - timeSpan;
 
-        var registersBefore = company.Registers.Where(r => r.Date.Date >= startBeforePeriod && r.Date.Date <= start && r.StatusBaseEntity == Domain.Enums.StatusEntityType.Active)
+        var registersBefore = company.Registers.Where(r => r.Date.Date >= startBeforePeriod && r.Date.Date < start && r.StatusBaseEntity == Domain.Enums.StatusEntityType.Active)
             .Select(RegisterMapper.MapToRegisterDto)
             .OrderByDescending(r => r.Date);
 
