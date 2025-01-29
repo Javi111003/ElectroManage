@@ -23,6 +23,7 @@ public class CreateRegisterCommandHandler : CoreCommandHandler<CreateRegisterCom
         var formulaRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.CostFormula>();
         var companyRepository = _unitOfWork.DbRepository<Domain.Entites.Sucursal.Company>();
         var company = await companyRepository.GetAllListOnly(filters: x => x.Id == command.CompanyId)
+            .Include(c => c.Registers)
             .Include(c => c.CostFormulas)
                 .ThenInclude(f => f.VariableDefinitions)
                 .AsSplitQuery()
@@ -31,6 +32,11 @@ public class CreateRegisterCommandHandler : CoreCommandHandler<CreateRegisterCom
         {
             _logger.LogError($"The company with id: {command.CompanyId} not found");
             ThrowError($"The company with id: {command.CompanyId} not found", 404);
+        }
+        if (company.Registers.Count(r => r.Date.Date == command.Date.Date) > 0)
+        {
+            _logger.LogError($"You can only create one register by day");
+            ThrowError($"You can only create one register by day", 400);
         }
         var formula = company.CostFormulas.Last();
         if (formula is null)
