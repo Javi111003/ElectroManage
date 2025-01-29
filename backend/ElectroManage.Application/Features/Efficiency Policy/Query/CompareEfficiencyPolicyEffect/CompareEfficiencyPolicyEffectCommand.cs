@@ -4,4 +4,5 @@ public record CompareEfficiencyPolicyEffectQuery : ICommand<CompareEfficiencyPol
 {
     public required long CompanyId { get; set; }
     public required long EfficiencyPolicyId {get; set;}
+    public DateTime ApplyingDate {get; set;}
 }

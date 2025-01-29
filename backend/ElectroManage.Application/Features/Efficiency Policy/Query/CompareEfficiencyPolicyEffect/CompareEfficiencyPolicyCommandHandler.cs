@@ -42,11 +42,16 @@ public class CompareEfficiencyPolicyEffectCommandHandler : CoreCommandHandler<Co
             ThrowError($"Efficiency Policy with Id {command.EfficiencyPolicyId} not found", 404);
         }
 
-        var appliedPolicy = company.EfficiencyPoliciesApplyed.Last(x => x.EfficiencyPolicyId == command.EfficiencyPolicyId);
-
+        var appliedPolicy = company.EfficiencyPoliciesApplyed.FirstOrDefault(x => x.EfficiencyPolicyId == command.EfficiencyPolicyId && x.ApplyingDate.Date == command.ApplyingDate.Date);
+        if(appliedPolicy is null)
+        {
+            _logger.LogError($"{nameof(ExecuteAsync)} | Efficiency Policy with Id {command.EfficiencyPolicyId} not applied to Company with Id {command.CompanyId} on given date");
+            ThrowError($"Efficiency Policy with Id {command.EfficiencyPolicyId} not applied to Company with Id {command.CompanyId} on given date", 404);
+        }
         var start = appliedPolicy.ApplyingDate.Date;
         var end = appliedPolicy.To?.Date ?? DateTime.UtcNow.Date;     // in case the policy is currently active we use the current date as end date
-        TimeSpan timeSpan = start - end ;
+    
+        TimeSpan timeSpan = end - start ;
         DateTime startBeforePeriod = start - timeSpan;
 
         var registersBefore = company.Registers.Where(r => r.Date.Date >= startBeforePeriod && r.Date.Date <= start && r.StatusBaseEntity == Domain.Enums.StatusEntityType.Active)
