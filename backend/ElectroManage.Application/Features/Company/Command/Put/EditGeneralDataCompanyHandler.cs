@@ -94,7 +94,7 @@ public class EditGeneralDataCompanyHandler : CoreCommandHandler<EditGeneralDataC
             var lastPolicy = company.EfficiencyPoliciesApplyed.Where(p => p.StatusBaseEntity == Domain.Enums.StatusEntityType.Active).Count() > 0 ? company.EfficiencyPoliciesApplyed.Where(p => p.StatusBaseEntity == Domain.Enums.StatusEntityType.Active).Last() : null; 
             if(lastPolicy is not null && (efficiencyPolicy is not null && lastPolicy.EfficiencyPolicyId != efficiencyPolicy.Id || efficiencyPolicy is null))
             {
-                lastPolicy.To = DateTime.Now;
+                lastPolicy.To = command.PolicyApplyingDate;
                 lastPolicy.StatusBaseEntity = Domain.Enums.StatusEntityType.Inactive;
                 await efficiencyPolicyCompanyRepository.UpdateAsync(lastPolicy, false);
             }
