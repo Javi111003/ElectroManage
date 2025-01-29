@@ -6,15 +6,14 @@
   justify-content: space-between;
 }
 .form-autocomplete {
-  width: 20%;
+  width: 40%;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content: space-between;
-  justify-items: left;
+  justify-content: left;
 }
 .form-buttons {
-  width: 80%;
+  width: 40%;
   display: flex;
   flex-wrap: wrap;
   justify-content: right;

@@ -121,7 +121,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     const year = d?.getFullYear();
 
     if (year !== undefined && month !== undefined && day !== undefined &&
-      (year < Tyear || (year === Tyear && (month < Tmonth) || (month === Tmonth && day < Tday))))
+      (year < Tyear || (year === Tyear && (month < Tmonth) || (year === Tyear && month === Tmonth && day < Tday))))
       return true;
 
     return false
@@ -152,8 +152,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
     const year = d?.getFullYear();
 
     if (year !== undefined && month !== undefined && day !== undefined &&
-      (year > DSyear || (year === DSyear && (month > DSmonth) || (month === DSmonth && day >= DSday))) &&
-      (year < Tyear || (year === Tyear && (month < Tmonth) || (month === Tmonth && day < Tday))))
+      (year > DSyear || (year === DSyear && (month > DSmonth) || (year === DSyear && month === DSmonth && day >= DSday))) &&
+      (year < Tyear || (year === Tyear && (month < Tmonth) || (year === Tyear && month === Tmonth && day < Tday))))
       return true;
 
     return false

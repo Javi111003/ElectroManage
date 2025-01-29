@@ -5,7 +5,7 @@ import { ConfigColumn } from '../../../../../shared/components/table/table.compo
 import { PolicyService } from '../../../../../services/policy/policy.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Item } from '../../../../../shared/shared.module';
-import { PolicyComparison } from '../../../../../models/policy.interface';
+import { PolicyApplied, PolicyComparison } from '../../../../../models/policy.interface';
 import { RegisterByDay } from '../../../../../models/register.interface';
 
 @Component({
@@ -19,6 +19,8 @@ export class ComparisonComponent implements OnInit {
   showTable: boolean = false;
   registersBefore: RegisterByDay[] = [];
   registersAfter: RegisterByDay[] = [];
+  noResultsBefore: boolean = false;
+  noResultsAfter: boolean = false;
   footerTableBefore: any[] = [];
   footerTableAfter: any[] = [];
   dataSourceBefore: MatTableDataSource<any> = new MatTableDataSource();
@@ -75,7 +77,9 @@ export class ComparisonComponent implements OnInit {
       if (policy) {
         if (policy.id) {
           const centerID = this.global.getControlValue(this.form, 'workCenter').id;
-          this.getBeforeAfterInfo(policy.id, centerID);
+          const len = policy.name.length;
+          const date = policy.name.substring(len - 11, len - 1);
+          this.getBeforeAfterInfo(policy.id, centerID, date);
         }
       }
     });
@@ -137,14 +141,20 @@ export class ComparisonComponent implements OnInit {
    * @param policyID The ID of the policy to apply.
    * @param centerID The ID of the center to which the policy is applied.
    */
-  getBeforeAfterInfo(policyID: number, centerID: number): void {
-    this.httpPolicy.getPolicyComparison(centerID, policyID).subscribe(comparison => {
+  getBeforeAfterInfo(policyID: number, centerID: number, date: string): void {
+    this.httpPolicy.getPolicyComparison(centerID, policyID, date).subscribe(comparison => {
       this.registersAfter = comparison.after.registers;
       this.registersBefore = comparison.before.registers;
       this.reloadTables(comparison);
     });
   }
 
+  /**
+   * Reloads the table data with the provided list of registers.
+   * This function updates the data sources of the tables with the new list of registers,
+   * before and after the appliance of a policy.
+   * @param comparison The registers after and before the policy appliance.
+   */
   reloadTables(comparison: PolicyComparison): void {
     this.dataSourceBefore.data = comparison.before.registers.map(register => ({
       date: register.date.substring(0, 10),
@@ -167,5 +177,8 @@ export class ComparisonComponent implements OnInit {
       comparison.after.totalConsumption.toFixed(2),
       comparison.after.totalCost.toFixed(2)
     ];
+
+    this.noResultsBefore = this.dataSourceBefore.data.length == 0;
+    this.noResultsAfter = this.dataSourceAfter.data.length == 0;
   }
 }

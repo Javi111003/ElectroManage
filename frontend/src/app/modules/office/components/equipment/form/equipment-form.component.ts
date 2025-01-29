@@ -258,7 +258,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
     const year = d?.getFullYear();
 
     if (year !== undefined && month !== undefined && day !== undefined &&
-      (year < Tyear || (year === Tyear && (month < Tmonth) || (month === Tmonth && day <= Tday))))
+      (year < Tyear || (year === Tyear && (month < Tmonth) || (year === Tyear && month === Tmonth && day <= Tday))))
       return true;
 
     return false;
