@@ -18,6 +18,7 @@ public static class EfficiencyPolicyMapper
         {
             EfficiencyPolicy = MapToEfficiencyPolicyDTO(appliedPolicy.EfficiencyPolicy),
             ApplyingDate = appliedPolicy.ApplyingDate,
+            To = appliedPolicy.To,
         };
     }
 }
