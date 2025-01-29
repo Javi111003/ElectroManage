@@ -29,21 +29,27 @@
   <div class="table" [class.hidden]="!showTable">
     <div>
       <h6>Antes</h6>
-      <app-table class="before"
+      <app-table class="before" [class.hidden]="dataSourceBefore.data.length == 0"
         [dataSource]="dataSourceBefore"
         [displayedColumns]="displayedColumns"
         [footer]="footerTableBefore"
         [showFooter]="true"
       ></app-table>
+      <div *ngIf="noResultsBefore">
+        <app-no-results></app-no-results>
+      </div>
     </div>
     <div>
       <h6>Después</h6>
-      <app-table class="after"
+      <app-table class="after" [class.hidden]="dataSourceAfter.data.length == 0"
         [dataSource]="dataSourceAfter"
         [displayedColumns]="displayedColumns"
         [footer]="footerTableAfter"
         [showFooter]="true"
       ></app-table>
+      <div *ngIf="noResultsAfter">
+        <app-no-results></app-no-results>
+      </div>
     </div>
   </div>
 </div>

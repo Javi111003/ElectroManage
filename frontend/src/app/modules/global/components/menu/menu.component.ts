@@ -83,7 +83,8 @@ export class MenuComponent implements OnInit {
   ngOnInit(): void {
     this.menuService.getMenuOptions().subscribe(data => {
       this.menuItems = data.menuItems;
-      const array = window.location.href.substring(7, window.location.href.length).split("/");
+      const ref = window.location.href;
+      const array = ref.substring(ref.indexOf(":") + 3, ref.length).split("/");
       let URL = [];
       for (let i = 1; i < array.length; i++) {
         URL.push(array[i]);

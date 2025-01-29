@@ -21,10 +21,18 @@ export class PolicyService {
     return this.http.get<PolicyApplied[]>(`${API_URL}/v1/company/${centerID}/list_policies`);
   }
 
-  getPolicyComparison(centerID: number, policyID: number): Observable<PolicyComparison> {
+  /**
+   * Fetches the comparison of an applied policy given a date, a policy and a center
+   * @param centerID The id of center when the policy has been applied
+   * @param policyID The id of the policy to find data of
+   * @param date The applying date of the policy
+   * @returns An Observable that resolves to a `PolicyComparison` object.
+   */
+  getPolicyComparison(centerID: number, policyID: number, date: string): Observable<PolicyComparison> {
     let param = new HttpParams();
     param = param.append('companyId', centerID);
     param = param.append('efficiencyPolicyId', policyID);
+    param = param.append('applyingDate', date);
     return this.http.get<PolicyComparison>(`${API_URL}/v1/policy/compare`, { params: param });
   }
 

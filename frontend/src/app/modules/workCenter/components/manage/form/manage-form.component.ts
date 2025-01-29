@@ -521,8 +521,21 @@ export class ManageFormComponent implements OnInit, OnDestroy {
     const month = d?.getMonth();
     const year = d?.getFullYear();
 
-    if (year !== undefined && month !== undefined && day !== undefined &&
-      (year < Tyear || (year === Tyear && (month < Tmonth) || (month === Tmonth && day <= Tday))))
+    const policy = this.data.policy;
+    let applyingDate = today;
+
+    if (policy)
+      applyingDate = new Date(policy.applyingDate);
+
+    const appDateDay = applyingDate.getDate();
+    const appDateMonth = applyingDate.getMonth();
+    const appDateYear = applyingDate.getFullYear();
+
+    if (year != undefined && month != undefined && day != undefined && d != undefined &&
+      (year < Tyear || (year === Tyear && (month < Tmonth) || (year === Tyear && month === Tmonth && day <= Tday)))
+      && (year > appDateYear || (year === appDateYear && (month > appDateMonth) ||
+      (year === appDateYear && month === appDateMonth && day >= appDateDay)))
+    )
       return true;
 
     return false;
