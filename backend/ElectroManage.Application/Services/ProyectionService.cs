@@ -8,14 +8,20 @@ namespace ElectroManage.Application.Services;
 [RegisterService<IProyectionService>(LifeTime.Scoped)]
 public class ProyectionService : IProyectionService
 {
-    public async Task<IEnumerable<ProyectionDTO>> CalculateProyectionsAsync(Company company)
+    public IEnumerable<ProyectionDTO> CalculateProyectionsAsync(Company company)
     {
         int daysInMonth = 30;
         int monthsToPredict = 3;
         int daysToPredict = daysInMonth * monthsToPredict;
 
-        var consumption = company.Registers.Where(r => r.Date.Year >= DateTime.UtcNow.Year - 5 && r.StatusBaseEntity == Domain.Enums.StatusEntityType.Active)
-            .Select(r => r.Consumption).ToList();
+        var consumption = company.Registers
+            .Where(r => r.Date.Year >= DateTime.UtcNow.Year - 5 && r.StatusBaseEntity == Domain.Enums.StatusEntityType.Active)
+            .OrderBy(r => r.Date) 
+            .Select(r => r.Consumption)
+            .ToList();
+
+        if (!consumption.Any())
+            return Enumerable.Empty<ProyectionDTO>();
 
         List<double> x = new List<double>();
         for (int i = 0; i < consumption.Count; i++)
@@ -31,17 +37,19 @@ public class ProyectionService : IProyectionService
             double predictedValueMonth = 0;
             for (int day = 0; day < daysInMonth; day++)
             {
-                predictedValueMonth += Predict(n, coefficients);
+                double dailyPrediction = Predict(n, coefficients);
+                predictedValueMonth += dailyPrediction;
                 n++;
             }
             response[month] = new ProyectionDTO
             {
-                Month = DateTime.UtcNow.Month + month + 1,
-                FutureConsumption = predictedValueMonth,
+                Month = DateTime.UtcNow.AddMonths(month + 1).Month,
+                FutureConsumption = Math.Round(predictedValueMonth,1)
             };
         }
         return response;
     }
+
     private Tuple<double, double> Fit(List<double> x, List<double> y)
     {
         double xMean = x.Average();
@@ -55,13 +63,14 @@ public class ProyectionService : IProyectionService
             sumX2 += Math.Pow(x[i] - xMean, 2);
         }
 
-        double slope = sumXy / sumX2;
+        double slope = sumX2 == 0 ? 0 : sumXy / sumX2;
         double intercept = yMean - slope * xMean;
 
         return new Tuple<double, double>(slope, intercept);
     }
+
     private double Predict(double x, Tuple<double, double> coefficients)
     {
-        return coefficients.Item1 * x + coefficients.Item2;
+        return Math.Max(coefficients.Item1 * x + coefficients.Item2, 0);
     }
 }

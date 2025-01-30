@@ -26,9 +26,9 @@ public class GetTopFiveCompaniesCountOfficeQueryHandler : CoreCommandHandler<Get
                 {
                     CompanyId = x.Id,
                     CompanyName = x.Name,
-                    OfficeCount = x.Offices.Where(o => o.StatusBaseEntity != Domain.Enums.StatusEntityType.Delete).Count()
+                    OfficeCount = x.Offices.Where(o => o.StatusBaseEntity == Domain.Enums.StatusEntityType.Active).Count()
                 })
-            .Take(5).OrderBy(x => x.OfficeCount)
+            .OrderByDescending(x => x.OfficeCount).Take(5)
             .ToListAsync(ct);
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution Completed");
         return companies;

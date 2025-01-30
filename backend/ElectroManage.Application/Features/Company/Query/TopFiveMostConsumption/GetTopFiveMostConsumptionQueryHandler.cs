@@ -30,7 +30,7 @@ public class GetTopFiveMostConsumptionQueryHandler : CoreCommandHandler<GetTopFi
                 CompanyName = x.Name,
                 ConsumptionLimit = x.ConsumptionLimit,
                 TotalConsumption = x.Registers.Where(r => r.StatusBaseEntity != Domain.Enums.StatusEntityType.Delete).Sum(r => r.Consumption)
-            }).Take(5).OrderBy(c => c.TotalConsumption)
+            }).OrderByDescending(c => c.TotalConsumption).Take(5)
             .ToListAsync(ct);
         return companies;
     }
