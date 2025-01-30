@@ -44,7 +44,7 @@ public class ProyectionNextThreeYearsCommandHandler : CoreCommandHandler<Proyect
                 response.Add(new ProyectionNextThreeMonthResponse
                 {
                     CompanyId = company.Id,
-                    Proyections = _proyectionService.CalculateProyectionsAsync(company).Result
+                    Proyections = _proyectionService.CalculateProyectionsAsync(company)
                 });
         }
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
