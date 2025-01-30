@@ -40,11 +40,12 @@ public class ProyectionNextThreeYearsCommandHandler : CoreCommandHandler<Proyect
         var response = new List<ProyectionNextThreeMonthResponse>();
         foreach (var company in companies)
         {
-            response.Add(new ProyectionNextThreeMonthResponse
-            {
-                CompanyId = company.Id,
-                Proyections = _proyectionService.CalculateProyectionsAsync(company).Result
-            });
+            if(company.Registers.Count > 0)
+                response.Add(new ProyectionNextThreeMonthResponse
+                {
+                    CompanyId = company.Id,
+                    Proyections = _proyectionService.CalculateProyectionsAsync(company).Result
+                });
         }
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
         return response;
