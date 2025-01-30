@@ -14,7 +14,7 @@ public class ProyectionService : IProyectionService
         int monthsToPredict = 3;
         int daysToPredict = daysInMonth * monthsToPredict;
 
-        var consumption = company.Registers.Where(r => r.Date.Year >= DateTime.UtcNow.Year - 5)
+        var consumption = company.Registers.Where(r => r.Date.Year >= DateTime.UtcNow.Year - 5 && r.StatusBaseEntity == Domain.Enums.StatusEntityType.Active)
             .Select(r => r.Consumption).ToList();
 
         List<double> x = new List<double>();

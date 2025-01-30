@@ -28,7 +28,7 @@ public class ProyectionNextThreeYearsCommandHandler : CoreCommandHandler<Proyect
         {
             c => c.Registers
         };
-        var companies = await companyRepository.GetAllListOnly(useInactive: true, includes: include, filters: x => command.CompaniesId.Contains(x.Id))
+        var companies = await companyRepository.GetAllListOnly(includes: include, filters: x => command.CompaniesId.Contains(x.Id))
             .ToListAsync();
         var notFound = command.CompaniesId.Except(companies.Select(x => x.Id));
         foreach (var id in notFound)
