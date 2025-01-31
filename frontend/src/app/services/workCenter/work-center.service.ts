@@ -4,7 +4,7 @@ import { API_URL } from '../../config/api.config';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { WorkCenter } from '../../models/workCenter.interface';
-import { MeanRegisterData, TotalConsumptionData } from '../../models/register.interface';
+import { MeanRegisterData, RegisterPrediction, TotalConsumptionData } from '../../models/register.interface';
 import { Alert, Excess } from '../../models/alert.interface';
 import { WarningByMonthResponse } from '../../models/dashboard.interface';
 
@@ -134,6 +134,24 @@ export class WorkCenterService {
 
     return this.http.get<MeanRegisterData[]>(
       `${API_URL}/v1/company/mean_cost_last_three_years`, { params }
+    );
+  }
+
+  /**
+   * Fetches the consumption projections for the next three months for a given list of work centers from the API.
+   * This method sends an HTTP GET request to the API to retrieve the consumption projections
+   * for a specified list of work centers.
+   * @param centerIDs The IDs of the work centers for which to fetch consumption projections.
+   * @returns An Observable that resolves to an array of RegisterPrediction objects.
+   */
+  getPrediction(centerIDs: number[]): Observable<RegisterPrediction[]> {
+    let params = new HttpParams();
+    centerIDs.forEach(id => {
+      params = params.append('companiesId', id.toString());
+    });
+
+    return this.http.get<RegisterPrediction[]>(
+      `${API_URL}/v1/company/Proyection_Next_Three_Months`, { params }
     );
   }
 

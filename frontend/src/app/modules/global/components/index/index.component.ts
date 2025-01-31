@@ -4,7 +4,7 @@ import { DashboardService } from '../../../../services/dashboard/dashboard.servi
 import { GlobalModule } from '../../global.module';
 import { WorkCenterService } from '../../../../services/workCenter/work-center.service';
 import { UserLogged } from '../../../../models/credential.interface';
-import { CompanybyMonthData, MostWarnedCenter } from '../../../../models/dashboard.interface';
+import { CentersPerYear, CompanybyMonthData, MostWarnedCenter } from '../../../../models/dashboard.interface';
 
 Chart.register(...registerables);
 
@@ -25,7 +25,7 @@ export class IndexComponent implements OnInit, OnDestroy {
   createdCentersThisMonth: number = 0;
   deletedCentersThisMonth: number = 0;
   userInfo: UserLogged = [][0];
-  centersCreatedData: CompanybyMonthData[]=[];
+  centersCreatedData: CentersPerYear = [][0];
   topConsumingCenters: any[] = [];
   topBiggestCenters: any[] = [];
   topWarnedCenters: MostWarnedCenter[] = [];
@@ -39,16 +39,17 @@ export class IndexComponent implements OnInit, OnDestroy {
     this.innerWidth = window.innerWidth;
   }
 
-  /**
-   * Initializes the component by getting user information and loading data.
-   * This method is called automatically when the component is initialized.
-   */
   ngOnInit(): void {
     this.userInfo = this.global.getUserInfo();
     const today = new Date();
     this.actualMonth = today.getMonth();
     this.loadAllData();
   }
+
+  ngOnDestroy() {
+    this.destroyAllCharts();
+  }
+
   /**
    * This method loads all the necessary data for the dashboard.
    * It calls methods to fetch data for centers created in the selected year,
@@ -108,7 +109,7 @@ export class IndexComponent implements OnInit, OnDestroy {
    */
   getCentersCreated(year: number): void {
     this.http.getCentersCreated(year).subscribe(centers => {
-      this.centersCreatedData = centers.companiesByMonth;
+      this.centersCreatedData = centers;
       this.createLineChart();
     });
   }
@@ -153,13 +154,12 @@ export class IndexComponent implements OnInit, OnDestroy {
     if (this.lineChart) {
       this.lineChart.destroy();
     }
-    const createdData = this.centersCreatedData.map(data => data.countCreatedCompanies);
-    const totalCreatedCenters = createdData.reduce((acc, item) => acc += item);
-    const deletedData = this.centersCreatedData.map(data => data.countDeletedCompanies);
-    const totalDeletedCenters = deletedData.reduce((acc, item) => acc += item);
+    const createdData = this.centersCreatedData.companiesByMonth.map(data => data.countCreatedCompanies);
+    const deletedData = this.centersCreatedData.companiesByMonth.map(data => data.countDeletedCompanies);
+    this.totalCentersPerYear = this.centersCreatedData.existingCompaniesThisYear;
+
     this.createdCentersThisMonth = createdData[this.actualMonth];
     this.deletedCentersThisMonth = deletedData[this.actualMonth];
-    this.totalCentersPerYear = totalCreatedCenters - totalDeletedCenters;
     this.lineChart = new Chart(canvas, {
       type: 'line',
       data: {
@@ -222,7 +222,7 @@ export class IndexComponent implements OnInit, OnDestroy {
       this.pieChart.destroy();
     }
     const colors = this.topBiggestCenters.map(() => `#${Math.floor(Math.random()*16777215).toString(16)}`);
-    
+
     const config: ChartConfiguration<'doughnut'> = {
       type: 'doughnut',
       data: {
@@ -252,7 +252,7 @@ export class IndexComponent implements OnInit, OnDestroy {
         }
       }
     };
-    
+
     this.pieChart = new Chart(canvas, config);
   }
 
@@ -266,7 +266,7 @@ export class IndexComponent implements OnInit, OnDestroy {
     if (this.barChart) {
       this.barChart.destroy();
     }
-    
+
     const config: ChartConfiguration<'bar'> = {
       type: 'bar',
       data: {
@@ -309,7 +309,7 @@ export class IndexComponent implements OnInit, OnDestroy {
         }
       }
     };
-    
+
     this.barChart = new Chart(canvas, config);
   }
 
@@ -394,12 +394,21 @@ export class IndexComponent implements OnInit, OnDestroy {
   }
 
   @HostListener('window:resize', ['$event'])
+  /**
+   * Handles the window resize event.
+   * Updates the innerWidth property, destroys all existing charts, and reloads all data.
+   */
   onResize() {
     this.innerWidth = window.innerWidth;
     this.destroyAllCharts();
     this.loadAllData();
   }
 
+  /**
+   * Destroys all existing charts.
+   * This method checks if each chart (line, pie, bar, and alert) exists,
+   * and if so, destroys it and sets its reference to null.
+   */
   destroyAllCharts(): void {
     if (this.lineChart) {
       this.lineChart.destroy();
@@ -417,9 +426,5 @@ export class IndexComponent implements OnInit, OnDestroy {
       this.alertChart.destroy();
       this.alertChart = null;
     }
-  }
-
-  ngOnDestroy() {
-    this.destroyAllCharts();
   }
 }

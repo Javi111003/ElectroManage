@@ -134,5 +134,6 @@
   "Variable must have a value or an expression as definition": "La variable debe tener un valor o una expresión como definición",
   "Username '{username}' is already taken.": "Ya existe un usuario con ese nombre",
   "Efficiency Policy with Id {id} not applied to Company with Id 10 on given date": "Esa política no se aplicó en esa fecha",
-  "Efficiency Policy with Id {id} not found": "Esa política de eficiencia no existe"
+  "Efficiency Policy with Id {id} not found": "Esa política de eficiencia no existe",
+  "You can only create one register by day": "Ya existe un registro con esa fecha"
 }
