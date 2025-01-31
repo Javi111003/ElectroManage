@@ -3,7 +3,7 @@ import { ConfigColumn } from '../../../../../shared/components/table/table.compo
 import { MatTableDataSource } from '@angular/material/table';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { GlobalModule } from '../../../../global/global.module';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Item } from '../../../../../shared/shared.module';
 
 
@@ -26,21 +26,24 @@ export class AvgConsumptionComponent implements OnInit {
   columnsToDisplay = ['Centro de Trabajo'];
   columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
   expandedElements: string[] = [];
-  showTable: boolean = false;
-  dataSources: { [key: string]: MatTableDataSource<any> } = {};
-  displayedColumns: ConfigColumn[] = [
-    {
-      title: 'Año',
-      field: 'year'
-    },
-    {
-      title: 'Costo ($)',
-      field: 'meanCost'
-    },
-    {
-      title: 'Consumo Promedio (Kw/h)',
-      field: 'meanConsumption'
-    }
+  showConsultTable: boolean = false;
+  showPredictTable: boolean = false;
+  monthMapper: Map<number, string> = new Map<number, string>([
+    [1, 'Enero'], [2, 'Febrero'], [3, 'Marzo'], [4, 'Abril'],
+    [5, 'Mayo'], [6, 'Junio'], [7, 'Julio'], [9, 'Agosto'],
+    [9, 'Septiembre'], [10, 'Octubre'], [11, 'Noviembre'], [12, 'Diciembre']
+  ]);
+  dataSourcesConsult: { [key: string]: MatTableDataSource<any> } = {};
+  dataSourcesPrediction: { [key: string]: MatTableDataSource<any> } = {};
+  noResultsPrediction: { [key: string]: boolean } = {};
+  displayedColumnsConsult: ConfigColumn[] = [
+    { title: 'Año', field: 'year' },
+    { title: 'Costo ($)', field: 'meanCost' },
+    { title: 'Consumo Promedio (Kw/h)', field: 'meanConsumption' }
+  ];
+  displayedColumnsPredict: ConfigColumn[] = [
+    { title: 'Mes', field: 'month' },
+    { title: 'Consumo esperado', field: 'expectedConsumption' }
   ];
 
   constructor (
@@ -52,9 +55,11 @@ export class AvgConsumptionComponent implements OnInit {
     });
 
     this.form.valueChanges.subscribe(() => {
-      this.showTable = false;
-      this.dataSources = {};
-    })
+      this.showConsultTable = false;
+      this.showPredictTable = false;
+      this.dataSourcesConsult = {};
+      this.dataSourcesPrediction = {};
+    });
 
     if (!this.global.getUserInfo().roles.includes('Admin')) {
       const id = this.global.getUserInfo().company.id;
@@ -95,7 +100,7 @@ export class AvgConsumptionComponent implements OnInit {
    * MatTableDataSource instances for each work center,
    * which are stored in the dataSources object.
    */
-  getAvgRegisters() {
+  getAvgRegisters(): void {
     this.global.httpCenter.getAvgRegisters(this.selectedOptionsIds).subscribe(registers => {
       for (let index = 0; index < registers.length; index++) {
         const centerName = this.global.workCenters.find(
@@ -103,8 +108,8 @@ export class AvgConsumptionComponent implements OnInit {
         )?.name;
 
         if (centerName) {
-          this.dataSources[centerName] = new MatTableDataSource();
-          this.dataSources[centerName].data = registers[index].yearCostDto.map(data => ({
+          this.dataSourcesConsult[centerName] = new MatTableDataSource();
+          this.dataSourcesConsult[centerName].data = registers[index].yearCostDto.map(data => ({
             year: data.year,
             meanCost: data.meanCost.toFixed(2),
             meanConsumption: data.meanConsumption.toFixed(2)
@@ -115,15 +120,44 @@ export class AvgConsumptionComponent implements OnInit {
   }
 
   /**
+   * Retrieves the consumption projections for the selected work centers.
+   * This method sends a request to the WorkCenterService to fetch the
+   * consumption projections for the IDs stored in
+   * selectedOptionsIds. The response is then processed to create
+   * MatTableDataSource instances for each work center,
+   * which are stored in the dataSourcesPrediction object.
+   */
+  getPrediction(): void {
+    this.global.httpCenter.getPrediction(this.selectedOptionsIds).subscribe(predictions => {
+      console.log(predictions);
+      for (let index = 0; index < predictions.length; index++) {
+        const centerName = this.global.workCenters.find(
+          item => item.id === predictions[index].companyId
+        )?.name;
+
+        if (centerName) {
+          this.dataSourcesPrediction[centerName] = new MatTableDataSource();
+          this.dataSourcesPrediction[centerName].data = predictions[index].proyections.map(data => ({
+            month: this.monthMapper.get(data.month),
+            expectedConsumption: data.futureConsumption.toFixed(2)
+          }));
+          this.noResultsPrediction[centerName] = this.dataSourcesPrediction[centerName].data.length == 0;
+        }
+      }
+    });
+  }
+
+  /**
    * Toggles the visibility of the table.
    * Called when the "Consultar" button is clicked.
    */
-  onConsultClick() {
-    if (!this.showTable) {
+  onConsultClick(): void {
+    this.showPredictTable = false;
+    if (!this.showConsultTable) {
       const workCenters = this.global.getControlValue(this.form, 'workCenters');
       if (workCenters && workCenters.length > 0)
       {
-        this.showTable = true;
+        this.showConsultTable = true;
         this.getAvgRegisters();
       } else {
         this.global.openDialog('Por favor, selecciona al menos un Centro de Trabajo.');
@@ -132,13 +166,22 @@ export class AvgConsumptionComponent implements OnInit {
   }
 
   /**
-   * Calculate the proyection of consumption for the next 3 years of the
+   * Calculate the proyection of consumption for the next 3 moths of the
    * selected work centers.
-   * Called when the "Proyección" button is clicked.
+   * Called when the `Predecir` button is clicked.
    */
-  onProyectionClick() {
-    this.global.openDialog('No esta implementado');
-    this.dataSources = {};
+  onPredictionClick(): void {
+    this.showConsultTable = false;
+    if (!this.showPredictTable) {
+      const workCenters = this.global.getControlValue(this.form, 'workCenters');
+      if (workCenters && workCenters.length > 0)
+      {
+        this.showPredictTable = true;
+        this.getPrediction();
+      } else {
+        this.global.openDialog('Por favor, selecciona al menos un Centro de Trabajo.');
+      }
+    }
   }
 
   /**
@@ -148,7 +191,7 @@ export class AvgConsumptionComponent implements OnInit {
    * otherwise, it adds the element to the array.
    * @param element The row element to be toggled.
    */
-  toggleRow(element: string) {
+  toggleRow(element: string): void {
     const index = this.expandedElements.indexOf(element);
     if (index >= 0) {
       this.expandedElements.splice(index, 1);

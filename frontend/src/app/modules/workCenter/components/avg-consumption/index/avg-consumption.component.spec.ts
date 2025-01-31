@@ -84,7 +84,7 @@ describe('AvgConsumptionComponent', () => {
     tick();
 
     expect(globalModuleMock.openDialog).toHaveBeenCalledWith('Por favor, selecciona al menos un Centro de Trabajo.');
-    expect(component.showTable).toBeFalse();
+    expect(component.showConsultTable).toBeFalse();
   }));
 
   it('should handle consult click with selected centers', fakeAsync(() => {
@@ -93,7 +93,7 @@ describe('AvgConsumptionComponent', () => {
     component.onConsultClick();
     tick();
 
-    expect(component.showTable).toBeTrue();
+    expect(component.showConsultTable).toBeTrue();
     expect(globalModuleMock.httpCenter.getAvgRegisters).toHaveBeenCalledWith([1]);
   }));
 
@@ -108,7 +108,7 @@ describe('AvgConsumptionComponent', () => {
   }));
 
   it('should handle proyection click', () => {
-    component.onProyectionClick();
+    component.onPredictionClick();
     expect(globalModuleMock.openDialog).toHaveBeenCalledWith('No esta implementado');
   });
 
@@ -116,7 +116,7 @@ describe('AvgConsumptionComponent', () => {
     const testElement = 'Test Row';
     component.toggleRow(testElement);
     expect(component.isRowExpanded(testElement)).toBeTrue();
-    
+
     component.toggleRow(testElement);
     expect(component.isRowExpanded(testElement)).toBeFalse();
   });
@@ -124,7 +124,7 @@ describe('AvgConsumptionComponent', () => {
   it('should update selected options ids when form changes', () => {
     const mockCenters = [{ id: 1, name: 'Test Center' }, { id: 2, name: 'Test Center 2' }];
     component.form.patchValue({ workCenters: mockCenters });
-    
+
     expect(component.selectedOptionsIds).toEqual([1, 2]);
   });
 

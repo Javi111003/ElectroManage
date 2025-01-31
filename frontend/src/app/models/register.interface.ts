@@ -38,3 +38,15 @@ export interface RegisterInfo {
   consumption: number;
   date: string;
 }
+
+// Prediction for the next three months
+export interface RegisterPrediction {
+  companyId: number;
+  proyections: MonthlyPrediction[];
+}
+
+// Prediction for each month
+export interface MonthlyPrediction {
+  month: number;
+  futureConsumption: number;
+}

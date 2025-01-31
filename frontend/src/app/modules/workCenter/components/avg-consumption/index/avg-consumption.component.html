@@ -14,15 +14,15 @@
       [function]="onConsultClick.bind(this)">
     </app-button>
     <app-button
-      [label]="'Proyección'"
-      [function]="onProyectionClick.bind(this)">
+      [label]="'Predecir'"
+      [function]="onPredictionClick.bind(this)">
     </app-button>
     <app-button></app-button>
   </div>
 </div>
 <table mat-table
        [dataSource]="global.getControlValue(form, 'workCenters')" multiTemplateDataRows
-       class="mat-elevation-z8" [hidden]="!showTable">
+       class="mat-elevation-z8" [hidden]="!showConsultTable && !showPredictTable">
   @for (column of columnsToDisplay; track column) {
     <ng-container matColumnDef="{{column}}">
       <th mat-header-cell *matHeaderCellDef> Centro de Trabajo </th>
@@ -46,12 +46,18 @@
       <div class="example-element-detail"
            [@detailExpand]="isRowExpanded(element.name) ? 'expanded' : 'collapsed'">
         <div class="example-element-detail">
-          <app-table
-            [dataSource]="dataSources[element.name]"
-            [displayedColumns]="displayedColumns"
+          <app-table *ngIf="showConsultTable"
+            [dataSource]="dataSourcesConsult[element.name]"
+            [displayedColumns]="displayedColumnsConsult"
+          >
+          </app-table>
+          <app-table *ngIf="showPredictTable && !noResultsPrediction[element.name]"
+            [dataSource]="dataSourcesPrediction[element.name]"
+            [displayedColumns]="displayedColumnsPredict"
           >
           </app-table>
         </div>
+        <app-no-results  *ngIf="noResultsPrediction[element.name]" [class.hidden]="!showPredictTable"></app-no-results>
       </div>
     </td>
   </ng-container>
