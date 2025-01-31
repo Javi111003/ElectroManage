@@ -8,7 +8,7 @@
         <form [formGroup]="form" (ngSubmit)="onSubmit.bind(this)">
           <div class="mb-3">
             <div class="row">
-              <div class="col-8 col-sm-6">
+              <div class="col-sm-6">
                 <label for="officeName" class="form-label">Nombre</label>
                 <input type="text" class="form-control" id="officeName" formControlName="officeName"
                   [ngClass]="{'is-invalid': form.get('officeName')?.invalid && form.get('officeName')?.touched}">
@@ -16,7 +16,7 @@
                   Este campo es obligatorio
                 </div>
               </div>
-              <div class="col-4 col-sm-6">
+              <div class="col-sm-6">
                 <label for="description" class="form-label">Descripción</label>
                 <input type="text" class="form-control" id="description" formControlName="description"
                   [ngClass]="{'is-invalid': form.get('description')?.invalid && form.get('description')?.touched}">

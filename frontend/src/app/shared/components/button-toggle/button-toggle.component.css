@@ -1,0 +1,11 @@
+mat-button-toggle {
+  background-color: #00203b;
+  color: white;
+}
+::ng-deep .mat-button-toggle-checked {
+  background-color: #193b19 !important;
+  color: white !important;
+}
+::ng-deep .mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after {
+  color: white !important;
+}

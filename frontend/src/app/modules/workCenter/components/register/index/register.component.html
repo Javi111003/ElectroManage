@@ -32,7 +32,10 @@
         [function]="onConsultClick.bind(this)"
       >
       </app-button>
-      <app-button class="exportPDF"></app-button>
+      <app-button class="export"
+        [control]="export"
+        [exportFunction]="exportFunction.bind(this)"
+      ></app-button>
     </div>
   </form>
   <div class="table" [class.hidden]="!showTable || dataSource.data.length == 0">

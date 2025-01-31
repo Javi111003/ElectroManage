@@ -112,8 +112,10 @@ export class MenuComponent implements OnInit {
   /**
    * Hide the visibility of the sidebar.
    */
-  hideSidebar(): void {
+  hideModals(): void {
     this.isSidebarActive = false;
+    this.isNotificationsMenuOpen = false;
+    this.isUserMenuOpen = false;
   }
 
   /**

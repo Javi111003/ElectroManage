@@ -10,6 +10,7 @@ import { ProgressSpinnerComponent } from './components/progress-spinner/progress
 import { ChipsComponent } from './components/chips/chips.component';
 import { SnackbarComponent } from './components/snackbar/snackbar.component';
 import { NoResultsComponent } from './components/no-results/no-results.component';
+import { ButtonToggleComponent } from './components/button-toggle/button-toggle.component';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -28,6 +29,7 @@ import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ProgressSpinnerComponent,
     ChipsComponent,
     SnackbarComponent,
-    NoResultsComponent
+    NoResultsComponent,
+    ButtonToggleComponent
   ],
   imports: [
     CommonModule,
@@ -67,7 +70,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CdkDropList,
     MatChipsModule,
     MatProgressBarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatButtonToggleModule
   ],
   exports: [
     TableComponent,
@@ -79,6 +83,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ChipsComponent,
     SnackbarComponent,
     NoResultsComponent,
+    ButtonToggleComponent,
 
     MatTableModule,
     MatIconModule,
@@ -103,7 +108,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CdkDropList,
     MatChipsModule,
     MatProgressBarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatButtonToggleModule
   ]
 })
 export class SharedModule { }
