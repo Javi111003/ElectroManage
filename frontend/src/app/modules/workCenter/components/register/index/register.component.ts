@@ -22,6 +22,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   form: FormGroup;
   showTable: boolean = false;
   noResults: boolean = false;
+  export: FormControl = new FormControl();
   dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
   footerTable: any[] = [];
   displayedColumns: ConfigColumn[] = [
@@ -88,6 +89,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  exportFunction(): void {
+    console.log(this.export.value.name);
   }
 
   /**

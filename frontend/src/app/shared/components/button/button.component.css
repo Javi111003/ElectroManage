@@ -26,3 +26,42 @@ button:hover {
 .hidden {
   display: none;
 }
+.modal-container {
+  position: relative;
+  display: inline-block;
+}
+.modal-menu {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: -220px;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  border-radius: 40px;
+  padding: 0.8rem;
+  width: 270px;
+  z-index: 1000;
+  font-family: 'Inter', 'Roboto', sans-serif;
+}
+.download-btn {
+  margin-left: 10px;
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color:#00203b;
+  color:white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.download-btn:hover {
+  transform:scale(1.1)
+}

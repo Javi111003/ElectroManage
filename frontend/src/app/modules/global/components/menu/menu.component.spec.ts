@@ -124,7 +124,7 @@ describe('MenuComponent', () => {
 
   it('should hide sidebar', () => {
     component.isSidebarActive = true;
-    component.hideSidebar();
+    component.hideModals();
     expect(component.isSidebarActive).toBeFalse();
   });
 

@@ -5,3 +5,14 @@
   <span *ngIf="!loading">{{label}}</span>
   <mat-icon [class.hidden]="!showIcon">{{icon}}</mat-icon>
 </button>
+
+<div class="modal-container">
+  <div class="modal-menu" *ngIf="isExportToggle">
+    <app-button-toggle
+      [options]="options"
+      [control]="control"
+    ></app-button-toggle>
+
+    <button class="download-btn" (click)="export()"><mat-icon>download</mat-icon></button>
+  </div>
+</div>

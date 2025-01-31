@@ -8,7 +8,7 @@
         <form id="form-container" [formGroup]="form" (ngSubmit)="onSubmit.bind(this)">
           <div class="mb-3">
             <div class="row">
-              <div class="col-8 col-sm-6">
+              <div class="col-sm-6">
                 <label for="name" class="form-label">Nombre del Centro</label>
                 <input type="text" class="form-control" id="name" formControlName="name"
                   [ngClass]="{'is-invalid': form.get('name')?.invalid && form.get('name')?.touched}">
@@ -16,7 +16,7 @@
                   Este campo es obligatorio
                 </div>
               </div>
-              <div class="col-4 col-sm-6">
+              <div class="col-sm-6">
                 <label for="monthlyConsumptionLimit" class="form-label">Límite de consumo mensual</label>
                 <input type="text" class="form-control" id="monthlyConsumptionLimit" formControlName="monthlyConsumptionLimit" appFloatValidation
                   [ngClass]="{'is-invalid': form.get('monthlyConsumptionLimit')?.invalid && form.get('monthlyConsumptionLimit')?.touched}">
@@ -108,7 +108,7 @@
 
           <div class="mb-3">
             <div class="row">
-              <div class="col-4 col-sm-4">
+              <div class="col-sm-4">
                 <label for="policy" class="form-label">Política</label>
                 <app-autocomplete class="form-control" id="policy"
                   [options]="policies"
@@ -116,7 +116,7 @@
                   [control]="global.getControl(form, 'policy')"
                 ></app-autocomplete>
               </div>
-              <div *ngIf="global.getControlValue(form, 'policy') && global.getControlValue(form, 'policy').id" class="col-4 col-sm-4">
+              <div *ngIf="global.getControlValue(form, 'policy') && global.getControlValue(form, 'policy').id" class="col-sm-4">
                 <label for="applyingDate" class="form-label">Fecha de aplicación</label> <br>
                 <app-datepicker class="form-control" id="applyingDate"
                   [filter]="filterDate"
@@ -124,7 +124,7 @@
                   [isDisabled]="checkApplyingDateDesabled()"
                 ></app-datepicker>
               </div>
-              <div *ngIf="!postMethod" class="col-4 col-sm-4">
+              <div *ngIf="!postMethod" class="col-sm-4">
                 <label for="teamWork" class="form-label">Equipo responsable</label>
                 <app-checkbox class="form-control" id="teamWork"
                   [options]="centerWorkers"

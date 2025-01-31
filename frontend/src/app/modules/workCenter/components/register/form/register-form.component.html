@@ -8,7 +8,7 @@
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="mb-3">
             <div class="row">
-              <div class="col-8 col-sm-6">
+              <div class="col-sm-6">
                 <label for="workCenter" class="form-label">Centro de Trabajo</label>
                 <app-autocomplete class="form-control" id="workCenter"
                   [options]="global.workCenters"
@@ -20,12 +20,11 @@
                   Este campo es obligatorio
                 </div>
               </div>
-              <div class="col-4 col-sm-6"></div>
             </div>
           </div>
           <div class="mb-3">
             <div class="row">
-              <div class="col-8 col-sm-6">
+              <div class="col-sm-6">
                 <label for="date" class="form-label">Fecha</label> <br>
                 <app-datepicker
                   [filter]="filterDate"
@@ -35,7 +34,7 @@
                   Este campo es obligatorio
                 </div>
               </div>
-              <div class="col-4 col-sm-6">
+              <div class="col-sm-6">
                 <label for="consumption" class="form-label">Consumo</label>
                 <input type="text" class="form-control" id="consumption" formControlName="consumption" appFloatValidation
                   [ngClass]="{'is-invalid': form.get('consumption')?.invalid && form.get('consumption')?.touched}">
