@@ -75,4 +75,11 @@ export class AutocompleteComponent implements OnInit, OnChanges {
   displayFn(option: Item): string {
     return option && option.name ? option.name : '';
   }
+
+  /**
+   * Clears the input field by setting its value to an empty string.
+   */
+  clearInput(): void {
+    this.control.setValue('');
+  }
 }

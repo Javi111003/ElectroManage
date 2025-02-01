@@ -24,7 +24,6 @@
 tr.example-detail-row {
   height: 0;
 }
-
 .prediction-chart-container {
   width: 100%;
   height: 400px;
@@ -33,4 +32,7 @@ tr.example-detail-row {
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.noResults {
+  width: 100%;
 }

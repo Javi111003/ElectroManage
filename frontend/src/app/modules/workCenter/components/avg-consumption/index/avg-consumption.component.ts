@@ -42,7 +42,7 @@ export class AvgConsumptionComponent implements OnInit {
   dataSourcesPrediction: { [key: string]: MatTableDataSource<any> } = {};
   noResultsPrediction: { [key: string]: boolean } = {};
 
-  /** 
+  /**
    * Collection of configuration columns for the consumption average table.
    * Defines the structure and display format of the consultation table.
    */
@@ -52,7 +52,7 @@ export class AvgConsumptionComponent implements OnInit {
     { title: 'Consumo Promedio (Kw/h)', field: 'meanConsumption' }
   ];
 
-  /** 
+  /**
    * Collection of configuration columns for the prediction table.
    * Defines the structure and display format of the prediction results table.
    */
@@ -66,7 +66,7 @@ export class AvgConsumptionComponent implements OnInit {
    * Component constructor.
    * Initializes the form and sets up form value change subscriptions.
    * For non-admin users, automatically sets their work center.
-   * 
+   *
    * @param global Service providing global functionality and data
    * @param fb FormBuilder service for creating reactive forms
    */
@@ -161,6 +161,13 @@ export class AvgConsumptionComponent implements OnInit {
       this.predictionChart.destroy();
     }
 
+    const date = new Date();
+    let labels: string[] = [
+      this.monthMapper.get(date.getMonth() + 2)!,
+      this.monthMapper.get(date.getMonth() + 3)!,
+      this.monthMapper.get(date.getMonth() + 4)!
+    ];
+
     this.global.httpCenter.getPrediction(this.selectedOptionsIds).subscribe(predictions => {
       console.log(predictions);
       for (let index = 0; index < predictions.length; index++) {
@@ -172,7 +179,7 @@ export class AvgConsumptionComponent implements OnInit {
           this.dataSourcesPrediction[centerName] = new MatTableDataSource();
           this.dataSourcesPrediction[centerName].data = predictions[index].proyections.map(data => ({
             month: this.monthMapper.get(data.month),
-            expectedConsumption: data.futureConsumption.toFixed(2)
+            expectedConsumption: data.futureConsumption
           }));
           this.noResultsPrediction[centerName] = this.dataSourcesPrediction[centerName].data.length == 0;
         }
@@ -190,7 +197,6 @@ export class AvgConsumptionComponent implements OnInit {
           borderWidth: 2
         };
       });
-      const labels = ['Mes 1', 'Mes 2', 'Mes 3'];
       this.createPredictionChart(datasets, labels);
     });
   }
@@ -213,7 +219,7 @@ export class AvgConsumptionComponent implements OnInit {
    * Creates or updates the prediction chart using Chart.js.
    * Displays multiple datasets, one for each work center, showing their
    * predicted consumption over the next three months.
-   * 
+   *
    * @param datasets Array of dataset objects containing the prediction data for each work center
    * @param labels Array of strings representing the x-axis labels (months)
    */

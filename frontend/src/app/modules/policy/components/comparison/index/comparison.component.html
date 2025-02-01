@@ -27,6 +27,12 @@
     </div>
   </div>
   <div class="table" [class.hidden]="!showTable">
+    <div class="chart-section">
+      <h6>Comparación de Consumo</h6>
+      <div class="chart-container">
+        <canvas id="consumptionChart"></canvas>
+      </div>
+    </div>
     <div>
       <h6>Antes</h6>
       <app-table class="before" [class.hidden]="dataSourceBefore.data.length == 0"
@@ -49,12 +55,6 @@
       ></app-table>
       <div *ngIf="noResultsAfter">
         <app-no-results></app-no-results>
-      </div>
-    </div>
-    <div class="chart-section">
-      <h6>Comparación de Consumo</h6>
-      <div class="chart-container">
-        <canvas id="consumptionChart"></canvas>
       </div>
     </div>
   </div>
