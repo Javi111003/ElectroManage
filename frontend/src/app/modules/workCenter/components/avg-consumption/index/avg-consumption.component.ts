@@ -28,6 +28,11 @@ export class AvgConsumptionComponent implements OnInit {
   expandedElements: string[] = [];
   showConsultTable: boolean = false;
   showPredictTable: boolean = false;
+
+  /**
+   * Maps month numbers to their Spanish names.
+   * Used for displaying month names in the prediction results.
+   */
   monthMapper: Map<number, string> = new Map<number, string>([
     [1, 'Enero'], [2, 'Febrero'], [3, 'Marzo'], [4, 'Abril'],
     [5, 'Mayo'], [6, 'Junio'], [7, 'Julio'], [9, 'Agosto'],
@@ -36,17 +41,35 @@ export class AvgConsumptionComponent implements OnInit {
   dataSourcesConsult: { [key: string]: MatTableDataSource<any> } = {};
   dataSourcesPrediction: { [key: string]: MatTableDataSource<any> } = {};
   noResultsPrediction: { [key: string]: boolean } = {};
+
+  /** 
+   * Collection of configuration columns for the consumption average table.
+   * Defines the structure and display format of the consultation table.
+   */
   displayedColumnsConsult: ConfigColumn[] = [
     { title: 'Año', field: 'year' },
     { title: 'Costo ($)', field: 'meanCost' },
     { title: 'Consumo Promedio (Kw/h)', field: 'meanConsumption' }
   ];
+
+  /** 
+   * Collection of configuration columns for the prediction table.
+   * Defines the structure and display format of the prediction results table.
+   */
   displayedColumnsPredict: ConfigColumn[] = [
     { title: 'Mes', field: 'month' },
     { title: 'Consumo esperado', field: 'expectedConsumption' }
   ];
   predictionChart: any;
 
+  /**
+   * Component constructor.
+   * Initializes the form and sets up form value change subscriptions.
+   * For non-admin users, automatically sets their work center.
+   * 
+   * @param global Service providing global functionality and data
+   * @param fb FormBuilder service for creating reactive forms
+   */
   constructor (
     public global: GlobalModule,
     private fb: FormBuilder
@@ -75,6 +98,11 @@ export class AvgConsumptionComponent implements OnInit {
     }
   }
 
+  /**
+   * Initializes the component.
+   * Sets up initial state and fetches work centers if user is admin.
+   * Also configures the form value change subscription for admin users.
+   */
   ngOnInit() {
     this.global.Reset();
     this.global.getWorkCenters();
@@ -149,8 +177,6 @@ export class AvgConsumptionComponent implements OnInit {
           this.noResultsPrediction[centerName] = this.dataSourcesPrediction[centerName].data.length == 0;
         }
       }
-
-      // Crear datos para la gráfica
       const datasets = predictions.map(prediction => {
         const centerName = this.global.workCenters.find(
           item => item.id === prediction.companyId
@@ -164,13 +190,16 @@ export class AvgConsumptionComponent implements OnInit {
           borderWidth: 2
         };
       });
-
       const labels = ['Mes 1', 'Mes 2', 'Mes 3'];
-
       this.createPredictionChart(datasets, labels);
     });
   }
 
+  /**
+   * Generates a random color in hexadecimal format.
+   * Used to assign different colors to each dataset in the prediction chart.
+   * @returns A string representing a color in hexadecimal format (#RRGGBB)
+   */
   private getRandomColor(): string {
     const letters = '0123456789ABCDEF';
     let color = '#';
@@ -180,6 +209,14 @@ export class AvgConsumptionComponent implements OnInit {
     return color;
   }
 
+  /**
+   * Creates or updates the prediction chart using Chart.js.
+   * Displays multiple datasets, one for each work center, showing their
+   * predicted consumption over the next three months.
+   * 
+   * @param datasets Array of dataset objects containing the prediction data for each work center
+   * @param labels Array of strings representing the x-axis labels (months)
+   */
   private createPredictionChart(datasets: any[], labels: string[]): void {
     this.predictionChart = new Chart('predictionChart', {
       type: 'line',

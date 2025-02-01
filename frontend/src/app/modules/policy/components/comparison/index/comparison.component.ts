@@ -179,24 +179,26 @@ export class ComparisonComponent implements OnInit {
       comparison.after.totalConsumption.toFixed(2),
       comparison.after.totalCost.toFixed(2)
     ];
-
     this.noResultsBefore = this.dataSourceBefore.data.length == 0;
     this.noResultsAfter = this.dataSourceAfter.data.length == 0;
-
     this.createChart(comparison);
   }
 
+  /**
+   * Creates or updates a chart comparing consumption before and after policy application.
+   * This method initializes a new Chart.js line chart that displays the consumption data
+   * for both periods on the same graph for easy comparison.
+   * 
+   * @param comparison The comparison data containing before and after consumption records
+   */
   createChart(comparison: PolicyComparison): void {
     if (this.chart) {
       this.chart.destroy();
     }
-
     const maxDays = Math.max(comparison.before.registers.length, comparison.after.registers.length);
     const labels = Array.from({length: maxDays}, (_, i) => `Día ${i + 1}`);
-
     const beforeData = comparison.before.registers.map(r => r.consumption);
     const afterData = comparison.after.registers.map(r => r.consumption);
-
     this.chart = new Chart('consumptionChart', {
       type: 'line',
       data: {
