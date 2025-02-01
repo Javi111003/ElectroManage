@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html dir="ltr" lang="en">
+    <head>
+        <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+        <meta name="x-apple-disable-message-reformatting"/>
+    </head>
+    <body style="font-family:ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji">
+        {{header}}
+
+        <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" class="space-y-6" style=" padding:0 24px 24px 24px">
+            <tbody>
+                <tr>
+                    <td>
+                        <main>
+                            <p class="undefined" style="font-size:20px;line-height:36px;font-weight:700;margin:16px 0; color:#00203b">Datos Solicitados:</p>
+                            <div>
+                                <span style="font-size:16px;line-height:22px;font-weight:700;color:#00203b">
+                                    Información solicitada: 
+                                </span>
+                                <span style="font-size:15px;line-height:22px;font-weight:400">
+                                    Sucursales de la empresa
+                                </span>
+                            </div>
+                        </main>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table align="center" width="100%" border="0" cellPadding="5" cellSpacing="0" style="border-collapse:collapse; margin-top:16px;">
+            <thead>
+                <tr style="background-color:#00203b; color:white;">
+                    <th style="padding:10px;">Nombre</th>
+                    <th style="padding:10px;">Área</th>
+                    <th style="padding:10px;">Tipo</th>
+                    <th style="padding:10px;">Ubicación</th>
+                    <th style="padding:10px;">Límite mensual</th>
+                </tr>
+            </thead>
+            <tbody style="text-align: center">
+                {{rows}}
+            </tbody>
+        </table>        
+    </body>
+</html>
