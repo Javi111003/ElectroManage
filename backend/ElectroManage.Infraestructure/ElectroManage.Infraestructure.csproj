@@ -18,4 +18,12 @@
     <ProjectReference Include="..\ElectroManage.Domain\ElectroManage.Domain.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Content Include="ElectroManage.Infraestructure/Templates/**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
+
+
 </Project>

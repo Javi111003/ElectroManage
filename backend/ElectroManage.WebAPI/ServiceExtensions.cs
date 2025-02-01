@@ -18,6 +18,9 @@ using ElectroManage.Application.Abstractions;
 using ElectroManage.Application.Services;
 using ElectroManage.Application.Abstractions.Authentication;
 using ElectroManage.Application.Services.Authentication;
+using ElectroManage.Infraestructure.Plugins;
+using ElectroManage.Infraestructure.Concrete;
+using ElectroManage.Infraestructure.Plugins.Exporters;
 
 namespace ElectroManage.WebAPI;
 public static class ServiceExtensions
@@ -32,6 +35,9 @@ public static class ServiceExtensions
         services.AddScoped<IFileWriterService, FileWriterService>();
         services.AddScoped<ICostCalculator, CostCalculator>();
         services.AddScoped<IProyectionService, ProyectionService>();
+        services.AddScoped<IExporter, PdfExporter>();
+        services.AddScoped<ITemplateService, TemplateService>();
+        //services.AddSingleton<PluginLoader>();
         services.AddSingleton<IEmailSender<AppUser>, IdentityEmailSender>();
     }
     public static void AddGenericRepositoryExtension(this IServiceCollection services)
