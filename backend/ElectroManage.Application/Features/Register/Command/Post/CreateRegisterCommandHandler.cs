@@ -1,4 +1,5 @@
 ﻿using ElectroManage.Application.Abstractions;
+using ElectroManage.Application.DTO_s;
 using ElectroManage.Domain.DataAccess.Abstractions;
 using ElectroManage.Domain.Entites.Sucursal;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +39,7 @@ public class CreateRegisterCommandHandler : CoreCommandHandler<CreateRegisterCom
             _logger.LogError($"You can only create one register by day");
             ThrowError($"You can only create one register by day", 400);
         }
-        var formula = company.CostFormulas.Last();
+        var formula = company.CostFormulas.LastOrDefault();
         if (formula is null)
         {
             _logger.LogError($"The company with id: {command.CompanyId} does not have a cost formula");
@@ -63,6 +64,11 @@ public class CreateRegisterCommandHandler : CoreCommandHandler<CreateRegisterCom
         await registerRepository.SaveAsync(register, false);
         company.Registers.Add(register);
         await companyRepository.UpdateAsync(company, false);
+        var consumption = company.Registers.Where(r => r.StatusBaseEntity == Domain.Enums.StatusEntityType.Active
+                                        && r.Date.Month == register.Date.Month
+                                        && r.Date.Year == r.Date.Year)
+                                        .Sum(r => r.Consumption);
+        bool exceedLimit = consumption > Convert.ToDouble(company.ConsumptionLimit);
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
         await _unitOfWork.SaveChangesAsync();
         return new CreateRegisterResponse
@@ -72,6 +78,14 @@ public class CreateRegisterCommandHandler : CoreCommandHandler<CreateRegisterCom
             Consumption = register.Consumption,
             Cost = register.Cost,
             Date = register.Date,
+            IsOverLimit = exceedLimit,
+            WarningInfo = exceedLimit ? new WarningDTO
+            {
+                 Consumption = Convert.ToDecimal(consumption),
+                 EstablishedLimit = company.ConsumptionLimit,
+                 Month = register.Date.Month,
+                 Year = register.Date.Year
+            } : null
         };
     }
 }
