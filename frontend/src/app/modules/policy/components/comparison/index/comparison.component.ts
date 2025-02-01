@@ -3,9 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { PolicyService } from '../../../../../services/policy/policy.service';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Item } from '../../../../../shared/shared.module';
-import { PolicyApplied, PolicyComparison } from '../../../../../models/policy.interface';
+import { PolicyComparison } from '../../../../../models/policy.interface';
 import { RegisterByDay } from '../../../../../models/register.interface';
 import { Chart } from 'chart.js/auto';
 
@@ -66,6 +66,11 @@ export class ComparisonComponent implements OnInit {
     this.form.get('workCenter')?.valueChanges.subscribe(() => {
       this.global.getControl(this.form, 'policy').reset();
       this.policies = [];
+
+      if (this.chart) {
+        this.chart.destroy();
+      }
+
       if (this.global.getControlValue(this.form, 'workCenter')) {
         const id = this.global.getControlValue(this.form, 'workCenter').id;
         if (id) {
@@ -87,6 +92,10 @@ export class ComparisonComponent implements OnInit {
     });
 
     this.form.valueChanges.subscribe(() => {
+      if (this.chart) {
+        this.chart.destroy();
+      }
+
       this.showTable = false;
       this.dataSourceBefore.data = [];
       this.dataSourceAfter.data = [];
@@ -112,7 +121,9 @@ export class ComparisonComponent implements OnInit {
    */
   onConsultClick() {
     if (!this.showTable) {
-      if (this.global.getControlValue(this.form, 'workCenter').id && this.global.getControlValue(this.form, 'policy').id) {
+      const center = this.global.getControlValue(this.form, 'workCenter');
+      const policy = this.global.getControlValue(this.form, 'policy');
+      if (center && policy && center.id && policy.id) {
         this.showTable = true;
       } else {
         this.showTable = false;
@@ -188,7 +199,7 @@ export class ComparisonComponent implements OnInit {
    * Creates or updates a chart comparing consumption before and after policy application.
    * This method initializes a new Chart.js line chart that displays the consumption data
    * for both periods on the same graph for easy comparison.
-   * 
+   *
    * @param comparison The comparison data containing before and after consumption records
    */
   createChart(comparison: PolicyComparison): void {

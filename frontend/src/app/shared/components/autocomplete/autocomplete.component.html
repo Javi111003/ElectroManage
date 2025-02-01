@@ -13,7 +13,9 @@
           [disabled]="isDisabled"
           [readonly]="isDisabled"
   >
-
+  <button mat-icon-button class="clear-button" (click)="clearInput()" *ngIf="control.value">
+    <mat-icon>clear</mat-icon>
+  </button>
   <mat-autocomplete
     autoActiveFirstOption #auto="matAutocomplete"
     [displayWith]="displayFn"

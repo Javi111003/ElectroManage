@@ -82,13 +82,12 @@ export class ChipsComponent {
       name: value
     };
 
-    const validate = this.validateOption(value);
-    if (value && validate) {
+    if (value) {
       this.options.update(options => [...options, obj]);
       this.allOptions.push(obj);
     }
 
-    this.function(value, validate);
+    this.function(value, true);
     this.currentOption.set('');
   }
 

@@ -20,6 +20,9 @@
     <app-button></app-button>
   </div>
 </div>
+<div class="prediction-chart-container" [hidden]="!showPredictTable">
+  <canvas id="predictionChart"></canvas>
+</div>
 <table mat-table
        [dataSource]="global.getControlValue(form, 'workCenters')" multiTemplateDataRows
        class="mat-elevation-z8" [hidden]="!showConsultTable && !showPredictTable">
@@ -57,7 +60,7 @@
           >
           </app-table>
         </div>
-        <app-no-results  *ngIf="noResultsPrediction[element.name]" [class.hidden]="!showPredictTable"></app-no-results>
+        <app-no-results  class="noResults" *ngIf="noResultsPrediction[element.name]" [class.hidden]="!showPredictTable"></app-no-results>
       </div>
     </td>
   </ng-container>
@@ -69,7 +72,4 @@
   </tr>
   <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
 </table>
-<div class="prediction-chart-container" [hidden]="!showPredictTable">
-  <canvas id="predictionChart"></canvas>
-</div>
 
