@@ -5,7 +5,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { GlobalModule } from '../../../../global/global.module';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Item } from '../../../../../shared/shared.module';
-
+import { Chart } from 'chart.js/auto';
 
 @Component({
   selector: 'app-avg-consumption',
@@ -45,6 +45,7 @@ export class AvgConsumptionComponent implements OnInit {
     { title: 'Mes', field: 'month' },
     { title: 'Consumo esperado', field: 'expectedConsumption' }
   ];
+  predictionChart: any;
 
   constructor (
     public global: GlobalModule,
@@ -128,6 +129,10 @@ export class AvgConsumptionComponent implements OnInit {
    * which are stored in the dataSourcesPrediction object.
    */
   getPrediction(): void {
+    if (this.predictionChart) {
+      this.predictionChart.destroy();
+    }
+
     this.global.httpCenter.getPrediction(this.selectedOptionsIds).subscribe(predictions => {
       console.log(predictions);
       for (let index = 0; index < predictions.length; index++) {
@@ -142,6 +147,75 @@ export class AvgConsumptionComponent implements OnInit {
             expectedConsumption: data.futureConsumption.toFixed(2)
           }));
           this.noResultsPrediction[centerName] = this.dataSourcesPrediction[centerName].data.length == 0;
+        }
+      }
+
+      // Crear datos para la gráfica
+      const datasets = predictions.map(prediction => {
+        const centerName = this.global.workCenters.find(
+          item => item.id === prediction.companyId
+        )?.name;
+
+        return {
+          label: centerName,
+          data: prediction.proyections.map(p => p.futureConsumption),
+          borderColor: this.getRandomColor(),
+          tension: 0.1,
+          borderWidth: 2
+        };
+      });
+
+      const labels = ['Mes 1', 'Mes 2', 'Mes 3'];
+
+      this.createPredictionChart(datasets, labels);
+    });
+  }
+
+  private getRandomColor(): string {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+  private createPredictionChart(datasets: any[], labels: string[]): void {
+    this.predictionChart = new Chart('predictionChart', {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: datasets
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Predicción de Consumo por Centro de Trabajo',
+            font: {
+              size: 16
+            }
+          },
+          legend: {
+            position: 'top'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Consumo Esperado (Kw/h)'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Próximos Meses'
+            }
+          }
         }
       }
     });

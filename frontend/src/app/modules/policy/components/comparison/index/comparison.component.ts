@@ -7,6 +7,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Item } from '../../../../../shared/shared.module';
 import { PolicyApplied, PolicyComparison } from '../../../../../models/policy.interface';
 import { RegisterByDay } from '../../../../../models/register.interface';
+import { Chart } from 'chart.js/auto';
 
 @Component({
   selector: 'app-comparison',
@@ -39,6 +40,7 @@ export class ComparisonComponent implements OnInit {
       field: 'cost'
     }
   ];
+  chart: any;
 
   constructor(
     public global: GlobalModule,
@@ -180,5 +182,77 @@ export class ComparisonComponent implements OnInit {
 
     this.noResultsBefore = this.dataSourceBefore.data.length == 0;
     this.noResultsAfter = this.dataSourceAfter.data.length == 0;
+
+    this.createChart(comparison);
+  }
+
+  createChart(comparison: PolicyComparison): void {
+    if (this.chart) {
+      this.chart.destroy();
+    }
+
+    const maxDays = Math.max(comparison.before.registers.length, comparison.after.registers.length);
+    const labels = Array.from({length: maxDays}, (_, i) => `Día ${i + 1}`);
+
+    const beforeData = comparison.before.registers.map(r => r.consumption);
+    const afterData = comparison.after.registers.map(r => r.consumption);
+
+    this.chart = new Chart('consumptionChart', {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Antes',
+            data: beforeData,
+            borderColor: '#FF6384',
+            tension: 0.1,
+            borderWidth: 2
+          },
+          {
+            label: 'Después',
+            data: afterData,
+            borderColor: '#36A2EB',
+            tension: 0.1,
+            borderWidth: 2
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              font: {
+                size: 14
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Consumo (Kw/h)',
+              font: {
+                size: 14
+              }
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Días',
+              font: {
+                size: 14
+              }
+            }
+          }
+        }
+      }
+    });
   }
 }
