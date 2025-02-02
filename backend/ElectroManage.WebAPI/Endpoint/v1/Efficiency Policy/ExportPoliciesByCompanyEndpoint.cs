@@ -1,7 +1,7 @@
 using ElectroManage.Application.Features.Efficiency_Policy.Query.Export.List;
 
 namespace ElectroManage.WebAPI.Endpoint.v1.Policy;
-public class ExportPoliciesByCompanyEndpoint : Endpoint<ExportPoliciesByCompanyCommand, byte[]>
+public class ExportListPoliciesEndpoint : Endpoint<ExportListPoliciesCommand, byte[]>
 {
     public override void Configure()
     {
@@ -10,9 +10,9 @@ public class ExportPoliciesByCompanyEndpoint : Endpoint<ExportPoliciesByCompanyC
         Version(1);
         Get("/policy/export/list");
         AllowAnonymous();
-        Summary(f => f.Summary = "Exporting policies by company");
+        Summary(f => f.Summary = "Exporting policies");
     }
-    public override async Task HandleAsync(ExportPoliciesByCompanyCommand req, CancellationToken ct)
+    public override async Task HandleAsync(ExportListPoliciesCommand req, CancellationToken ct)
     {
         var data = await req.ExecuteAsync(ct);
         await SendBytesAsync(data, "application/pdf");

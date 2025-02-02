@@ -3,12 +3,12 @@ using ElectroManage.Infraestructure.Services;
 using Microsoft.Extensions.Logging;
 
 namespace ElectroManage.Application.Features.Efficiency_Policy.Query.Export.List;
-public class ExportPoliciesByCompanyCommandHandler : CoreQueryHandler<ExportPoliciesByCompanyCommand, byte[]>
+public class ExportListPoliciesCommandHandler : CoreQueryHandler<ExportListPoliciesCommand, byte[]>
 {
-    readonly ILogger<ExportPoliciesByCompanyCommandHandler> _logger;
+    readonly ILogger<ExportListPoliciesCommandHandler> _logger;
     readonly ITemplateService _templateService;
-    public ExportPoliciesByCompanyCommandHandler(
-        ILogger<ExportPoliciesByCompanyCommandHandler> logger, 
+    public ExportListPoliciesCommandHandler(
+        ILogger<ExportListPoliciesCommandHandler> logger, 
         ITemplateService templateService, 
         IExporter exporter,
         IUnitOfWork unitOfWork) : base(unitOfWork)
@@ -16,7 +16,7 @@ public class ExportPoliciesByCompanyCommandHandler : CoreQueryHandler<ExportPoli
         _logger = logger;
         _templateService = templateService;
     }
-    public override Task<byte[]> ExecuteAsync(ExportPoliciesByCompanyCommand command, CancellationToken ct = default)
+    public override Task<byte[]> ExecuteAsync(ExportListPoliciesCommand command, CancellationToken ct = default)
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
