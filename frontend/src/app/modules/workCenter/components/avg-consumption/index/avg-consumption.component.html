@@ -17,7 +17,11 @@
       [label]="'Predecir'"
       [function]="onPredictionClick.bind(this)">
     </app-button>
-    <app-button></app-button>
+    <app-button class="export"
+      [control]="export"
+      [exportFunction]="exportFunction.bind(this)"
+      [isDisabled]="!showConsultTable && !showPredictTable"
+    ></app-button>
   </div>
 </div>
 <div class="prediction-chart-container" [hidden]="!showPredictTable">

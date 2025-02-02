@@ -16,6 +16,7 @@ import { LoginComponent } from './components/login/login.component';
 //global services
 import { WorkCenterService } from '../../services/workCenter/work-center.service';
 import { OfficeService } from '../../services/office/office.service';
+import { ExportService } from '../../services/export/export.service';
 
 //global directives
 import { PasswordValidatorDirective } from '../../directives/password/password.directive';
@@ -90,10 +91,16 @@ import { Observable } from 'rxjs';
 export class GlobalModule {
   workCenters: Item[] = [];
   offices: Item[] = [];
+  formatMapper: Map<string, string> = new Map<string, string>([
+    ["pdf", "application/pdf"],
+    ["docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"],
+    ["csv", "text/csv"]
+  ])
 
   constructor(
     public httpCenter: WorkCenterService,
     public httpOffice: OfficeService,
+    private httpExport: ExportService,
     public dialog: MatDialog
   ) { }
 
@@ -210,6 +217,37 @@ export class GlobalModule {
     const milliseconds = ('00' + date.getMilliseconds()).slice(-3);
 
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+  }
+
+  export(route: string, name: string, format: string): void {
+    this.httpExport.getDocument(route).subscribe({
+      next: (response) => {
+
+        if (!response) {
+          throw new Error("Descarga fallida");
+        }
+
+        const binaryString = atob(response);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        const blob = new Blob([bytes], { type: this.formatMapper.get(format) });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${name}.${format}`;
+        document.body.appendChild(link);
+        link.click();
+
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+      },
+      error: (error) => {
+        console.error("Error durante la descarga: ", error);
+      }
+    });
   }
 
   /**

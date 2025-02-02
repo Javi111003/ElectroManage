@@ -6,6 +6,8 @@ import { GlobalModule } from '../../../../global/global.module';
 import { DataService } from '../../../../../services/data/data.service';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
 import { UserLogged } from '../../../../../models/credential.interface';
+import { FormControl } from '@angular/forms';
+import { API_URL, EXPORT_USER } from '../../../../../config/api.config';
 
 declare var bootstrap: any;
 
@@ -16,6 +18,7 @@ declare var bootstrap: any;
 })
 export class ManageComponent implements OnInit {
   noResults: boolean = false;
+  export: FormControl = [][0]
   dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
   displayedColumns: ConfigColumn[] = [
     {
@@ -60,6 +63,13 @@ export class ManageComponent implements OnInit {
     this.dataService.setData([null, true, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
+  }
+
+  exportFunction(): void {
+    const userId = this.global.getUserInfo().id;
+    const format = this.export.value;
+    const route = `${API_URL}${EXPORT_USER}?userId=${userId}&format=%22${format}%22`;
+    this.global.export(route, "Usuarios", format);
   }
 
   /**

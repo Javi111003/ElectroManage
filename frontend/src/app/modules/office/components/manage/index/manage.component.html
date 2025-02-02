@@ -22,7 +22,11 @@
       [label]="'Consultar'"
       [function]="onConsultClick.bind(this)">
     </app-button>
-    <app-button></app-button>
+    <app-button class="export"
+      [control]="export"
+      [exportFunction]="exportFunction.bind(this)"
+      [isDisabled]="!showTable"
+    ></app-button>
   </div>
   <div class="form-table" [class.hidden]="!showTable || dataSource.data.length == 0">
     <app-table

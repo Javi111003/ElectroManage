@@ -8,6 +8,8 @@ import { CenterDetails } from '../../../../../models/workCenter.interface';
 import { Subscription } from 'rxjs';
 import { UserLogged } from '../../../../../models/credential.interface';
 import { UserService } from '../../../../../services/user/user.service';
+import { FormControl } from '@angular/forms';
+import { API_URL, EXPORT_CENTER } from '../../../../../config/api.config';
 
 declare var bootstrap: any;
 
@@ -20,6 +22,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
   centerObjectArray: CenterDetails[] = [];
   noResults: boolean = false;
+  export: FormControl = [][0];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
     {
@@ -91,6 +94,13 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.dataService.setData([null, true, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
+  }
+
+  exportFunction(): void {
+    const userId = this.global.getUserInfo().id;
+    const format = this.export.value;
+    const route = `${API_URL}${EXPORT_CENTER}?userId=${userId}&format=%22${format}%22`;
+    this.global.export(route, "Centros_de_Trabajo", format);
   }
 
   /**

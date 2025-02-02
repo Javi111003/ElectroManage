@@ -9,7 +9,6 @@ import { SharedModule } from '../../../../../shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { ManageFormComponent } from '../../../components/manage/form/manage-form.component';
-import { MatNativeDateModule } from '@angular/material/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OfficeService } from '../../../../../services/office/office.service';
 
@@ -57,7 +56,7 @@ describe('ManageOfficeComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [
          ManageComponent,
-         ManageFormComponent 
+         ManageFormComponent
       ],
       imports: [
         ReactiveFormsModule,

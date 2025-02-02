@@ -8,6 +8,8 @@ import { PolicyInfo } from '../../../../../models/policy.interface';
 import { Subscription } from 'rxjs';
 import { Item } from '../../../../../shared/shared.module';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
+import { FormControl } from '@angular/forms';
+import { API_URL, EXPORT_POLICY } from '../../../../../config/api.config';
 
 declare var bootstrap: any;
 @Component({
@@ -18,6 +20,7 @@ declare var bootstrap: any;
 export class ManageComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
   noResults: boolean = false;
+  export: FormControl = [][0];
   policyStringArray: string[] = [];
   policyArray: Item[] = [];
   policyObjectArray: PolicyInfo[] = [];
@@ -61,6 +64,13 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.dataService.setData([null, true, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
+  }
+
+  exportFunction(): void {
+    const userId = this.global.getUserInfo().id;
+    const format = this.export.value;
+    const route = `${API_URL}${EXPORT_POLICY}?userId=${userId}&format=%22${format}%22`;
+    this.global.export(route, "Políticas_de_Eficiencia_Energética", format);
   }
 
   /**

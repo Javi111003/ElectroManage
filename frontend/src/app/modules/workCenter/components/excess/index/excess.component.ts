@@ -7,7 +7,7 @@ import {default as _rollupMoment, Moment} from 'moment';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { GlobalModule } from '../../../../global/global.module';
-import { MY_FORMATS } from '../../../../../config/api.config';
+import { API_URL, EXPORT_EXCESS, MY_FORMATS } from '../../../../../config/api.config';
 
 const moment = _rollupMoment || _moment;
 
@@ -27,6 +27,7 @@ export class ExcessComponent {
   readonly date = new FormControl(this.dateInitialize);
   showTable: boolean = false;
   noResults: boolean = false;
+  export: FormControl = [][0];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
     {
@@ -107,6 +108,15 @@ export class ExcessComponent {
       else
         this.global.openDialog('Por favor, selecciona un mes y un año.');
     }
+  }
+
+  exportFunction(): void {
+    const userId = this.global.getUserInfo().id;
+    const month = this.monthMapper.get(this.global.getControlValue(this.form, 'month'));
+    const year = this.global.getControlValue(this.form, 'year');
+    const format = this.export.value;
+    const route = `${API_URL}${EXPORT_EXCESS}?userId=${userId}&date=%22${month}%20${year}%22&format=%22${format}%22`;
+    this.global.export(route, "Exceso_de_Cosumo", format);
   }
 
   /**

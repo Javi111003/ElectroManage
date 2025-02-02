@@ -9,6 +9,7 @@ import { SnackbarService } from '../../../../../services/snackbar/snackbar.servi
 import { Register, RegisterByDay, TotalConsumptionData } from '../../../../../models/register.interface';
 import { Subscription } from 'rxjs';
 import { RegisterService } from '../../../../../services/register/register.service';
+import { API_URL, EXPORT_REGISTER } from '../../../../../config/api.config';
 
 declare var bootstrap: any;
 
@@ -92,7 +93,16 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   exportFunction(): void {
-    console.log(this.export.value.name);
+    const userId = this.global.getUserInfo().id;
+    const centerId = this.global.getControlValue(this.form, 'workCenter').id;
+    const initDate = this.global.getControlValue(this.form, 'startDate');
+    const endDate = this.global.getControlValue(this.form, 'endDate');
+    const dateParams = `start=%22${initDate}%22&end=%22${endDate}%22`;
+    const userCenterParam = `userId=${userId}&companyId=${centerId}`;
+    const format = this.export.value;
+
+    const route = `${API_URL}${EXPORT_REGISTER}?${userCenterParam}&${dateParams}&format=%22${format}%22`;
+    this.global.export(route, "Registros_de_consumo", format);
   }
 
   /**
