@@ -24,6 +24,11 @@ namespace ElectroManage.Domain.DataAccess
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
 
+        // Constructor protegido para testing
+        protected ApplicationDbContext()
+        {
+        }
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             foreach (var entry in ChangeTracker.Entries<IEntity>())

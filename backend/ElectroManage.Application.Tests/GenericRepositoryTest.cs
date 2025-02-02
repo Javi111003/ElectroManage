@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using FluentAssertions;
 using System.Collections.Generic;
@@ -7,16 +8,27 @@ using ElectroManage.Domain.DataAccess.Concrete;
 using ElectroManage.Domain.Entites.Identity;
 using ElectroManage.Domain.DataAccess;
 
-
 public abstract class GenericRepositoryTest<T> where T : Entity<long>
 {
     protected readonly Mock<ApplicationDbContext> _mockContext;
+    protected readonly Mock<DbSet<T>> _mockDbSet;
     protected readonly GenericCoreRepository<T> _repository;
+
     protected GenericRepositoryTest()
     {
-        _mockContext = new Mock<ApplicationDbContext>();
+        // Crear mock del DbSet
+        _mockDbSet = new Mock<DbSet<T>>();
+        
+        // Crear mock del DbContext con constructor protegido
+        _mockContext = new Mock<ApplicationDbContext>(MockBehavior.Loose);
+        
+        // Setup del DbSet
+        _mockContext.Setup(c => c.Set<T>()).Returns(_mockDbSet.Object);
+        
+        // Crear el repositorio con el contexto mockeado
         _repository = new GenericCoreRepository<T>(_mockContext.Object);
     }
+
     public abstract T CreatedEntity();
 
     [Fact]
