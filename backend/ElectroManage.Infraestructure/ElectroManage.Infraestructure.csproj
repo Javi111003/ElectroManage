@@ -20,7 +20,7 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<Content Include="ElectroManage.Infraestructure/Templates/**">
+		<Content Include="Templates/**">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</Content>
