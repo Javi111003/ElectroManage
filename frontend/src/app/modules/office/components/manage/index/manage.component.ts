@@ -7,6 +7,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Item } from '../../../../../shared/shared.module';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
+import { API_URL, EXPORT_OFFICE } from '../../../../../config/api.config';
 
 declare var bootstrap: any;
 @Component({
@@ -19,6 +20,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   form: FormGroup;
   showTable: boolean = false;
   noResults: boolean = false;
+  export: FormControl = [][0];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
     {
@@ -106,6 +108,14 @@ export class ManageComponent implements OnInit, OnDestroy {
     this.dataService.setData([null, center, true, false]);
     const modal = new bootstrap.Modal(document.getElementById('exampleModal') as HTMLElement);
     modal.show();
+  }
+
+  exportFunction(): void {
+    const userId = this.global.getUserInfo().id;
+    const centerId = this.global.getControlValue(this.form, "workCenter").id;
+    const format = this.export.value;
+    const route = `${API_URL}${EXPORT_OFFICE}?userId=${userId}&companyId=${centerId}&format=%22${format}%22`;
+    this.global.export(route, "Oficinas", format);
   }
 
    /**

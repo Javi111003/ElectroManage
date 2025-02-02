@@ -9,6 +9,10 @@
           [icon]="'add'"
         >
       </app-button>
+      <app-button class="export"
+        [control]="export"
+        [exportFunction]="exportFunction.bind(this)"
+      ></app-button>
       </div>
     </div>
     <div class="col-12">

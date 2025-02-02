@@ -35,6 +35,7 @@
       <app-button class="export"
         [control]="export"
         [exportFunction]="exportFunction.bind(this)"
+        [isDisabled]="!showTable"
       ></app-button>
     </div>
   </form>

@@ -3,9 +3,10 @@ import { ConfigColumn } from '../../../../../shared/components/table/table.compo
 import { MatTableDataSource } from '@angular/material/table';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { GlobalModule } from '../../../../global/global.module';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Item } from '../../../../../shared/shared.module';
 import { Chart } from 'chart.js/auto';
+import { API_URL, EXPORT_AVG, EXPORT_PREDICTION } from '../../../../../config/api.config';
 
 @Component({
   selector: 'app-avg-consumption',
@@ -28,6 +29,7 @@ export class AvgConsumptionComponent implements OnInit {
   expandedElements: string[] = [];
   showConsultTable: boolean = false;
   showPredictTable: boolean = false;
+  export: FormControl = [][0];
 
   /**
    * Maps month numbers to their Spanish names.
@@ -111,6 +113,29 @@ export class AvgConsumptionComponent implements OnInit {
         this.findCenterIds();
         this.expandedElements = [];
       });
+    }
+  }
+
+  exportFunction(): void {
+    let route = `${API_URL}`;
+    const userId = this.global.getUserInfo().id;
+    this.findCenterIds();
+    let centers = "";
+    this.selectedOptionsIds.forEach(id => {
+      centers += `companyIds=${id}&`
+    });
+    const format = this.export.value;
+
+    if (this.showConsultTable) {
+      route += `${EXPORT_AVG}?userId=3&${centers}format=%22${format}%22`;
+      this.global.export(route, "Consumo_promedio", format);
+    } else if (this.showPredictTable) {
+      centers = "";
+      this.selectedOptionsIds.forEach(id => {
+        centers += `companiesIds=${id}&`
+      });
+      route += `${EXPORT_PREDICTION}?userId=${userId}&${centers}format=%22${format}%22`;
+      this.global.export(route, "Predicción_de_Consumo_Trimestre", format);
     }
   }
 

@@ -250,7 +250,7 @@
   border-radius: 4px;
   padding: 0.8rem;
   min-width: 200px;
-  z-index: 1000;
+  z-index: 99999;
   font-family: 'Inter', 'Roboto', sans-serif;
 }
 .user-section,

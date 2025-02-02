@@ -8,6 +8,7 @@ import { DataService } from '../../../../../services/data/data.service';
 import { Subscription } from 'rxjs';
 import { Item } from '../../../../../shared/shared.module';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
+import { API_URL, EXPORT_EQUIPMENT } from '../../../../../config/api.config';
 
 declare var bootstrap: any;
 
@@ -23,6 +24,7 @@ export class EquipmentComponent implements OnInit, OnDestroy {
   form: FormGroup;
   showTable: boolean = false;
   noResults: boolean = false;
+  export: FormControl = [][0];
   equipmentObjects: Equipment[] = [];
   equipments: string[] = [];
   useFrequency: Map<string, string> = new Map<string, string>([
@@ -182,6 +184,14 @@ export class EquipmentComponent implements OnInit, OnDestroy {
         this.global.openDialog('Por favor, selecciona un Centro de Trabajo y una Oficina válidos.');
       }
     }
+  }
+
+  exportFunction(): void {
+    const userId = this.global.getUserInfo().id;
+    const officeId = this.global.getControlValue(this.form, 'office').id;
+    const format = this.export.value;
+    const route = `${API_URL}${EXPORT_EQUIPMENT}?userId=${userId}&officeId=${officeId}&format=%22${format}%22`;
+    this.global.export(route, "Exceso_de_Cosumo", format);
   }
 
   /**

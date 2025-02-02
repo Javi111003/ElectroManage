@@ -20,15 +20,15 @@ export class ButtonComponent {
   @Input() options: Item[] = [
     {
       id: 1,
-      name: ".pdf"
+      name: "pdf"
     },
     {
       id: 2,
-      name: ".docx"
+      name: "docx"
     },
     {
       id: 3,
-      name: ".csv"
+      name: "csv"
     }
   ];
 

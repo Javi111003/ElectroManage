@@ -3,11 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfigColumn } from '../../../../../shared/components/table/table.component';
 import { PolicyService } from '../../../../../services/policy/policy.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Item } from '../../../../../shared/shared.module';
 import { PolicyComparison } from '../../../../../models/policy.interface';
 import { RegisterByDay } from '../../../../../models/register.interface';
 import { Chart } from 'chart.js/auto';
+import { API_URL, EXPORT_COMPARISON } from '../../../../../config/api.config';
 
 @Component({
   selector: 'app-comparison',
@@ -22,6 +23,7 @@ export class ComparisonComponent implements OnInit {
   registersAfter: RegisterByDay[] = [];
   noResultsBefore: boolean = false;
   noResultsAfter: boolean = false;
+  export: FormControl = [][0];
   footerTableBefore: any[] = [];
   footerTableAfter: any[] = [];
   dataSourceBefore: MatTableDataSource<any> = new MatTableDataSource();
@@ -130,6 +132,18 @@ export class ComparisonComponent implements OnInit {
         this.global.openDialog('Por favor, selecciona un Centro de Trabajo y una Política válidos.');
       }
     }
+  }
+
+  exportFunction(): void {
+    const userId = this.global.getUserInfo().id;
+    const centerId = this.global.getControlValue(this.form, "workCenter").id;
+    const policy = this.global.getControlValue(this.form, "policy");
+    const len = policy.name.length;
+    const date = policy.name.substring(len - 11, len - 1);
+    const format = this.export.value;
+    const params = `?userId=${userId}&companyId=${centerId}&policyId=${policy.id}&applyingDate=%22${date}%22&format=%22${format}%22`;
+    const route = `${API_URL}${EXPORT_COMPARISON}${params}`;
+    this.global.export(route, "Comparación_de_Política", format);
   }
 
   /**

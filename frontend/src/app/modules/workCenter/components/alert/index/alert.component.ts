@@ -4,6 +4,7 @@ import { ConfigColumn } from '../../../../../shared/components/table/table.compo
 import { GlobalModule } from '../../../../global/global.module';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Item } from '../../../../../shared/shared.module';
+import { API_URL, EXPORT_ALERT } from '../../../../../config/api.config';
 
 @Component({
   selector: 'app-alert',
@@ -14,6 +15,7 @@ export class AlertComponent implements OnInit {
   form: FormGroup;
   showTable: boolean = false;
   noResults: boolean = false;
+  export: FormControl = [][0];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
     {
@@ -79,6 +81,14 @@ export class AlertComponent implements OnInit {
         this.global.openDialog('Por favor, selecciona un Centro de Trabajo válido.');
       }
     }
+  }
+
+  exportFunction(): void {
+    const userId = this.global.getUserInfo().id;
+    const centerId = this.global.getControlValue(this.form, 'workCenter').id;
+    const format = this.export.value;
+    const route = `${API_URL}${EXPORT_ALERT}?companyId=${centerId}&userId=${userId}&format=%22${format}%22`;
+    this.global.export(route, "Registros_de_consumo", format);
   }
 
   /**
