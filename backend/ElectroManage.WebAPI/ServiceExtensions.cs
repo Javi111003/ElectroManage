@@ -35,9 +35,9 @@ public static class ServiceExtensions
         services.AddScoped<IFileWriterService, FileWriterService>();
         services.AddScoped<ICostCalculator, CostCalculator>();
         services.AddScoped<IProyectionService, ProyectionService>();
-        services.AddScoped<IExporter, PdfExporter>();
+        //services.AddScoped<IExporter, PdfExporter>();
         services.AddScoped<ITemplateService, TemplateService>();
-        //services.AddSingleton<PluginLoader>();
+        services.AddSingleton<PluginLoader>();
         services.AddSingleton<IEmailSender<AppUser>, IdentityEmailSender>();
     }
     public static void AddGenericRepositoryExtension(this IServiceCollection services)

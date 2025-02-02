@@ -69,7 +69,7 @@ public class TemplateService : ITemplateService
     private string GetHeaderTemplate(User user)
     {
         var html = File.ReadAllText(HeaderTemplateUrl);
-        html = html.Replace("{{user_name}}", user.UserName)
+        html = html.Replace("{{username}}", user.UserName)
                    .Replace("{{email}}", user.Email)
                    .Replace("{{companyName}}", user.Company.Name)
                    .Replace("{{logo}}", LogoUrl);
