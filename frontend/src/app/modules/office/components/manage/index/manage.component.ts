@@ -120,7 +120,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     const userId = this.global.getUserInfo().id;
     const centerId = this.global.getControlValue(this.form, "workCenter").id;
     const format = this.export.value.name;
-    const route = `${API_URL}${EXPORT_OFFICE}?userId=${userId}&companyId=${centerId}&format=%22${format}%22`;
+    const route = `${API_URL}${EXPORT_OFFICE}?userId=${userId}&companyId=${centerId}&format=${format}`;
     this.global.export(route, "Oficinas", format);
   }
 

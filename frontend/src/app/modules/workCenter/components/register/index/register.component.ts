@@ -110,7 +110,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     const userCenterParam = `userId=${userId}&companyId=${centerId}`;
     const format = this.export.value.name;
 
-    const route = `${API_URL}${EXPORT_REGISTER}?${userCenterParam}&${dateParams}&format=%22${format}%22`;
+    const route = `${API_URL}${EXPORT_REGISTER}?${userCenterParam}&${dateParams}&format=${format}`;
     this.global.export(route, "Registros_de_consumo", format);
   }
 
