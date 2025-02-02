@@ -75,7 +75,7 @@ export class ManageComponent implements OnInit {
   exportFunction(): void {
     const userId = this.global.getUserInfo().id;
     const format = this.export.value.name;
-    const route = `${API_URL}${EXPORT_USER}?userId=${userId}&format=%22${format}%22`;
+    const route = `${API_URL}${EXPORT_USER}?userId=${userId}&format=${format}`;
     this.global.export(route, "Usuarios", format);
   }
 

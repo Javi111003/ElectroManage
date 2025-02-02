@@ -138,14 +138,14 @@ export class AvgConsumptionComponent implements OnInit {
     const format = this.export.value.name;
 
     if (this.showConsultTable) {
-      route += `${EXPORT_AVG}?userId=3&${centers}format=%22${format}%22`;
+      route += `${EXPORT_AVG}?userId=3&${centers}format=${format}`;
       this.global.export(route, "Consumo_promedio", format);
     } else if (this.showPredictTable) {
       centers = "";
       this.selectedOptionsIds.forEach(id => {
         centers += `companiesIds=${id}&`
       });
-      route += `${EXPORT_PREDICTION}?userId=${userId}&${centers}format=%22${format}%22`;
+      route += `${EXPORT_PREDICTION}?userId=${userId}&${centers}format=${format}`;
       this.global.export(route, "Predicción_de_Consumo_Trimestre", format);
     }
   }

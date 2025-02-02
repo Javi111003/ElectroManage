@@ -92,7 +92,7 @@ export class AlertComponent implements OnInit {
     const userId = this.global.getUserInfo().id;
     const centerId = this.global.getControlValue(this.form, 'workCenter').id;
     const format = this.export.value.name;
-    const route = `${API_URL}${EXPORT_ALERT}?companyId=${centerId}&userId=${userId}&format=%22${format}%22`;
+    const route = `${API_URL}${EXPORT_ALERT}?companyId=${centerId}&userId=${userId}&format=${format}`;
     this.global.export(route, "Registros_de_consumo", format);
   }
 

@@ -120,7 +120,7 @@ export class ExcessComponent {
     const month = this.monthMapper.get(this.global.getControlValue(this.form, 'month'));
     const year = this.global.getControlValue(this.form, 'year');
     const format = this.export.value.name;
-    const route = `${API_URL}${EXPORT_EXCESS}?userId=${userId}&date=${month}%20${year}&format=%22${format}%22`;
+    const route = `${API_URL}${EXPORT_EXCESS}?userId=${userId}&date=${month}%20${year}&format=${format}`;
     this.global.export(route, "Exceso_de_Cosumo", format);
   }
 

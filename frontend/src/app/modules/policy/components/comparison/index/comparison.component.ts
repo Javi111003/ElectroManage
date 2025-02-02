@@ -145,7 +145,7 @@ export class ComparisonComponent implements OnInit {
     const len = policy.name.length;
     const date = policy.name.substring(len - 11, len - 1);
     const format = this.export.value.name;
-    const params = `?userId=${userId}&companyId=${centerId}&policyId=${policy.id}&applyingDate=${date}&format=%22${format}%22`;
+    const params = `?userId=${userId}&companyId=${centerId}&policyId=${policy.id}&applyingDate=${date}&format=${format}`;
     const route = `${API_URL}${EXPORT_COMPARISON}${params}`;
     this.global.export(route, "Comparación_de_Política", format);
   }
