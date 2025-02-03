@@ -72,7 +72,7 @@ public class TemplateService : ITemplateService
         html = html.Replace("{{username}}", user.UserName)
                    .Replace("{{email}}", user.Email)
                    .Replace("{{companyName}}", user.Company.Name)
-                   .Replace("{{logo}}", LogoUrl);
+                   .Replace("{{logo}}", "{{}}");//incluir imagen en local , comprobar si es la causa del error en produccion
         return html;
     }
 }
