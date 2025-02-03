@@ -15,6 +15,6 @@ public class ExportListAppUsersEndpoint : Endpoint<ExportListAppUsersCommand, by
     public override async Task HandleAsync(ExportListAppUsersCommand req, CancellationToken ct)
     {
         var data = await req.ExecuteAsync(ct);
-        await SendBytesAsync(data, "application/pdf");
+        await SendAsync(data);
     }
 }

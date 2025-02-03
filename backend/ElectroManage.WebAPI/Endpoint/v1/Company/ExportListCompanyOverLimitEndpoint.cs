@@ -15,6 +15,6 @@ public class ExportListCompanyOverLimitEndpoint : Endpoint<ExportListCompanyOver
     public override async Task HandleAsync(ExportListCompanyOverLimitCommand req, CancellationToken ct)
     {
         var data = await req.ExecuteAsync(ct);
-        await SendBytesAsync(data, "application/pdf");
+        await SendAsync(data);
     }
 }

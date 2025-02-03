@@ -15,6 +15,6 @@ public class ExportWarningsByCompanyEndpoint : Endpoint<ExportWarningsByCompanyC
     public override async Task HandleAsync(ExportWarningsByCompanyCommand req, CancellationToken ct)
     {
         var data = await req.ExecuteAsync(ct);
-        await SendBytesAsync(data, "application/pdf");
+        await SendAsync(data);
     }
 }
