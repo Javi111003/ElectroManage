@@ -2,32 +2,47 @@
 using Microsoft.Extensions.Logging;
 using SelectPdf;
 
-namespace ElectroManage.Infraestructure.Plugins.Exporters;
-public class PdfExporter : IExporter
-{ 
-    public string Format => "pdf";
-    public byte[] Export(string data)
+namespace ElectroManage.Infraestructure.Plugins.Exporters
+{
+    /// <summary>
+    /// Provides functionality to export data to a PDF format
+    /// </summary>
+    public class PdfExporter : IExporter
     {
-        try
+        /// <summary>
+        /// Gets the format of the export, which is "pdf"
+        /// </summary>
+        public string Format => "pdf";
+
+        /// <summary>
+        /// Exports the provided data as a PDF document
+        /// </summary>
+        /// <param name="data">The HTML string data to be converted into a PDF</param>
+        /// <returns>A byte array representing the generated PDF document</returns>
+        /// <exception cref="Exception">Throws an exception if the PDF conversion fails</exception>
+        public byte[] Export(string data)
         {
-            // Crear una instancia del convertidor HTML a PDF
-            HtmlToPdf converter = new HtmlToPdf();
+            try
+            {
+                // Create an instance of the HTML to PDF converter
+                HtmlToPdf converter = new HtmlToPdf();
 
-            // Convertir el HTML a un documento PDF
-            PdfDocument doc = converter.ConvertHtmlString(data);
+                // Convert the HTML to a PDF document
+                PdfDocument doc = converter.ConvertHtmlString(data);
 
-            // Guardar el documento PDF en un array de bytes
-            byte[] pdf = doc.Save();
+                // Save the PDF document to a byte array
+                byte[] pdf = doc.Save();
 
-            // Cerrar el documento para liberar recursos
-            doc.Close();
+                // Close the document to free resources
+                doc.Close();
 
-            return pdf;
-        }
-        catch(Exception ex)
-        {
-            Console.WriteLine(ex.ToString());
-            throw;
+                return pdf;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                throw;
+            }
         }
     }
 }
