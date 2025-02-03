@@ -8,6 +8,7 @@ using ElectroManage.Domain.DataAccess.Concrete;
 using ElectroManage.Domain.Entites.Identity;
 using ElectroManage.Domain.DataAccess;
 
+namespace ElectroManage.Application.Tests.Base;
 public abstract class GenericRepositoryTest<T> where T : Entity<long>
 {
     protected readonly Mock<ApplicationDbContext> _mockContext;
