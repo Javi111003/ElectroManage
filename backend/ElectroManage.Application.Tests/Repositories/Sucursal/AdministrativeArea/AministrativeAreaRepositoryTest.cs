@@ -1,23 +1,21 @@
-using System;
 using System.Threading.Tasks;
 using Xunit;
 using FluentAssertions;
 using Moq;
-using ElectroManage.Domain.Entites.Offices;
+using ElectroManage.Domain.Entites.Sucursal;
+using ElectroManage.Application.Tests.Base;
 
-namespace ElectroManage.Application.Tests
+namespace ElectroManage.Application.Tests.Repositories.Sucursal.AdministrativeArea
 {
-    public class OfficeRepositoryTest : GenericRepositoryTest<Office>
+    public class AdministrativeAreaRepositoryTest : GenericRepositoryTest<AministrativeArea>
     {
-        public override Office CreatedEntity()
+        public override AdministrativeArea CreatedEntity()
         {
-            return new Office
+            return new AministrativeArea
             {
                 Id = 1,
-                Name = "Test Office",
-                Description = "Test Description",
-                CompanyId = 1
-                // No incluimos Company ni Equipments ya que son navegación
+                Name = "Test Area",
+                Description = "Test Area Description"
             };
         }
 
@@ -30,14 +28,14 @@ namespace ElectroManage.Application.Tests
             await _repository.SaveAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<Office>().AddAsync(entity, default), Times.Once);
+            _mockContext.Verify(m => m.Set<AministrativeArea>().AddAsync(entity, default), Times.Once);
         }
 
         public override async Task GetByIdAsync_Should_Return_Null()
         {
             // Arrange
             long id = 999;
-            _mockContext.Setup(m => m.Set<Office>().FindAsync(id)).ReturnsAsync((Office)null);
+            _mockContext.Setup(m => m.Set<AministrativeArea>().FindAsync(id)).ReturnsAsync((AministrativeArea)null);
 
             // Act
             var result = await _repository.GetByIdAsync(id);
@@ -50,26 +48,26 @@ namespace ElectroManage.Application.Tests
         {
             // Arrange
             var entity = CreatedEntity();
-            _mockContext.Setup(m => m.Set<Office>().Update(entity));
+            _mockContext.Setup(m => m.Set<AministrativeArea>().Update(entity));
 
             // Act
             await _repository.UpdateAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<Office>().Update(entity), Times.Once);
+            _mockContext.Verify(m => m.Set<AministrativeArea>().Update(entity), Times.Once);
         }
 
         public override async Task DeleteAsync_Should_Delete_Entity()
         {
             // Arrange
             var entity = CreatedEntity();
-            _mockContext.Setup(m => m.Set<Office>().Remove(entity));
+            _mockContext.Setup(m => m.Set<AministrativeArea>().Remove(entity));
 
             // Act
             await _repository.DeleteAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<Office>().Remove(entity), Times.Once);
+            _mockContext.Verify(m => m.Set<AministrativeArea>().Remove(entity), Times.Once);
         }
     }
 } 
