@@ -5,10 +5,11 @@ using SelectPdf;
 namespace ElectroManage.Infraestructure.Plugins.Exporters;
 public class PdfExporter : IExporter
 { 
-    readonly ILogger<PdfExporter> _logger;
-    public PdfExporter(ILogger<PdfExporter> logger)
+    private readonly ILogger _logger;
+    public PdfExporter()
     {
-        _logger = logger;
+        var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+        _logger = loggerFactory.CreateLogger<PdfExporter>();
     }
     public string Format => "pdf";
     public byte[] Export(string data)
