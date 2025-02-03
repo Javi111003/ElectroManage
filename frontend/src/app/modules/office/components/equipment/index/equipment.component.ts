@@ -197,7 +197,7 @@ export class EquipmentComponent implements OnInit, OnDestroy {
     const officeId = this.global.getControlValue(this.form, 'office').id;
     const format = this.export.value.name;
     const route = `${API_URL}${EXPORT_EQUIPMENT}?userId=${userId}&officeId=${officeId}&format=${format}`;
-    this.global.export(route, "Exceso_de_Cosumo", format);
+    this.global.export(route, "Equipos_de_Cosumo", format);
   }
 
   /**
