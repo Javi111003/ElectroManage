@@ -84,7 +84,7 @@ export class IndexComponent implements OnInit, OnDestroy {
       this.httpCenter.getRegister(companyId, startDate, endDate).subscribe(data => {
         this.topConsumingCenters = [{
           companyName: centerDetails.name,
-          totalConsumption: data.totalConsumption,
+          totalConsumption: data.totalConsumption.toFixed(2),
           consumptionLimit: centerDetails.consumptionLimit
         }];
         this.createExcessBarChart();
@@ -120,7 +120,12 @@ export class IndexComponent implements OnInit, OnDestroy {
    */
   getTopFiveConsumingCenters(): void {
     this.http.getTopFiveConsumingCenters().subscribe(centers => {
-      this.topConsumingCenters = centers;
+      console.log(centers);
+      this.topConsumingCenters = centers.map(center => ({
+          companyName: center.companyName,
+          totalConsumption: center.totalConsumption.toFixed(2),
+          consumptionLimit: center.consumptionLimit
+      }));
       this.createExcessBarChart();
     });
   }
@@ -267,7 +272,7 @@ export class IndexComponent implements OnInit, OnDestroy {
     if (this.barChart) {
       this.barChart.destroy();
     }
-
+    console.log(this.topConsumingCenters)
     const config: ChartConfiguration<'bar'> = {
       type: 'bar',
       data: {

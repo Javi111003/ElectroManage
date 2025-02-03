@@ -182,9 +182,10 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
         this.dataService.notifyDataUpdated();
         this.activateCloseButton();
 
+        const centerName = this.postMethod ? response.companyName : this.global.getControlValue(this.form, 'workCenter').name;
         if (response.isOverLimit) {
           this.httpNotification.addNotification(
-            `La sucursal ${response.companyName} ha superado su límite mensual de ` +
+            `La sucursal ${centerName} ha superado su límite mensual de ` +
             `${response.warningInfo.establishedLimit} KwH.`
           );
         }
