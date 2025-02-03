@@ -22,7 +22,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
   centerObjectArray: CenterDetails[] = [];
   noResults: boolean = false;
-  export: FormControl = [][0];
+  export: FormControl = new FormControl();
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
     {
@@ -96,9 +96,17 @@ export class ManageComponent implements OnInit, OnDestroy {
     modal.show();
   }
 
+  /**
+   * Exports the work center data in the specified format.
+   *
+   * This function retrieves the user ID from the global user information,
+   * gets the export format from the export form control, constructs the
+   * export route URL, and then calls the global export function with the
+   * constructed route, a predefined file name, and the selected format.
+   */
   exportFunction(): void {
     const userId = this.global.getUserInfo().id;
-    const format = this.export.value;
+    const format = this.export.value.name;
     const route = `${API_URL}${EXPORT_CENTER}?userId=${userId}&format=%22${format}%22`;
     this.global.export(route, "Centros_de_Trabajo", format);
   }

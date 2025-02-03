@@ -135,5 +135,8 @@
   "Username '{username}' is already taken.": "Ya existe un usuario con ese nombre",
   "Efficiency Policy with Id {id} not applied to Company with Id 10 on given date": "Esa política no se aplicó en esa fecha",
   "Efficiency Policy with Id {id} not found": "Esa política de eficiencia no existe",
-  "You can only create one register by day": "Ya existe un registro con esa fecha"
+  "You can only create one register by day": "Ya existe un registro con esa fecha",
+  "This Policy's name already exists": "Ya existe una política con ese nombre",
+  "Username '{username}' is invalid, can only contain letters or digits.": "Nombre de usuario inválido",
+  " Error removing role.\n \nError Message: Username '{username}' is invalid, can only contain letters or digits.": "Nombre de usuario inválido"
 }

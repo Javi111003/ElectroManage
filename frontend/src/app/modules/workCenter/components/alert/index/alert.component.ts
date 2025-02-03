@@ -15,7 +15,7 @@ export class AlertComponent implements OnInit {
   form: FormGroup;
   showTable: boolean = false;
   noResults: boolean = false;
-  export: FormControl = [][0];
+  export: FormControl = new FormControl();
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
     {
@@ -83,10 +83,15 @@ export class AlertComponent implements OnInit {
     }
   }
 
+  /**
+   * Exports alert data based on the selected work center and user information.
+   * Constructs the export route using the API URL, company ID, user ID, and selected format.
+   * Initiates the export process with the constructed route and specified format.
+   */
   exportFunction(): void {
     const userId = this.global.getUserInfo().id;
     const centerId = this.global.getControlValue(this.form, 'workCenter').id;
-    const format = this.export.value;
+    const format = this.export.value.name;
     const route = `${API_URL}${EXPORT_ALERT}?companyId=${centerId}&userId=${userId}&format=%22${format}%22`;
     this.global.export(route, "Registros_de_consumo", format);
   }

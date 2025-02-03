@@ -289,6 +289,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         );
       },
       error: (error) => {
+        this.enableAddType = true;
         console.log(error);
         this.snackbar.openSnackBar('Error al añadir, intente de nuevo...');
       }
@@ -352,7 +353,7 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
    * If successful, it retrieves the updated list of brands.
    */
   addBrand(): void {
-    this.enableAddBrand = !this.enableAddBrand;
+    this.enableAddBrand = false;
     const eqBrand: EquipmentBrand = {
       name: this.global.getControlValue(this.form, 'brand'),
       description: null
@@ -370,8 +371,9 @@ export class EquipmentFormComponent implements OnInit, OnDestroy {
         );
       },
       error: (error) => {
+        this.enableAddBrand = true;
         console.log(error);
-        this.snackbar.openSnackBar('Error al eliminar, intente de nuevo...');
+        this.snackbar.openSnackBar('Error al añadir, intente de nuevo...');
       }
     });
   }

@@ -38,12 +38,19 @@ export class ButtonComponent {
    */
   toggleExportMenu(): void {
     this.isExportToggle = !this.isExportToggle;
+    this.control.setValue(this.options[0]);
     if (this.isExportToggle)
       this.label = "Atrás"
     else
       this.label = "Exportar"
   }
 
+  /**
+   * Triggers the export functionality and updates the component state.
+   *
+   * This method calls the `exportFunction` to perform the export operation,
+   * then sets `isExportToggle` to `false` and updates the `label` to "Exportar".
+   */
   export(): void {
     this.exportFunction();
     this.isExportToggle = false;

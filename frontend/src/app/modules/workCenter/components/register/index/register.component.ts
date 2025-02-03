@@ -92,14 +92,23 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+  /**
+   * Exports the register data based on the selected user, work center, and date range.
+   *
+   * This function retrieves the user ID, work center ID, start date, and end date from the form,
+   * formats the dates, constructs the export URL with the necessary parameters, and triggers
+   * the export process.
+   */
   exportFunction(): void {
     const userId = this.global.getUserInfo().id;
     const centerId = this.global.getControlValue(this.form, 'workCenter').id;
-    const initDate = this.global.getControlValue(this.form, 'startDate');
+    const startDate = this.global.getControlValue(this.form, 'startDate');
     const endDate = this.global.getControlValue(this.form, 'endDate');
-    const dateParams = `start=%22${initDate}%22&end=%22${endDate}%22`;
+    const start = this.global.formatLocalDate(startDate);
+    const end = this.global.formatLocalDate(endDate);
+    const dateParams = `start=${start}&end=${end}`;
     const userCenterParam = `userId=${userId}&companyId=${centerId}`;
-    const format = this.export.value;
+    const format = this.export.value.name;
 
     const route = `${API_URL}${EXPORT_REGISTER}?${userCenterParam}&${dateParams}&format=%22${format}%22`;
     this.global.export(route, "Registros_de_consumo", format);

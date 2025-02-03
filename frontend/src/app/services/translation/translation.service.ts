@@ -53,6 +53,7 @@ export class TranslationService {
    */
   private findKey(message: string): string | undefined {
     return Object.keys(this.translations).find(key => {
+      console.log({message});
       const regex = new RegExp('^' + key.replace(/{\w+}/g, '.+') + '$');
       return regex.test(message);
     });

@@ -29,7 +29,7 @@ export class AvgConsumptionComponent implements OnInit {
   expandedElements: string[] = [];
   showConsultTable: boolean = false;
   showPredictTable: boolean = false;
-  export: FormControl = [][0];
+  export: FormControl = new FormControl();
 
   /**
    * Maps month numbers to their Spanish names.
@@ -116,6 +116,17 @@ export class AvgConsumptionComponent implements OnInit {
     }
   }
 
+  /**
+   * Exports data based on the selected options and the current view.
+   *
+   * This function constructs an export route based on the selected options and the current view
+   * (either consultation table or prediction table). It then calls the global export function
+   * with the constructed route, a filename, and the selected format.
+   *
+   * @remarks
+   * - If `showConsultTable` is true, the function exports average consumption data.
+   * - If `showPredictTable` is true, the function exports consumption prediction data.
+   */
   exportFunction(): void {
     let route = `${API_URL}`;
     const userId = this.global.getUserInfo().id;
@@ -124,7 +135,7 @@ export class AvgConsumptionComponent implements OnInit {
     this.selectedOptionsIds.forEach(id => {
       centers += `companyIds=${id}&`
     });
-    const format = this.export.value;
+    const format = this.export.value.name;
 
     if (this.showConsultTable) {
       route += `${EXPORT_AVG}?userId=3&${centers}format=%22${format}%22`;

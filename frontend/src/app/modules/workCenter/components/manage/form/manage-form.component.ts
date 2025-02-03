@@ -830,6 +830,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         );
       },
       error: (error) => {
+        this.enableAddType = true;
         console.log(error);
         this.snackbar.openSnackBar('Error al añadir, intente de nuevo...');
       }
@@ -862,6 +863,7 @@ export class ManageFormComponent implements OnInit, OnDestroy {
         );
       },
       error: (error) => {
+        this.enableAddArea = true;
         console.log(error);
         this.snackbar.openSnackBar('Error al añadir, intente de nuevo...');
       }

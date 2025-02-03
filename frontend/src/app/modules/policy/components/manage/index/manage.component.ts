@@ -20,7 +20,7 @@ declare var bootstrap: any;
 export class ManageComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
   noResults: boolean = false;
-  export: FormControl = [][0];
+  export: FormControl = new FormControl();
   policyStringArray: string[] = [];
   policyArray: Item[] = [];
   policyObjectArray: PolicyInfo[] = [];
@@ -66,9 +66,16 @@ export class ManageComponent implements OnInit, OnDestroy {
     modal.show();
   }
 
+  /**
+   * Exports the policy data for the current user in the specified format.
+   *
+   * This function retrieves the user ID from the global user information,
+   * constructs the export route URL with the specified format, and then
+   * calls the global export function to download the policy data.
+   */
   exportFunction(): void {
     const userId = this.global.getUserInfo().id;
-    const format = this.export.value;
+    const format = this.export.value.name;
     const route = `${API_URL}${EXPORT_POLICY}?userId=${userId}&format=%22${format}%22`;
     this.global.export(route, "Políticas_de_Eficiencia_Energética", format);
   }

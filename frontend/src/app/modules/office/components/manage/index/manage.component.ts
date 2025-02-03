@@ -20,7 +20,7 @@ export class ManageComponent implements OnInit, OnDestroy {
   form: FormGroup;
   showTable: boolean = false;
   noResults: boolean = false;
-  export: FormControl = [][0];
+  export: FormControl = new FormControl();
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
     {
@@ -110,10 +110,16 @@ export class ManageComponent implements OnInit, OnDestroy {
     modal.show();
   }
 
+  /**
+   * Exports office data based on the selected format.
+   *
+   * This function retrieves the user ID and work center ID from the global state,
+   * constructs an export URL with the specified format, and triggers the export process.
+   */
   exportFunction(): void {
     const userId = this.global.getUserInfo().id;
     const centerId = this.global.getControlValue(this.form, "workCenter").id;
-    const format = this.export.value;
+    const format = this.export.value.name;
     const route = `${API_URL}${EXPORT_OFFICE}?userId=${userId}&companyId=${centerId}&format=%22${format}%22`;
     this.global.export(route, "Oficinas", format);
   }
