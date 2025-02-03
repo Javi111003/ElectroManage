@@ -171,7 +171,7 @@ public class TemplateService : ITemplateService
     {
         var header = GetHeaderTemplate(user);
         var htmlCompanies = File.ReadAllText(CompaniesTemplateUrl);
-        var companiesList = companies.Select(c => $"<tr><td>{c.Name}</td><td>{c.AdministrativeArea.Name}</td><td>{c.InstalationType.Name}</td><td>{c.Location.AddressDetails}</td><td>{c.ConsumptionLimit}</td></tr>");
+        var companiesList = companies.Select(c => $"<tr><td>{c.Name}</td><td>{c.AministrativeArea.Name}</td><td>{c.InstalationType.Name}</td><td>{c.Location.AddressDetails}</td><td>{c.ConsumptionLimit}</td></tr>");
         htmlCompanies = htmlCompanies.Replace("{{header}}", header)
                                    .Replace("{{rows}}", string.Join("", companiesList));
         return htmlCompanies;

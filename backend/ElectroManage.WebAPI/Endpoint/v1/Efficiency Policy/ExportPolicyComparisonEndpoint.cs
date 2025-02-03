@@ -15,6 +15,6 @@ public class ExportPolicyComparisonByCompanyEndpoint : Endpoint<ExportPolicyComp
     public override async Task HandleAsync(ExportPolicyComparisonCommand req, CancellationToken ct)
     {
         var data = await req.ExecuteAsync(ct);
-        await SendBytesAsync(data, "application/pdf");
+        await SendAsync(data);
     }
 }

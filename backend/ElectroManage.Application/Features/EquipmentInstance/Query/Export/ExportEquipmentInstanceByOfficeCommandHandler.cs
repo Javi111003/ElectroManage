@@ -1,6 +1,7 @@
 using ElectroManage.Domain.DataAccess.Abstractions;
 using ElectroManage.Infraestructure.Plugins;
 using ElectroManage.Infraestructure.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
