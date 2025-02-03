@@ -13,4 +13,5 @@ public interface ITemplateService
     public string GetOfficesTemplate(Domain.Entites.Identity.AppUser user, List<Domain.Entites.Offices.Office> offices, string officeCompanyName);
     public string GetEquipmentsTemplate(Domain.Entites.Identity.AppUser user, List<Domain.Entites.Equipment.EquipmentInstance> equipments, string equipmentCompanyName, string equipmentOfficeName);
     public string GetPolicyComparisonTemplate(Domain.Entites.Identity.AppUser user, Domain.Entites.Sucursal.EfficiencyPolicy policy, List<Domain.Entites.Sucursal.Register> registersBefore, List<Domain.Entites.Sucursal.Register> registersAfter, string policyCompanyName);
+    public string GetPoliciesTemplate(Domain.Entites.Identity.AppUser user, List<Domain.Entites.Sucursal.EfficiencyPolicy> policies);
 }
