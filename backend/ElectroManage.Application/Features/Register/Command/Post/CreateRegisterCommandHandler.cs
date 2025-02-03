@@ -34,7 +34,7 @@ public class CreateRegisterCommandHandler : CoreCommandHandler<CreateRegisterCom
             _logger.LogError($"The company with id: {command.CompanyId} not found");
             ThrowError($"The company with id: {command.CompanyId} not found", 404);
         }
-        if (company.Registers.Count(r => r.Date.Date == command.Date.Date) > 0)
+        if (company.Registers.Count(r => r.StatusBaseEntity == Domain.Enums.StatusEntityType.Active && r.Date.Date == command.Date.Date) > 0)
         {
             _logger.LogError($"You can only create one register by day");
             ThrowError($"You can only create one register by day", 400);
