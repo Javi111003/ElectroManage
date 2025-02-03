@@ -167,6 +167,53 @@ public class TemplateService : ITemplateService
                              .Replace("{{rows}}", rows);
         return htmlUsers;
     }
+    public string GetCompaniesTemplate(User user, List<Domain.Entites.Sucursal.Company> companies)
+    {
+        var header = GetHeaderTemplate(user);
+        var htmlCompanies = File.ReadAllText(CompaniesTemplateUrl);
+        var companiesList = companies.Select(c => $"<tr><td>{c.Name}</td><td>{c.AdministrativeArea.Name}</td><td>{c.InstalationType.Name}</td><td>{c.Location.AddressDetails}</td><td>{c.ConsumptionLimit}</td></tr>");
+        htmlCompanies = htmlCompanies.Replace("{{header}}", header)
+                                   .Replace("{{rows}}", string.Join("", companiesList));
+        return htmlCompanies;
+    }
+    public string GetOfficesTemplate(User user, List<Domain.Entites.Offices.Office> offices, string officeCompanyName)
+    {
+        var header = GetHeaderTemplate(user);
+        var htmlOffices = File.ReadAllText(OfficeTemplateUrl);
+        var officesList = offices.Select(o => $"<tr><td>{o.Name}</td><td>{o.Description}</td></tr>");
+        htmlOffices = htmlOffices.Replace("{{header}}", header)
+                                 .Replace("{{fromCompany}}", officeCompanyName)
+                                 .Replace("{{rows}}", string.Join("", officesList));
+        return htmlOffices;
+    }
+    public string GetEquipmentsTemplate(User user, List<Domain.Entites.Equipment.EquipmentInstance> equipments, string equipmentCompanyName, string equipmentOfficeName)
+    {
+        var header = GetHeaderTemplate(user);
+        var htmlEquipments = File.ReadAllText(EquipmentsTemplateUrl);
+        var equipmentsList = equipments.Select(e => $"<tr><td>{e.InstalationDate.ToString("dd/MM/yyyy")}</td><td>{e.EquipmentSpecification.Model}</td><td>{e.EquipmentSpecification.EquipmentBrand.Name}</td><td>{e.EquipmentSpecification.EquipmentType.Name}</td><td>{e.EquipmentSpecification.Capacity}</td><td>{e.EquipmentSpecification.AverageConsumption}</td><td>{e.UseFrequency}</td><td>{e.MantainceStatus}</td><td>{e.EquipmentSpecification.LifeSpanYears}</td><td>{e.EquipmentSpecification.Efficiency}</td></tr>");
+
+
+        htmlEquipments = htmlEquipments.Replace("{{header}}", header)
+                                       .Replace("{{fromCompany}}", equipmentCompanyName)
+                                       .Replace("{{fromOffice}}", equipmentOfficeName)
+                                       .Replace("{{rows}}", string.Join("", equipmentsList));
+        return htmlEquipments;
+    }
+    public string GetPolicyComparisonTemplate(User user, Domain.Entites.Sucursal.EfficiencyPolicy policy, List<Domain.Entites.Sucursal.Register> registersBefore, List<Domain.Entites.Sucursal.Register> registersAfter, string policyCompanyName)
+    {
+        var header = GetHeaderTemplate(user);
+        var htmlPolicyComparison = File.ReadAllText(PolicyComparissionTemplateUrl);
+        var rowsBefore = registersBefore.Select(r => $"<tr><td>{r.Date.ToString("dd/MM/yyyy")}</td><td>{r.Consumption}</td><td>{r.Cost}</td></tr>");
+        var rowsAfter = registersAfter.Select(r => $"<tr><td>{r.Date.ToString("dd/MM/yyyy")}</td><td>{r.Consumption}</td><td>{r.Cost}</td></tr>");
+
+        htmlPolicyComparison = htmlPolicyComparison.Replace("{{header}}", header)
+                                                   .Replace("{{inCompany}}", policyCompanyName)
+                                                   .Replace("{{policy}}", policy.Name)
+                                                   .Replace("{{rowsBefore}}", string.Join("", rowsBefore))
+                                                   .Replace("{{rowsAfter}}", string.Join("", rowsAfter));
+        return htmlPolicyComparison;
+    }
+    
     private string GetHeaderTemplate(User user)
     {
         var html = File.ReadAllText(HeaderTemplateUrl);
