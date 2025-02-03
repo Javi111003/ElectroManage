@@ -3,6 +3,7 @@ using ElectroManage.Infraestructure.Plugins;
 using ElectroManage.Infraestructure.Services;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ElectroManage.Application.Features.Company.Query.Export.List;
 public class ExportListCompanyCommandHandler : CoreQueryHandler<ExportListCompanyCommand, byte[]>
@@ -18,8 +19,10 @@ public class ExportListCompanyCommandHandler : CoreQueryHandler<ExportListCompan
     {
         _logger = logger;
         _templateService = templateService;
+        _pluginLoader = pluginLoader;
     }
     public override async Task<byte[]> ExecuteAsync(ExportListCompanyCommand command, CancellationToken ct = default)
+
     {
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution started");
         var userRepo = UnitOfWork!.DbRepository<Domain.Entites.Identity.AppUser>();
@@ -30,7 +33,7 @@ public class ExportListCompanyCommandHandler : CoreQueryHandler<ExportListCompan
         var companyRepo = UnitOfWork!.DbRepository<Domain.Entites.Sucursal.Company>();
         var companyInclude = new List<Expression<Func<Domain.Entites.Sucursal.Company, object>>>
         {
-            x => x.AdministrativeArea,
+            x => x.AministrativeArea,
             x => x.InstalationType,
             x => x.Location
         };

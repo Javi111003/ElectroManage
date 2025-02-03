@@ -2,6 +2,7 @@ using ElectroManage.Domain.DataAccess.Abstractions;
 using ElectroManage.Infraestructure.Plugins;
 using ElectroManage.Infraestructure.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace ElectroManage.Application.Features.Office.Query.Export.List;

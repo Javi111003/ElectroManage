@@ -10,11 +10,12 @@ public class ExportEquipmentInstancesByOfficeEndpoint : Endpoint<ExportEquipment
         Version(1);
         Get("/equipment/export");
         AllowAnonymous();
-        Summary(f => f.Summary = "Exporting equipment instances by company");
+        Summary(f => f.Summary = "Exporting equipment instances in an office");
     }
     public override async Task HandleAsync(ExportEquipmentInstancesByOfficeCommand req, CancellationToken ct)
     {
         var data = await req.ExecuteAsync(ct);
-        await SendBytesAsync(data, "application/pdf");
+        await SendAsync(data);
     }
+
 }
