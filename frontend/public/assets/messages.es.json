@@ -138,5 +138,7 @@
   "You can only create one register by day": "Ya existe un registro con esa fecha",
   "This Policy's name already exists": "Ya existe una política con ese nombre",
   "Username '{username}' is invalid, can only contain letters or digits.": "Nombre de usuario inválido",
-  " Error removing role.\n \nError Message: Username '{username}' is invalid, can only contain letters or digits.": "Nombre de usuario inválido"
+  " Error removing role.\n \nError Message: Username '{username}' is invalid, can only contain letters or digits.": "Nombre de usuario inválido",
+  " Exporter for format: docx is not implemented": "Ese formato estará disponible en próximas versiones ;)",
+  " Exporter for format: csv is not implemented": "Ese formato estará disponible en próximas versiones ;)"
 }
