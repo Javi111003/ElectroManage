@@ -18,7 +18,7 @@ declare var bootstrap: any;
 })
 export class ManageComponent implements OnInit {
   noResults: boolean = false;
-  export: FormControl = [][0]
+  export: FormControl = new FormControl();
   dataSource: MatTableDataSource<any> = new MatTableDataSource([0]);
   displayedColumns: ConfigColumn[] = [
     {
@@ -65,9 +65,16 @@ export class ManageComponent implements OnInit {
     modal.show();
   }
 
+  /**
+   * Exports user data in the specified format.
+   *
+   * This function retrieves the user ID from the global user information,
+   * constructs the export route URL with the specified format, and then
+   * calls the global export function to export the user data.
+   */
   exportFunction(): void {
     const userId = this.global.getUserInfo().id;
-    const format = this.export.value;
+    const format = this.export.value.name;
     const route = `${API_URL}${EXPORT_USER}?userId=${userId}&format=%22${format}%22`;
     this.global.export(route, "Usuarios", format);
   }

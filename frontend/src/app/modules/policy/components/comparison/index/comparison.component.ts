@@ -23,7 +23,7 @@ export class ComparisonComponent implements OnInit {
   registersAfter: RegisterByDay[] = [];
   noResultsBefore: boolean = false;
   noResultsAfter: boolean = false;
-  export: FormControl = [][0];
+  export: FormControl = new FormControl();
   footerTableBefore: any[] = [];
   footerTableAfter: any[] = [];
   dataSourceBefore: MatTableDataSource<any> = new MatTableDataSource();
@@ -134,14 +134,18 @@ export class ComparisonComponent implements OnInit {
     }
   }
 
+  /**
+   * Exports the policy comparison data based on the selected user, work center, and policy.
+   * Constructs the export URL with the necessary parameters and triggers the export process.
+   */
   exportFunction(): void {
     const userId = this.global.getUserInfo().id;
     const centerId = this.global.getControlValue(this.form, "workCenter").id;
     const policy = this.global.getControlValue(this.form, "policy");
     const len = policy.name.length;
     const date = policy.name.substring(len - 11, len - 1);
-    const format = this.export.value;
-    const params = `?userId=${userId}&companyId=${centerId}&policyId=${policy.id}&applyingDate=%22${date}%22&format=%22${format}%22`;
+    const format = this.export.value.name;
+    const params = `?userId=${userId}&companyId=${centerId}&policyId=${policy.id}&applyingDate=${date}&format=%22${format}%22`;
     const route = `${API_URL}${EXPORT_COMPARISON}${params}`;
     this.global.export(route, "Comparación_de_Política", format);
   }

@@ -27,7 +27,7 @@ export class ExcessComponent {
   readonly date = new FormControl(this.dateInitialize);
   showTable: boolean = false;
   noResults: boolean = false;
-  export: FormControl = [][0];
+  export: FormControl = new FormControl();
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: ConfigColumn[] = [
     {
@@ -110,12 +110,17 @@ export class ExcessComponent {
     }
   }
 
+  /**
+   * Exports the excess consumption data based on the selected month, year, and format.
+   * Constructs the export URL using the user ID, selected month, year, and format.
+   * Initiates the export process by calling the global export function.
+   */
   exportFunction(): void {
     const userId = this.global.getUserInfo().id;
     const month = this.monthMapper.get(this.global.getControlValue(this.form, 'month'));
     const year = this.global.getControlValue(this.form, 'year');
-    const format = this.export.value;
-    const route = `${API_URL}${EXPORT_EXCESS}?userId=${userId}&date=%22${month}%20${year}%22&format=%22${format}%22`;
+    const format = this.export.value.name;
+    const route = `${API_URL}${EXPORT_EXCESS}?userId=${userId}&date=${month}%20${year}&format=%22${format}%22`;
     this.global.export(route, "Exceso_de_Cosumo", format);
   }
 

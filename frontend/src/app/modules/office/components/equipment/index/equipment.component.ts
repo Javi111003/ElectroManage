@@ -24,7 +24,7 @@ export class EquipmentComponent implements OnInit, OnDestroy {
   form: FormGroup;
   showTable: boolean = false;
   noResults: boolean = false;
-  export: FormControl = [][0];
+  export: FormControl = new FormControl();
   equipmentObjects: Equipment[] = [];
   equipments: string[] = [];
   useFrequency: Map<string, string> = new Map<string, string>([
@@ -186,10 +186,16 @@ export class EquipmentComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Exports equipment data based on the selected office and format.
+   *
+   * This function retrieves the user ID and office ID from the global state,
+   * constructs an export URL with the specified format, and triggers the export process.
+   */
   exportFunction(): void {
     const userId = this.global.getUserInfo().id;
     const officeId = this.global.getControlValue(this.form, 'office').id;
-    const format = this.export.value;
+    const format = this.export.value.name;
     const route = `${API_URL}${EXPORT_EQUIPMENT}?userId=${userId}&officeId=${officeId}&format=%22${format}%22`;
     this.global.export(route, "Exceso_de_Cosumo", format);
   }

@@ -10,8 +10,8 @@ export class ExportService {
   constructor(private http: HttpClient) { }
 
   /**
-   * gets the pdf to download.
-   * @returns A string with de pdf encoded.
+   * gets the document to download.
+   * @returns A string with de document encoded.
    */
   getDocument(route: string): Observable<string> {
     return this.http.get<string>(route);

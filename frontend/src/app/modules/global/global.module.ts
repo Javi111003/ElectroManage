@@ -219,10 +219,18 @@ export class GlobalModule {
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
   }
 
+  /**
+   * Exports a document from the server and triggers a download in the browser.
+   * This function sends a request to the server to retrieve a document, converts the response
+   * to a binary format, creates a Blob object, and triggers a download in the browser.
+   * @param route The route to the document on the server.
+   * @param name The name to be given to the downloaded file.
+   * @param format The format of the document (e.g., 'pdf', 'docx', 'csv').
+   */
   export(route: string, name: string, format: string): void {
+    console.log(route);
     this.httpExport.getDocument(route).subscribe({
       next: (response) => {
-
         if (!response) {
           throw new Error("Descarga fallida");
         }
@@ -245,7 +253,7 @@ export class GlobalModule {
         document.body.removeChild(link);
       },
       error: (error) => {
-        console.error("Error durante la descarga: ", error);
+        console.error("Error during download: ", error);
       }
     });
   }
