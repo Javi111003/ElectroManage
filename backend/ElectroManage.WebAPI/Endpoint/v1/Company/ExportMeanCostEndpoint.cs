@@ -15,6 +15,6 @@ public class ExportMeanCostEndpoint : Endpoint<ExportMeanCostCommand, byte[]>
     public override async Task HandleAsync(ExportMeanCostCommand req, CancellationToken ct)
     {
         var data = await req.ExecuteAsync(ct);
-        await SendBytesAsync(data, "application/pdf");
+        await SendAsync(data);
     }
 }

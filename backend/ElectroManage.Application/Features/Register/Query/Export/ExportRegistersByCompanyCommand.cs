@@ -1,4 +1,3 @@
-using System;
 namespace ElectroManage.Application.Features.Register.Query.Export.List;
 public class ExportRegistersByCompanyCommand : ICommand<byte[]>
 {

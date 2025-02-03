@@ -15,6 +15,6 @@ public class ExportProyectionEndpoint : Endpoint<ExportProyectionCommand, byte[]
     public override async Task HandleAsync(ExportProyectionCommand req, CancellationToken ct)
     {
         var data = await req.ExecuteAsync(ct);
-        await SendBytesAsync(data, "application/pdf");
+        await SendAsync(data);
     }
 }

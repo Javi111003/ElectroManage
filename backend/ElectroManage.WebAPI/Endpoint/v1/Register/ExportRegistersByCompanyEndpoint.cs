@@ -15,6 +15,6 @@ public class ExportRegistersByCompanyEndpoint : Endpoint<ExportRegistersByCompan
     public override async Task HandleAsync(ExportRegistersByCompanyCommand req, CancellationToken ct)
     {
         var data = await req.ExecuteAsync(ct);
-        await SendBytesAsync(data, "application/pdf");
+        await SendAsync(data);
     }
 }
