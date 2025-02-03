@@ -78,7 +78,8 @@ export class IndexComponent implements OnInit, OnDestroy {
   getCompanySpecificData(companyId: number): void {
     this.httpCenter.getCenterById(companyId).subscribe(centerDetails => {
       const currentYear = new Date().getFullYear();
-      const startDate = `${currentYear}-01-01`;
+      const currentMonth = new Date().getMonth() + 1;
+      const startDate = `${currentYear}-${currentMonth}-01`;
       const endDate = `${currentYear}-12-31`;
       this.httpCenter.getRegister(companyId, startDate, endDate).subscribe(data => {
         this.topConsumingCenters = [{
