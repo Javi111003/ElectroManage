@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { SnackbarService } from '../../../../../services/snackbar/snackbar.service';
 import { Register, RegisterInfo } from '../../../../../models/register.interface';
 import { RegisterService } from '../../../../../services/register/register.service';
+import { NotificationService } from '../../../../../services/notification/notification.service';
 
 @Component({
   selector: 'app-register-form',
@@ -24,7 +25,8 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     public global: GlobalModule,
     private dataService: DataService,
     private snackbar: SnackbarService,
-    private httpRegister: RegisterService
+    private httpRegister: RegisterService,
+    private httpNotification: NotificationService
   )
   {
     const today = new Date();
@@ -179,6 +181,13 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
         this.snackbar.openSnackBar(successMessage);
         this.dataService.notifyDataUpdated();
         this.activateCloseButton();
+
+        if (response.isOverLimit) {
+          this.httpNotification.addNotification(
+            `La sucursal ${response.companyName} ha superado su límite mensual de ` +
+            `${response.warningInfo.establishedLimit} KwH.`
+          );
+        }
       },
       error: (error: any) => {
         this.loading = false;
