@@ -2,16 +2,16 @@ using System.Threading.Tasks;
 using Xunit;
 using FluentAssertions;
 using Moq;
-using ElectroManage.Domain.Entites.Sucursal;
+using Policy = ElectroManage.Domain.Entites.Sucursal.EfficiencyPolicy;
 using ElectroManage.Application.Tests.Base;
 
 namespace ElectroManage.Application.Tests.Repositories.EfficiencyPolicy
 {
-    public class EfficiencyPolicyRepositoryTest : GenericRepositoryTest<EfficiencyPolicy>
+    public class EfficiencyPolicyRepositoryTest : GenericRepositoryTest<Policy>
     {
-        public override EfficiencyPolicy CreatedEntity()
+        public override Policy CreatedEntity()
         {
-            return new EfficiencyPolicy
+            return new Policy
             {
                 Id = 1,
                 Name = "Test Policy",
@@ -29,14 +29,14 @@ namespace ElectroManage.Application.Tests.Repositories.EfficiencyPolicy
             await _repository.SaveAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<EfficiencyPolicy>().AddAsync(entity, default), Times.Once);
+            _mockContext.Verify(m => m.Set<Policy>().AddAsync(entity, default), Times.Once);
         }
 
         public override async Task GetByIdAsync_Should_Return_Null()
         {
             // Arrange
             long id = 999;
-            _mockContext.Setup(m => m.Set<EfficiencyPolicy>().FindAsync(id)).ReturnsAsync((EfficiencyPolicy)null);
+            _mockContext.Setup(m => m.Set<Policy>().FindAsync(id)).ReturnsAsync((Policy)null);
 
             // Act
             var result = await _repository.GetByIdAsync(id);
@@ -49,26 +49,26 @@ namespace ElectroManage.Application.Tests.Repositories.EfficiencyPolicy
         {
             // Arrange
             var entity = CreatedEntity();
-            _mockContext.Setup(m => m.Set<EfficiencyPolicy>().Update(entity));
+            _mockContext.Setup(m => m.Set<Policy>().Update(entity));
 
             // Act
             await _repository.UpdateAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<EfficiencyPolicy>().Update(entity), Times.Once);
+            _mockContext.Verify(m => m.Set<Policy>().Update(entity), Times.Once);
         }
 
         public override async Task DeleteAsync_Should_Delete_Entity()
         {
             // Arrange
             var entity = CreatedEntity();
-            _mockContext.Setup(m => m.Set<EfficiencyPolicy>().Remove(entity));
+            _mockContext.Setup(m => m.Set<Policy>().Remove(entity));
 
             // Act
             await _repository.DeleteAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<EfficiencyPolicy>().Remove(entity), Times.Once);
+            _mockContext.Verify(m => m.Set<Policy>().Remove(entity), Times.Once);
         }
     }
 } 

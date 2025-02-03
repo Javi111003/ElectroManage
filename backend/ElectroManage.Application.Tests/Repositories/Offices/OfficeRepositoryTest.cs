@@ -1,14 +1,9 @@
-using System;
-using System.Threading.Tasks;
-using Xunit;
 using FluentAssertions;
 using Moq;
 using ElectroManage.Domain.Entites.Offices;
 using ElectroManage.Application.Tests.Base;
 
 namespace ElectroManage.Application.Tests.Repositories.Offices;
-
-{
     public class OfficeRepositoryTest : GenericRepositoryTest<Office>
     {
         public override Office CreatedEntity()
@@ -74,4 +69,3 @@ namespace ElectroManage.Application.Tests.Repositories.Offices;
             _mockContext.Verify(m => m.Set<Office>().Remove(entity), Times.Once);
         }
     }
-} 

@@ -8,11 +8,11 @@ using ElectroManage.Application.Tests.Base;
 
 namespace ElectroManage.Application.Tests.Repositories.Register
 {
-    public class RegisterRepositoryTest : GenericRepositoryTest<Register>
+    public class RegisterRepositoryTest : GenericRepositoryTest<ElectroManage.Domain.Entites.Sucursal.Register>
     {
-        public override Register CreatedEntity()
+        public override ElectroManage.Domain.Entites.Sucursal.Register CreatedEntity()
         {
-            return new Register
+            return new ElectroManage.Domain.Entites.Sucursal.Register
             {
                 Id = 1,
                 Date = DateTime.Now,
@@ -31,14 +31,14 @@ namespace ElectroManage.Application.Tests.Repositories.Register
             await _repository.SaveAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<Register>().AddAsync(entity, default), Times.Once);
+            _mockContext.Verify(m => m.Set<ElectroManage.Domain.Entites.Sucursal.Register>().AddAsync(entity, default), Times.Once);
         }
 
         public override async Task GetByIdAsync_Should_Return_Null()
         {
             // Arrange
             long id = 999;
-            _mockContext.Setup(m => m.Set<Register>().FindAsync(id)).ReturnsAsync((Register)null);
+            _mockContext.Setup(m => m.Set<ElectroManage.Domain.Entites.Sucursal.Register>().FindAsync(id)).ReturnsAsync((ElectroManage.Domain.Entites.Sucursal.Register)null);
 
             // Act
             var result = await _repository.GetByIdAsync(id);
@@ -51,26 +51,26 @@ namespace ElectroManage.Application.Tests.Repositories.Register
         {
             // Arrange
             var entity = CreatedEntity();
-            _mockContext.Setup(m => m.Set<Register>().Update(entity));
+            _mockContext.Setup(m => m.Set<ElectroManage.Domain.Entites.Sucursal.Register>().Update(entity));
 
             // Act
             await _repository.UpdateAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<Register>().Update(entity), Times.Once);
+            _mockContext.Verify(m => m.Set<ElectroManage.Domain.Entites.Sucursal.Register>().Update(entity), Times.Once);
         }
 
         public override async Task DeleteAsync_Should_Delete_Entity()
         {
             // Arrange
             var entity = CreatedEntity();
-            _mockContext.Setup(m => m.Set<Register>().Remove(entity));
+            _mockContext.Setup(m => m.Set<ElectroManage.Domain.Entites.Sucursal.Register>().Remove(entity));
 
             // Act
             await _repository.DeleteAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<Register>().Remove(entity), Times.Once);
+            _mockContext.Verify(m => m.Set<ElectroManage.Domain.Entites.Sucursal.Register>().Remove(entity), Times.Once);
         }
     }
 } 

@@ -1,18 +1,16 @@
-using System.Threading.Tasks;
-using Xunit;
 using FluentAssertions;
 using Moq;
-using ElectroManage.Domain.Entites.Companies;
+using Center = ElectroManage.Domain.Entites.Sucursal.Company;
 using ElectroManage.Application.Tests.Base;
 
 namespace ElectroManage.Application.Tests.Repositories.Sucursal.Company
 {
-    public class CompanyRepositoryTest : GenericRepositoryTest<Company>
+    public class CompanyRepositoryTest : GenericRepositoryTest<Center>
     {
 
-        public override Company CreatedEntity()
+        public override Center CreatedEntity()
         {
-            return new Company
+            return new Center
             {
                 Id = 1,
                 Name = "Test Company",
@@ -33,14 +31,14 @@ namespace ElectroManage.Application.Tests.Repositories.Sucursal.Company
             await _repository.SaveAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<Company>().AddAsync(entity, default), Times.Once);
+            _mockContext.Verify(m => m.Set<Center>().AddAsync(entity, default), Times.Once);
         }
 
         public override async Task GetByIdAsync_Should_Return_Null()
         {
             // Arrange
             long id = 999;
-            _mockContext.Setup(m => m.Set<Company>().FindAsync(id)).ReturnsAsync((Company)null);
+            _mockContext.Setup(m => m.Set<Center>().FindAsync(id)).ReturnsAsync((Center)null);
 
             // Act
             var result = await _repository.GetByIdAsync(id);
@@ -53,26 +51,26 @@ namespace ElectroManage.Application.Tests.Repositories.Sucursal.Company
         {
             // Arrange
             var entity = CreatedEntity();
-            _mockContext.Setup(m => m.Set<Company>().Update(entity));
+            _mockContext.Setup(m => m.Set<Center>().Update(entity));
 
             // Act
             await _repository.UpdateAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<Company>().Update(entity), Times.Once);
+            _mockContext.Verify(m => m.Set<Center>().Update(entity), Times.Once);
         }
 
         public override async Task DeleteAsync_Should_Delete_Entity()
         {
             // Arrange
             var entity = CreatedEntity();
-            _mockContext.Setup(m => m.Set<Company>().Remove(entity));
+            _mockContext.Setup(m => m.Set<Center>().Remove(entity));
 
             // Act
             await _repository.DeleteAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<Company>().Remove(entity), Times.Once);
+            _mockContext.Verify(m => m.Set<Center>().Remove(entity), Times.Once);
         }
     }
 } 

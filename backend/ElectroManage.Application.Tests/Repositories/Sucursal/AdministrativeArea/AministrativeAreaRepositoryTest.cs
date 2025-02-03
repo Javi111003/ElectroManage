@@ -9,7 +9,7 @@ namespace ElectroManage.Application.Tests.Repositories.Sucursal.AdministrativeAr
 {
     public class AdministrativeAreaRepositoryTest : GenericRepositoryTest<AministrativeArea>
     {
-        public override AdministrativeArea CreatedEntity()
+        public override AministrativeArea CreatedEntity()
         {
             return new AministrativeArea
             {

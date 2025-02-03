@@ -57,14 +57,14 @@ namespace ElectroManage.Application.Tests.Repositories.Equipment
             await _repository.UpdateAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<EquipmentInstace>().Update(entity), Times.Once);
+            _mockContext.Verify(m => m.Set<EquipmentInstance>().Update(entity), Times.Once);
         }
 
         public override async Task DeleteAsync_Should_Delete_Entity()
         {
             // Arrange
             var entity = CreatedEntity();
-            _mockContext.Setup(m => m.Set<EquipmentInstace>().Remove(entity));
+            _mockContext.Setup(m => m.Set<EquipmentInstance>().Remove(entity));
 
             // Act
             await _repository.DeleteAsync(entity);
