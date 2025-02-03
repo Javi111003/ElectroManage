@@ -7,7 +7,8 @@ import { GlobalModule } from '../../global.module';
 import { UserById } from '../../../../models/credential.interface';
 import { UserService } from '../../../../services/user/user.service';
 import { Observable } from 'rxjs';
-import { WebSocketService } from '../../../../services/webSocket/web-socket.service';
+import { NotificationService } from '../../../../services/notification/notification.service';
+import { Item } from '../../../../shared/shared.module';
 
 @Component({
   selector: 'app-menu',
@@ -43,7 +44,7 @@ import { WebSocketService } from '../../../../services/webSocket/web-socket.serv
 export class MenuComponent implements OnInit {
   isSidebarActive = false;
   currentURL = '/';
-  alerts: string[] = [];
+  alerts: Item[] = [];
   alertsViews: number = 0;
   menuItems: any[] = [];
   isUserMenuOpen: boolean = false;
@@ -65,7 +66,7 @@ export class MenuComponent implements OnInit {
     private router: Router,
     private auth: AuthService,
     private httpUser: UserService,
-    private webSocketService: WebSocketService
+    private httpNotification: NotificationService,
   ) {
     const storedLoginTime = sessionStorage.getItem('loginTime');
     this.loginStartTime = storedLoginTime ? parseInt(storedLoginTime) : new Date().getTime();
@@ -99,6 +100,11 @@ export class MenuComponent implements OnInit {
         menuItem.isOpen = true;
     });
 
+    this.httpNotification.notifications$.subscribe((notifications) => {
+      this.alerts = notifications;
+      console.log(this.alerts);
+    });
+
     setInterval(() => this.updateLoginTime(), 1000);
   }
 
@@ -107,6 +113,20 @@ export class MenuComponent implements OnInit {
    */
   toggleSidebar() {
     this.isSidebarActive = !this.isSidebarActive;
+  }
+
+  /**
+   * Removes a notification with the specified ID.
+   *
+   * This method calls the `removeNotification` method of the `httpNotification` service
+   * to remove the notification with the given ID. Additionally, it decrements the
+   * `alertsViews` count by 1.
+   *
+   * @param id - The ID of the notification to be removed.
+   */
+  removeNotification(id: number): void {
+    this.httpNotification.removeNotification(id);
+    this.alertsViews -= 1;
   }
 
   /**

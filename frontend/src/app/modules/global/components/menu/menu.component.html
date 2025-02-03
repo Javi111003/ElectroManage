@@ -4,12 +4,17 @@
     <img src="logo.png" alt="Company Logo" (click)="navigateHome()">
     <p>Electro Manage</p>
     <div class="icons">
-      <div class="notifications-menu-container">
+      <div class="notifications-menu-container" *appShowForRoles="['Admin', 'Manager']">
         <mat-icon [matBadge]="alerts.length - alertsViews" (click)="toggleNotificationsMenu($event)">notifications</mat-icon>
         <span class="cdk-visually-hidden"></span>
-        <div class="notifications-menu" style="min-width: 500px; max-height: 330px; overflow: auto;" *ngIf="isNotificationsMenuOpen">
+        <div class="notifications-menu" style="overflow: auto;" *ngIf="isNotificationsMenuOpen">
           <ul class="info-section">
-            <li class="info-container" style="color: #8b1010;" *ngFor="let alert of alerts">{{ alert }}</li>
+            <li class="info-container" style="color: #8b1010;" *ngFor="let alert of alerts">
+              {{ alert.name }}
+              <button (click)="removeNotification(alert.id)" style="border: none; background-color: transparent; color: #8b1010;">
+                <mat-icon>clear</mat-icon>
+              </button>
+            </li>
           </ul>
         </div>
       </div>
