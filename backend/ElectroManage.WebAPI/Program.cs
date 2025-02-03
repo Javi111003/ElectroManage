@@ -26,6 +26,14 @@ builder.Services.SwaggerDocument(o =>
     o.AutoTagPathSegmentIndex = 0;
 });
 
+builder.Services.AddApplicationInsightsTelemetry();
+
+// Configurar logging para enviar a Azure
+builder.Logging.AddApplicationInsights(
+    configureTelemetryConfiguration: (config) => config.ConnectionString = builder.Configuration["ApplicationInsights:ConnectionString"],
+    configureApplicationInsightsLoggerOptions: (options) => { }
+);
+
 builder.Services.AddIdentityExtension();
 builder.Services.AddGenericRepositoryExtension();
 builder.Services.AddJWTAuthenticationExtension(builder.Configuration);
