@@ -34,7 +34,12 @@ public class ListCompanyOverLimitQueryHandler : CoreCommandHandler<ListCompanyOv
         .ToListAsync(ct);
         
         var groupedWarnings = warnings.GroupBy(w => w.CompanyId);
+        List<CompanyOverLimitResponse> response = [];
+        foreach(var warning in groupedWarnings)
+        {
+            response.AddRange(warning.Select(w => ListWarningMapper.ToCompanyOverLimitResponse(w)));
+        }
         _logger.LogInformation($"{nameof(ExecuteAsync)} | Execution completed");
-        return groupedWarnings.Select(w => ListWarningMapper.ToCompanyOverLimitResponse(w.Last()));        
+        return response;
     }
 }
