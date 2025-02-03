@@ -1,17 +1,15 @@
-using System.Threading.Tasks;
-using Xunit;
 using FluentAssertions;
 using Moq;
-using ElectroManage.Domain.Entites.Sucursal;
+using Instalation = ElectroManage.Domain.Entites.Sucursal.InstalationType;
 using ElectroManage.Application.Tests.Base;
 
 namespace ElectroManage.Application.Tests.Repositories.Sucursal.InstalationType
 {
-    public class InstalationTypeRepositoryTest : GenericRepositoryTest<InstalationType>
+    public class InstalationTypeRepositoryTest : GenericRepositoryTest<Instalation>
     {
-        public override InstalationType CreatedEntity()
+        public override Instalation CreatedEntity()
         {
-            return new InstalationType
+            return new Instalation
             {
                 Id = 1,
                 Name = "Test Installation Type",
@@ -28,14 +26,14 @@ namespace ElectroManage.Application.Tests.Repositories.Sucursal.InstalationType
             await _repository.SaveAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<InstalationType>().AddAsync(entity, default), Times.Once);
+            _mockContext.Verify(m => m.Set<Instalation>().AddAsync(entity, default), Times.Once);
         }
 
         public override async Task GetByIdAsync_Should_Return_Null()
         {
             // Arrange
             long id = 999;
-            _mockContext.Setup(m => m.Set<InstalationType>().FindAsync(id)).ReturnsAsync((InstalationType)null);
+            _mockContext.Setup(m => m.Set<Instalation>().FindAsync(id)).ReturnsAsync((Instalation)null);
 
             // Act
             var result = await _repository.GetByIdAsync(id);
@@ -48,26 +46,26 @@ namespace ElectroManage.Application.Tests.Repositories.Sucursal.InstalationType
         {
             // Arrange
             var entity = CreatedEntity();
-            _mockContext.Setup(m => m.Set<InstalationType>().Update(entity));
+            _mockContext.Setup(m => m.Set<Instalation>().Update(entity));
 
             // Act
             await _repository.UpdateAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<InstalationType>().Update(entity), Times.Once);
+            _mockContext.Verify(m => m.Set<Instalation>().Update(entity), Times.Once);
         }
 
         public override async Task DeleteAsync_Should_Delete_Entity()
         {
             // Arrange
             var entity = CreatedEntity();
-            _mockContext.Setup(m => m.Set<InstalationType>().Remove(entity));
+            _mockContext.Setup(m => m.Set<Instalation>().Remove(entity));
 
             // Act
             await _repository.DeleteAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<InstalationType>().Remove(entity), Times.Once);
+            _mockContext.Verify(m => m.Set<Instalation>().Remove(entity), Times.Once);
         }
     }
 } 

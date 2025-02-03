@@ -5,14 +5,15 @@ using FluentAssertions;
 using Moq;
 using ElectroManage.Domain.Entites.Sucursal;
 using ElectroManage.Application.Tests.Base;
+using Formula = ElectroManage.Domain.Entites.Sucursal.CostFormula;
 
 namespace ElectroManage.Application.Tests.Repositories.CostFormula
 {
-    public class CostFormulaRepositoryTest : GenericRepositoryTest<CostFormula>
+    public class CostFormulaRepositoryTest : GenericRepositoryTest<Formula>
     {
-        public override CostFormula CreatedEntity()
+        public override Formula CreatedEntity()
         {
-            return new CostFormula
+            return new Formula
             {
                 Id = 1,
                 Name = "Test Formula",
@@ -32,14 +33,14 @@ namespace ElectroManage.Application.Tests.Repositories.CostFormula
             await _repository.SaveAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<CostFormula>().AddAsync(entity, default), Times.Once);
+            _mockContext.Verify(m => m.Set<Formula>().AddAsync(entity, default), Times.Once);
         }
 
         public override async Task GetByIdAsync_Should_Return_Null()
         {
             // Arrange
             long id = 999;
-            _mockContext.Setup(m => m.Set<CostFormula>().FindAsync(id)).ReturnsAsync((CostFormula)null);
+            _mockContext.Setup(m => m.Set<Formula>().FindAsync(id)).ReturnsAsync((Formula)null);
 
             // Act
             var result = await _repository.GetByIdAsync(id);
@@ -52,26 +53,26 @@ namespace ElectroManage.Application.Tests.Repositories.CostFormula
         {
             // Arrange
             var entity = CreatedEntity();
-            _mockContext.Setup(m => m.Set<CostFormula>().Update(entity));
+            _mockContext.Setup(m => m.Set<Formula>().Update(entity));
 
             // Act
             await _repository.UpdateAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<CostFormula>().Update(entity), Times.Once);
+            _mockContext.Verify(m => m.Set<Formula>().Update(entity), Times.Once);
         }
 
         public override async Task DeleteAsync_Should_Delete_Entity()
         {
             // Arrange
             var entity = CreatedEntity();
-            _mockContext.Setup(m => m.Set<CostFormula>().Remove(entity));
+            _mockContext.Setup(m => m.Set<Formula>().Remove(entity));
 
             // Act
             await _repository.DeleteAsync(entity);
 
             // Assert
-            _mockContext.Verify(m => m.Set<CostFormula>().Remove(entity), Times.Once);
+            _mockContext.Verify(m => m.Set<Formula>().Remove(entity), Times.Once);
         }
     }
 } 
