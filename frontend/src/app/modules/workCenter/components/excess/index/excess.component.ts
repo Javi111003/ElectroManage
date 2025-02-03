@@ -92,7 +92,7 @@ export class ExcessComponent {
   filter(d: Moment | null): boolean {
     const currentYear = moment().year();
     const currentMonth = moment().month();
-    return d ? d.year() < currentYear || (d.year() === currentYear && d.month() < currentMonth) : false;
+    return d ? d.year() < currentYear || (d.year() === currentYear && d.month() <= currentMonth) : false;
   }
 
   /**
