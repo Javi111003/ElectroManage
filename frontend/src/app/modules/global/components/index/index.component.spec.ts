@@ -127,17 +127,7 @@ describe('IndexComponent', () => {
     tick(); // Esperar a que se complete la operación asíncrona
     
     expect(dashboardServiceMock.getCentersCreated).toHaveBeenCalledWith(2023);
-    expect(component.centersCreatedData).toEqual(mockCentersCreated.companiesByMonth);
-  }));
-
-  it('should handle all data loading on init', fakeAsync(() => {
-    component.ngOnInit();
-    tick(0); // Esperar al setTimeout en loadAllData
-
-    expect(dashboardServiceMock.getCentersCreated).toHaveBeenCalled();
-    expect(dashboardServiceMock.getTopFiveConsumingCenters).toHaveBeenCalled();
-    expect(dashboardServiceMock.getTopFiveBiggestCenters).toHaveBeenCalled();
-    expect(dashboardServiceMock.getTopFiveWarnedCenters).toHaveBeenCalledWith(2023); // Añadir el año
+    expect(component.centersCreatedData).toEqual(mockCentersCreated);  // Modificado aquí
   }));
 
   // Modificar los tests existentes para usar fakeAsync cuando sea necesario

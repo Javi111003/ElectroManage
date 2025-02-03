@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { WorkCenterService } from './work-center.service';
 import { API_URL } from '../../config/api.config';
-import { WorkCenter, CenterDetails, AdminArea, InstallationType, Location, ManagementTeam } from '../../models/workCenter.interface';
+import { WorkCenter, CenterDetails, AdminArea, InstallationType, Location, ManagementTeam, LocationEdited } from '../../models/workCenter.interface';
 import { TotalConsumptionData, MeanRegisterData } from '../../models/register.interface';
 import { Alert } from '../../models/alert.interface';
 
@@ -59,6 +59,21 @@ describe('WorkCenterService', () => {
         },
         applyingDate: '2023-01-01',
         to: '2023-12-31'
+      },
+      currentCostFormula: {
+        id: 1,
+        name: 'Test Formula',
+        expression: 'x * y',
+        variables: [
+          {
+            variableName: 'x',
+            expression: '10'
+          },
+          {
+            variableName: 'y',
+            expression: '20'
+          }
+        ]
       }
     };
 
@@ -177,6 +192,12 @@ describe('WorkCenterService', () => {
       }
     };
 
+    const mockLocationEdited: LocationEdited = {
+      addressDetails: 'Test Address',
+      latitude: 0,
+      longitude: 0
+    };
+
     const mockTeam: ManagementTeam = {
       name: 'Test Team',
       userIds: [1, 2]
@@ -217,8 +238,8 @@ describe('WorkCenterService', () => {
       expect(req.request.method).toBe('POST');
       req.flush({});
 
-      // PUT
-      service.editLocation(mockLocation, 1).subscribe();
+      // PUT - Usar mockLocationEdited en lugar de mockLocation
+      service.editLocation(mockLocationEdited, 1).subscribe();
       req = httpMock.expectOne(`${API_URL}/v1/location/1`);
       expect(req.request.method).toBe('PUT');
       req.flush({});
