@@ -213,7 +213,15 @@ public class TemplateService : ITemplateService
                                                    .Replace("{{rowsAfter}}", string.Join("", rowsAfter));
         return htmlPolicyComparison;
     }
-    
+    public string GetPoliciesTemplate(User user, List<Domain.Entites.Sucursal.EfficiencyPolicy> policies)
+    {
+        var header = GetHeaderTemplate(user);
+        var htmlPolicies = File.ReadAllText(PoliciesTemplateUrl);
+        var rows = policies.Select(p => $"<tr><td>{p.Name}</td><td>{p.Description}</td></tr>");
+        htmlPolicies = htmlPolicies.Replace("{{header}}", header)
+                                  .Replace("{{rows}}", string.Join("", rows));
+        return htmlPolicies;
+    }
     private string GetHeaderTemplate(User user)
     {
         var html = File.ReadAllText(HeaderTemplateUrl);
