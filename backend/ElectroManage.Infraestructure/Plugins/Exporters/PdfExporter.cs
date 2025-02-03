@@ -20,7 +20,7 @@ public class PdfExporter : IExporter
             HtmlToPdf converter = new HtmlToPdf();
 
             // Convertir el HTML a un documento PDF
-            PdfDocument doc = converter.ConvertHtmlString(data);
+            PdfDocument doc = converter.ConvertHtmlString("<h1>Prueba PDF</h1>");
 
             // Guardar el documento PDF en un array de bytes
             byte[] pdf = doc.Save();
