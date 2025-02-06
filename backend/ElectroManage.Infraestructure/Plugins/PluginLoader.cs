@@ -85,7 +85,17 @@ public class PluginLoader : IDisposable
             }
         }
     }
+    /// <summary>
+    /// Tries to get an exporter for the specified format.
+    /// </summary>
+    /// <param name="format">The format of the exporter.</param>
+    /// <param name="exporter">The exporter instance if found.</param>
+    /// <returns>True if an exporter is found; otherwise, false.</returns>
     public bool TryGetExporter(string format, out IExporter? exporter) => _pluginExporters.TryGetValue(format, out exporter) || _internalExporters.TryGetValue(format, out exporter);//Mayor prioridad a los plugins
+    /// <summary>
+    /// Gets the available formats from both internal and plugin exporters.
+    /// </summary>
+    /// <returns>An array of available formats.</returns>
     public string[] GetAvaibleFormats() => _internalExporters.Select(x => x.Key.ToLower()).Concat(_pluginExporters.Select(x => x.Key.ToLower())).Distinct().ToArray();
     public void Dispose() => _watcher.Dispose();
 }
