@@ -1,32 +1,33 @@
-# ElectroManage
+# ElectroManage 💡⚡
 
-Este es el repositorio del proyecto ElectroManage.
+**ElectroManage** is a web application developed with Angular and .NET using FastEndpoints and EFCore. This project aims to manage and monitor the electrical consumption of the company's branches.
 
-## Descripción
+## Project Description 📋
 
-Este proyecto es una API web desarrollada en .NET 8.
+**ElectroManage** is an advanced web-based solution designed to help companies efficiently manage and monitor their electrical consumption across multiple branches. The application provides a comprehensive dashboard for real-time monitoring, historical data analysis, and predictive insights.
 
-## Estructura del Proyecto
+## Key Features 🔑
 
-- `ElectroManage.WebAPI/`: Contiene la API web.
-- `ElectroManage.Domain/`: Contiene las entidades de dominio y configuraciones.
-- `ElectroManage.Application/`: Contiene la lógica de aplicación.
-- `backend/`: Contiene la web API y toda la lógica del backend.
-- `frontend/`: Contiene la parte visual de la aplicación web
+- **Real-Time Monitoring**: View the real-time electrical consumption of each branch.
+- **Daily Consumption Records**: Enter daily consumption records to track usage patterns.
+- **Cost Calculation Formulas**: Define and apply cost calculation formulas based on consumption data.
+- **Efficiency Comparison**: Compare the energy efficiency of different branches and identify best practices.
+- **Predictive Analysis**: Utilize predictive algorithms to forecast future consumption and make informed decisions.
 
-## Cómo Empezar
+## Design Patterns and Principles 🏛️
 
-1. Clona el repositorio.
-2. Navega a la carpeta del proyecto.
-3. Ejecuta `dotnet restore` para restaurar las dependencias.
-4. Ejecuta `dotnet run` para iniciar la aplicación.
+- **Command**: Implements the command design pattern for encapsulating all information needed to perform an action.
+- **CQRS**: Uses Command Query Responsibility Segregation to separate read and write operations.
+- **Repository Pattern**: Abstracts the data layer, providing a flexible way to access and manipulate data.
+- **UnitOfWork**: Manages database transactions, ensuring data consistency and integrity.
 
-## Flujo de Trabajo
+## Technology Stack 💻
 
-1. Crea una nueva rama para modificar CUALQUIER COSA en el proyecto, para cada característica o corrección (`git checkout -b feature/nueva-caracteristica`).
-2. Sube tus cambios a tu repositorio remoto (`git push origin feature/nueva-caracteristica`).
-3. Abre un Pull Request para revisión y fusión de cambios.
+- **Frontend**: Angular for a dynamic and responsive user experience.
+- **Backend**: .NET with FastEndpoints for robust and efficient API management.
+- **Database**: PostgreSQL for reliable and scalable data storage.
+- **ORM**: EFCore for data management and persistence.
 
-## Commits(En EL README de BACKEND está descrito el flujo para los commits)
+## Architecture 🗼⛏️
 
-1.Crea commits con un mensaje descriptivo (` git commit -m "Añadiendo un ejemplo para realizar un commit" `)
+The project follows the principles of Clean Architecture, ensuring a separation of concerns and high maintainability. The layers include
